@@ -868,6 +868,13 @@
     "desc": "At each stage the output covariance is Sigma_y = J Sigma_x J^T, so chaining stages composes the Jacobians and per-source noise (depth sigma_Z growing as Z^2, calibration/hand-eye residual, rover-pose uncertainty) accumulates into the fruit-pose covariance in the robot frame. The deliverable of localization is a pose WITH covariance; the occlusion gate and grasp module consume it. Sections 6.4 and 7.2.",
     "section": "7",
     "fragment": "F-M5-3-covariance-propagation.svg"
+   },
+   {
+    "id": "F-M5-5",
+    "title": "Placement error budget (CEC-03), dominant term",
+    "desc": "The placement error budget assembled in full: six independent sources (depth, calibration, hand-eye, sync, estimation, mechanical) combine in quadrature into sigma_place, which must satisfy 3 sigma_place <= c. Because the total is set by the largest term, the depth error (growing as Z^2) is often dominant, so the mission stages the fruit close and attacks the dominant source first (EI-05). The machine's central accuracy contract, allocated to each subsystem. Sections 6.7 and 7.4.",
+    "section": "7",
+    "fragment": "F-M5-5-placement-budget-master.svg"
    }
   ]
  },

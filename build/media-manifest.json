@@ -2897,6 +2897,13 @@
     "desc": "Transferring to a variant (a delicate berry, a heavy squash, a different platform, a new constraint) changes the parameters and values (fruit properties, geometry, budgets, envelope) but keeps the tools and method (the six CECs and the judgment insights). None is watermelon-specific; a student who can re-derive a new machine with them has learned the course, not the case study (EI-17). Section 6.5.",
     "section": "6",
     "fragment": "F-M17-5-transfer-variant.svg"
+   },
+   {
+    "id": "F-M17-4",
+    "title": "Composed budgets, all at once, vs limits",
+    "desc": "The composed system model verifies the whole design satisfies every budget simultaneously: placement (CEC-03), cycle time (CEC-01), grip-force window (CEC-02), power/thermal (M12), reliability (M14), and cost-per-acre (M16), each against its limit. Accepted only when all hold together. The acceptance argument: works / proven / safe / pencils out, each on admissible evidence. Complements the M13 composed-budgets figure by closing to economics. Section 7.1.",
+    "section": "7",
+    "fragment": "F-M17-4-composed-budgets-all.svg"
    }
   ]
  }

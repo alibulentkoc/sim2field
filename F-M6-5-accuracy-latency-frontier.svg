@@ -5,7 +5,7 @@
 <line x1="389" y1="70" x2="389" y2="240" stroke="var(--danger)" stroke-width="1.4" stroke-dasharray="5 3"/>
 <text x="393.0" y="80" font-size="7" fill="var(--danger-text)">latency budget (CEC-01)</text>
 <line x1="110" y1="146" x2="560" y2="146" stroke="var(--warn)" stroke-width="1.4" stroke-dasharray="5 3"/>
-<text x="560" y="142.5" font-size="7" fill="var(--warn-text)" font-weight="end" text-anchor="end">recall / yield threshold (M4)</text>
+<text x="560" y="142.5" font-size="7" fill="var(--warn-text)" text-anchor="end">recall / yield threshold (M4)</text>
 <polyline points="200.0,134.6 263.0,107.4 335.0,93.8 407.0,85.3 479.0,80.2 537.5,77.7" fill="none" stroke="var(--info)" stroke-width="2.2"/>
 <circle cx="200.0" cy="134.6" r="3" fill="var(--info)"/>
 <circle cx="263.0" cy="107.4" r="3" fill="var(--info)"/>

@@ -21,11 +21,11 @@
 <line x1="470" y1="110" x2="730" y2="110" stroke="var(--border-strong)" stroke-width="5" stroke-linecap="round"/>
 <rect x="540" y="105" width="120" height="10" rx="3" fill="var(--accent)" fill-opacity="0.35" stroke="var(--accent)"/>
 <line x1="540" y1="94" x2="540" y2="126" stroke="var(--info)" stroke-width="1.4"/>
-<text x="540" y="88" font-size="6.8" fill="var(--info)" font-weight="anc=middle">min: reach</text>
-<text x="540" y="138" font-size="6" fill="var(--text-muted)" font-weight="anc=middle">span >= W_bed</text>
+<text x="540" y="88" font-size="6.8" fill="var(--info)" text-anchor="middle">min: reach</text>
+<text x="540" y="138" font-size="6" fill="var(--text-muted)" text-anchor="middle">span >= W_bed</text>
 <line x1="660" y1="94" x2="660" y2="126" stroke="var(--danger)" stroke-width="1.4"/>
-<text x="660" y="88" font-size="6.8" fill="var(--danger-text)" font-weight="anc=middle">max: stability</text>
-<text x="660" y="138" font-size="6" fill="var(--text-muted)" font-weight="anc=middle">+ maneuver (M10)</text>
+<text x="660" y="88" font-size="6.8" fill="var(--danger-text)" text-anchor="middle">max: stability</text>
+<text x="660" y="138" font-size="6" fill="var(--text-muted)" text-anchor="middle">+ maneuver (M10)</text>
 <text x="600.0" y="114" font-size="6.6" fill="var(--accent)" font-weight="700" text-anchor="middle">feasible w</text>
 <text x="470" y="80" font-size="7.4" fill="var(--text-secondary)" font-weight="700">track width w</text>
 <text x="470" y="165" font-size="7" fill="var(--text-muted)">If the interval is empty, the architecture</text>

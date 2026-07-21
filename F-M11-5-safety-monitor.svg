@@ -15,7 +15,7 @@
 <line x1="370" y1="88" x2="438" y2="88" stroke="var(--border-strong)" stroke-width="1.4" marker-end="url(#a)"/>
 <rect x="250" y="150" width="310" height="86" rx="9" fill="var(--danger)" fill-opacity="0.07" stroke="var(--danger)" stroke-width="1.8"/>
 <text x="405" y="170" font-size="9.5" fill="var(--danger-text)" font-weight="700" text-anchor="middle">INDEPENDENT SAFETY MONITOR</text>
-<text x="405" y="184" font-size="6.8" fill="var(--text-muted)" font-weight="anc=middle">own inputs - own simple verified logic - own execution context</text>
+<text x="405" y="184" font-size="6.8" fill="var(--text-muted)" text-anchor="middle">own inputs - own simple verified logic - own execution context</text>
 <text x="266" y="202" font-size="7" fill="var(--text-secondary)">watches guards: grip force vs window (M9), &#956;/&#947; (M8),</text>
 <text x="266" y="213" font-size="7" fill="var(--text-secondary)">stability margin (M10), heartbeat/watchdog of every node</text>
 <text x="266" y="227" font-size="7.2" fill="var(--danger-text)" font-weight="700">can OVERRIDE: safe-stop / safe-release / bounded halt</text>

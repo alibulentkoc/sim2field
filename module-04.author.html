@@ -319,11 +319,11 @@ footer{max-width:var(--measure);margin:0 auto;padding:2.5rem 2rem;border-top:1px
 <text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Multi-head detection architecture</text>
 <rect x="30" y="72" width="150" height="120" rx="9" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.6"/>
 <text x="105" y="96" font-size="9" fill="var(--accent)" font-weight="700" text-anchor="middle">BACKBONE</text>
-<text x="105" y="112" font-size="6.6" fill="var(--text-muted)" font-weight="anc=middle">shared conv features</text>
-<text x="105" y="124" font-size="6.6" fill="var(--text-muted)" font-weight="anc=middle">edges -> fruit-like</text>
-<text x="105" y="144" font-size="6.4" fill="var(--text-muted)" font-weight="anc=middle">weight sharing,</text>
-<text x="105" y="155" font-size="6.4" fill="var(--text-muted)" font-weight="anc=middle">translation-tolerant</text>
-<text x="105" y="176" font-size="6.4" fill="var(--text-muted)" font-weight="anc=middle">(pretrained, M4 6.4)</text>
+<text x="105" y="112" font-size="6.6" fill="var(--text-muted)" text-anchor="middle">shared conv features</text>
+<text x="105" y="124" font-size="6.6" fill="var(--text-muted)" text-anchor="middle">edges -> fruit-like</text>
+<text x="105" y="144" font-size="6.4" fill="var(--text-muted)" text-anchor="middle">weight sharing,</text>
+<text x="105" y="155" font-size="6.4" fill="var(--text-muted)" text-anchor="middle">translation-tolerant</text>
+<text x="105" y="176" font-size="6.4" fill="var(--text-muted)" text-anchor="middle">(pretrained, M4 6.4)</text>
 <rect x="300" y="72" width="290" height="34" rx="7" fill="var(--surface)" stroke="var(--info)" stroke-width="1.3"/>
 <text x="312" y="87" font-size="8" fill="var(--info)" font-weight="700">detection</text>
 <text x="312" y="99" font-size="6.4" fill="var(--text-muted)">bbox + confidence  -  is it there, and where</text>
@@ -369,12 +369,12 @@ footer{max-width:var(--measure);margin:0 auto;padding:2.5rem 2rem;border-top:1px
 <text x="150" y="240" font-size="6.8" fill="var(--accent-2)">domain randomization (lighting, texture, pose, clutter) combats the sim-to-real gap</text>
 <rect x="362" y="108" width="150" height="66" rx="9" fill="var(--surface-2)" stroke="var(--accent)" stroke-width="1.7"/>
 <text x="437" y="132" font-size="8.6" fill="var(--accent)" font-weight="700" text-anchor="middle">DATASET</text>
-<text x="437" y="148" font-size="6.6" fill="var(--text-muted)" font-weight="anc=middle">must COVER the</text>
-<text x="437" y="159" font-size="6.6" fill="var(--text-muted)" font-weight="anc=middle">field variability</text>
+<text x="437" y="148" font-size="6.6" fill="var(--text-muted)" text-anchor="middle">must COVER the</text>
+<text x="437" y="159" font-size="6.6" fill="var(--text-muted)" text-anchor="middle">field variability</text>
 <line x1="512" y1="141" x2="560" y2="141" stroke="var(--border-strong)" stroke-width="1.4" marker-end="url(#a)"/>
 <rect x="562" y="118" width="170" height="46" rx="8" fill="var(--surface)" stroke="var(--info)" stroke-width="1.4"/>
 <text x="647" y="140" font-size="8" fill="var(--info)" font-weight="700" text-anchor="middle">model (M4)</text>
-<text x="647" y="154" font-size="6.4" fill="var(--text-muted)" font-weight="anc=middle">field competence</text>
+<text x="647" y="154" font-size="6.4" fill="var(--text-muted)" text-anchor="middle">field competence</text>
 <text x="20" y="258" font-size="7.8" fill="var(--text-muted)">The dataset is the product: field competence comes from data coverage. If the union does not cover the field's variability, the model inherits a blind spot (a distribution-shift failure). Section 6.5.</text>
 </svg></div><figcaption><span class="fid">F-M4-5</span>Data strategy: real + annotated + synthetic. A sound data strategy has three parts feeding one dataset that must cover the field's variability: real field capture, expensive annotation, and synthetic generation in the twin (free labels, manufactured rare/hazardous cases), with domain randomization combating the sim-to-real gap. The dataset is the product; if the union does not cover the field, the model inherits a blind spot. Section 6.5.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 265" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The development-versus-runtime AI boundary: the model is built off-robot at development time (capture, annotation, synthetic generation, training, evaluation, compilation) and delivered as a compiled artifact, while at runtime the on-robot machine only loads it and runs inference with no learning and no network, the AI-specific view of the no-cloud boundary." font-family="'IBM Plex Mono',monospace">
 <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>

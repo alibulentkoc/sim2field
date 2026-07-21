@@ -2,9 +2,9 @@
 <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
 <text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Adversarial envelope coverage (test the edges)</text>
 <rect x="120" y="60" width="380" height="150" rx="6" fill="var(--surface)" stroke="var(--border-strong)" stroke-width="1.4"/>
-<text x="310.0" y="52" font-size="7" fill="var(--text-muted)" font-weight="anc=middle">operating envelope</text>
+<text x="310.0" y="52" font-size="7" fill="var(--text-muted)" text-anchor="middle">operating envelope</text>
 <text x="114" y="224" font-size="6.6" fill="var(--text-muted)" text-anchor="middle">easy</text>
-<text x="500" y="224" font-size="6.6" fill="var(--danger-text)" font-weight="end" text-anchor="end">slope / light / occlusion / dust / wear -> harsh</text>
+<text x="500" y="224" font-size="6.6" fill="var(--danger-text)" text-anchor="end">slope / light / occlusion / dust / wear -> harsh</text>
 <circle cx="295" cy="137" r="3" fill="var(--info)" fill-opacity="0.7"/>
 <circle cx="303" cy="139" r="3" fill="var(--info)" fill-opacity="0.7"/>
 <circle cx="317" cy="118" r="3" fill="var(--info)" fill-opacity="0.7"/>
@@ -14,7 +14,7 @@
 <circle cx="329" cy="134" r="3" fill="var(--info)" fill-opacity="0.7"/>
 <circle cx="318" cy="121" r="3" fill="var(--info)" fill-opacity="0.7"/>
 <circle cx="318" cy="150" r="3" fill="var(--info)" fill-opacity="0.7"/>
-<text x="310.0" y="101.0" font-size="6.6" fill="var(--info)" font-weight="anc=middle">demo: easy center (proves little)</text>
+<text x="310.0" y="101.0" font-size="6.6" fill="var(--info)" text-anchor="middle">demo: easy center (proves little)</text>
 <path d="M 122,62 L 130,70 M 122,70 L 130,62" stroke="var(--danger)" stroke-width="1.6"/>
 <path d="M 490,62 L 498,70 M 490,70 L 498,62" stroke="var(--danger)" stroke-width="1.6"/>
 <path d="M 122,200 L 130,208 M 122,208 L 130,200" stroke="var(--danger)" stroke-width="1.6"/>
@@ -25,7 +25,7 @@
 <path d="M 306.0,201 L 314.0,209 M 306.0,209 L 314.0,201" stroke="var(--danger)" stroke-width="1.6"/>
 <path d="M 427.59999999999997,78.5 L 435.59999999999997,86.5 M 427.59999999999997,86.5 L 435.59999999999997,78.5" stroke="var(--danger)" stroke-width="1.6"/>
 <path d="M 458.0,183.5 L 466.0,191.5 M 458.0,191.5 L 466.0,183.5" stroke="var(--danger)" stroke-width="1.6"/>
-<text x="492" y="78" font-size="6.6" fill="var(--danger-text)" font-weight="end" text-anchor="end">adversarial: edges + corners</text>
+<text x="492" y="78" font-size="6.6" fill="var(--danger-text)" text-anchor="end">adversarial: edges + corners</text>
 <rect x="524" y="60" width="218" height="150" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
 <text x="536" y="80" font-size="7.8" fill="var(--text-primary)" font-weight="700">Design tests to FAIL it:</text>
 <text x="536" y="98" font-size="6.8" fill="var(--danger-text)">x steepest slope + payload</text>

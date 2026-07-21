@@ -5,7 +5,7 @@
 <rect x="581" y="60" width="119" height="180" fill="var(--danger)" fill-opacity="0.10"/>
 <rect x="209" y="60" width="373" height="180" fill="var(--accent)" fill-opacity="0.06"/>
 <line x1="90" y1="136.8" x2="700" y2="136.8" stroke="var(--warn)" stroke-width="1.2" stroke-dasharray="4 3"/>
-<text x="700" y="132.75624145681172" font-size="7.2" fill="var(--warn-text)" font-weight="end" text-anchor="end">&#956;_min</text>
+<text x="700" y="132.75624145681172" font-size="7.2" fill="var(--warn-text)" text-anchor="end">&#956;_min</text>
 <polyline points="90.0,240.0 100.2,230.6 110.3,221.2 120.5,211.8 130.7,202.6 140.8,193.4 151.0,184.4 161.2,175.5 171.3,166.8 181.5,158.3 191.7,150.0 201.8,142.0 212.0,134.2 222.2,126.7 232.3,119.6 242.5,112.7 252.7,106.2 262.8,100.1 273.0,94.4 283.2,89.0 293.3,84.1 303.5,79.6 313.7,75.6 323.8,72.0 334.0,68.8 344.2,66.1 354.3,63.9 364.5,62.2 374.7,61.0 384.8,60.2 395.0,60.0 405.2,60.2 415.3,61.0 425.5,62.2 435.7,63.9 445.8,66.1 456.0,68.8 466.2,72.0 476.3,75.6 486.5,79.6 496.7,84.1 506.8,89.0 517.0,94.4 527.2,100.1 537.3,106.2 547.5,112.7 557.7,119.6 567.8,126.7 578.0,134.2 588.2,142.0 598.3,150.0 608.5,158.3 618.7,166.8 628.8,175.5 639.0,184.4 649.2,193.4 659.3,202.6 669.5,211.8 679.7,221.2 689.8,230.6 700.0,240.0" fill="none" stroke="var(--info)" stroke-width="2.4"/>
 <line x1="90" y1="56" x2="90" y2="240" stroke="var(--border-strong)" stroke-width="1.4"/>
 <line x1="90" y1="240" x2="700" y2="240" stroke="var(--border-strong)" stroke-width="1.4"/>
@@ -16,12 +16,12 @@
 <text x="395.0" y="254" font-size="6.6" fill="var(--text-muted)" text-anchor="middle">90</text>
 <text x="547.5" y="254" font-size="6.6" fill="var(--text-muted)" text-anchor="middle">135</text>
 <text x="700.0" y="254" font-size="6.6" fill="var(--text-muted)" text-anchor="middle">180</text>
-<text x="147.61111111111111" y="82" font-size="7" fill="var(--danger-text)" font-weight="anc=middle">keep-out</text>
+<text x="147.61111111111111" y="82" font-size="7" fill="var(--danger-text)" text-anchor="middle">keep-out</text>
 <text x="147.61111111111111" y="93" font-size="6.4" fill="var(--danger-text)" text-anchor="middle">&#947;->0&#176;</text>
-<text x="642.3888888888889" y="82" font-size="7" fill="var(--danger-text)" font-weight="anc=middle">keep-out</text>
+<text x="642.3888888888889" y="82" font-size="7" fill="var(--danger-text)" text-anchor="middle">keep-out</text>
 <text x="642.3888888888889" y="93" font-size="6.4" fill="var(--danger-text)" text-anchor="middle">&#947;->180&#176;</text>
 <text x="395.0" y="76" font-size="7.4" fill="var(--accent)" font-weight="700" text-anchor="middle">safe operating band</text>
-<text x="395.0" y="87" font-size="6.6" fill="var(--accent)" font-weight="anc=middle">&#947; in [&#947;_min, &#947;_max]</text>
+<text x="395.0" y="87" font-size="6.6" fill="var(--accent)" text-anchor="middle">&#947; in [&#947;_min, &#947;_max]</text>
 <text x="20" y="266" font-size="7.8" fill="var(--text-muted)">Singularity: det J = 0 (det J &#8733; sin &#947;). Require &#956; &gt;= &#956;_min and &#947; within a safe band across the workspace. Because the arm swings a heavy</text>
 <text x="20" y="278" font-size="7.8" fill="var(--text-muted)">payload, this keep-out is a SAFETY requirement, not only performance: near singularity, force transmits poorly and motion is ill-conditioned. Sections 6.5 and 7.4.</text>
 </svg>

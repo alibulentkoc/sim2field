@@ -32,7 +32,7 @@
 <circle cx="690" cy="204" r="7" fill="var(--danger)"/>
 <text x="680" y="208" font-size="6.6" fill="var(--danger-text)" text-anchor="end">dusty, wet</text>
 <text x="200" y="68" font-size="7" fill="var(--accent)">nominal</text>
-<text x="690" y="68" font-size="7" fill="var(--danger-text)" font-weight="end" text-anchor="end">envelope edge (design + validate here)</text>
+<text x="690" y="68" font-size="7" fill="var(--danger-text)" text-anchor="end">envelope edge (design + validate here)</text>
 <rect x="30" y="238" width="712" height="32" rx="8" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.5"/>
 <text x="44" y="252" font-size="8" fill="var(--text-secondary)" font-weight="700">The envelope is the real specification; the average condition is not (EI-10).</text>
 <text x="44" y="264" font-size="7.4" fill="var(--text-muted)">Design and validate at the edges: steepest slope with payload, roughest terrain, tightest headland, worst light. Section 6.6.</text>

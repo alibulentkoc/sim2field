@@ -11,13 +11,13 @@
 <text x="630.0" y="170" font-size="9" fill="var(--danger)" font-weight="700" text-anchor="middle">SAFE STOP</text>
 <text x="630.0" y="184" font-size="6.8" fill="var(--text-muted)" text-anchor="middle">fail-safe: bounded halt</text>
 <line x1="240" y1="88" x2="298" y2="88" stroke="var(--border-strong)" stroke-width="1.4" marker-end="url(#a)"/>
-<text x="269" y="82" font-size="6.6" fill="var(--warn-text)" font-weight="anc=middle">recoverable</text>
-<text x="269" y="98" font-size="6.6" fill="var(--warn-text)" font-weight="anc=middle">fault</text>
+<text x="269" y="82" font-size="6.6" fill="var(--warn-text)" text-anchor="middle">recoverable</text>
+<text x="269" y="98" font-size="6.6" fill="var(--warn-text)" text-anchor="middle">fault</text>
 <line x1="300" y1="108" x2="240" y2="108" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#a)"/>
-<text x="269" y="120" font-size="6.4" fill="var(--text-muted)" font-weight="anc=middle">recover</text>
+<text x="269" y="120" font-size="6.4" fill="var(--text-muted)" text-anchor="middle">recover</text>
 <path d="M 180,120 Q 360,200 538,175" fill="none" stroke="var(--danger)" stroke-width="1.4" marker-end="url(#a)"/>
 <line x1="420" y1="120" x2="540" y2="160" stroke="var(--danger)" stroke-width="1.4" marker-end="url(#a)"/>
-<text x="300" y="205" font-size="6.8" fill="var(--danger-text)" font-weight="anc=middle">unrecoverable fault OR safety-monitor command (from any state)</text>
+<text x="300" y="205" font-size="6.8" fill="var(--danger-text)" text-anchor="middle">unrecoverable fault OR safety-monitor command (from any state)</text>
 <rect x="60" y="150" width="420" height="52" rx="8" fill="var(--surface-2)" stroke="var(--danger)" stroke-opacity="0.5"/>
 <text x="72" y="168" font-size="8" fill="var(--text-secondary)" font-weight="700">The safe state is reachable from EVERY state (the monitor's last resort).</text>
 <text x="72" y="182" font-size="7.4" fill="var(--text-muted)">Reaction must beat harm:  L_detect + L_react  &lt;=  T_harm  (M11 Sec 7.4).</text>

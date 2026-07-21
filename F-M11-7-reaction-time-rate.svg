@@ -6,7 +6,7 @@
 <polyline points="146.0,60.2 200.0,113.5 267.5,138.0 357.5,152.4 470.0,161.0 560.0,163.9" fill="none" stroke="var(--accent)" stroke-width="2.2"/>
 <text x="299.0" y="140.0" font-size="6.8" fill="var(--accent)">L_detect + L_react (total)</text>
 <line x1="110" y1="150" x2="560" y2="150" stroke="var(--danger)" stroke-width="1.6" stroke-dasharray="5 3"/>
-<text x="560" y="145.52" font-size="7" fill="var(--danger-text)" font-weight="end" text-anchor="end">T_harm</text>
+<text x="560" y="145.52" font-size="7" fill="var(--danger-text)" text-anchor="end">T_harm</text>
 <line x1="268" y1="66" x2="268" y2="210" stroke="var(--warn)" stroke-width="1.2" stroke-dasharray="3 3"/>
 <text x="267.5" y="68.88" font-size="6.8" fill="var(--warn-text)" text-anchor="middle">min monitor rate</text>
 <text x="357.5" y="80.4" font-size="6.6" fill="var(--accent)">feasible (total &lt; T_harm)</text>

@@ -11,11 +11,11 @@
 <text x="243.5" y="100" font-size="7" fill="var(--text-on-accent)" text-anchor="middle">L_detect</text>
 <rect x="337" y="86" width="154" height="20" fill="var(--warn)" fill-opacity="0.55" stroke="var(--warn)"/>
 <text x="414.0" y="100" font-size="7" fill="var(--text-on-accent)" text-anchor="middle">L_react</text>
-<text x="144" y="100" font-size="7.6" fill="var(--info)" font-weight="end">software</text>
+<text x="144" y="100" font-size="7.6" fill="var(--info)" text-anchor="end">software</text>
 <line x1="491" y1="96" x2="623" y2="96" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 2"/>
 <text x="557.0" y="82" font-size="6.8" fill="var(--accent)" text-anchor="middle">margin</text>
 <rect x="150" y="126" width="33" height="20" fill="var(--accent)" fill-opacity="0.7" stroke="var(--accent)"/>
-<text x="144" y="140" font-size="7.6" fill="var(--accent)" font-weight="end" text-anchor="end">physics</text>
+<text x="144" y="140" font-size="7.6" fill="var(--accent)" text-anchor="end">physics</text>
 <text x="199.5" y="140" font-size="7" fill="var(--accent)">relief / compliance act (near-instant)</text>
 <line x1="183" y1="136" x2="623" y2="136" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 2"/>
 <text x="403.0" y="122" font-size="6.8" fill="var(--accent)" text-anchor="middle">large margin</text>

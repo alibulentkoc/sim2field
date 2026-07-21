@@ -20,7 +20,7 @@
 <text x="654.0" y="114" font-size="6.6" fill="var(--text-secondary)" text-anchor="middle">against real data</text>
 <text x="654.0" y="128" font-size="6.2" fill="var(--text-muted)" text-anchor="middle">measure the reality gap</text>
 <path d="M 654.0,142 L 654.0,172 L 294.0,172 L 294.0,142" fill="none" stroke="var(--danger)" stroke-width="1.4" stroke-dasharray="4 2" marker-end="url(#a)"/>
-<text x="474.0" y="182" font-size="7" fill="var(--danger-text)" font-weight="anc=middle">if the gap is too large, widen / retune p(&#958;) and repeat</text>
+<text x="474.0" y="182" font-size="7" fill="var(--danger-text)" text-anchor="middle">if the gap is too large, widen / retune p(&#958;) and repeat</text>
 <rect x="30" y="196" width="712" height="26" rx="7" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.5"/>
 <text x="44" y="213" font-size="7.8" fill="var(--accent)" font-weight="700">&#960;* = argmax_&#960;  E over &#958;~p(&#958;) [ E_&#960;[G | &#958;] ]   -   optimal in expectation across a broad p(&#958;) -> robust to the real &#958;.</text>
 <text x="20" y="244" font-size="7.8" fill="var(--text-muted)">Neither imitation nor RL can be trained on real fruit at scale (too slow, too destructive), so training is in the twin. Never trust a policy that has</text>

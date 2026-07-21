@@ -19,11 +19,11 @@
 <text x="150" y="240" font-size="6.8" fill="var(--accent-2)">domain randomization (lighting, texture, pose, clutter) combats the sim-to-real gap</text>
 <rect x="362" y="108" width="150" height="66" rx="9" fill="var(--surface-2)" stroke="var(--accent)" stroke-width="1.7"/>
 <text x="437" y="132" font-size="8.6" fill="var(--accent)" font-weight="700" text-anchor="middle">DATASET</text>
-<text x="437" y="148" font-size="6.6" fill="var(--text-muted)" font-weight="anc=middle">must COVER the</text>
-<text x="437" y="159" font-size="6.6" fill="var(--text-muted)" font-weight="anc=middle">field variability</text>
+<text x="437" y="148" font-size="6.6" fill="var(--text-muted)" text-anchor="middle">must COVER the</text>
+<text x="437" y="159" font-size="6.6" fill="var(--text-muted)" text-anchor="middle">field variability</text>
 <line x1="512" y1="141" x2="560" y2="141" stroke="var(--border-strong)" stroke-width="1.4" marker-end="url(#a)"/>
 <rect x="562" y="118" width="170" height="46" rx="8" fill="var(--surface)" stroke="var(--info)" stroke-width="1.4"/>
 <text x="647" y="140" font-size="8" fill="var(--info)" font-weight="700" text-anchor="middle">model (M4)</text>
-<text x="647" y="154" font-size="6.4" fill="var(--text-muted)" font-weight="anc=middle">field competence</text>
+<text x="647" y="154" font-size="6.4" fill="var(--text-muted)" text-anchor="middle">field competence</text>
 <text x="20" y="258" font-size="7.8" fill="var(--text-muted)">The dataset is the product: field competence comes from data coverage. If the union does not cover the field's variability, the model inherits a blind spot (a distribution-shift failure). Section 6.5.</text>
 </svg>

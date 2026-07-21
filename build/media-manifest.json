@@ -512,6 +512,13 @@
     "fragment": "F-M3-6-ripeness-modality.svg"
    },
    {
+    "id": "F-M3-7",
+    "title": "Calibration: measurements in the robot frame",
+    "desc": "Three calibrations make a measurement mean something in the robot frame: intrinsic maps pixels to rays; extrinsic and hand-eye relate sensors to each other and the camera to the manipulator so a detected fruit becomes a reachable target; temporal synchronizes streams so fused measurements refer to the same instant (a latency error masquerades as a position error on a moving platform). Residual calibration error is a named term in the placement budget (CEC-03). Section 6.7.",
+    "section": "6",
+    "fragment": "F-M3-7-calibration-frames.svg"
+   },
+   {
     "id": "F-M3-4",
     "title": "Stereo depth error vs range",
     "desc": "Depth error grows as the square of range (dZ ~ Z^2/(f b) dd): doubling the standoff quadruples the error. A larger baseline lowers the curve, and staging each fruit to a close pick station (DD-2) shrinks Z where accuracy matters most. Section 7.3.",

@@ -505,6 +505,13 @@
     "fragment": "F-M3-3-stereo-triangulation.svg"
    },
    {
+    "id": "F-M3-6",
+    "title": "Ripeness cue to sensing modality",
+    "desc": "Ripeness cues map to sensing modalities: visible color cues (ground-spot color, tendril dieback, rind sheen) are read by RGB; internal water and sugar content by NIR/spectral; the shell's resonance by acoustic tap sensing. None is decisive alone, so the fusion stage (M5) and the learned classifier (M4) combine them; M3's job is to decide which bands/cues to measure. Section 6.4.",
+    "section": "6",
+    "fragment": "F-M3-6-ripeness-modality.svg"
+   },
+   {
     "id": "F-M3-4",
     "title": "Stereo depth error vs range",
     "desc": "Depth error grows as the square of range (dZ ~ Z^2/(f b) dd): doubling the standoff quadruples the error. A larger baseline lowers the curve, and staging each fruit to a close pick station (DD-2) shrinks Z where accuracy matters most. Section 7.3.",

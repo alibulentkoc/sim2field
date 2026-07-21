@@ -1728,6 +1728,13 @@
     "desc": "Swinging the payload shifts the CoG laterally by Delta = m_fruit r_swing / m_total; on a side slope the worst case is the swing toward the downhill edge, subtracting from the slope margin (w/2)cos(theta) - h sin(theta). Require margin(theta_max) - Delta_max >= safety margin. This couples arm motion (M8/M9) to base design and may constrain the swing trajectory or max working slope. Section 7.3.",
     "section": "7",
     "fragment": "F-M10-4-arm-swing-cog.svg"
+   },
+   {
+    "id": "F-M10-6",
+    "title": "Lateral navigation budget vs workspace half-width",
+    "desc": "The lateral placement error (bed-centering and localization combined in quadrature, sigma_lat = sqrt(sigma_center^2 + sigma_loc^2)) must keep the fruit inside the manipulator workspace: 3 sigma_lat <= W_workspace/2 - margin. This sizes the required navigation accuracy against the reachable width (CEC-03). Section 7.4.",
+    "section": "7",
+    "fragment": "F-M10-6-lateral-nav-budget.svg"
    }
   ]
  },

@@ -2411,6 +2411,13 @@
     "fragment": "F-M14-3-sample-size-confidence.svg"
    },
    {
+    "id": "F-M14-5",
+    "title": "Adversarial envelope coverage",
+    "desc": "Adversarial validation concentrates tests at the envelope's edges and corners (steepest slope, worst light, densest occlusion, most variable fruit, dustiest air, most-worn state) rather than clustering in the easy center like a demo. You design tests to fail the machine, find where it fails, and either fix it or bound the envelope honestly, the difference between a demo and a proof (EI-14/EI-10). Section 6.5.",
+    "section": "6",
+    "fragment": "F-M14-5-adversarial-coverage.svg"
+   },
+   {
     "id": "F-M14-7",
     "title": "Composed-budget acceptance table",
     "desc": "Each verified budget (placement 3sigma, cycle time, power/thermal, grasp success, reliability) is reported with its evidence fidelity rung and a confidence or margin. A budget met only in an unvalidated twin (CEC-06) is reported as a projection, not as field-proven, so every claim carries the rung of evidence beneath it. An honest acceptance table. Section 7.4.",

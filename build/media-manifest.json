@@ -1907,6 +1907,13 @@
     "desc": "The architecture separates a real-time control plane (grasp-force loop M9, drive/stability M10, motion M8, safety monitor) with bounded worst-case latency from a best-effort perception plane (detection M4, localization M5) that tolerates jitter, isolated so a neural network occasionally taking longer cannot delay the force loop. Engineered via executor/thread assignment, priorities, affinity, RTOS. Section 6.3.",
     "section": "6",
     "fragment": "F-M11-2-plane-separation.svg"
+   },
+   {
+    "id": "F-M11-7",
+    "title": "Safety reaction time vs time-to-harm (monitor rate)",
+    "desc": "Seen through the monitor rate: detection latency is roughly one monitor period plus processing, so a faster monitor shrinks it, and the total of detect plus actuator reaction must stay below the time-to-harm (L_detect + L_react <= T_harm), which sets a minimum monitor rate. Physical bounds act at physics speed to buy margin. Complements the M15 reaction-time-margin timeline. Section 7.4.",
+    "section": "7",
+    "fragment": "F-M11-7-reaction-time-rate.svg"
    }
   ]
  },

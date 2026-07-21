@@ -828,68 +828,7 @@ where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.
 <line x1="671.0" y1="330" x2="114" y2="330" stroke="var(--info)" stroke-width="1.2" stroke-dasharray="5 3"/>
 <line x1="114" y1="330" x2="114" y2="304" stroke="var(--info)" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#ahA)"/>
 <text x="661.0" y="324" text-anchor="end" font-size="9" fill="var(--info-text)">allocation: c sets each subsystem's max error budget</text>
-</svg></div><figcaption><span class="fid">F-M1-6</span>Placement error budget: allocation by root-sum-square. The four independent error sources combine by RSS and pass the 3-sigma capture-tolerance gate; the tolerance c allocates a maximum error to each subsystem. Schematic of the section 7.2 result.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cycle-time budget waterfall: eight pick-cycle stages accumulating to 6.6 seconds, exceeding the 3.0 second arrival interval at walking pace." font-family="'IBM Plex Mono',monospace">
-<line x1="58" y1="322.0" x2="710" y2="322.0" stroke="var(--grid-line)" stroke-width="1"/>
-<text x="50" y="325.0" text-anchor="end" font-size="9" fill="var(--text-muted)">0</text>
-<line x1="58" y1="284.0" x2="710" y2="284.0" stroke="var(--grid-line)" stroke-width="1"/>
-<text x="50" y="287.0" text-anchor="end" font-size="9" fill="var(--text-muted)">1</text>
-<line x1="58" y1="246.0" x2="710" y2="246.0" stroke="var(--grid-line)" stroke-width="1"/>
-<text x="50" y="249.0" text-anchor="end" font-size="9" fill="var(--text-muted)">2</text>
-<line x1="58" y1="208.0" x2="710" y2="208.0" stroke="var(--grid-line)" stroke-width="1"/>
-<text x="50" y="211.0" text-anchor="end" font-size="9" fill="var(--text-muted)">3</text>
-<line x1="58" y1="170.0" x2="710" y2="170.0" stroke="var(--grid-line)" stroke-width="1"/>
-<text x="50" y="173.0" text-anchor="end" font-size="9" fill="var(--text-muted)">4</text>
-<line x1="58" y1="132.0" x2="710" y2="132.0" stroke="var(--grid-line)" stroke-width="1"/>
-<text x="50" y="135.0" text-anchor="end" font-size="9" fill="var(--text-muted)">5</text>
-<line x1="58" y1="94.0" x2="710" y2="94.0" stroke="var(--grid-line)" stroke-width="1"/>
-<text x="50" y="97.0" text-anchor="end" font-size="9" fill="var(--text-muted)">6</text>
-<line x1="58" y1="56.0" x2="710" y2="56.0" stroke="var(--grid-line)" stroke-width="1"/>
-<text x="50" y="59.0" text-anchor="end" font-size="9" fill="var(--text-muted)">7</text>
-<text x="18" y="189.0" font-size="9" fill="var(--text-muted)" transform="rotate(-90 18 189.0)" text-anchor="middle">seconds</text>
-<line x1="58" y1="322" x2="710" y2="322" stroke="var(--border-strong)" stroke-width="1.5"/>
-<rect x="74.0" y="310.6" width="44" height="11.4" rx="2" fill="var(--accent-dim)"/>
-<text x="96" y="306.6" text-anchor="middle" font-size="9" fill="var(--text-secondary)">0.3</text>
-<text x="96" y="337" text-anchor="middle" font-size="9" fill="var(--text-muted)">detect</text>
-<line x1="118.0" y1="310.6" x2="148.0" y2="310.6" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="2 2"/>
-<rect x="148.0" y="303.0" width="44" height="7.6" rx="2" fill="var(--accent-dim)"/>
-<text x="170" y="299.0" text-anchor="middle" font-size="9" fill="var(--text-secondary)">0.2</text>
-<text x="170" y="337" text-anchor="middle" font-size="9" fill="var(--text-muted)">plan</text>
-<line x1="192.0" y1="303.0" x2="222.0" y2="303.0" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="2 2"/>
-<rect x="222.0" y="265.0" width="44" height="38.0" rx="2" fill="var(--accent-dim)"/>
-<text x="244" y="261.0" text-anchor="middle" font-size="9" fill="var(--text-secondary)">1.0</text>
-<text x="244" y="337" text-anchor="middle" font-size="9" fill="var(--text-muted)">align</text>
-<line x1="266.0" y1="265.0" x2="296.0" y2="265.0" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="2 2"/>
-<rect x="296.0" y="227.0" width="44" height="38.0" rx="2" fill="var(--accent-dim)"/>
-<text x="318" y="223.0" text-anchor="middle" font-size="9" fill="var(--text-secondary)">1.0</text>
-<text x="318" y="337" text-anchor="middle" font-size="9" fill="var(--text-muted)">grasp</text>
-<line x1="340.0" y1="227.0" x2="370.0" y2="227.0" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="2 2"/>
-<rect x="370.0" y="196.6" width="44" height="30.4" rx="2" fill="var(--accent-dim)"/>
-<text x="392" y="192.6" text-anchor="middle" font-size="9" fill="var(--text-secondary)">0.8</text>
-<text x="392" y="337" text-anchor="middle" font-size="9" fill="var(--text-muted)">lift</text>
-<line x1="414.0" y1="196.6" x2="444.0" y2="196.6" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="2 2"/>
-<rect x="444.0" y="139.6" width="44" height="57.0" rx="2" fill="var(--warn)"/>
-<text x="466" y="135.6" text-anchor="middle" font-size="9" fill="var(--text-secondary)">1.5</text>
-<text x="466" y="337" text-anchor="middle" font-size="9" fill="var(--warn-text)">transfer</text>
-<line x1="488.0" y1="139.6" x2="518.0" y2="139.6" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="2 2"/>
-<rect x="518.0" y="109.2" width="44" height="30.4" rx="2" fill="var(--accent-dim)"/>
-<text x="540" y="105.2" text-anchor="middle" font-size="9" fill="var(--text-secondary)">0.8</text>
-<text x="540" y="337" text-anchor="middle" font-size="9" fill="var(--text-muted)">place</text>
-<line x1="562.0" y1="109.2" x2="592.0" y2="109.2" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="2 2"/>
-<rect x="592.0" y="71.2" width="44" height="38.0" rx="2" fill="var(--accent-dim)"/>
-<text x="614" y="67.2" text-anchor="middle" font-size="9" fill="var(--text-secondary)">1.0</text>
-<text x="614" y="337" text-anchor="middle" font-size="9" fill="var(--text-muted)">return</text>
-<text x="466" y="102.7" text-anchor="middle" font-size="8" fill="var(--text-on-accent)" font-weight="700">DOM</text>
-<rect x="666.0" y="71.2" width="44" height="250.8" rx="2" fill="var(--accent)"/>
-<text x="688" y="67.2" text-anchor="middle" font-size="10" fill="var(--accent)" font-weight="700">6.6</text>
-<text x="688" y="337" text-anchor="middle" font-size="9" fill="var(--text-secondary)" font-weight="700">total</text>
-<line x1="636.0" y1="71.2" x2="666.0" y2="71.2" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="2 2"/>
-<line x1="58" y1="208.0" x2="710" y2="208.0" stroke="var(--danger)" stroke-width="1.5" stroke-dasharray="6 3"/>
-<rect x="470" y="183.0" width="238" height="19" rx="3" fill="var(--surface-2)" stroke="var(--danger-dim)"/>
-<text x="479" y="197.0" font-size="9" fill="var(--danger-text)">arrival interval at 0.4 m/s = 3.0 s</text>
-<text x="58" y="26" font-size="10" fill="var(--text-primary)" font-weight="700">Single end-effector, drive-over pick cycle</text>
-<text x="58" y="40" font-size="9" fill="var(--text-muted)">total 6.6 s &gt; 3.0 s interval, so a single arm is feasible only at v &lt;= 0.18 m/s (below walking pace)</text>
-<text x="58" y="388" font-size="8" fill="var(--text-muted)">Illustrative stage times [VERIFY@PUB]; the point is the structural gap that motivates parallelism (TS-1), not the exact seconds.</text>
-</svg></div><figcaption><span class="fid">F-M1-5</span>The cycle-time budget (throughput feasibility). A waterfall of the single-arm drive-over pick cycle: the stage times (detect, plan, align, grasp, lift, transfer, place, return) accumulate past the fruit-arrival interval at walking pace, so one end-effector is feasible only well below walking pace. The structural gap (not the exact illustrative seconds) is what motivates parallelism (TS-1). Section 7.1.</figcaption></figure></section>
+</svg></div><figcaption><span class="fid">F-M1-6</span>Placement error budget: allocation by root-sum-square. The four independent error sources combine by RSS and pass the 3-sigma capture-tolerance gate; the tolerance c allocates a maximum error to each subsystem. Schematic of the section 7.2 result.</figcaption></figure></section>
 <section class="section"><h2 id="sec-8-engineering-principles"><span class="secnum">8</span><span class="sectitle">Engineering Principles</span></h2><p>Distilled, reusable principles this module establishes:</p>
 <ol>
 <li><strong>Decompose by function, then choose form.</strong> Partition by the flow of information/action; defer component choice so it can be traded.</li>

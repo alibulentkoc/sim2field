@@ -2576,6 +2576,13 @@
     "fragment": "F-M15-2-stored-energy-domains.svg"
    },
    {
+    "id": "F-M15-6",
+    "title": "Responsible-deployment considerations",
+    "desc": "Responsible deployment weighs considerations engineering evidence cannot settle: labor displacement and who bears the cost, worker safety for people who share the field, environmental footprint (->M16), data ownership and accountability, dual-use and distributive effects between small and large growers, and the humility to bound where the machine should not operate (bounding out is a design decision). The safety case states residual risk honestly (EI-15). Section 6.8.",
+    "section": "6",
+    "fragment": "F-M15-6-responsible-deployment.svg"
+   },
+   {
     "id": "F-M15-5",
     "title": "Reaction-time margin: physics vs software speed",
     "desc": "After a hazard begins, the software path must detect and react before the time-to-harm deadline (L_detect + L_react <= T_harm), while the physical bounds (mechanical relief M9, passive compliance EI-09) act at physics speed, near-instantly, buying margin the software path cannot guarantee alone. M11 Section 7.4; M15 Section 6.4.",

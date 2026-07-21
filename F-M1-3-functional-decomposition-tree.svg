@@ -1,0 +1,66 @@
+<svg viewBox="0 0 760 386" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Functional decomposition tree: the mission decomposes into Perceive, Decide, and Act, bound by Integrate and Deploy, each with its subfunctions from Section 6.4." font-family="'IBM Plex Mono',monospace">
+<rect x="8" y="167.0" width="132" height="52" rx="10" fill="var(--surface-2)" stroke="var(--accent)" stroke-width="1.5"/>
+<text x="74" y="189.0" text-anchor="middle" font-size="11" fill="var(--accent)" font-weight="700" font-family="'Space Grotesk',sans-serif">Harvest fruit</text>
+<text x="74" y="203.0" text-anchor="middle" font-size="8.5" fill="var(--text-muted)">autonomously</text>
+<line x1="140" y1="193.0" x2="194" y2="65.0" stroke="var(--border-strong)" stroke-width="1.2"/>
+<rect x="196" y="49.0" width="120" height="32" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="256.0" y="70.0" text-anchor="middle" font-size="13" fill="var(--accent)" font-weight="700" font-family="'Space Grotesk',sans-serif">PERCEIVE</text>
+<path d="M316,65.0 C334,65.0 346,53.5 352,53.5" fill="none" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="3 3"/>
+<rect x="352" y="44.0" width="178" height="19" rx="5" fill="var(--surface)" stroke="var(--border)"/>
+<text x="362" y="57.0" font-size="9.5" fill="var(--text-secondary)">detect fruit</text>
+<path d="M316,65.0 C334,65.0 346,76.5 352,76.5" fill="none" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="3 3"/>
+<rect x="352" y="67.0" width="178" height="19" rx="5" fill="var(--surface)" stroke="var(--border)"/>
+<text x="362" y="80.0" font-size="9.5" fill="var(--text-secondary)">localize (3-D)</text>
+<line x1="140" y1="193.0" x2="194" y2="111.0" stroke="var(--border-strong)" stroke-width="1.2"/>
+<rect x="196" y="95.0" width="120" height="32" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="256.0" y="116.0" text-anchor="middle" font-size="13" fill="var(--accent)" font-weight="700" font-family="'Space Grotesk',sans-serif">DECIDE</text>
+<path d="M316,111.0 C334,111.0 346,99.5 352,99.5" fill="none" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="3 3"/>
+<rect x="352" y="90.0" width="178" height="19" rx="5" fill="var(--surface)" stroke="var(--border)"/>
+<text x="362" y="103.0" font-size="9.5" fill="var(--text-secondary)">plan the pick</text>
+<path d="M316,111.0 C334,111.0 346,122.5 352,122.5" fill="none" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="3 3"/>
+<rect x="352" y="113.0" width="178" height="19" rx="5" fill="var(--surface)" stroke="var(--border)"/>
+<text x="362" y="126.0" font-size="9.5" fill="var(--text-secondary)">plan the grasp</text>
+<line x1="140" y1="193.0" x2="194" y2="191.5" stroke="var(--border-strong)" stroke-width="1.2"/>
+<rect x="196" y="175.5" width="120" height="32" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="256.0" y="196.5" text-anchor="middle" font-size="13" fill="var(--accent)" font-weight="700" font-family="'Space Grotesk',sans-serif">ACT</text>
+<path d="M316,191.5 C334,191.5 346,145.5 352,145.5" fill="none" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="3 3"/>
+<rect x="352" y="136.0" width="178" height="19" rx="5" fill="var(--surface)" stroke="var(--border)"/>
+<text x="362" y="149.0" font-size="9.5" fill="var(--text-secondary)">position</text>
+<path d="M316,191.5 C334,191.5 346,168.5 352,168.5" fill="none" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="3 3"/>
+<rect x="352" y="159.0" width="178" height="19" rx="5" fill="var(--surface)" stroke="var(--border)"/>
+<text x="362" y="172.0" font-size="9.5" fill="var(--text-secondary)">grasp</text>
+<path d="M316,191.5 C334,191.5 346,191.5 352,191.5" fill="none" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="3 3"/>
+<rect x="352" y="182.0" width="178" height="19" rx="5" fill="var(--surface)" stroke="var(--border)"/>
+<text x="362" y="195.0" font-size="9.5" fill="var(--text-secondary)">lift</text>
+<path d="M316,191.5 C334,191.5 346,214.5 352,214.5" fill="none" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="3 3"/>
+<rect x="352" y="205.0" width="178" height="19" rx="5" fill="var(--surface)" stroke="var(--border)"/>
+<text x="362" y="218.0" font-size="9.5" fill="var(--text-secondary)">transfer</text>
+<path d="M316,191.5 C334,191.5 346,237.5 352,237.5" fill="none" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="3 3"/>
+<rect x="352" y="228.0" width="178" height="19" rx="5" fill="var(--surface)" stroke="var(--border)"/>
+<text x="362" y="241.0" font-size="9.5" fill="var(--text-secondary)">release</text>
+<line x1="140" y1="193.0" x2="194" y2="295.0" stroke="var(--border-strong)" stroke-width="1.2"/>
+<rect x="196" y="279.0" width="120" height="32" rx="8" fill="var(--surface)" stroke="var(--accent-2)" stroke-width="1.4"/>
+<text x="256.0" y="300.0" text-anchor="middle" font-size="13" fill="var(--accent-2)" font-weight="700" font-family="'Space Grotesk',sans-serif">INTEGRATE</text>
+<path d="M316,295.0 C334,295.0 346,260.5 352,260.5" fill="none" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="3 3"/>
+<rect x="352" y="251.0" width="178" height="19" rx="5" fill="var(--surface)" stroke="var(--border)"/>
+<text x="362" y="264.0" font-size="9.5" fill="var(--text-secondary)">power</text>
+<path d="M316,295.0 C334,295.0 346,283.5 352,283.5" fill="none" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="3 3"/>
+<rect x="352" y="274.0" width="178" height="19" rx="5" fill="var(--surface)" stroke="var(--border)"/>
+<text x="362" y="287.0" font-size="9.5" fill="var(--text-secondary)">compute</text>
+<path d="M316,295.0 C334,295.0 346,306.5 352,306.5" fill="none" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="3 3"/>
+<rect x="352" y="297.0" width="178" height="19" rx="5" fill="var(--surface)" stroke="var(--border)"/>
+<text x="362" y="310.0" font-size="9.5" fill="var(--text-secondary)">safety</text>
+<path d="M316,295.0 C334,295.0 346,329.5 352,329.5" fill="none" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="3 3"/>
+<rect x="352" y="320.0" width="178" height="19" rx="5" fill="var(--surface)" stroke="var(--border)"/>
+<text x="362" y="333.0" font-size="9.5" fill="var(--text-secondary)">real-time comms</text>
+<line x1="140" y1="193.0" x2="194" y2="352.5" stroke="var(--border-strong)" stroke-width="1.2"/>
+<rect x="196" y="336.5" width="120" height="32" rx="8" fill="var(--surface)" stroke="var(--accent-2)" stroke-width="1.4"/>
+<text x="256.0" y="357.5" text-anchor="middle" font-size="13" fill="var(--accent-2)" font-weight="700" font-family="'Space Grotesk',sans-serif">DEPLOY</text>
+<path d="M316,352.5 C334,352.5 346,352.5 352,352.5" fill="none" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="3 3"/>
+<rect x="352" y="343.0" width="178" height="19" rx="5" fill="var(--surface)" stroke="var(--border)"/>
+<text x="362" y="356.0" font-size="9.5" fill="var(--text-secondary)">the machine as one system</text>
+<rect x="556" y="42" width="12" height="12" rx="3" fill="none" stroke="var(--accent)"/>
+<text x="573" y="52" font-size="9" fill="var(--text-muted)">primary flow</text>
+<rect x="556" y="62" width="12" height="12" rx="3" fill="none" stroke="var(--accent-2)"/>
+<text x="573" y="72" font-size="9" fill="var(--text-muted)">binding function</text>
+</svg>

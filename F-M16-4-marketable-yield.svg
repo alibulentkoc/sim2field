@@ -1,0 +1,29 @@
+<svg viewBox="0 0 760 265" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Marketable-yield value: gross yield per acre is eroded by the bruise-and-damage rate and the missed-fruit rate into marketable yield, which times price gives revenue per acre, and subtracting cost per acre gives net value; a percentage point of bruise rate is a direct revenue loss, so quality is economics." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Marketable yield to revenue</text>
+<rect x="130" y="76.7" width="90" height="133.3" rx="3" fill="var(--accent)" fill-opacity="0.55" stroke="var(--accent)"/>
+<text x="175.0" y="224" font-size="7.2" fill="var(--text-secondary)" font-weight="700" text-anchor="middle">gross yield</text>
+<rect x="260" y="76.7" width="90" height="18.7" rx="3" fill="var(--danger)" fill-opacity="0.55" stroke="var(--danger)"/>
+<text x="305.0" y="224" font-size="7.2" fill="var(--text-secondary)" font-weight="700" text-anchor="middle">- bruise loss</text>
+<text x="305.0" y="235" font-size="5.8" fill="var(--text-muted)" text-anchor="middle">damage rate (M9/CEC-02)</text>
+<line x1="220" y1="76.7" x2="260" y2="76.7" stroke="var(--text-muted)" stroke-width="0.8" stroke-dasharray="3 2"/>
+<rect x="390" y="95.3" width="90" height="14.7" rx="3" fill="var(--warn)" fill-opacity="0.55" stroke="var(--warn)"/>
+<text x="435.0" y="224" font-size="7.2" fill="var(--text-secondary)" font-weight="700" text-anchor="middle">- miss loss</text>
+<text x="435.0" y="235" font-size="5.8" fill="var(--text-muted)" text-anchor="middle">missed-fruit rate (recall, M4)</text>
+<line x1="350" y1="95.3" x2="390" y2="95.3" stroke="var(--text-muted)" stroke-width="0.8" stroke-dasharray="3 2"/>
+<rect x="520" y="110.0" width="90" height="100.0" rx="3" fill="var(--accent-strong)" fill-opacity="0.55" stroke="var(--accent-strong)"/>
+<text x="565.0" y="224" font-size="7.2" fill="var(--text-secondary)" font-weight="700" text-anchor="middle">marketable</text>
+<text x="565.0" y="235" font-size="5.8" fill="var(--text-muted)" text-anchor="middle">x price = revenue/acre</text>
+<line x1="480" y1="110.0" x2="520" y2="110.0" stroke="var(--text-muted)" stroke-width="0.8" stroke-dasharray="3 2"/>
+<line x1="110" y1="210" x2="710" y2="210" stroke="var(--border-strong)" stroke-width="1.2"/>
+<rect x="520" y="70" width="222" height="120" rx="9" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.6"/>
+<text x="534" y="90" font-size="8.2" fill="var(--accent)" font-weight="700">revenue / acre =</text>
+<text x="534" y="104" font-size="7" fill="var(--text-secondary)">yield x (1 - loss rate) x price</text>
+<text x="534" y="124" font-size="8" fill="var(--text-primary)" font-weight="700">net value / acre =</text>
+<text x="534" y="138" font-size="7" fill="var(--text-secondary)">revenue/acre - cost/acre</text>
+<text x="534" y="160" font-size="7" fill="var(--warn-text)">1 point of bruise rate</text>
+<text x="534" y="171" font-size="7" fill="var(--warn-text)">= a direct revenue loss.</text>
+<text x="534" y="183" font-size="7.2" fill="var(--accent)" font-weight="700">Quality is economics.</text>
+<text x="20" y="244" font-size="7.8" fill="var(--text-muted)">A bruised melon is a harvested melon that earns nothing; loss rate combines the bruise/damage rate (M9) and the missed-fruit rate (recall, M4).</text>
+<text x="20" y="256" font-size="7.8" fill="var(--text-muted)">Illustrative rates. Section 7.2.</text>
+</svg>

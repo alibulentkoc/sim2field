@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0e120d">
+<title>The Signal-to-Action Spine - Worked Example (CEC-01)</title>
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<style>
+  /* ================= THEME DEFINITION - the ONLY place raw color values live ================= */
+  :root{
+    color-scheme: dark;
+    --bg:#0e120d; --surface:#161c14; --surface-2:#0b0e0a; --surface-3:#12160f;
+    --border:#2b3527; --border-strong:#3a4633; --grid-line:#1c231a;
+    --text-primary:#eef2e6; --text-secondary:#c8cfbe; --text-muted:#adb4a2;
+    --text-lede:#c9d0bf; --text-cons:#d4dbc9; --text-on-accent:#0e120d;
+    --accent:#9bcf3b; --accent-dim:#86ba35; --accent-strong:#6f9a2c;
+    --danger:#f0556a; --danger-text:#f697a4; --danger-dim:#b93b4c;
+    --warn:#e0a03b; --info:#6fb0d9; --accent-2:#b98bd9; --marker:#ffffff;
+    /* mission-FSM stage palette */
+    --stage-drive:#7fb0a0; --stage-stage:#6fb0d9; --stage-align:#9bcf3b; --stage-grab:#c9e06a;
+    --stage-lift:#b98bd9; --stage-swing:#f0556a; --stage-lower:#e0a03b; --stage-release:#d98b8b;
+    /* tints */
+    --tint-accent:rgba(155,207,59,.07); --tint-accent-soft:rgba(155,207,59,.05); --tint-hero:rgba(155,207,59,.06);
+    --tint-danger:rgba(240,85,106,.08); --tint-warn:rgba(224,160,59,.08);
+    --status-ok-text:#d0d7c6; --status-warn-text:#eed9b4; --status-danger-text:#f3ccd2;
+    --font-sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --font-display:'Space Grotesk',var(--font-sans);
+  }
+  /* ========================================================================================== */
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{background:var(--bg); color:var(--text-primary); -webkit-text-size-adjust:100%; text-size-adjust:100%; scroll-behavior:smooth}
+  body{background:var(--bg); color:var(--text-primary); font-family:var(--font-sans);
+    line-height:1.7; -webkit-font-smoothing:antialiased; padding:0 0 6rem; letter-spacing:.002em}
+  .wrap{max-width:820px; margin:0 auto; padding:0 1.6rem; background:var(--bg); color:var(--text-primary)}
+  code,.mono,.num{font-family:var(--font-mono); font-variant-numeric:tabular-nums}
+  a{color:var(--accent)}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+  .katex{font-size:1.06em}
+  .katex-display{margin:0}
+  .eq{background:var(--surface-3); color:var(--text-primary); border:1px solid var(--border); border-radius:10px;
+    padding:1.15rem 1.3rem; margin:1.15rem 0; overflow-x:auto; overflow-y:hidden}
+  .eq .katex-display{margin:0}
+
+  header{background:var(--bg); color:var(--text-primary); border-bottom:1px solid var(--border); padding:3.6rem 0 2.6rem; margin-bottom:2.6rem}
+  .eyebrow{font-family:var(--font-mono); font-size:.73rem; font-weight:500; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--accent); margin-bottom:1.15rem; display:flex; gap:.85rem; flex-wrap:wrap}
+  .eyebrow span{color:var(--text-muted)}
+  h1{font-family:var(--font-display); font-weight:600; font-size:clamp(2rem,5vw,3rem);
+    line-height:1.05; letter-spacing:-.021em; margin-bottom:1.05rem; color:var(--text-primary)}
+  h1 em{font-style:normal; color:var(--accent)}
+  .lede{font-size:1.08rem; color:var(--text-lede); max-width:64ch}
+
+  .hero{position:relative; margin:2.4rem 0 .6rem; padding:2.2rem 1.6rem 1.9rem; isolation:isolate}
+  .hero-bg{position:absolute; inset:0; width:100%; height:100%; z-index:-1}
+  .hero-inner{position:relative; text-align:center}
+  .hero-tab{display:inline-block; font-family:var(--font-mono); font-size:.66rem; font-weight:500; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--accent); background:var(--bg); padding:.28rem .7rem;
+    border:1px solid var(--accent-strong); border-radius:5px; margin-bottom:1.2rem}
+  .hero-eq{margin:.4rem 0 1rem}
+  .hero-eq .katex{font-size:1.3em}
+  .hero-sub{font-size:.92rem; color:var(--text-muted); max-width:54ch; margin:0 auto}
+
+  section{margin-top:3.4rem}
+  .kicker{font-family:var(--font-mono); font-size:.71rem; font-weight:500; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--accent-dim); margin-bottom:.7rem}
+  h2{font-family:var(--font-display); font-weight:600; font-size:1.55rem; letter-spacing:-.012em; margin-bottom:1rem; color:var(--text-primary)}
+  p{margin-bottom:1.05rem; color:var(--text-secondary)} strong{color:var(--text-primary); font-weight:600}
+  .rind-t{color:var(--accent)} .flesh-t{color:var(--danger-text)} .amber-t{color:var(--warn)} .water-t{color:var(--info)}
+  .note{font-size:.86rem; color:var(--text-muted)}
+
+  .spine{display:flex; flex-wrap:wrap; gap:.4rem; margin:1.2rem 0}
+  .spine .node{flex:1; min-width:88px; background:var(--surface-2); color:var(--text-secondary); border:1px solid var(--border);
+    border-radius:9px; padding:.7rem .6rem; text-align:center}
+  .spine .node .ph{font-family:var(--font-mono); font-size:.62rem; font-weight:500; letter-spacing:.08em; text-transform:uppercase; color:var(--accent-dim); margin-bottom:.3rem}
+  .spine .node .nm{font-family:var(--font-display); font-weight:600; font-size:.9rem; color:var(--text-primary)}
+  .spine .node .mod{font-family:var(--font-mono); font-size:.6rem; color:var(--text-muted); margin-top:.15rem}
+  .spine .arrow{align-self:center; color:var(--text-muted); font-family:var(--font-mono)}
+
+  .dstep{margin:2rem 0; padding-left:1.5rem; border-left:2px solid var(--border); position:relative}
+  .dstep::before{content:attr(data-n); position:absolute; left:-.9rem; top:-.1rem;
+    font-family:var(--font-mono); font-size:.7rem; font-weight:600; color:var(--text-on-accent);
+    background:var(--accent-strong); width:1.6rem; height:1.6rem; border-radius:50%; display:grid; place-items:center}
+  .d-state{font-family:var(--font-display); font-weight:500; font-size:1.12rem; color:var(--text-primary); margin-bottom:.2rem; line-height:1.4}
+  .d-exp{color:var(--text-secondary); margin:.9rem 0}
+  .d-exp .hot{color:var(--danger-text); font-weight:600}
+  .d-cons{display:flex; gap:.7rem; align-items:flex-start; margin-top:.9rem; padding:.75rem .95rem;
+    background:var(--tint-accent-soft); border:1px solid var(--accent-strong); border-radius:8px}
+  .d-cons .lab{font-family:var(--font-mono); font-size:.63rem; font-weight:500; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--accent); flex:none; margin-top:.18rem}
+  .d-cons p{margin:0; color:var(--text-cons); font-size:.94rem}
+
+  .insight{border:1px solid var(--accent-strong); border-radius:12px; padding:1.4rem 1.6rem; margin-top:1.6rem;
+    background:linear-gradient(180deg,var(--tint-hero),transparent)}
+  .insight .tag{font-family:var(--font-mono); font-size:.72rem; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin-bottom:.55rem}
+  .insight p{color:var(--text-cons); margin-bottom:0} .insight strong{color:var(--accent)}
+  .takeaway{border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:12px; padding:1.5rem 1.7rem; background:var(--surface)}
+  .tk-list{list-style:none}
+  .tk-list li{display:flex; gap:.85rem; align-items:flex-start; padding:.6rem 0; color:var(--text-secondary); border-bottom:1px solid var(--border)}
+  .tk-list li:last-child{border-bottom:none; padding-top:.95rem}
+  .tk-mark{font-family:var(--font-mono); color:var(--text-muted); flex:none; margin-top:.1rem}
+  .tk-mark.tk-hot{color:var(--accent)} .tk-list strong{color:var(--text-primary)}
+  footer{margin-top:4rem; padding-top:1.6rem; border-top:1px solid var(--border);
+    font-family:var(--font-mono); font-size:.74rem; color:var(--text-muted); line-height:1.85}
+
+  @media(max-width:640px){ .spine .node{min-width:70px} }
+  @media(prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <header>
+    <div class="eyebrow">Foundational Concept <span>/</span> CEC-01 <span>/</span> Module 1 <span>/</span> The Signal-to-Action Spine</div>
+    <h1>One machine turns a camera frame into a <em>grasped fruit</em>.</h1>
+    <p class="lede">Everything the harvester does is one loop: perceive, decide, act - bound by integrate and deploy. Every module you have studied advances one stage of that loop, and every subsystem exists because the loop requires it. The budget that ties it together is time: each fruit must be fully handled before the next one arrives. Here is that loop, timed, and the tension it exposes.</p>
+
+    <div class="hero">
+      <svg class="hero-bg" viewBox="0 0 800 230" preserveAspectRatio="none" role="presentation" aria-hidden="true" focusable="false">
+        <defs>
+          <pattern id="grid" width="26" height="26" patternUnits="userSpaceOnUse">
+            <path d="M26 0H0V26" fill="none" style="stroke:var(--grid-line)" stroke-width="1" vector-effect="non-scaling-stroke"/>
+          </pattern>
+        </defs>
+        <rect x="6" y="6" width="788" height="218" rx="12" style="fill:var(--surface-3)"/>
+        <rect x="6" y="6" width="788" height="218" rx="12" fill="url(#grid)" opacity="0.5"/>
+        <rect x="6" y="6" width="788" height="218" rx="12" fill="none" style="stroke:var(--border)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M20 6V22 M6 20H22" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M780 6V22 M778 20H794" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M20 224V208 M6 210H22" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M780 224V208 M778 210H794" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+      </svg>
+      <div class="hero-inner">
+        <div class="hero-tab">Governing relation</div>
+        <div class="hero-eq" role="math" aria-label="T cycle less than or equal to T arrival equals d over v; therefore v less than or equal to d over T cycle"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>T</mi><mrow><mi mathvariant="normal">c</mi><mi mathvariant="normal">y</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">e</mi></mrow></msub><mo>≤</mo><msub><mi>T</mi><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">v</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">l</mi></mrow></msub><mo>=</mo><mfrac><mi>d</mi><mi>v</mi></mfrac><mspace width="1em"/><mo>⟹</mo><mspace width="1em"/><mi>v</mi><mo>≤</mo><mfrac><mi>d</mi><msub><mi>T</mi><mrow><mi mathvariant="normal">c</mi><mi mathvariant="normal">y</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">e</mi></mrow></msub></mfrac></mrow><annotation encoding="application/x-tex">T_{\mathrm{cycle}} \le T_{\mathrm{arrival}} = \frac{d}{v} \quad\Longrightarrow\quad v \le \frac{d}{T_{\mathrm{cycle}}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathrm mtight">cycle</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathrm mtight">arrival</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0574em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">v</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">⟹</span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.3435em;vertical-align:-0.9721em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathrm mtight">cycle</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9721em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div>
+        <div class="hero-sub">Each fruit must be fully handled before the next arrives - so the cycle time caps the rover speed.</div>
+      </div>
+    </div>
+  </header>
+
+  <section id="spine" aria-labelledby="spine-h">
+    <div class="kicker">The spine - perceive, decide, act</div>
+    <h2 id="spine-h">The mission loop, stage by stage</h2>
+    <p>The harvester decomposes by <strong>function</strong>, not by part. Each stage of the mission FSM is owned by a module you have already met - the worked examples for perception, placement, reach, and grip are the four stations of this one loop.</p>
+    <div class="spine">
+      <div class="node"><div class="ph">perceive</div><div class="nm">ALIGN</div><div class="mod">M4 / M5</div></div>
+      <div class="arrow" aria-hidden="true">-&gt;</div>
+      <div class="node"><div class="ph">act</div><div class="nm">GRAB</div><div class="mod">M9</div></div>
+      <div class="arrow" aria-hidden="true">-&gt;</div>
+      <div class="node"><div class="ph">act</div><div class="nm">LIFT / SWING</div><div class="mod">M8</div></div>
+      <div class="arrow" aria-hidden="true">-&gt;</div>
+      <div class="node"><div class="ph">act</div><div class="nm">LOWER / RELEASE</div><div class="mod">M8 / M9</div></div>
+    </div>
+    <p class="note">Framed by DRIVE and STAGE (the platform, M10) at the front, and by Integrate and Deploy (M13, M17) around the whole.</p>
+  </section>
+
+  <section id="derivation" aria-labelledby="deriv-h">
+    <div class="kicker">Full derivation - the cycle-time budget</div>
+    <h2 id="deriv-h">Why time is the binding constraint</h2>
+
+    <div class="dstep" data-n="1">
+      <div class="d-state">The whole pick cycle must finish before the next fruit arrives.</div>
+      <div class="eq"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>T</mi><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">v</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">l</mi></mrow></msub><mo>=</mo><mfrac><mi>d</mi><mi>v</mi></mfrac><mspace width="2em"/><msub><mi>T</mi><mrow><mi mathvariant="normal">c</mi><mi mathvariant="normal">y</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">e</mi></mrow></msub><mo>≤</mo><msub><mi>T</mi><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">v</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">l</mi></mrow></msub></mrow><annotation encoding="application/x-tex">T_{\mathrm{arrival}} = \frac{d}{v} \qquad T_{\mathrm{cycle}} \le T_{\mathrm{arrival}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathrm mtight">arrival</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0574em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">v</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:2em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathrm mtight">cycle</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathrm mtight">arrival</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></div>
+      <p class="d-exp">The arrival interval <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>T</mi><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">v</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">l</mi></mrow></msub><mo>=</mo><mi>d</mi><mi mathvariant="normal">/</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">T_{\mathrm{arrival}} = d/v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathrm mtight">arrival</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span></span></span></span> is the time between fruit reaching the station. The whole pick cycle must finish inside it, or the machine falls behind and fruit passes unpicked.</p>
+      <div class="d-cons"><span class="lab">Consequence</span><p><strong>Time is the binding constraint</strong> that ties the spine together - one number every subsystem is measured against.</p></div>
+    </div>
+
+    <div class="dstep" data-n="2">
+      <div class="d-state">Sum the mission-FSM stage times to size the cycle.</div>
+      <div class="eq"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>T</mi><mrow><mi mathvariant="normal">c</mi><mi mathvariant="normal">y</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">e</mi></mrow></msub><mo>=</mo><mn>0.3</mn><mo>+</mo><mn>0.2</mn><mo>+</mo><mn>1.0</mn><mo>+</mo><mn>1.0</mn><mo>+</mo><mn>0.8</mn><mo>+</mo><mn>1.5</mn><mo>+</mo><mn>0.8</mn><mo>+</mo><mn>1.0</mn><mo>=</mo><mn>6.6</mn><mtext> </mtext><mi mathvariant="normal">s</mi></mrow><annotation encoding="application/x-tex">T_{\mathrm{cycle}} = 0.3 + 0.2 + 1.0 + 1.0 + 0.8 + 1.5 + 0.8 + 1.0 = 6.6\ \mathrm{s}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathrm mtight">cycle</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">0.3</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">0.2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">1.0</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">1.0</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">0.8</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">1.5</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">0.8</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1.0</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">6.6</span><span class="mspace"> </span><span class="mord mathrm">s</span></span></span></span></span></div>
+      <p class="d-exp">Adding the stage times (illustrative, Module 1 Sec. 7.1): DRIVE 0.3 + STAGE 0.2 + ALIGN 1.0 + GRAB 1.0 + LIFT 0.8 + <span class="hot">SWING 1.5</span> + LOWER 0.8 + RELEASE 1.0. The dominant stage is <span class="hot">SWING</span> at 1.5 s - the transfer swing that moves the fruit from vine to bin.</p>
+      <div class="d-cons"><span class="lab">Consequence</span><p>The sum reveals feasibility and <strong>names the stage to attack first</strong> (EI-05): SWING carries the most time.</p></div>
+    </div>
+
+    <div class="dstep" data-n="3">
+      <div class="d-state">The constraint bites: the cycle time caps the rover speed.</div>
+      <div class="eq"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>v</mi><mo>≤</mo><mfrac><mi>d</mi><msub><mi>T</mi><mrow><mi mathvariant="normal">c</mi><mi mathvariant="normal">y</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">e</mi></mrow></msub></mfrac><mo>=</mo><mfrac><mn>1.2</mn><mn>6.6</mn></mfrac><mo>=</mo><mn>0.18</mn><mtext> </mtext><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><mi mathvariant="normal">s</mi></mrow></mrow><annotation encoding="application/x-tex">v \le \frac{d}{T_{\mathrm{cycle}}} = \frac{1.2}{6.6} = 0.18\ \mathrm{m/s}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.3435em;vertical-align:-0.9721em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathrm mtight">cycle</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9721em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0074em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">6.6</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1.2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0.18</span><span class="mspace"> </span><span class="mord"><span class="mord mathrm">m/s</span></span></span></span></span></span></div>
+      <p class="d-exp">The ratified target is <strong><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>≤</mo><mn>0.20</mn><mtext> </mtext><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">/</mi><mi mathvariant="normal">s</mi></mrow></mrow><annotation encoding="application/x-tex">v \le 0.20\ \mathrm{m/s}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0.20</span><span class="mspace"> </span><span class="mord"><span class="mord mathrm">m/s</span></span></span></span></span></strong> at <strong><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>T</mi><mrow><mi mathvariant="normal">c</mi><mi mathvariant="normal">y</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">e</mi></mrow></msub><mo>≤</mo><mn>6.0</mn><mtext> </mtext><mi mathvariant="normal">s</mi></mrow><annotation encoding="application/x-tex">T_{\mathrm{cycle}} \le 6.0\ \mathrm{s}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathrm mtight">cycle</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">6.0</span><span class="mspace"> </span><span class="mord mathrm">s</span></span></span></span></strong> (Doc B). The naive single-arm cycle (6.6 s) forces the rover <em>below</em> the target - the budget did not describe a design, it <strong>constrained</strong> one and exposed a tension.</p>
+      <div class="d-cons"><span class="lab">Consequence</span><p>The levers: attack the dominant stage (SWING), or change the architecture (a second arm, buffering, a faster transfer). <strong>Modules 8-10 and the capstone exist to resolve exactly this.</strong></p></div>
+    </div>
+  </section>
+
+  <section id="instrument" aria-labelledby="inst-h">
+    <div class="kicker">The cycle, live - resolve the tension</div>
+    <h2 id="inst-h">Fit the loop inside the budget</h2>
+    <p>The timeline below is the mission cycle, stage by stage, against the <span class="rind-t">6-second budget line</span>. Attack the dominant <span class="flesh-t">SWING</span> stage with a faster transfer, or add a second arm to parallelize the pick - and watch the cycle time, the rover speed, and the throughput respond.</p>
+
+    <!-- CEC-01 embeddable fragment: the mission cycle-time budget interactive only.
+     No page chrome, no hero, no derivation, no concept prose (the chapter owns
+     those). Self-contained: scoped styles under .wx-embed, a container-scoped
+     script, and semantic tokens resolved from the host :root. Inlined by the
+     module renderer at the concept anchor; the standalone worked example remains
+     the full-page target. ASCII only. -->
+<section class="wx-embed" data-wx="cec01-spine" aria-label="Interactive: mission cycle-time budget">
+<style>
+  .wx-embed .instrument{background:var(--surface);color:var(--text-secondary);border:1px solid var(--border);border-radius:14px;padding:1.7rem;margin:0}
+  .wx-embed .inst-head{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap;margin-bottom:1.3rem}
+  .wx-embed .inst-title{font-family:var(--font-display);font-weight:600;font-size:1.05rem;color:var(--text-primary)}
+  .wx-embed .reset{font-family:var(--font-mono);font-size:.75rem;font-weight:500;color:var(--accent);background:transparent;border:1px solid var(--accent-strong);border-radius:6px;padding:.5rem .85rem;cursor:pointer;transition:.15s}
+  .wx-embed .reset:hover{background:var(--accent-strong);color:var(--text-on-accent)}
+  .wx-embed .noscript-note{background:var(--tint-warn);color:var(--status-warn-text);border:1px solid var(--warn);border-radius:8px;padding:.8rem 1rem;font-size:.86rem;margin-bottom:1rem}
+  .wx-embed .timeline{position:relative;height:60px;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;display:flex;overflow:visible;margin-top:.3rem}
+  .wx-embed .tstage{height:100%;position:relative;transition:width .35s cubic-bezier(.4,0,.2,1);min-width:0;display:flex;align-items:center;justify-content:center;border-right:1px solid var(--surface-2)}
+  .wx-embed .tstage.dom{outline:2px solid var(--marker);outline-offset:-2px;z-index:2}
+  .wx-embed .tstage .tn{font-family:var(--font-mono);font-size:.58rem;color:var(--text-on-accent);font-weight:600;white-space:nowrap;opacity:0}
+  .wx-embed .tstage.wide .tn{opacity:1}
+  .wx-embed .budget-line{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--accent-strong);z-index:5}
+  .wx-embed .budget-line .tag{position:absolute;top:-18px;transform:translateX(-50%);font-family:var(--font-mono);font-size:.62rem;font-weight:500;color:var(--accent);white-space:nowrap}
+  .wx-embed .controls{display:flex;gap:1.4rem;flex-wrap:wrap;margin:1.3rem 0}
+  .wx-embed .ctl-group{display:flex;flex-direction:column;gap:.4rem;min-width:180px}
+  .wx-embed .ctl-group .lbl{font-family:var(--font-mono);font-size:.68rem;font-weight:500;letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted)}
+  .wx-embed .ctl-group .lbl b{color:var(--text-primary)}
+  .wx-embed input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:3px;background:var(--border);outline-offset:4px;cursor:pointer}
+  .wx-embed input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--accent);border:2px solid var(--bg);cursor:pointer}
+  .wx-embed input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--accent);border:2px solid var(--bg);cursor:pointer}
+  .wx-embed .seg{display:inline-flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;width:fit-content}
+  .wx-embed .seg button{font-family:var(--font-mono);font-size:.8rem;padding:.5rem .85rem;background:var(--surface-2);color:var(--text-muted);border:none;cursor:pointer;transition:.15s}
+  .wx-embed .seg button+button{border-left:1px solid var(--border)}
+  .wx-embed .seg button.on{background:var(--accent-strong);color:var(--text-on-accent);font-weight:600}
+  .wx-embed .seg button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  .wx-embed .readbar{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin:1.3rem 0 .3rem}
+  .wx-embed .ro{background:var(--surface-2);color:var(--text-secondary);border:1px solid var(--border);border-radius:8px;padding:.7rem .8rem}
+  .wx-embed .ro .lab{font-family:var(--font-mono);font-size:.6rem;font-weight:500;letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.3rem}
+  .wx-embed .ro .val{font-family:var(--font-mono);font-size:1.1rem;font-weight:600;color:var(--text-primary)}
+  .wx-embed .ro .val small{font-size:.58rem;color:var(--text-muted);font-weight:400}
+  .wx-embed .ro .val.bad{color:var(--danger-text)}
+  .wx-embed .ro .val.ok{color:var(--accent)}
+  .wx-embed .status{padding:.9rem 1rem;border-radius:8px;border:1px solid;font-family:var(--font-mono);font-size:.74rem;font-weight:500;line-height:1.55;margin-top:1rem}
+  .wx-embed .status.ok{border-color:var(--accent-strong);background:var(--tint-accent);color:var(--status-ok-text)}
+  .wx-embed .status.warn{border-color:var(--warn);background:var(--tint-warn);color:var(--status-warn-text)}
+  .wx-embed .status.bad{border-color:var(--danger-dim);background:var(--tint-danger);color:var(--status-danger-text)}
+  .wx-embed .status b{color:var(--text-primary)}
+  @media(max-width:640px){ .wx-embed .readbar{grid-template-columns:1fr 1fr} }
+  @media(prefers-reduced-motion:reduce){ .wx-embed *{transition:none!important} }
+</style>
+
+  <div class="instrument">
+    <div class="inst-head">
+      <div class="inst-title">Mission cycle-time budget</div>
+      <button class="reset" id="resetBtn" type="button">Reset</button>
+    </div>
+
+    <noscript><p class="noscript-note">This interactive cycle-time budget requires JavaScript. The worked result is in the derivation above: the naive single-arm cycle sums to 6.6 s (dominant stage SWING, 1.5 s), which forces the rover to 0.18 m/s - below the 0.20 m/s target - so the design must attack the dominant stage or change the architecture (a second arm) to meet T_cycle &lt;= 6.0 s.</p></noscript>
+
+    <div class="barlab" style="display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:.66rem; font-weight:500; color:var(--text-muted); margin-bottom:.2rem"><span>mission cycle (s)</span><span>scale 0 - 8 s</span></div>
+    <div class="timeline" id="timeline" role="img" aria-label="Mission-cycle timeline: the eight FSM stages sized by duration, against the 6-second budget line"></div>
+
+    <div class="controls">
+      <div class="ctl-group">
+        <span class="lbl">SWING transfer time <b><span id="swingRead">1.5</span> s</b> (dominant)</span>
+        <input type="range" id="swing" min="0.5" max="1.5" step="0.1" value="1.5" aria-label="SWING transfer time, seconds">
+      </div>
+      <div class="ctl-group">
+        <span class="lbl" id="archLbl">architecture</span>
+        <div class="seg" id="armSeg" role="group" aria-labelledby="archLbl">
+          <button data-arms="1" class="on" type="button" aria-pressed="true">Single arm</button>
+          <button data-arms="2" type="button" aria-pressed="false">Two arms</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="readbar">
+      <div class="ro"><div class="lab">cycle time</div><div class="val"><span id="roCycle">6.6</span> <small>s / 6.0</small></div></div>
+      <div class="ro"><div class="lab">rover speed</div><div class="val"><span id="roSpeed">0.18</span> <small>m/s / 0.20</small></div></div>
+      <div class="ro"><div class="lab">throughput</div><div class="val"><span id="roThru">545</span> <small>fruit/hr</small></div></div>
+      <div class="ro"><div class="lab">dominant stage</div><div class="val" style="font-size:.95rem"><span id="roDom">SWING</span></div></div>
+    </div>
+
+    <div class="status warn" id="status" aria-live="polite"></div>
+  </div>
+
+<script>
+/* Interactive enhancement only. All engineering content is static and readable
+   with JavaScript disabled. Vanilla JS, no external dependencies. Colors come
+   from semantic tokens, never raw hex. Scoped to its container so it is safe to
+   inline into a chapter beside other content. */
+(function(){
+  "use strict";
+  var root = (document.currentScript && document.currentScript.closest('.wx-embed'))
+             || document.querySelector('.wx-embed[data-wx="cec01-spine"]');
+  if(!root) return;
+  var q = function(sel){ return root.querySelector(sel); };
+  const SCALE=8.0;
+  const BUDGET=6.0, V_TGT=0.20, d=1.2;
+  const BASE=[
+    {n:'DRIVE', t:0.3, c:'var(--stage-drive)'},
+    {n:'STAGE', t:0.2, c:'var(--stage-stage)'},
+    {n:'ALIGN', t:1.0, c:'var(--stage-align)'},
+    {n:'GRAB', t:1.0, c:'var(--stage-grab)'},
+    {n:'LIFT', t:0.8, c:'var(--stage-lift)'},
+    {n:'SWING', t:1.5, c:'var(--stage-swing)'},
+    {n:'LOWER', t:0.8, c:'var(--stage-lower)'},
+    {n:'RELEASE', t:1.0, c:'var(--stage-release)'}
+  ];
+  let state={swing:1.5, arms:1};
+  function stages(){ return BASE.map(s=> s.n==='SWING' ? {...s,t:state.swing} : {...s}); }
+  function cycleSingle(st){ return st.reduce((a,s)=>a+s.t,0); }
+  function cycleTwoArm(st){
+    const fixed=st.filter(s=>s.n==='DRIVE'||s.n==='STAGE').reduce((a,s)=>a+s.t,0);
+    const pick =st.filter(s=>!(s.n==='DRIVE'||s.n==='STAGE')).reduce((a,s)=>a+s.t,0);
+    return fixed + pick/2;
+  }
+  const timeline=q('#timeline');
+  if(!timeline) return;
+  function pct(t){ return Math.min(100, t/SCALE*100); }
+  function render(){
+    const st=stages();
+    const Tsingle=cycleSingle(st);
+    const T = state.arms===2 ? cycleTwoArm(st) : Tsingle;
+    const v = d/T;
+    const thru = 3600/T;
+    let dom=st[0]; st.forEach(s=>{ if(s.t>dom.t) dom=s; });
+    let html='';
+    st.forEach(s=>{
+      const w=pct(state.arms===2 && !(s.n==='DRIVE'||s.n==='STAGE') ? s.t/2 : s.t);
+      const isDom = s.n===dom.n && state.arms===1;
+      html+=`<div class="tstage${isDom?' dom':''} ${w>6?'wide':''}" style="width:${w}%;background:${s.c}">`+
+        `<span class="tn">${s.n}</span></div>`;
+    });
+    timeline.innerHTML = html +
+      `<div class="budget-line" style="left:${pct(BUDGET)}%"><span class="tag">budget 6.0 s</span></div>`;
+    const $=id=>root.querySelector('#'+id);
+    $('swingRead').textContent=state.swing.toFixed(1);
+    $('roCycle').textContent=T.toFixed(1);
+    $('roCycle').className='val '+(T<=BUDGET?'ok':'bad');
+    $('roSpeed').textContent=v.toFixed(2);
+    $('roSpeed').className='val '+(v>=V_TGT?'ok':'bad');
+    $('roThru').textContent=thru.toFixed(0);
+    $('roDom').textContent = state.arms===2 ? 'pick parallel' : dom.n;
+    const st_=$('status');
+    if(state.arms===2){
+      st_.className='status ok';
+      st_.innerHTML=`<b>Two arms - architecture change.</b> The pick stages overlap across two arms, so the effective cycle is ${T.toFixed(1)} s: speed ${v.toFixed(2)} m/s and throughput ${thru.toFixed(0)} fruit/hr, well inside budget. Complexity moved to integration and control, but the mission number is met with room to spare.`;
+    } else if(T<=BUDGET){
+      st_.className='status ok';
+      st_.innerHTML=`<b>Budget closes.</b> Cycle ${T.toFixed(1)} s (&lt;= 6.0), rover ${v.toFixed(2)} m/s (&gt;= 0.20 target), ${thru.toFixed(0)} fruit/hr. Attacking the dominant SWING stage brought the single-arm cycle inside budget - no second arm needed yet.`;
+    } else {
+      st_.className='status warn';
+      st_.innerHTML=`<b>Over budget by ${(T-BUDGET).toFixed(1)} s.</b> Cycle ${T.toFixed(1)} s forces the rover to ${v.toFixed(2)} m/s - below the 0.20 m/s target. Attack the dominant <b>${dom.n}</b> stage (${dom.t.toFixed(1)} s), or switch to two arms.`;
+    }
+  }
+  q('#swing').addEventListener('input',e=>{ state.swing=+e.target.value; render(); });
+  q('#armSeg').addEventListener('click',e=>{
+    if(e.target.tagName!=='BUTTON') return;
+    state.arms=+e.target.dataset.arms;
+    root.querySelectorAll('#armSeg button').forEach(b=>{ const on=b===e.target; b.classList.toggle('on',on); b.setAttribute('aria-pressed',on); });
+    render();
+  });
+  q('#resetBtn').addEventListener('click',()=>{
+    state={swing:1.5,arms:1};
+    q('#swing').value=1.5;
+    root.querySelectorAll('#armSeg button').forEach(b=>{ const on=b.dataset.arms==='1'; b.classList.toggle('on',on); b.setAttribute('aria-pressed',on); });
+    render();
+  });
+  render();
+})();
+</script>
+</section>
+
+    </section>
+
+  <section id="cec01" aria-labelledby="cec-h">
+    <div class="kicker">The concept - a budget constrains, it does not describe</div>
+    <h2 id="cec-h">What a systems budget is for</h2>
+    <div class="insight">
+      <div class="tag">CEC-01 - The Signal-to-Action Spine</div>
+      <p><strong>The harvester is one machine that turns a camera frame into a grasped fruit; it decomposes by function into Perceive, Decide, Act - and every subsystem exists because the spine requires it.</strong> The cycle-time budget is what makes the spine verifiable: it converts a qualitative loop into a per-stage time allocation, and the moment you sum the stages it exposes whether the architecture can meet the mission. Here it forced a choice - a faster transfer or a second arm - long before any part was built. That is what a systems budget is for: not to describe a design, but to constrain one and reveal its tensions early, when they are cheap to fix.</p>
+    </div>
+  </section>
+
+  <section id="takeaway" aria-labelledby="tk-h">
+    <div class="kicker">Engineering takeaway - what to do next</div>
+    <h2 id="tk-h">Where the next effort belongs</h2>
+    <div class="takeaway">
+      <ul class="tk-list">
+        <li><span class="tk-mark" aria-hidden="true">-&gt;</span> Build the budget <strong>before</strong> the mechanism. Summing the stage times tells you whether the architecture can meet the mission - and which stage to fix - before any hardware is committed.</li>
+        <li><span class="tk-mark tk-hot" aria-hidden="true">-&gt;</span> The single-arm cycle is dominated by <strong class="rind-t">SWING (transfer)</strong>. The first move is a faster transfer path; if that is not enough, a second arm parallelizes the pick and roughly doubles throughput. Attack the dominant stage before adding complexity.</li>
+        <li><span class="tk-mark" aria-hidden="true">-&gt;</span> Speed and throughput are the <strong>same budget</strong> seen two ways: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>=</mo><mi>d</mi><mi mathvariant="normal">/</mi><msub><mi>T</mi><mrow><mi mathvariant="normal">c</mi><mi mathvariant="normal">y</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">e</mi></mrow></msub></mrow><annotation encoding="application/x-tex">v = d / T_{\mathrm{cycle}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord mathnormal">d</span><span class="mord">/</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathrm mtight">cycle</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span>. Cutting the cycle both raises the safe rover speed and the fruit-per-hour - confirm the faster speed still respects the placement budget (CEC-03) and the edge latency (CEC-04).</li>
+        <li><span class="tk-mark" aria-hidden="true">-&gt;</span> <strong>Decision:</strong> treat the cycle-time budget as the <strong class="rind-t">integrating contract</strong> for the whole spine - it is where perception, reach, grip, and mobility are reconciled against one mission number. Resolve its tension by architecture first, tuning second.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    SIM2FIELD / Autonomous Watermelon Harvesting Robotics<br>
+    Worked example for the Signal-to-Action Spine (CEC-01), Module 1 - the loop that integrates M4/M5 (perceive), M8 (reach), M9 (grip), M10 (mobility)<br>
+    Values illustrative from Module 1 Sec. 7.1; budget ratified in Doc B (T_cycle &lt;= 6 s, v &lt;= 0.2 m/s, d ~ 1.2 m) - frozen Rev 1.0<br>
+    Production Phase asset - configuration-controlled
+  </footer>
+</main>
+
+</body>
+</html>

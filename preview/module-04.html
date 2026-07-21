@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manipulation &amp; Control — SIM2FIELD</title>
+<meta name="description" content="A short university course on the engineering of an autonomous watermelon/pumpkin harvesting robot: perception, edge AI, manipulation, and field deployment.">
+<link rel="stylesheet" href="assets/style.css">
+
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a class="brand" href="index.html"><span class="dot"></span>SIM2FIELD</a>
+  <div class="nav-links"><a href="index.html">Home</a><a href="index.html#modules" class="active">Modules</a><a href="demo-page.html">Live Demo</a><a href="index.html#specs">Specs</a><a href="capstone.html">Capstone</a></div>
+</div></nav>
+<header class="article-head"><div class="inner"><p class="eyebrow">Module 4</p><h1>Manipulation &amp; Control</h1><div class="dur">◷ 5 hours</div></div></header><main class="page prose">
+
+<h2 id="learning-outcomes">Learning outcomes</h2>
+<p>By the end of this module, students can:</p>
+<ol>
+<li>Distinguish serial and parallel manipulator architectures and justify a choice
+   for a heavy-payload harvester.</li>
+<li>Derive the inverse kinematics of the case-study parallel two-cylinder
+   mechanism and compute actuator lengths for a target.</li>
+<li>Identify a mechanism's workspace, singularities, and collision constraints and
+   explain how a planner respects them.</li>
+<li>Explain degree-of-freedom reduction as a co-design outcome — how vehicle
+   motion and gripper compliance remove actuated axes.</li>
+<li>Describe a grasp/place cycle as a state machine and reason about its
+   transitions and safety.</li>
+</ol>
+<h2 id="core-concepts">Core concepts</h2>
+<h3 id="serial-vs-parallel-and-why-parallel-wins-here">Serial vs. parallel — and why parallel wins here</h3>
+<p>A <strong>serial</strong> arm stacks motorized joints; each motor carries the weight of every
+joint beyond it, so a heavy end payload demands large motors at the base and the
+arm is heavy and compliant. A <strong>parallel</strong> mechanism grounds its actuators to the
+frame and drives the end platform through struts, so the moving mass is small and
+the structure is stiff. For a 5–10 kg fruit, parallel is the natural fit.</p>
+<p>Our case study is a <strong>planar parallel two-cylinder mechanism</strong>: two telescopic
+struts, each based on a frame rail, converge on a single gripper node in the
+transverse (cross-row) plane. Both actuators are frame-mounted — near-zero motor
+mass moves — and the mechanism is stiff enough to swing a heavy melon without
+whipping.</p>
+<h3 id="inverse-kinematics-refreshingly-direct">Inverse kinematics — refreshingly direct</h3>
+<p>For most parallel mechanisms IK is the <em>easy</em> direction. Here it is almost
+trivial and that is a feature, not a simplification for teaching. Let the gripper
+node be at <code>G = (z, y)</code> in the transverse plane and let the two strut bases be
+<code>B₁</code> and <code>B₂</code> on the rails. The required strut lengths are just the distances:</p>
+<pre><code>L₁ = |G − B₁| = √((z − z_B1)² + (y − y_B1)²)
+L₂ = |G − B₂| = √((z − z_B2)² + (y − y_B2)²)
+</code></pre>
+<p>The actuator lengths <em>are</em> the task coordinates — there is no transcendental
+solve, no branch ambiguity. Command <code>(z, y)</code>, get <code>(L₁, L₂)</code>. Students compute
+these by hand and then watch the twin do exactly the same thing.</p>
+<h3 id="workspace-singularities-collisions">Workspace, singularities, collisions</h3>
+<p>Three constraints bound where the node may go, and a real planner enforces all
+three:</p>
+<ul>
+<li><strong>Workspace</strong> = the intersection of the two strut <strong>stroke annuli</strong> (each strut
+  has a min and max length). Reachable space is the lens where both annuli
+  overlap, and — a nice co-design point — it <strong>scales with the rover's track
+  width</strong>, because the bases ride the adjustable rails.</li>
+<li><strong>Singularities.</strong> When the two struts become nearly collinear, the mechanism
+  loses force authority perpendicular to them — a <strong>parallel singularity</strong>. The
+  health metric is the <strong>transmission angle</strong> <code>γ</code> between the struts at the node;
+  the planner keeps <code>γ</code> bounded away from 0° and 180° (e.g., warns below ~15°).
+  There is also a <strong>flat-singularity</strong> limit near the base line that caps how
+  high the node may rise.</li>
+<li><strong>Collisions.</strong> The payload envelope (fingers + fruit, hanging below the node)
+  must clear the frame, wheels, and bin wall during transfer. The planner keeps
+  the node inside a <strong>keep-out corridor</strong> — carrying high over obstacles and
+  descending only past the bin wall.</li>
+</ul>
+<p>A good exercise in engineering judgment: the same widening of the track that
+improves agronomic clearance <em>also</em> improves <code>γ</code>. The course keeps returning to
+these coupled decisions.</p>
+<h3 id="degree-of-freedom-reduction-as-co-design">Degree-of-freedom reduction as co-design</h3>
+<p>A naive picker might have a base yaw, a shoulder, an elbow, a wrist, and a
+telescoping reach — five actuated axes, five things to fail. The case study
+deletes most of them, and <em>where each axis went</em> is the lesson:</p>
+<table>
+<thead>
+<tr>
+<th>Eliminated axis</th>
+<th>Absorbed by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fore/aft (x) positioning</td>
+<td>the <strong>vehicle</strong> — it drives the fruit to a fixed station</td>
+</tr>
+<tr>
+<td>Along-row (x) fine scatter</td>
+<td><strong>paddle width</strong> — long compliant pads tolerate offset</td>
+</tr>
+<tr>
+<td>Wrist tilt</td>
+<td>a <strong>gravity-plumb</strong> gripper head that hangs level passively</td>
+</tr>
+<tr>
+<td>Base yaw / lateral transfer</td>
+<td>the <strong>in-plane stroke</strong> itself places into the side trailer</td>
+</tr>
+</tbody>
+</table>
+<p>What remains is two prismatic drives plus a grip. Fewer drives means fewer field
+failures, simpler control, lower cost, and — because pick and place become the
+<em>same two poses every cycle</em> — highly repeatable cycle times. This is the single
+most important design idea in the module: <strong>actuated complexity is a cost, and
+much of it can be designed away by letting the vehicle and passive compliance do
+the work.</strong></p>
+<h3 id="the-graspplace-cycle-as-a-state-machine">The grasp/place cycle as a state machine</h3>
+<p>The supervisor sequences the arm through a small, verifiable state machine:</p>
+<pre><code>DRIVE → STAGE → ALIGN → GRAB → LIFT → SWING → LOWER → RELEASE → (next fruit)
+</code></pre>
+<p>Each transition has a guard (a condition that must hold) and a safety
+consideration. <code>LIFT</code> and <code>SWING</code> occur at a height that clears the keep-out
+corridor; <code>GRAB</code> waits on a force/tactile condition; <code>RELEASE</code> only fires over a
+valid bin slot. Students reason about what happens if a guard never becomes true
+(a stuck cycle) and how the machine should recover.</p>
+<h3 id="active-canopy-management-closing-the-loop-with-module-2">Active canopy management (closing the loop with Module 2)</h3>
+<p>When perception reports a fruit above the occlusion gate, manipulation helps
+perception: a front-mounted canopy tool (a rotary brush, an air knife, or passive
+lifter fingers) clears leaves in a corridor, and a wrist-mounted air puff clears
+residual canopy at the grasp site. A slip clutch and a motor-current limit
+protect against vine wrap. This is a concrete example of subsystems cooperating
+rather than operating in a strict pipeline.</p>
+<h2 id="grad-extension"><span class="tagpill tag-grad">Graduate</span>Grad extension</h2>
+<p><strong>Plan through the constraints.</strong> Given strut stroke limits, base positions, and
+a keep-out corridor, write (pseudocode or real) a planner that moves the node
+from a pick pose to a drop pose while (a) staying inside both stroke annuli,
+(b) keeping <code>γ</code> above a threshold, and (c) never entering the keep-out volume
+below the carry height. Report the path and where each constraint was active.
+Graduate students additionally derive the mechanism's Jacobian and relate its
+conditioning to <code>γ</code>.</p>
+<h2 id="demo-or-lab"><span class="tagpill tag-lab">Hands-on</span>Demo or lab</h2><div class="embed"><div class="bar"><span class="live"></span>LIVE SIMULATION — AMIGA PARALLEL 2-CYLINDER HARVESTER<a href="demo.html" target="_blank" rel="noopener">Open full screen ↗</a></div><iframe src="demo.html" title="Harvester simulation" loading="lazy"></iframe></div>
+<p><strong>Lab 4 — Kinematics and the constraint envelope.</strong>
+See <a href="../../labs/lab-04-manipulation.md"><code>labs/lab-04-manipulation.md</code></a>. In the
+digital twin:</p>
+<ol>
+<li>Drag the gripper node and read <code>L₁, L₂</code> and <code>γ</code> live; map the reachable
+   workspace by finding where the node stops moving (stroke limits).</li>
+<li>Widen the track and observe both the workspace growth and the improvement in
+   <code>γ</code> at the drop pose — quantify both.</li>
+<li>Force a near-singular configuration and describe what the telemetry shows and
+   why the planner would avoid it.</li>
+<li>Step the state machine through one full cycle and annotate each guard.</li>
+</ol>
+<h2 id="knowledge-check"><span class="tagpill tag-quiz">Quiz</span>Knowledge check</h2><div class="quiz" data-quiz><div class="quiz-head"><span class="ic">◇</span>Module 4 — Knowledge Check<span class="score">0 / 2</span></div><div class="q" data-correct="1"><p class="qtext"><span class="qn">01</span>For the parallel two-cylinder mechanism, the inverse kinematics is:</p><button class="opt" data-q="0" data-o="0">a system of transcendental equations with two branches<span class="mark"></span></button><button class="opt" data-q="0" data-o="1">the Euclidean distance from the node to each strut base, Lᵢ = |G − Bᵢ|<span class="mark"></span></button><button class="opt" data-q="0" data-o="2">impossible in closed form<span class="mark"></span></button><button class="opt" data-q="0" data-o="3">computed by the neural network<span class="mark"></span></button><div class="qexpl"><b>Why:</b> The actuator lengths ARE the task coordinates: each strut length is just the distance from the gripper node to that strut&#x27;s base — no transcendental solve, no branch ambiguity.</div></div><div class="q" data-correct="1"><p class="qtext"><span class="qn">02</span>The transmission angle γ approaching 0° indicates:</p><button class="opt" data-q="1" data-o="0">maximum stiffness<span class="mark"></span></button><button class="opt" data-q="1" data-o="1">a parallel singularity with lost force authority<span class="mark"></span></button><button class="opt" data-q="1" data-o="2">the workspace boundary is far away<span class="mark"></span></button><button class="opt" data-q="1" data-o="3">the gripper is fully open<span class="mark"></span></button><div class="qexpl"><b>Why:</b> As the two struts become collinear (γ→0), the mechanism loses force authority perpendicular to them — a parallel singularity the planner must avoid.</div></div><div class="quiz-foot"><button class="btn btn-dark" data-reset>Reset</button><span class="msg">Pick an answer to check it instantly.</span></div></div>
+<ol>
+<li>Give two physical reasons a parallel mechanism suits a 5–10 kg payload better
+   than a serial arm.</li>
+<li>Bases at <code>B₁ = (−0.85, 1.75)</code> and <code>B₂ = (0.85, 1.75)</code> m; node target
+   <code>G = (0.0, 0.45)</code>. Compute <code>L₁</code> and <code>L₂</code>.</li>
+<li>Define the transmission angle <code>γ</code>. What physically goes wrong as <code>γ → 0</code>, and
+   how does the planner respond?</li>
+<li>For each eliminated actuated axis in the case study, name what absorbed its
+   function.</li>
+<li>In the state machine, why must <code>LIFT</code> and <code>SWING</code> share a common carry height?
+   What collision does that prevent?</li>
+</ol>
+<h2 id="take-home-assignment"><span class="tagpill tag-take">Assignment</span>Take-home assignment</h2>
+<p>Produce a <strong>one-page manipulation analysis</strong> of the case-study mechanism (or your
+own variant): the IK equations, a sketch or plot of the reachable workspace, the
+location of its singularities, and a labeled state machine for one grasp/place
+cycle with the guard on each transition. Deliverable:
+<code>assignments/m4-manipulation-analysis.md</code> plus figures.</p><div class="pager"><a href="module-03.html"><span class="d">← Previous</span>Module 3: Edge Computing, ML &amp; AI</a><a class="next" href="module-05.html"><span class="d">Next →</span>Module 5: Integration &amp; System Design</a></div></main>
+<footer class="foot"><div class="inner">
+  <div>SIM2FIELD · Robotic Harvesting Systems — course materials</div>
+  <div><a href="index.html">Home</a> · <a href="demo-page.html">Live Demo</a> · <a href="capstone.html">Capstone</a></div>
+</div></footer>
+
+<script>
+document.querySelectorAll('[data-quiz]').forEach(function(quiz){
+  var total = quiz.querySelectorAll('.q').length;
+  var answered = {};
+  function refresh(){
+    var correct = Object.values(answered).filter(Boolean).length;
+    quiz.querySelector('.score').textContent = correct + ' / ' + total;
+    var msg = quiz.querySelector('.msg');
+    if (Object.keys(answered).length === total){
+      msg.textContent = correct === total ? 'Perfect — all correct.' :
+        'You got ' + correct + ' of ' + total + '. Review the explanations and try again.';
+    }
+  }
+  quiz.querySelectorAll('.opt').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var qEl = btn.closest('.q');
+      if (qEl.dataset.locked) return;
+      qEl.dataset.locked = '1';
+      var correct = parseInt(qEl.dataset.correct,10);
+      var chosen = parseInt(btn.dataset.o,10);
+      qEl.querySelectorAll('.opt').forEach(function(o){
+        o.classList.add('locked');
+        var oi = parseInt(o.dataset.o,10);
+        if (oi === correct) o.classList.add('correct');
+        else if (o === btn) o.classList.add('wrong');
+      });
+      qEl.querySelector('.qexpl').classList.add('show');
+      answered[qEl.dataset.q || btn.dataset.q] = (chosen === correct);
+      refresh();
+    });
+  });
+  quiz.querySelector('[data-reset]').addEventListener('click', function(){
+    answered = {};
+    quiz.querySelectorAll('.q').forEach(function(qEl){
+      delete qEl.dataset.locked;
+      qEl.querySelectorAll('.opt').forEach(function(o){ o.className='opt'; });
+      qEl.querySelector('.qexpl').classList.remove('show');
+    });
+    quiz.querySelector('.msg').textContent = 'Pick an answer to check it instantly.';
+    refresh();
+  });
+});
+</script>
+
+</body>
+</html>

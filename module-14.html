@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark"><meta name="theme-color" content="#0e120d">
+<title>Module 14: Verification, Validation &amp; Reliability (SIM2FIELD)</title>
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<style>:root{
+  color-scheme:dark;
+  --bg:#0e120d; --surface:#161c14; --surface-2:#0b0e0a; --surface-3:#12160f;
+  --border:#2b3527; --border-strong:#3a4633; --grid-line:#1c231a;
+  --text-primary:#eef2e6; --text-secondary:#c8cfbe; --text-muted:#adb4a2;
+  --text-lede:#c9d0bf; --text-cons:#d4dbc9; --text-on-accent:#0e120d;
+  --accent:#9bcf3b; --accent-dim:#86ba35; --accent-strong:#6f9a2c;
+  --danger:#f0556a; --danger-text:#f697a4; --danger-dim:#b93b4c;
+  --warn:#e0a03b; --warn-text:#eed9b4; --info:#6fb0d9; --info-text:#bfe0f2; --accent-2:#b98bd9; --marker:#ffffff;
+  --tint-accent:rgba(155,207,59,.07); --tint-accent-soft:rgba(155,207,59,.05); --tint-hero:rgba(155,207,59,.06);
+  --tint-danger:rgba(240,85,106,.07); --tint-warn:rgba(224,160,59,.08); --tint-info:rgba(111,176,217,.08); --tint-gov:rgba(185,139,217,.07);
+  --font-sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --font-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --font-display:'Space Grotesk',var(--font-sans);
+  --rail:300px; --topbar:54px; --measure:54rem;
+
+  /* mission-FSM stage palette (used by inlined worked-example fragments) */
+  --stage-drive:#7fb0a0; --stage-stage:#6fb0d9; --stage-align:#9bcf3b; --stage-grab:#c9e06a;
+  --stage-lift:#b98bd9; --stage-swing:#f0556a; --stage-lower:#e0a03b; --stage-release:#d98b8b;
+  --status-ok-text:#d0d7c6; --status-warn-text:#eed9b4; --status-danger-text:#f3ccd2;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);color:var(--text-primary);-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text-primary);font-family:var(--font-sans);line-height:1.72;-webkit-font-smoothing:antialiased;letter-spacing:.002em}
+a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+code,.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.skip{position:absolute;left:-999px;top:0;background:var(--accent);color:var(--text-on-accent);padding:.5rem .8rem;border-radius:6px;z-index:60}
+.skip:focus{left:.5rem;top:.5rem}
+.katex{font-size:1.04em}
+
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar);z-index:40;background:var(--surface-2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem;padding:0 1.1rem}
+.topbar .mk{font-family:var(--font-display);font-weight:600;font-size:1rem;letter-spacing:-.01em}
+.topbar .cx{flex:1;min-width:0;font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar .src{flex:none;font-family:var(--font-mono);font-size:.66rem;color:var(--accent);border:1px solid var(--accent-strong);border-radius:6px;padding:.3rem .6rem}
+body.ed-author .topbar{border-bottom-color:var(--accent-2)}
+body.ed-author .topbar .src{color:var(--accent-2);border-color:var(--accent-2)}
+
+.book{display:grid;grid-template-columns:var(--rail) 1fr;padding-top:var(--topbar)}
+.rail{position:sticky;top:var(--topbar);align-self:start;height:calc(100vh - var(--topbar));overflow-y:auto;background:var(--surface);border-right:1px solid var(--border);padding:1.3rem 1rem 3rem}
+.rail h2{font-family:var(--font-mono);font-size:.64rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-dim);margin:0 .4rem .7rem}
+.toc{list-style:none} .toc li{margin:.05rem 0}
+.toc a{display:flex;gap:.5rem;align-items:baseline;color:var(--text-secondary);font-size:.83rem;line-height:1.35;padding:.32rem .5rem;border-radius:7px;border-left:2px solid transparent}
+.toc a:hover{background:var(--surface-3);text-decoration:none;color:var(--text-primary)}
+.toc a.active{background:var(--tint-accent);border-left-color:var(--accent);color:var(--text-primary)}
+.toc .tn{font-family:var(--font-mono);font-size:.68rem;color:var(--text-muted);flex:none;min-width:1.3em}
+.toc a.active .tn{color:var(--accent)}
+.toc .tt{margin-left:auto;font-family:var(--font-mono);font-size:.54rem;letter-spacing:.05em;text-transform:uppercase;padding:.05rem .3rem;border-radius:4px;border:1px solid var(--border);color:var(--text-muted)}
+.toc .tt.instr{color:var(--accent-2);border-color:var(--accent-2)} .toc .tt.spec{color:var(--warn);border-color:var(--warn)}
+
+.main{min-width:0;background:var(--bg)}
+.inner{max-width:var(--measure);margin:0 auto;padding:2.4rem 2rem 7rem}
+
+/* ---------- MISSION OPENING ---------- */
+.mission{margin-bottom:.5rem}
+.mission-hero{padding:1.2rem 0 2.4rem;border-bottom:1px solid var(--border)}
+.mission-hero .eyebrow{font-family:var(--font-mono);font-size:.72rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:1.4rem}
+.mission-hero .hook{font-family:var(--font-display);font-weight:600;font-size:clamp(1.7rem,3.6vw,2.55rem);line-height:1.12;letter-spacing:-.018em;color:var(--text-primary);max-width:22em;margin-bottom:1.3rem}
+.mission-hero h1{font-family:var(--font-display);font-weight:500;font-size:1.12rem;color:var(--text-secondary);letter-spacing:-.008em;margin-bottom:.7rem}
+.mission-hero .slim{font-family:var(--font-mono);font-size:.74rem;color:var(--text-muted);letter-spacing:.02em}
+.movement{padding:2.1rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:190px 1fr;gap:1.6rem}
+.movement .mv-label{font-family:var(--font-mono);font-size:.7rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-dim);padding-top:.25rem}
+.movement .mv-label::before{content:"";display:block;width:30px;height:2px;background:var(--accent-strong);margin-bottom:.75rem}
+.movement .mv-body p{color:var(--text-secondary);font-size:1.02rem;margin:0 0 .9rem}
+.movement .mv-body p:last-child{margin-bottom:0}
+.movement .mv-body strong{color:var(--text-primary);font-weight:600}
+.movement .mv-body em{color:var(--text-cons)}
+.movement.objectives .mv-body ul{list-style:none;margin:0}
+.movement.objectives .mv-body li{position:relative;padding-left:1.5rem;margin:.5rem 0;color:var(--text-secondary)}
+.movement.objectives .mv-body li::before{content:"\2192";position:absolute;left:0;color:var(--accent);font-family:var(--font-mono)}
+.movement.objectives .mv-body strong{color:var(--text-primary)}
+.chapter-start{display:flex;align-items:center;gap:1rem;margin:2.8rem 0 .3rem}
+.chapter-start::before,.chapter-start::after{content:"";height:1px;background:var(--border);flex:1}
+.chapter-start span{font-family:var(--font-mono);font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;color:var(--accent-dim)}
+
+/* ---------- PROSE ---------- */
+.section{margin-top:3.2rem}
+.section h2{font-family:var(--font-display);font-weight:600;font-size:1.6rem;letter-spacing:-.012em;line-height:1.15;margin-bottom:1rem;scroll-margin-top:calc(var(--topbar) + 1rem);display:flex;gap:.7rem;align-items:baseline;border-top:1px solid var(--border);padding-top:1.7rem}
+.section h2.unnum{display:block}
+.section h2 .secnum{font-family:var(--font-mono);font-size:.9rem;font-weight:600;color:var(--accent);flex:none}
+.section h3{font-family:var(--font-display);font-weight:600;font-size:1.14rem;color:var(--text-primary);margin:1.6rem 0 .5rem}
+.section p{margin:0 0 1rem;color:var(--text-secondary)}
+.section strong{color:var(--text-primary);font-weight:600}
+.section em{color:var(--text-cons)}
+.section ul,.section ol{margin:0 0 1.1rem 1.3rem;color:var(--text-secondary)}
+.section li{margin:.35rem 0} .section li::marker{color:var(--accent-dim)}
+.section code{background:var(--surface-3);border:1px solid var(--border);border-radius:4px;padding:.05rem .35rem;font-size:.88em;color:var(--text-cons)}
+.section pre{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem;overflow-x:auto;margin:0 0 1.1rem}
+.section pre code{background:none;border:none;padding:0;color:var(--text-secondary);font-size:.82rem;line-height:1.6}
+hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
+
+.eqwrap{background:var(--surface-3);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem;margin:0 0 1.15rem;overflow-x:auto}
+.eqwrap .katex-display{margin:0}
+
+.twrap{overflow-x:auto;margin:0 0 1.2rem;border:1px solid var(--border);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:.86rem}
+th,td{text-align:left;padding:.6rem .8rem;border-bottom:1px solid var(--border);vertical-align:top}
+thead th{font-family:var(--font-mono);font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);font-weight:500;background:var(--surface-3)}
+tbody tr:last-child td{border-bottom:none} td strong{color:var(--accent)}
+
+.callout{border-radius:12px;padding:1.1rem 1.35rem;margin:0 0 1.3rem;border:1px solid var(--border);background:var(--surface)}
+.callout p{margin:0 0 .6rem;color:var(--text-cons)} .callout p:last-child{margin-bottom:0}
+.callout.cec{border-color:var(--accent-strong);background:linear-gradient(180deg,var(--tint-hero),transparent)}
+.callout.cec h3{color:var(--accent);margin:.1rem 0 .5rem;font-size:1.05rem} .callout.cec strong{color:var(--accent)}
+.callout.industry{border-color:var(--info);background:var(--tint-info)}
+.callout.industry h3{color:var(--info-text);font-size:1rem;margin:.1rem 0 .6rem} .callout.industry strong{color:var(--info-text)}
+.callout.hook{border-color:var(--accent-strong);background:var(--tint-accent-soft)}
+.callout.note{border-left:3px solid var(--border-strong);background:var(--surface-3)}
+.callout.gov{border-color:var(--accent-2);background:var(--tint-gov)}
+.section.failure ul{list-style:none;margin-left:0}
+.section.failure ul li{padding:.55rem 0;border-bottom:1px solid var(--border)}
+.section.failure li::before{content:"\2020";color:var(--danger-text);font-family:var(--font-mono);margin-right:.6rem}
+
+.figure{margin:0 0 1.4rem;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.figure.diagram .ascii{margin:0;border:none;border-radius:0;background:var(--surface-3)}
+.figure.diagram .ascii code{color:var(--accent-dim);font-size:.8rem}
+.figure .figbody{padding:1rem 1.1rem;background:var(--surface-3);overflow-x:auto}
+.figure .figbody svg{display:block;width:100%;height:auto;min-width:520px}
+.figure figcaption{padding:.7rem 1rem;font-size:.82rem;color:var(--text-muted);border-top:1px solid var(--border)}
+.figure .fid{font-family:var(--font-mono);font-size:.64rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-right:.5rem}
+.figure.slot{border-style:dashed;border-color:var(--border-strong)}
+.figure.slot .slotbox{display:flex;flex-direction:column;gap:.3rem;padding:1.6rem 1.4rem;background:repeating-linear-gradient(135deg,var(--surface-3),var(--surface-3) 10px,transparent 10px,transparent 20px);border:none}
+.figure.slot .slit{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--warn-text)}
+.figure.slot b{color:var(--text-primary);font-size:.95rem} .figure.slot .desc{color:var(--text-muted);font-size:.84rem}
+
+.widget-embed{margin:1.6rem 0;border:0;background:transparent;overflow:visible}
+.we-head{display:flex;align-items:baseline;gap:.7rem;flex-wrap:wrap;padding:0 .2rem .6rem;background:transparent}
+.we-head .wid{font-family:var(--font-mono);font-size:.62rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-on-accent);background:var(--accent-strong);padding:.15rem .5rem;border-radius:5px}
+.we-head .wid.live{background:var(--accent)}
+.we-head b{font-family:var(--font-display);font-weight:600;color:var(--text-primary);font-size:1rem}
+.we-open{margin-left:auto;font-family:var(--font-mono);font-size:.72rem;color:var(--accent)}
+.we-cap{margin:.65rem 0 0;padding:0 .2rem;font-size:.8rem;color:var(--text-muted)}
+
+.answers,.instructor-wrap{border:1px solid var(--border-strong);border-radius:10px;background:var(--surface-3);margin:1.2rem 0}
+.answers summary,.instructor-wrap summary{cursor:pointer;padding:.8rem 1.1rem;font-family:var(--font-mono);font-size:.78rem;color:var(--accent-2);list-style:none}
+.answers summary::-webkit-details-marker,.instructor-wrap summary::-webkit-details-marker{display:none}
+.answers summary::before,.instructor-wrap summary::before{content:"\25B8 ";color:var(--accent-2)}
+.answers[open] summary::before,.instructor-wrap[open] summary::before{content:"\25BE "}
+.answers .keylist{margin:.2rem 1.4rem 1rem;color:var(--text-secondary);font-size:.88rem}
+.answers .keylist .qn{font-family:var(--font-mono);color:var(--accent);margin-right:.3rem}
+.instructor-wrap{margin-top:2.4rem}
+.instructor-wrap > :not(summary){padding:0 1.2rem} .instructor-wrap > :last-child{padding-bottom:1rem}
+.instructor-wrap p,.instructor-wrap li{color:var(--text-muted)}
+.cover-meta{font-family:var(--font-mono);font-size:.8rem;color:var(--text-muted);line-height:1.9}
+.cover-meta strong{color:var(--text-secondary);font-weight:600} .cover-meta p{margin:.1rem 0}
+.section.instructor{margin-top:2.6rem}
+
+footer{max-width:var(--measure);margin:0 auto;padding:2.5rem 2rem;border-top:1px solid var(--border);font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);line-height:1.85}
+
+@media(max-width:900px){:root{--rail:0px}.book{grid-template-columns:1fr}.rail{display:none}.inner{padding:1.6rem 1.2rem 5rem}}
+@media(max-width:720px){.movement{grid-template-columns:1fr;gap:.5rem}.movement .mv-label::before{margin-bottom:.4rem}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style></head>
+<body class="ed-student">
+<a class="skip" href="#main">Skip to chapter</a>
+<div class="topbar"><span class="mk">SIM2FIELD</span>
+  <span class="cx">Digital textbook / Student edition</span>
+  <span class="src">source: MODULE-14.md</span></div>
+<div class="book">
+  <nav class="rail" aria-label="Chapter contents"><h2>Chapter contents</h2><ul class="toc"><li><a href="#sec-2-learning-objectives"><span class="tn">2</span>Learning Objectives</a></li><li><a href="#sec-3-student-outcomes"><span class="tn">3</span>Student Outcomes</a></li><li><a href="#sec-4-engineering-motivation"><span class="tn">4</span>Engineering Motivation</a></li><li><a href="#sec-engineering-failure-cases-v-v-and-reliab">Engineering Failure Cases (V&V-and-reliability-specific)</a></li><li><a href="#sec-5-background-knowledge"><span class="tn">5</span>Background Knowledge</a></li><li><a href="#sec-6-theory"><span class="tn">6</span>Theory</a></li><li><a href="#sec-7-mathematics"><span class="tn">7</span>Mathematics</a></li><li><a href="#sec-8-engineering-principles"><span class="tn">8</span>Engineering Principles</a></li><li><a href="#sec-9-system-requirements"><span class="tn">9</span>System Requirements</a></li><li><a href="#sec-10-design-decisions"><span class="tn">10</span>Design Decisions</a></li><li><a href="#sec-11-trade-studies"><span class="tn">11</span>Trade Studies</a></li><li><a href="#sec-12-simulation-activities"><span class="tn">12</span>Simulation Activities</a></li><li><a href="#sec-13-digital-twin-activities"><span class="tn">13</span>Digital Twin Activities</a></li><li><a href="#sec-14-hardware-activities"><span class="tn">14</span>Hardware Activities</a></li><li><a href="#sec-15-software-activities"><span class="tn">15</span>Software Activities</a></li><li><a href="#sec-16-ros-2-integration"><span class="tn">16</span>ROS 2 Integration</a></li><li><a href="#sec-17-ai-integration"><span class="tn">17</span>AI Integration</a></li><li><a href="#sec-18-edge-computing-integration"><span class="tn">18</span>Edge Computing Integration</a></li><li><a href="#sec-19-fluid-power-integration"><span class="tn">19</span>Fluid Power Integration</a></li><li><a href="#sec-24-laboratory"><span class="tn">24</span>Laboratory</a></li><li><a href="#sec-25-homework"><span class="tn">25</span>Homework</a></li><li><a href="#sec-26-quiz"><span class="tn">26</span>Quiz</a></li><li><a href="#sec-27-challenge-problems"><span class="tn">27</span>Challenge Problems</a></li><li><a href="#sec-engineering-design-review">Engineering Design Review</a></li><li><a href="#sec-29-research-frontiers"><span class="tn">29</span>Research Frontiers</a></li><li><a href="#sec-30-references"><span class="tn">30</span>References</a></li></ul></nav>
+  <main class="main" id="main"><div class="inner">
+    <header class="mission">
+    <div class="mission-hero">
+      <div class="eyebrow">Module 14 / Mission briefing</div>
+      
+      <h1>Verification, Validation &amp; Reliability</h1>
+      <div class="slim">Part VI, Prove  /  5 to 6 contact hours + a 2 to 3 hour laboratory + homework</div>
+    </div>
+    <section class="movement"><div class="mv-label">Mission</div><div class="mv-body"><p>Verification, validation, and reliability are the disciplines that convert design intent and simulation results into defensible evidence: verification asks &quot;did we build the machine right?&quot; (does it meet its requirements?), validation asks &quot;did we build the right machine?&quot; (does it do the job in the real field?), and reliability asks &quot;will it keep working?&quot; (how often does it fail, and how does it degrade over a season?).</p>
+</div></section><section class="movement"><div class="mv-label">Previous milestone</div><div class="mv-body"><p>A machine that should work and a machine that is proven to work are separated by this module. The course has been accumulating the raw material all along: every module wrote requirements with verification methods; every module set a budget (placement, cycle-time, grasp-force, power, thermal); Module 13 produced the validated twin as an evidence source.</p>
+</div></section><section class="movement"><div class="mv-label">Engineering problem</div><div class="mv-body"><p>This module organizes that material into a coherent verification and validation campaign: it maps each requirement to the evidence that proves it, and, crucially, to the fidelity rung (CEC-06) that evidence lives on. A requirement about reach can be verified in a kinematic twin; a requirement that the grasp will not bruise cannot be verified below the validated contact rung and, ultimately, field data. Knowing which evidence is admissible for which claim is the discipline that keeps a V&amp;V campaign honest.</p>
+</div></section><section class="movement"><div class="mv-label">Design tension</div><div class="mv-body"><p>Reliability adds the dimension of time and repetition. A machine that grasps one melon perfectly must grasp thousands across a season, in dust and heat and wear. This module analyzes failure modes, estimates failure rates, and, applying the course's dominant-term discipline (EI-05) to reliability, identifies the dominant failure mode and attacks it, because reliability effort spent anywhere but the dominant risk barely moves the number.</p>
+</div></section><section class="movement"><div class="mv-label">What this module resolves</div><div class="mv-body"><p>It treats a subtle truth the whole course has circled: a metric measured on a comfortable test set lies about field performance. The module's Engineering Insight is that validation must be adversarial, you prove a machine by trying to break it across the operating envelope's hard cases, not by demonstrating it on the easy ones, because the field will run the adversarial test whether or not you did.</p>
+</div></section>
+    
+    
+    <div class="chapter-start"><span>The chapter</span></div>
+  </header>
+    <section class="section"><h2 id="sec-2-learning-objectives"><span class="secnum">2</span><span class="sectitle">Learning Objectives</span></h2><ul>
+<li><strong>LO-M14.1</strong> Distinguish verification (meets requirements) from validation (does the real job) and structure a V&amp;V campaign mapping requirements to evidence., <em>Bloom: Create</em></li>
+<li><strong>LO-M14.2</strong> Match each requirement's evidence to the appropriate fidelity rung (twin/HIL/field) and argue its admissibility (CEC-06)., <em>Bloom: Evaluate</em></li>
+<li><strong>LO-M14.3</strong> Design statistically sound test plans (sample size, coverage of the envelope) for performance claims (grasp success, placement, cycle time)., <em>Bloom: Create (with Analyze)</em></li>
+<li><strong>LO-M14.4</strong> Analyze reliability: failure modes (FMEA), failure-rate estimation, and identify/attack the dominant failure mode (EI-05)., <em>Bloom: Analyze</em></li>
+<li><strong>LO-M14.5</strong> Design adversarial validation across the operating envelope's edges rather than nominal demonstrations (EI-14/EI-10)., <em>Bloom: Create (with Evaluate)</em></li>
+<li><strong>LO-M14.6</strong> Verify the composed budgets (CEC-01/CEC-03, power/thermal) with field-representative evidence., <em>Bloom: Evaluate</em></li>
+<li><strong>LO-M14.7</strong> Specify the V&amp;V role of the validated twin and where hardware/field evidence is mandatory., <em>Bloom: Create</em></li>
+</ul>
+<p>Maps to course objectives <strong>LO7</strong> (primary), <strong>LO1/all</strong> (integrative), and ABET <strong>SO1, SO2, SO6</strong>. [-&gt;Doc I]</p>
+</section>
+<section class="section"><h2 id="sec-3-student-outcomes"><span class="secnum">3</span><span class="sectitle">Student Outcomes</span></h2><p>A student who has mastered this module can, without prompting:</p>
+<ol>
+<li>Build a requirements-to-evidence V&amp;V matrix., <em>Bloom: Create</em></li>
+<li>Assign the right fidelity rung to each verification claim and defend admissibility., <em>Bloom: Evaluate</em></li>
+<li>Design a statistically sound, envelope-covering test plan., <em>Bloom: Create</em></li>
+<li>Perform an FMEA and find/attack the dominant failure mode., <em>Bloom: Analyze</em></li>
+<li>Design adversarial validation that tries to break the machine., <em>Bloom: Create</em></li>
+<li>Verify composed budgets with field-representative data., <em>Bloom: Evaluate</em></li>
+</ol>
+</section>
+<section class="section"><h2 id="sec-4-engineering-motivation"><span class="secnum">4</span><span class="sectitle">Engineering Motivation</span></h2><p>Module 1 warned that the failures which end field-robot programs are rarely the ones caught in the lab, they are the reliability failures that accumulate over a season and the validation failures that appear only in the real field. This module exists because <strong>a claim without admissible evidence is an opinion</strong>, and a machine deployed on opinions harms fruit, wastes a grower's season, and, where it moves a heavy payload near people, endangers them.</p>
+<p>The motivation sharpens around three honesties. First, the honesty of <em>evidence</em>: it is tempting to verify a requirement with whatever is cheapest, a low-fidelity simulation, a bench demo, a single lucky field run, but a grasp-will-not-bruise claim proven only in a kinematic twin is not proven at all (CEC-06). The V&amp;V campaign must match evidence to claim, and admit where only field data will do. Second, the honesty of <em>statistics</em>: &quot;it worked in the demo&quot; is a sample of one; a machine that must grasp thousands of melons needs test plans with enough samples, across enough of the envelope, to bound the real success rate, and to state the confidence honestly. Third, the honesty of <em>adversarial validation</em>: a machine demonstrated on the easy row proves only that it can do the easy row. The field will present the sloped, dusty, occluded, worst-case row (EI-10), so validation must go looking for failure there deliberately, because the alternative is letting the field find it first, at the grower's expense.</p>
+<p>Reliability adds the motivation of <em>scale and time</em>. One perfect grasp is an anecdote; a season of grasps is the product. Failure modes that are negligible per-cycle become certain over ten thousand cycles; wear, dust, heat, and vibration degrade what was fine on day one. The dominant-term discipline the course used for accuracy and energy (EI-05) applies again: find the failure mode that dominates the machine's downtime or damage, and attack <em>it</em>, because a program that hardens the wrong failure mode spends effort without buying reliability. The motivation for this module is that the field is the final examiner, and it grades on evidence, statistics, and a full season, so the machine must be proven the way the field will test it.</p>
+</section>
+<section class="section failure"><h2 id="sec-engineering-failure-cases-v-v-and-reliab" class="unnum">Engineering Failure Cases (V&V-and-reliability-specific)</h2><p>Sharpening Module 1's classes at the proving stage:</p>
+<ul>
+<li><strong>Inadmissible evidence.</strong> A requirement is &quot;verified&quot; on a fidelity rung too low for the claim; the machine fails in the field the sim said it passed. <em>Motivates</em> evidence-to-fidelity matching (Section 6.2, CEC-06).</li>
+<li><strong>Undersized test.</strong> A success rate is claimed from too few samples over too little of the envelope; the true field rate is worse. <em>Motivates</em> statistically sound, envelope-covering test plans (Section 6.3, Section 7.1 to 7.2).</li>
+<li><strong>Dominant-failure blind spot.</strong> Reliability effort hardens a minor failure mode while the dominant one drives downtime/damage. <em>Motivates</em> FMEA and dominant-mode attack (Section 6.4, EI-05).</li>
+<li><strong>Demo-not-validation.</strong> The machine is shown on easy rows; the hard cases were never tested. <em>Motivates</em> adversarial validation across the envelope (Section 6.5, EI-14/EI-10).</li>
+<li><strong>Wear/drift over a season.</strong> Day-one performance degrades as components wear, filters clog, calibration drifts. <em>Motivates</em> durability/reliability-growth testing (Section 6.6).</li>
+</ul>
+<p>Each is prevented by an honest V&amp;V or reliability discipline.</p>
+</section>
+<section class="section"><h2 id="sec-5-background-knowledge"><span class="secnum">5</span><span class="sectitle">Background Knowledge</span></h2><p><strong>Assumed (from prerequisites):</strong> probability and statistics (distributions, confidence intervals, sample size, hypothesis testing); the M1 requirements and cycle-time budget (CEC-01); the M5 error budget (CEC-03) and EI-05 dominant-term method; the M9 grasp/bruise outcomes and CR-03; the M10 operating envelope (EI-10); the M11 safety architecture and fault injection; the M12 envelope-edge operating point (EI-12); the M13 integrated machine and <em>validated twin as evidence source</em> (CEC-06).</p>
+<p><strong>Introduced here, used later:</strong> the vocabulary of V&amp;V and reliability, <em>verification vs. validation, requirement-to-evidence traceability, evidence admissibility, test plan, sample size/confidence, coverage, FMEA (failure modes and effects), failure rate, MTBF, reliability growth, durability, adversarial/edge-case validation, acceptance criteria</em>. Developed at applied (L2) depth; formal reliability engineering is referenced [-&gt;Doc H].</p>
+<p><strong>Where this sits in the dependency graph.</strong> M14 depends on all prior modules (their requirements and budgets) and especially M13 (the validated twin/evidence). It <strong>masters</strong> the V&amp;V and reliability threads; it <strong>applies</strong> CEC-01/CEC-02/CEC-03 (verifies the budgets), CEC-06 (evidence admissibility per rung), EI-05 (dominant failure mode), EI-10/EI-12 (envelope-edge validation). It hands forward: the verification evidence and reliability analysis to M15 (the safety case builds on V&amp;V) and M16 (reliability drives cost/deployment economics); and to M17 (the capstone's acceptance criteria).</p>
+</section>
+<section class="section"><h2 id="sec-6-theory"><span class="secnum">6</span><span class="sectitle">Theory</span></h2><h3>6.1 Verification vs. validation</h3>
+<p><strong>Verification</strong> confirms the machine meets its <em>specified requirements</em> (&quot;did we build it right?&quot;), each requirement from M1 onward has a verification method (analysis, test, review, demonstration). <strong>Validation</strong> confirms the machine does its <em>actual job in the real field</em> (&quot;did we build the right thing?&quot;), it tests against the mission and the grower's need, not just the spec, and can reveal that a met requirement was the <em>wrong</em> requirement. Both are needed: a machine can pass verification (meets spec) and fail validation (spec didn't capture the field).</p>
+<h3>6.2 Evidence, admissibility, and fidelity (CEC-06 applied)</h3>
+<p>Every verification claim rests on <em>evidence</em>, and evidence has a <strong>fidelity</strong>. A claim is only as strong as the rung its evidence lives on: reach -&gt; kinematic twin; stability -&gt; dynamic twin; grasp-will-not-bruise -&gt; <em>validated contact rung and field data</em> (CR-03/CEC-06); timing -&gt; HIL under load. The V&amp;V campaign builds a <strong>requirement-to-evidence matrix</strong> that names, for each requirement, the evidence <em>and its fidelity rung</em>, and flags where only hardware/field data is admissible. This is CEC-06 as the backbone of verification: an unvalidated or under-fidelity twin result is not admissible evidence.</p>
+<h3>6.3 Statistically sound test planning</h3>
+<p>A performance claim (grasp success rate, placement 3σ, cycle time) is a <em>statistical</em> claim and needs a test plan: <strong>sample size</strong> sufficient to bound the metric to a stated confidence, and <strong>coverage</strong> of the operating envelope (fruit variability, slope, light, dust) so the sample represents the field. A success rate <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>p</mi><mo>^</mo></mover></mrow><annotation encoding="application/x-tex">\hat p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">p</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1667em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span></span></span></span> from <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span> trials has a confidence interval that narrows with <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span>; claiming a high reliability requires many trials (and, for rare failures, either very large <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span> or accelerated/edge-case testing). &quot;It worked in the demo&quot; is <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n=1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> with no coverage, not evidence.</p>
+<h3>6.4 Reliability and the dominant failure mode (EI-05 applied)</h3>
+<p><strong>Reliability</strong> is the probability the machine performs over time/cycles without failure. Analysis proceeds by <strong>FMEA</strong> (enumerate failure modes, their effects, likelihood, and detectability), <strong>failure-rate estimation</strong> (per-cycle or per-hour rates -&gt; MTBF), and, the key judgment, <strong>identifying the dominant failure mode</strong>: the one contributing most to downtime, damage, or missed harvest. The dominant-term discipline (EI-05) says attack <em>it</em>: a given reliability effort moves the machine's overall failure rate most when aimed at the dominant mode. Reliability grows by iterating (test -&gt; find dominant mode -&gt; fix -&gt; retest, reliability growth).</p>
+<h3>6.5 Adversarial validation across the envelope (the insight)</h3>
+<p>Validation that only demonstrates success proves little; <strong>adversarial validation</strong> deliberately seeks the conditions that break the machine, the envelope's edges (EI-10): steepest slope, worst light, densest occlusion, most variable fruit, dustiest air, most-worn state. You design tests to <em>fail</em> the machine, find where it fails, and either fix it or bound the envelope honestly. This is the difference between a demo and a proof: the field runs the adversarial test regardless, so the engineer must run it first.</p>
+<h3>6.6 Durability and reliability growth over a season</h3>
+<p>A season is thousands of cycles under wear, dust, heat, and vibration. Durability testing (accelerated life, sustained operation, environmental) reveals modes that day-one testing cannot: calibration drift (re-inflating the placement budget, CEC-03), filter clogging (thermal, M12), seal wear (fluid, M9), fastener loosening (vibration). Reliability is <em>grown</em> across iterations, and the machine's acceptance is a reliability target over a representative season, not a single good day.</p>
+<h3>6.7 Composed-budget verification with field evidence</h3>
+<p>Module 13 verified the budgets composed in the twin; this module verifies them with <strong>field-representative evidence</strong>: the placement 3σ measured across real fruit and conditions (CEC-03), the cycle time under real load (CEC-01), the power/thermal margin on a hot dusty day (M12/EI-12). Where the twin is validated (CEC-06), it supplies much of this; where it is not, field data is mandatory. The verified budgets, with their evidence and fidelity, are the core of the acceptance argument (-&gt;M15/M16).</p>
+<figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Verification versus validation as a V-model: the left arm decomposes mission to implementation, the right arm integrates and tests back up; horizontal links are verification (did we build it right, meets spec), the top link is validation (did we build the right thing, in the field). A machine can pass verification yet fail validation." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<line x1="119.0" y1="70.0" x2="179.0" y2="148.0" stroke="var(--border)" stroke-width="1.2"/>
+<line x1="179.0" y1="148.0" x2="239.0" y2="226.0" stroke="var(--border)" stroke-width="1.2"/>
+<line x1="239.0" y1="226.0" x2="307.0" y2="306.0" stroke="var(--border)" stroke-width="1.2"/>
+<line x1="505.0" y1="306.0" x2="573.0" y2="226.0" stroke="var(--border)" stroke-width="1.2"/>
+<line x1="573.0" y1="226.0" x2="633.0" y2="148.0" stroke="var(--border)" stroke-width="1.2"/>
+<line x1="633.0" y1="148.0" x2="693.0" y2="70.0" stroke="var(--border)" stroke-width="1.2"/>
+<line x1="307.0" y1="306.0" x2="505.0" y2="306.0" stroke="var(--border-strong)" stroke-width="1.4" marker-end="url(#v)"/>
+<line x1="314.0" y1="226.0" x2="498.0" y2="226.0" stroke="var(--accent)" stroke-width="1.4" stroke-dasharray="6 4"/>
+<text x="406.0" y="220.0" text-anchor="middle" font-size="7.5" fill="var(--accent)">verify: subsystem: analysis / test</text>
+<line x1="254.0" y1="148.0" x2="558.0" y2="148.0" stroke="var(--accent)" stroke-width="1.4" stroke-dasharray="6 4"/>
+<text x="406.0" y="142.0" text-anchor="middle" font-size="7.5" fill="var(--accent)">verify: system: demonstration / review</text>
+<line x1="194.0" y1="70.0" x2="618.0" y2="70.0" stroke="var(--accent-2)" stroke-width="2"/>
+<text x="406.0" y="62.0" text-anchor="middle" font-size="9" fill="var(--accent-2)" font-weight="700">VALIDATION: did we build the RIGHT THING? (field, mission, grower need)</text>
+<rect x="44" y="50" width="150" height="40" rx="7" fill="var(--surface)" stroke="var(--accent-2)" stroke-width="1.4"/>
+<text x="119.0" y="74" text-anchor="middle" font-size="9" fill="var(--text-primary)" font-weight="700">Mission / grower need</text>
+<rect x="104" y="128" width="150" height="40" rx="7" fill="var(--surface)" stroke="var(--info)" stroke-width="1.4"/>
+<text x="179.0" y="152" text-anchor="middle" font-size="9" fill="var(--text-primary)" font-weight="700">System requirements (M1)</text>
+<rect x="164" y="206" width="150" height="40" rx="7" fill="var(--surface)" stroke="var(--info)" stroke-width="1.4"/>
+<text x="239.0" y="230" text-anchor="middle" font-size="9" fill="var(--text-primary)" font-weight="700">Subsystem design</text>
+<rect x="232" y="286" width="150" height="40" rx="7" fill="var(--surface)" stroke="var(--text-secondary)" stroke-width="1.4"/>
+<text x="307.0" y="310" text-anchor="middle" font-size="9" fill="var(--text-primary)" font-weight="700">Implementation / build</text>
+<rect x="430" y="286" width="150" height="40" rx="7" fill="var(--surface)" stroke="var(--text-secondary)" stroke-width="1.4"/>
+<text x="505.0" y="310" text-anchor="middle" font-size="9" fill="var(--text-primary)" font-weight="700">Unit / bench test</text>
+<rect x="498" y="206" width="150" height="40" rx="7" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="573.0" y="230" text-anchor="middle" font-size="9" fill="var(--text-primary)" font-weight="700">Subsystem verification</text>
+<rect x="558" y="128" width="150" height="40" rx="7" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="633.0" y="152" text-anchor="middle" font-size="9" fill="var(--text-primary)" font-weight="700">System verification</text>
+<rect x="618" y="50" width="150" height="40" rx="7" fill="var(--surface)" stroke="var(--accent-2)" stroke-width="1.4"/>
+<text x="693.0" y="74" text-anchor="middle" font-size="9" fill="var(--text-primary)" font-weight="700">Field validation</text>
+<text x="150" y="330" text-anchor="middle" font-size="8.5" fill="var(--text-muted)">specification / decomposition (top-down)</text>
+<text x="600" y="330" text-anchor="middle" font-size="8.5" fill="var(--text-muted)">integration / test (bottom-up)</text>
+<text x="378" y="150" text-anchor="middle" font-size="9" fill="var(--accent)" font-weight="700">VERIFICATION</text>
+<text x="378" y="163" text-anchor="middle" font-size="7.6" fill="var(--text-muted)">did we build it RIGHT? (meets spec)</text>
+<text x="378" y="176" text-anchor="middle" font-size="7.6" fill="var(--text-muted)">analysis / test / review / demonstration</text>
+<rect x="196" y="352" width="368" height="34" rx="8" fill="var(--surface-2)" stroke="var(--warn)" stroke-opacity="0.6"/>
+<text x="380" y="366" text-anchor="middle" font-size="8.2" fill="var(--warn-text)" font-weight="700">A machine can pass verification (meets spec)</text>
+<text x="380" y="378" text-anchor="middle" font-size="8" fill="var(--text-muted)">and still fail validation (the spec did not capture the field).</text>
+</svg></div><figcaption><span class="fid">F-M14-1</span>Verification vs validation (the V-model). The left arm decomposes mission to implementation, the right arm integrates and tests back up. Horizontal links are verification (did we build it right, meets spec, via analysis/test/review/demonstration); the top link is validation (did we build the right thing, in the field). A machine can pass verification yet fail validation. Section 6.1.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="FMEA and the dominant failure mode: failure modes ranked by their contribution to the system failure rate, with the largest highlighted as the dominant mode to attack first; the system rate is the sum, MTBF its reciprocal, and reliability the exponential." font-family="'IBM Plex Mono',monospace">
+<line x1="92" y1="70" x2="92" y2="300" stroke="var(--border-strong)" stroke-width="1.5"/>
+<line x1="92" y1="300" x2="470" y2="300" stroke="var(--border-strong)" stroke-width="1.5"/>
+<text x="84" y="187.0" text-anchor="middle" font-size="8.3" fill="var(--text-muted)" transform="rotate(-90 84 187.0)">failure-rate contribution &#955;_i</text>
+<rect x="104.0" y="96.6" width="39.1" height="203.4" rx="2" fill="var(--danger)" fill-opacity="0.9" stroke="var(--danger)"/>
+<text x="123.5" y="311" text-anchor="middle" font-size="6.4" fill="var(--text-muted)">gripper-pad wear</text>
+<rect x="167.0" y="187.0" width="39.1" height="113.0" rx="2" fill="var(--accent-strong)" fill-opacity="0.55" stroke="var(--accent-strong)"/>
+<text x="186.5" y="311" text-anchor="middle" font-size="6.4" fill="var(--text-muted)">vision miss / occlusion</text>
+<rect x="230.0" y="220.9" width="39.1" height="79.1" rx="2" fill="var(--accent-strong)" fill-opacity="0.55" stroke="var(--accent-strong)"/>
+<text x="249.5" y="311" text-anchor="middle" font-size="6.4" fill="var(--text-muted)">mechanism jam</text>
+<rect x="293.0" y="250.3" width="39.1" height="49.7" rx="2" fill="var(--accent-strong)" fill-opacity="0.55" stroke="var(--accent-strong)"/>
+<text x="312.5" y="311" text-anchor="middle" font-size="6.4" fill="var(--text-muted)">sensor dropout</text>
+<rect x="356.0" y="270.6" width="39.1" height="29.4" rx="2" fill="var(--accent-strong)" fill-opacity="0.55" stroke="var(--accent-strong)"/>
+<text x="375.5" y="311" text-anchor="middle" font-size="6.4" fill="var(--text-muted)">thermal throttle</text>
+<rect x="419.0" y="284.2" width="39.1" height="15.8" rx="2" fill="var(--accent-strong)" fill-opacity="0.55" stroke="var(--accent-strong)"/>
+<text x="438.5" y="311" text-anchor="middle" font-size="6.4" fill="var(--text-muted)">connector / comms</text>
+<text x="124" y="89" text-anchor="middle" font-size="7.8" fill="var(--danger-text)" font-weight="700">dominant</text>
+<text x="124" y="79" text-anchor="middle" font-size="7" fill="var(--text-muted)">attack first (EI-05)</text>
+<text x="281" y="326" text-anchor="middle" font-size="7" fill="var(--text-muted)">failure modes, ranked (illustrative modes and rates; the method is the ranking, not asserted values)</text>
+<text x="492" y="66" font-size="9" fill="var(--text-primary)" font-weight="700">Reliability arithmetic</text>
+<text x="492" y="86" font-size="8" fill="var(--text-secondary)">FMEA: mode, effect, likelihood, detectability</text>
+<text x="492" y="106" font-size="8.6" fill="var(--text-secondary)">&#955;_sys = sum &#955;_i    (series)</text>
+<text x="492" y="123" font-size="8.6" fill="var(--text-secondary)">MTBF = 1 / &#955;_sys</text>
+<text x="492" y="140" font-size="8.6" fill="var(--text-secondary)">R(t) = e^(-&#955;_sys t)</text>
+<rect x="492" y="154" width="256" height="52" rx="8" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.5"/>
+<text x="502" y="172" font-size="7.8" fill="var(--accent)" font-weight="700">The largest &#955;_i dominates:</text>
+<text x="502" y="185" font-size="7.6" fill="var(--text-muted)">&#8706;&#955;_sys/&#8706;&#955;_i is largest there, so a fractional</text>
+<text x="502" y="197" font-size="7.6" fill="var(--text-muted)">cut of the dominant mode moves &#955;_sys most.</text>
+<text x="492" y="224" font-size="7.8" fill="var(--text-secondary)">Reliability growth: test -&gt; find dominant -&gt; fix -&gt; retest.</text>
+<text x="20" y="348" font-size="8.3" fill="var(--text-muted)">A given reliability effort moves overall failure rate most when aimed at the dominant mode: the dominant-term discipline (EI-05) in the reliability domain.</text>
+</svg></div><figcaption><span class="fid">F-M14-4</span>FMEA and the dominant failure mode (MTBF). Failure modes ranked by their contribution to the system failure rate, with the largest highlighted as the dominant mode to attack first. lambda_sys = sum lambda_i (series); MTBF = 1/lambda_sys; R(t) = e^(-lambda_sys t). A fractional cut of the dominant mode moves lambda_sys most: EI-05 in the reliability domain. Illustrative modes/rates; the method is the ranking. Sections 6.4 and 7.3.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Reliability grows across iterations over a season: each durability-test fix (calibration drift, filter clogging, seal wear, fastener loosening) raises mean time between failures toward the acceptance target; day-one testing cannot reveal these wear modes, so acceptance is a reliability target over a representative season, not a single good day." font-family="'IBM Plex Mono',monospace">
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Reliability growth over a season</text>
+<line x1="96" y1="66" x2="96" y2="252" stroke="var(--border-strong)" stroke-width="1.4"/>
+<line x1="96" y1="252" x2="700" y2="252" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="88" y="161.0" text-anchor="middle" font-size="8.4" fill="var(--text-muted)" transform="rotate(-90 88 161.0)">MTBF (cycles between failures)</text>
+<text x="398.0" y="292" text-anchor="middle" font-size="8.4" fill="var(--text-muted)">cumulative test over a representative season (thousands of cycles: wear, dust, heat, vibration) -&gt;</text>
+<line x1="96" y1="97.3" x2="700" y2="97.3" stroke="var(--accent)" stroke-width="1.4" stroke-dasharray="6 3"/>
+<text x="700" y="92.3" text-anchor="end" font-size="7.8" fill="var(--accent)" font-weight="700">acceptance reliability target</text>
+<polyline points="132.2,208.3 253.0,171.9 373.8,146.4 482.6,124.6 609.4,100.9" fill="none" stroke="var(--info)" stroke-width="2.4"/>
+<line x1="132.2" y1="208.3" x2="132.2" y2="252" stroke="var(--danger)" stroke-width="1" stroke-dasharray="3 3"/>
+<circle cx="132.2" cy="208.3" r="4.5" fill="var(--info)"/>
+<text x="138.2" y="222.3" font-size="7.2" fill="var(--danger-text)">start</text>
+<circle cx="253.0" cy="171.9" r="4.5" fill="var(--info)"/>
+<text x="253.0" y="155.9" text-anchor="middle" font-size="7.4" fill="var(--text-secondary)" font-weight="700">fix: calibration drift</text>
+<text x="253.0" y="165.9" text-anchor="middle" font-size="6.4" fill="var(--text-muted)">re-inflates placement budget (CEC-03)</text>
+<circle cx="373.8" cy="146.4" r="4.5" fill="var(--info)"/>
+<text x="373.8" y="130.4" text-anchor="middle" font-size="7.4" fill="var(--text-secondary)" font-weight="700">fix: filter clogging</text>
+<text x="373.8" y="140.4" text-anchor="middle" font-size="6.4" fill="var(--text-muted)">thermal (M12)</text>
+<circle cx="482.6" cy="124.6" r="4.5" fill="var(--info)"/>
+<text x="482.6" y="108.6" text-anchor="middle" font-size="7.4" fill="var(--text-secondary)" font-weight="700">fix: seal wear</text>
+<text x="482.6" y="118.6" text-anchor="middle" font-size="6.4" fill="var(--text-muted)">fluid (M9)</text>
+<circle cx="609.4" cy="100.9" r="4.5" fill="var(--info)"/>
+<text x="609.4" y="84.9" text-anchor="middle" font-size="7.4" fill="var(--text-secondary)" font-weight="700">fix: fastener loosening</text>
+<text x="609.4" y="94.9" text-anchor="middle" font-size="6.4" fill="var(--text-muted)">vibration</text>
+<text x="277.2" y="215.6" font-size="7.6" fill="var(--info)">reliability is grown across iterations</text>
+<text x="20" y="288" font-size="7.8" fill="var(--text-muted)">Durability testing (accelerated life, sustained operation, environmental) reveals wear modes day-one testing cannot. Acceptance is a</text>
+<text x="20" y="300" font-size="7.8" fill="var(--text-secondary)" font-weight="700">reliability target over a representative season, not a single good day (EI: prove a season, not a day).</text>
+</svg></div><figcaption><span class="fid">F-M14-6</span>Reliability growth over a season. Reliability is grown across iterations: each durability-test fix (calibration drift re-inflating placement CEC-03, filter clogging thermal M12, seal wear fluid M9, fastener loosening vibration) raises MTBF toward the acceptance target. Durability testing (accelerated life, sustained operation, environmental) reveals wear modes day-one testing cannot; acceptance is a reliability target over a representative season, not a single good day. Section 6.6.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The requirement-to-evidence matrix names, for each requirement, the evidence and its fidelity rung, and flags where only hardware or field data is admissible: reach needs only a kinematic twin, stability a dynamic twin, grasp-will-not-bruise a validated contact rung plus field data, and timing hardware-in-the-loop under load; an unvalidated or under-fidelity twin result is not admissible evidence." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Requirement-to-evidence matrix (CEC-06 as V&amp;V backbone)</text>
+<text x="310.0" y="80" font-size="7" fill="var(--info)" text-anchor="middle">kinematic</text>
+<text x="430.0" y="80" font-size="7" fill="var(--info)" text-anchor="middle">dynamic</text>
+<text x="550.0" y="80" font-size="7" fill="var(--info)" text-anchor="middle">contact/fluid</text>
+<text x="670.0" y="80" font-size="7" fill="var(--info)" text-anchor="middle">HIL / field</text>
+<text x="30" y="106.0" font-size="7.6" fill="var(--text-secondary)">reach / workspace</text>
+<rect x="250" y="86" width="114" height="28" rx="5" fill="var(--accent)" fill-opacity="0.5" stroke="var(--accent)"/>
+<text x="307.0" y="103.0" font-size="6.4" fill="var(--text-on-accent)" font-weight="700" text-anchor="middle">admissible</text>
+<text x="307.0" y="112.0" font-size="5.8" fill="var(--text-on-accent)" text-anchor="middle">twin ok</text>
+<rect x="370" y="86" width="114" height="28" rx="5" fill="var(--surface-2)" fill-opacity="0.25" stroke="var(--border)"/>
+<rect x="490" y="86" width="114" height="28" rx="5" fill="var(--surface-2)" fill-opacity="0.25" stroke="var(--border)"/>
+<rect x="610" y="86" width="114" height="28" rx="5" fill="var(--surface-2)" fill-opacity="0.25" stroke="var(--border)"/>
+<text x="30" y="140.0" font-size="7.6" fill="var(--text-secondary)">stability on slope</text>
+<rect x="250" y="120" width="114" height="28" rx="5" fill="var(--surface-2)" fill-opacity="0.25" stroke="var(--border)"/>
+<rect x="370" y="120" width="114" height="28" rx="5" fill="var(--accent)" fill-opacity="0.5" stroke="var(--accent)"/>
+<text x="427.0" y="137.0" font-size="6.4" fill="var(--text-on-accent)" font-weight="700" text-anchor="middle">admissible</text>
+<text x="427.0" y="146.0" font-size="5.8" fill="var(--text-on-accent)" text-anchor="middle">twin ok</text>
+<rect x="490" y="120" width="114" height="28" rx="5" fill="var(--surface-2)" fill-opacity="0.25" stroke="var(--border)"/>
+<rect x="610" y="120" width="114" height="28" rx="5" fill="var(--surface-2)" fill-opacity="0.25" stroke="var(--border)"/>
+<text x="30" y="174.0" font-size="7.6" fill="var(--text-secondary)">grasp will not bruise</text>
+<rect x="250" y="154" width="114" height="28" rx="5" fill="var(--surface-2)" fill-opacity="0.25" stroke="var(--border)"/>
+<rect x="370" y="154" width="114" height="28" rx="5" fill="var(--surface-2)" fill-opacity="0.25" stroke="var(--border)"/>
+<rect x="490" y="154" width="114" height="28" rx="5" fill="var(--warn)" fill-opacity="0.5" stroke="var(--warn)"/>
+<text x="547.0" y="171.0" font-size="6.4" fill="var(--text-on-accent)" font-weight="700" text-anchor="middle">admissible</text>
+<text x="547.0" y="180.0" font-size="5.8" fill="var(--text-on-accent)" text-anchor="middle">hardware/field</text>
+<rect x="610" y="154" width="114" height="28" rx="5" fill="var(--surface-2)" fill-opacity="0.25" stroke="var(--border)"/>
+<text x="30" y="208.0" font-size="7.6" fill="var(--text-secondary)">timing / deadlines</text>
+<rect x="250" y="188" width="114" height="28" rx="5" fill="var(--surface-2)" fill-opacity="0.25" stroke="var(--border)"/>
+<rect x="370" y="188" width="114" height="28" rx="5" fill="var(--surface-2)" fill-opacity="0.25" stroke="var(--border)"/>
+<rect x="490" y="188" width="114" height="28" rx="5" fill="var(--surface-2)" fill-opacity="0.25" stroke="var(--border)"/>
+<rect x="610" y="188" width="114" height="28" rx="5" fill="var(--warn)" fill-opacity="0.5" stroke="var(--warn)"/>
+<text x="667.0" y="205.0" font-size="6.4" fill="var(--text-on-accent)" font-weight="700" text-anchor="middle">admissible</text>
+<text x="667.0" y="214.0" font-size="5.8" fill="var(--text-on-accent)" text-anchor="middle">hardware/field</text>
+<text x="20" y="252" font-size="7.8" fill="var(--text-muted)">A claim is only as strong as the rung its evidence lives on. The matrix flags where only hardware/field data is admissible (grasp-no-bruise: the</text>
+<text x="20" y="264" font-size="7.8" fill="var(--text-muted)">CR-03 contact rung + field; timing: HIL under load). An unvalidated or under-fidelity twin result is not admissible evidence (CEC-06). Section 6.2.</text>
+</svg></div><figcaption><span class="fid">F-M14-2</span>Requirement-to-evidence matrix. For each requirement, the matrix names the evidence and its fidelity rung and flags where only hardware/field data is admissible: reach -> kinematic twin, stability -> dynamic twin, grasp-will-not-bruise -> validated contact rung + field (CR-03), timing -> HIL under load. A claim is only as strong as its rung; an unvalidated or under-fidelity twin result is not admissible evidence (CEC-06). Section 6.2.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sample size versus confidence: a success rate estimated from n trials has a confidence interval that narrows as n grows, so a single demo is one trial with no coverage and no evidence, while claiming high reliability requires many trials, and rare failures need very large samples or accelerated edge-case testing." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Sample size vs confidence</text>
+<polygon points="110.0,66.0 181.6,66.0 260.0,66.0 331.6,66.0 410.0,70.9 481.6,79.2 560.0,84.4 560.0,96.8 481.6,102.0 410.0,110.3 331.6,126.5 260.0,152.8 181.6,204.2 110.0,230.0" fill="var(--info)" fill-opacity="0.14"/>
+<polyline points="110.0,66.0 181.6,66.0 260.0,66.0 331.6,66.0 410.0,70.9 481.6,79.2 560.0,84.4" fill="none" stroke="var(--info)" stroke-width="1.4"/>
+<polyline points="110.0,230.0 181.6,204.2 260.0,152.8 331.6,126.5 410.0,110.3 481.6,102.0 560.0,96.8" fill="none" stroke="var(--info)" stroke-width="1.4"/>
+<line x1="110" y1="91" x2="560" y2="91" stroke="var(--accent)" stroke-width="1.4" stroke-dasharray="4 3"/>
+<text x="560" y="86.6" font-size="7" fill="var(--accent)" font-weight="end" text-anchor="end">estimate p_hat</text>
+<circle cx="110.0" cy="90.6" r="4" fill="var(--danger)"/>
+<text x="116.0" y="200.2" font-size="6.8" fill="var(--danger-text)">n=1: the demo</text>
+<text x="116.0" y="213.32" font-size="6.2" fill="var(--danger-text)">huge interval, no coverage</text>
+<line x1="110" y1="62" x2="110" y2="230" stroke="var(--border-strong)" stroke-width="1.4"/>
+<line x1="110" y1="230" x2="560" y2="230" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="102" y="148.0" text-anchor="middle" font-size="8" fill="var(--text-muted)" transform="rotate(-90 102 148.0)">success rate + confidence interval</text>
+<text x="335.0" y="258" font-size="8" fill="var(--text-muted)" text-anchor="middle">sample size n (log scale)  -></text>
+<text x="110.0" y="244" font-size="6.6" fill="var(--text-muted)" text-anchor="middle">1</text>
+<text x="260.0" y="244" font-size="6.6" fill="var(--text-muted)" text-anchor="middle">10</text>
+<text x="410.0" y="244" font-size="6.6" fill="var(--text-muted)" text-anchor="middle">100</text>
+<text x="560.0" y="244" font-size="6.6" fill="var(--text-muted)" text-anchor="middle">1000</text>
+<rect x="580" y="66" width="162" height="120" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="592" y="86" font-size="7.6" fill="var(--text-primary)" font-weight="700">A claim is statistical:</text>
+<text x="592" y="104" font-size="6.8" fill="var(--text-muted)">- interval narrows with n</text>
+<text x="592" y="120" font-size="6.8" fill="var(--text-muted)">- high reliability needs</text>
+<text x="592" y="130" font-size="6.8" fill="var(--text-muted)">  many trials</text>
+<text x="592" y="148" font-size="6.8" fill="var(--text-muted)">- rare failures need very</text>
+<text x="592" y="158" font-size="6.8" fill="var(--text-muted)">  large n or accelerated /</text>
+<text x="592" y="168" font-size="6.8" fill="var(--text-muted)">  edge-case testing</text>
+<text x="20" y="256" font-size="7.8" fill="var(--text-muted)">Coverage of the operating envelope (fruit, slope, light, dust) must make the sample represent the field. "It worked in the demo" is n=1, not evidence. Section 6.3.</text>
+</svg></div><figcaption><span class="fid">F-M14-3</span>Sample size vs confidence. A success rate from n trials has a confidence interval that narrows as n grows, so a single demo is n=1 with no coverage and no evidence, while claiming high reliability requires many trials and rare failures need very large n or accelerated/edge-case testing. Coverage of the operating envelope must make the sample represent the field. Section 6.3.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Adversarial validation deliberately concentrates tests at the envelope's edges and corners, the steepest slope, worst light, densest occlusion, most variable fruit, dustiest air, most-worn state, rather than clustering in the easy center like a demo; you design tests to fail the machine, find where it fails, and either fix it or bound the envelope honestly." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Adversarial envelope coverage (test the edges)</text>
+<rect x="120" y="60" width="380" height="150" rx="6" fill="var(--surface)" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="310.0" y="52" font-size="7" fill="var(--text-muted)" font-weight="anc=middle">operating envelope</text>
+<text x="114" y="224" font-size="6.6" fill="var(--text-muted)" text-anchor="middle">easy</text>
+<text x="500" y="224" font-size="6.6" fill="var(--danger-text)" font-weight="end" text-anchor="end">slope / light / occlusion / dust / wear -> harsh</text>
+<circle cx="295" cy="137" r="3" fill="var(--info)" fill-opacity="0.7"/>
+<circle cx="303" cy="139" r="3" fill="var(--info)" fill-opacity="0.7"/>
+<circle cx="317" cy="118" r="3" fill="var(--info)" fill-opacity="0.7"/>
+<circle cx="283" cy="148" r="3" fill="var(--info)" fill-opacity="0.7"/>
+<circle cx="297" cy="124" r="3" fill="var(--info)" fill-opacity="0.7"/>
+<circle cx="338" cy="134" r="3" fill="var(--info)" fill-opacity="0.7"/>
+<circle cx="329" cy="134" r="3" fill="var(--info)" fill-opacity="0.7"/>
+<circle cx="318" cy="121" r="3" fill="var(--info)" fill-opacity="0.7"/>
+<circle cx="318" cy="150" r="3" fill="var(--info)" fill-opacity="0.7"/>
+<text x="310.0" y="101.0" font-size="6.6" fill="var(--info)" font-weight="anc=middle">demo: easy center (proves little)</text>
+<path d="M 122,62 L 130,70 M 122,70 L 130,62" stroke="var(--danger)" stroke-width="1.6"/>
+<path d="M 490,62 L 498,70 M 490,70 L 498,62" stroke="var(--danger)" stroke-width="1.6"/>
+<path d="M 122,200 L 130,208 M 122,208 L 130,200" stroke="var(--danger)" stroke-width="1.6"/>
+<path d="M 490,200 L 498,208 M 490,208 L 498,200" stroke="var(--danger)" stroke-width="1.6"/>
+<path d="M 306.0,61 L 314.0,69 M 306.0,69 L 314.0,61" stroke="var(--danger)" stroke-width="1.6"/>
+<path d="M 491,131.0 L 499,139.0 M 491,139.0 L 499,131.0" stroke="var(--danger)" stroke-width="1.6"/>
+<path d="M 121,131.0 L 129,139.0 M 121,139.0 L 129,131.0" stroke="var(--danger)" stroke-width="1.6"/>
+<path d="M 306.0,201 L 314.0,209 M 306.0,209 L 314.0,201" stroke="var(--danger)" stroke-width="1.6"/>
+<path d="M 427.59999999999997,78.5 L 435.59999999999997,86.5 M 427.59999999999997,86.5 L 435.59999999999997,78.5" stroke="var(--danger)" stroke-width="1.6"/>
+<path d="M 458.0,183.5 L 466.0,191.5 M 458.0,191.5 L 466.0,183.5" stroke="var(--danger)" stroke-width="1.6"/>
+<text x="492" y="78" font-size="6.6" fill="var(--danger-text)" font-weight="end" text-anchor="end">adversarial: edges + corners</text>
+<rect x="524" y="60" width="218" height="150" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="536" y="80" font-size="7.8" fill="var(--text-primary)" font-weight="700">Design tests to FAIL it:</text>
+<text x="536" y="98" font-size="6.8" fill="var(--danger-text)">x steepest slope + payload</text>
+<text x="536" y="113" font-size="6.8" fill="var(--danger-text)">x worst light, deepest shade</text>
+<text x="536" y="128" font-size="6.8" fill="var(--danger-text)">x densest occlusion</text>
+<text x="536" y="143" font-size="6.8" fill="var(--danger-text)">x most variable fruit</text>
+<text x="536" y="158" font-size="6.8" fill="var(--danger-text)">x dustiest air, degraded airflow</text>
+<text x="536" y="173" font-size="6.8" fill="var(--danger-text)">x most-worn state</text>
+<text x="20" y="238" font-size="7.8" fill="var(--text-secondary)" font-weight="700">The field runs the adversarial test regardless, so the engineer must run it first: the difference between a demo and a proof (EI-14/EI-10).</text>
+<text x="20" y="250" font-size="7.8" fill="var(--text-muted)">Find where it fails, then fix it or bound the envelope honestly. Section 6.5.</text>
+</svg></div><figcaption><span class="fid">F-M14-5</span>Adversarial envelope coverage. Adversarial validation concentrates tests at the envelope's edges and corners (steepest slope, worst light, densest occlusion, most variable fruit, dustiest air, most-worn state) rather than clustering in the easy center like a demo. You design tests to fail the machine, find where it fails, and either fix it or bound the envelope honestly, the difference between a demo and a proof (EI-14/EI-10). Section 6.5.</figcaption></figure></section>
+<section class="section"><h2 id="sec-7-mathematics"><span class="secnum">7</span><span class="sectitle">Mathematics</span></h2><p>Rigor tier for M14: <strong>L2</strong>. Central results: test-plan sample size/confidence, and reliability/failure-rate composition.</p>
+<h3>7.1 Success-rate confidence</h3>
+<p>For a grasp success rate, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>p</mi><mo>^</mo></mover><mo>=</mo><mi>s</mi><mi mathvariant="normal">/</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">\hat p = s/n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">p</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1667em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">s</span><span class="mord">/</span><span class="mord mathnormal">n</span></span></span></span> from <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span> successes in <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span> trials; the confidence interval width scales <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∼</mo><msqrt><mrow><mover accent="true"><mi>p</mi><mo>^</mo></mover><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mover accent="true"><mi>p</mi><mo>^</mo></mover><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><mi>n</mi></mrow></msqrt></mrow><annotation encoding="application/x-tex">\sim\sqrt{\hat p(1-\hat p)/n}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.3669em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.24em;vertical-align:-0.305em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.935em;"><span class="svg-align" style="top:-3.2em;"><span class="pstrut" style="height:3.2em;"></span><span class="mord" style="padding-left:1em;"><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">p</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1667em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">p</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1667em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span><span class="mclose">)</span><span class="mord">/</span><span class="mord mathnormal">n</span></span></span><span style="top:-2.895em;"><span class="pstrut" style="height:3.2em;"></span><span class="hide-tail" style="min-width:1.02em;height:1.28em;"><svg xmlns="http://www.w3.org/2000/svg" width='400em' height='1.28em' viewBox='0 0 400000 1296' preserveAspectRatio='xMinYMin slice'><path d='M263,681c0.7,0,18,39.7,52,119
+c34,79.3,68.167,158.7,102.5,238c34.3,79.3,51.8,119.3,52.5,120
+c340,-704.7,510.7,-1060.3,512,-1067
+l0 -0
+c4.7,-7.3,11,-11,19,-11
+H40000v40H1012.3
+s-271.3,567,-271.3,567c-38.7,80.7,-84,175,-136,283c-52,108,-89.167,185.3,-111.5,232
+c-22.3,46.7,-33.8,70.3,-34.5,71c-4.7,4.7,-12.3,7,-23,7s-12,-1,-12,-1
+s-109,-253,-109,-253c-72.7,-168,-109.3,-252,-110,-252c-10.7,8,-22,16.7,-34,26
+c-22,17.3,-33.3,26,-34,26s-26,-26,-26,-26s76,-59,76,-59s76,-60,76,-60z
+M1001 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.305em;"><span></span></span></span></span></span></span></span></span> (use an exact/binomial interval for small <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span> or extreme <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>p</mi><mo>^</mo></mover></mrow><annotation encoding="application/x-tex">\hat p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">p</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1667em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span></span></span></span>). To <em>demonstrate</em> a high reliability <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span></span></span></span> with confidence <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">1-\alpha</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0037em;">α</span></span></span></span> and zero failures, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≥</mo><mi>ln</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>α</mi><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><mi>ln</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>R</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">n \ge \ln(\alpha)/\ln(R)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">ln</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="mclose">)</span><span class="mord">/</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">ln</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mclose">)</span></span></span></span>. <em>Use:</em> size the validation campaign; show why &quot;99% reliable&quot; needs hundreds of trials, not a demo.</p>
+<h3>7.2 Coverage and stratified testing</h3>
+<p>Partition the envelope (slope × light × fruit-size × dust) into strata; allocate samples so each stratum, especially the hard edges (EI-10/EI-14), is represented. <em>Use:</em> a success rate that is <em>representative</em>, not biased toward easy conditions.</p>
+<h3>7.3 Reliability, failure rate, and the dominant mode (EI-05)</h3>
+<p>System failure rate (series approximation) <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>λ</mi><mtext>sys</mtext></msub><mo>≈</mo><msub><mo>∑</mo><mi>i</mi></msub><msub><mi>λ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\lambda_\text{sys}\approx\sum_i \lambda_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal">λ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">sys</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0497em;vertical-align:-0.2997em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.162em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">λ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>; MTBF <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo><mn>1</mn><mi mathvariant="normal">/</mi><msub><mi>λ</mi><mtext>sys</mtext></msub></mrow><annotation encoding="application/x-tex">=1/\lambda_\text{sys}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.3669em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord">1/</span><span class="mord"><span class="mord mathnormal">λ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">sys</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span>; reliability over <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span>: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>=</mo><msup><mi>e</mi><mrow><mo>−</mo><msub><mi>λ</mi><mtext>sys</mtext></msub><mi>t</mi></mrow></msup></mrow><annotation encoding="application/x-tex">R(t)=e^{-\lambda_\text{sys}t}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8491em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight"><span class="mord mathnormal mtight">λ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1645em;"><span style="top:-2.357em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord text mtight"><span class="mord mtight">sys</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2819em;"><span></span></span></span></span></span></span><span class="mord mathnormal mtight">t</span></span></span></span></span></span></span></span></span></span></span></span>. Rank <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">{</mo><msub><mi>λ</mi><mi>i</mi></msub><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{\lambda_i\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord"><span class="mord mathnormal">λ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">}</span></span></span></span>; the largest is the <strong>dominant failure mode</strong>, and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∂</mi><msub><mi>λ</mi><mtext>sys</mtext></msub><mi mathvariant="normal">/</mi><mi mathvariant="normal">∂</mi><msub><mi>λ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\partial\lambda_\text{sys}/\partial\lambda_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord" style="margin-right:0.05556em;">∂</span><span class="mord"><span class="mord mathnormal">λ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">sys</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mord">/</span><span class="mord" style="margin-right:0.05556em;">∂</span><span class="mord"><span class="mord mathnormal">λ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> is largest there, so a fractional reduction of the dominant mode moves <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>λ</mi><mtext>sys</mtext></msub></mrow><annotation encoding="application/x-tex">\lambda_\text{sys}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal">λ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">sys</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span> most. <em>Use:</em> direct reliability effort quantitatively (EI-05 in the reliability domain). <strong>Grad (L3):</strong> distinguish per-cycle vs. per-time modes and wear-out (increasing hazard) from random failures.</p>
+<h3>7.4 Composed-budget verification with uncertainty</h3>
+<p>Report each verified budget (placement 3σ, cycle time, power/thermal margin) with its <em>evidence fidelity</em> and a confidence/margin. A budget &quot;met&quot; in an unvalidated twin (CEC-06) is reported as such, not as field-proven. <em>Use:</em> an honest acceptance table where every claim carries its evidence rung.</p>
+<figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The composed-budget acceptance table reports each verified budget with its evidence fidelity and a confidence or margin: a budget met only in an unvalidated twin is reported as such, not as field-proven, so every claim carries the rung of evidence beneath it." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Composed-budget acceptance table (honest evidence)</text>
+<text x="36" y="64" font-size="7.4" fill="var(--text-primary)" font-weight="700">budget</text>
+<text x="181" y="64" font-size="7.4" fill="var(--text-primary)" font-weight="700">value vs limit</text>
+<text x="351" y="64" font-size="7.4" fill="var(--text-primary)" font-weight="700">margin</text>
+<text x="441" y="64" font-size="7.4" fill="var(--text-primary)" font-weight="700">evidence rung</text>
+<text x="616" y="64" font-size="7.4" fill="var(--text-primary)" font-weight="700">status</text>
+<rect x="30" y="76" width="700" height="28" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+<text x="36" y="94" font-size="7" fill="var(--text-secondary)">placement 3sigma</text>
+<text x="181" y="94" font-size="7" fill="var(--text-muted)">2.4 vs 3.0 mm</text>
+<text x="351" y="94" font-size="7" fill="var(--text-muted)">0.6 mm</text>
+<text x="441" y="94" font-size="6.6" fill="var(--info)">contact rung + field</text>
+<rect x="610" y="80" width="112" height="20" rx="4" fill="var(--accent)" fill-opacity="0.18" stroke="var(--accent)"/>
+<text x="666" y="94" font-size="6.8" fill="var(--accent)" font-weight="700" text-anchor="middle">proven</text>
+<rect x="30" y="108" width="700" height="28" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+<text x="36" y="126" font-size="7" fill="var(--text-secondary)">cycle time</text>
+<text x="181" y="126" font-size="7" fill="var(--text-muted)">11.2 vs 12 s</text>
+<text x="351" y="126" font-size="7" fill="var(--text-muted)">0.8 s</text>
+<text x="441" y="126" font-size="6.6" fill="var(--info)">HIL under load</text>
+<rect x="610" y="112" width="112" height="20" rx="4" fill="var(--accent)" fill-opacity="0.18" stroke="var(--accent)"/>
+<text x="666" y="126" font-size="6.8" fill="var(--accent)" font-weight="700" text-anchor="middle">proven</text>
+<rect x="30" y="140" width="700" height="28" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+<text x="36" y="158" font-size="7" fill="var(--text-secondary)">power / thermal</text>
+<text x="181" y="158" font-size="7" fill="var(--text-muted)">exceeds at 45C</text>
+<text x="351" y="158" font-size="7" fill="var(--text-muted)">-</text>
+<text x="441" y="158" font-size="6.6" fill="var(--info)">dynamic twin</text>
+<rect x="610" y="144" width="112" height="20" rx="4" fill="var(--warn)" fill-opacity="0.18" stroke="var(--warn)"/>
+<text x="666" y="158" font-size="6.8" fill="var(--warn)" font-weight="700" text-anchor="middle">projection</text>
+<rect x="30" y="172" width="700" height="28" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+<text x="36" y="190" font-size="7" fill="var(--text-secondary)">grasp success</text>
+<text x="181" y="190" font-size="7" fill="var(--text-muted)">0.94 est (n=180)</text>
+<text x="351" y="190" font-size="7" fill="var(--text-muted)">+/-0.03</text>
+<text x="441" y="190" font-size="6.6" fill="var(--info)">field sample</text>
+<rect x="610" y="176" width="112" height="20" rx="4" fill="var(--accent)" fill-opacity="0.18" stroke="var(--accent)"/>
+<text x="666" y="190" font-size="6.8" fill="var(--accent)" font-weight="700" text-anchor="middle">proven</text>
+<rect x="30" y="204" width="700" height="28" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+<text x="36" y="222" font-size="7" fill="var(--text-secondary)">reliability / season</text>
+<text x="181" y="222" font-size="7" fill="var(--text-muted)">target R(t)</text>
+<text x="351" y="222" font-size="7" fill="var(--text-muted)">tbd</text>
+<text x="441" y="222" font-size="6.6" fill="var(--info)">accelerated life</text>
+<rect x="610" y="208" width="112" height="20" rx="4" fill="var(--danger)" fill-opacity="0.18" stroke="var(--danger)"/>
+<text x="666" y="222" font-size="6.8" fill="var(--danger)" font-weight="700" text-anchor="middle">not yet</text>
+<text x="20" y="236" font-size="7.8" fill="var(--text-muted)">A budget met in an unvalidated twin (CEC-06) is reported as a projection, not as field-proven. Every claim carries its evidence rung. Illustrative entries. Section 7.4.</text>
+</svg></div><figcaption><span class="fid">F-M14-7</span>Composed-budget acceptance table. Each verified budget (placement 3sigma, cycle time, power/thermal, grasp success, reliability) is reported with its evidence fidelity rung and a confidence or margin. A budget met only in an unvalidated twin (CEC-06) is reported as a projection, not as field-proven, so every claim carries the rung of evidence beneath it. An honest acceptance table. Section 7.4.</figcaption></figure></section>
+<section class="section"><h2 id="sec-8-engineering-principles"><span class="secnum">8</span><span class="sectitle">Engineering Principles</span></h2><ol>
+<li><strong>Verify against the spec, validate against the field</strong>, both, and know which you're doing.</li>
+<li><strong>Evidence has fidelity</strong> (CEC-06): a claim is only as strong as the validated rung under it.</li>
+<li><strong>Statistics, not anecdotes</strong>, size the test to the claim; state the confidence.</li>
+<li><strong>Cover the envelope, especially its edges</strong> (EI-10), a representative sample, not an easy one.</li>
+<li><strong>Find and attack the dominant failure mode</strong> (EI-05), reliability effort pays only where the failures are.</li>
+<li><strong>Validate adversarially</strong> (EI-14): try to break it before the field does.</li>
+<li><strong>Prove a season, not a day</strong>, reliability is grown and demonstrated over representative time.</li>
+</ol>
+</section>
+<section class="section"><h2 id="sec-9-system-requirements"><span class="secnum">9</span><span class="sectitle">System Requirements</span></h2><p>Derived from the proving mission; verify all prior budgets. IDs continue; [-&gt;Doc B] formalizes. Targets [VERIFY@PUB].</p>
+<div class="twrap"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Type</th>
+<th>Requirement (abbreviated)</th>
+<th>Verification method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SR-V-05</td>
+<td>Verification</td>
+<td>Every top-level requirement shall map to admissible evidence at the appropriate fidelity rung (CEC-06).</td>
+<td>Requirement-to-evidence matrix review</td>
+</tr>
+<tr>
+<td>SR-V-06</td>
+<td>Verification</td>
+<td>Grasp success and no-bruise rates shall be validated to a stated target and confidence across the envelope.</td>
+<td>Statistical field/HIL test</td>
+</tr>
+<tr>
+<td>SR-V-07</td>
+<td>Verification</td>
+<td>Placement (CEC-03), cycle-time (CEC-01), and power/thermal (M12) budgets shall be verified with field-representative evidence.</td>
+<td>Measurement + analysis</td>
+</tr>
+<tr>
+<td>SR-R-01</td>
+<td>Reliability</td>
+<td>An FMEA shall identify failure modes and the dominant mode; the design shall attack the dominant mode to a reliability target (EI-05).</td>
+<td>FMEA + reliability-growth test</td>
+</tr>
+<tr>
+<td>SR-R-02</td>
+<td>Reliability</td>
+<td>The machine shall meet a reliability/durability target over a representative season (wear, dust, heat, vibration).</td>
+<td>Durability/accelerated-life test</td>
+</tr>
+<tr>
+<td>SR-V-08</td>
+<td>Verification</td>
+<td>Validation shall include adversarial testing at the operating-envelope edges (EI-14/EI-10).</td>
+<td>Edge-case test campaign</td>
+</tr>
+<tr>
+<td>SR-I-19</td>
+<td>Interface</td>
+<td>V&amp;V evidence and reliability analysis shall feed the safety case (M15) and cost/deployment (M16).</td>
+<td>Review</td>
+</tr>
+</tbody>
+</table></div>
+<p>Traceability: SR-V-05 -&gt; CEC-06; SR-V-06/07 -&gt; CEC-01/02/03, M12; <strong>SR-R-01 -&gt; EI-05</strong>; SR-R-02 -&gt; durability; SR-V-08 -&gt; EI-10/EI-14; SR-I-19 -&gt; M15/M16.</p>
+</section>
+<section class="section"><h2 id="sec-10-design-decisions"><span class="secnum">10</span><span class="sectitle">Design Decisions</span></h2><ul>
+<li><strong>DD-83 Requirement-to-evidence matrix with fidelity tags</strong> (CEC-06). <em>Rationale:</em> Section 6.2; admissible evidence per claim. <em>Serves:</em> SR-V-05.</li>
+<li><strong>DD-84 Statistically sound, envelope-stratified test plans.</strong> <em>Rationale:</em> Section 6.3/Section 7.1 to 7.2; representative, confidence-bounded claims. <em>Serves:</em> SR-V-06/07.</li>
+<li><strong>DD-85 FMEA + dominant-failure-mode attack</strong> (EI-05). <em>Rationale:</em> Section 6.4/Section 7.3; reliability effort where it pays. <em>Serves:</em> SR-R-01.</li>
+<li><strong>DD-86 Durability / reliability-growth testing over a representative season.</strong> <em>Rationale:</em> Section 6.6; prove time, not a day. <em>Serves:</em> SR-R-02.</li>
+<li><strong>DD-87 Adversarial validation at envelope edges</strong> (EI-14). <em>Rationale:</em> Section 6.5; break it first. <em>Serves:</em> SR-V-08.</li>
+<li><strong>DD-88 Twin-as-evidence where validated; field-mandatory where not</strong> (CEC-06). <em>Rationale:</em> Section 6.2/Section 6.7; honest evidence sourcing. <em>Serves:</em> SR-V-05/07.</li>
+<li><strong>DD-89 Composed-budget acceptance table with evidence fidelity.</strong> <em>Rationale:</em> Section 6.7/Section 7.4; the honest acceptance argument. <em>Serves:</em> SR-V-07.</li>
+</ul>
+</section>
+<section class="section"><h2 id="sec-11-trade-studies"><span class="secnum">11</span><span class="sectitle">Trade Studies</span></h2><h3>11.1 TS-27: Evidence-source strategy per claim</h3>
+<p><strong>Alternatives:</strong> (A) <strong>twin-heavy</strong> (verify mostly in the validated twin); (B) <strong>field-heavy</strong> (verify mostly in the field); (C) <strong>HIL-heavy</strong>; (D) <strong>matched (twin where validated, HIL for timing, field for fidelity-sensitive/adversarial claims)</strong>. Scored 1 to 5 (weights illustrative; ratified in -&gt;Doc B/Doc G).</p>
+<div class="twrap"><table>
+<thead>
+<tr>
+<th>Criterion (weight)</th>
+<th style="text-align:center">A: Twin-heavy</th>
+<th style="text-align:center">B: Field-heavy</th>
+<th style="text-align:center">C: HIL-heavy</th>
+<th style="text-align:center">D: Matched</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Admissibility / trustworthiness per claim (0.30)</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">5</td>
+</tr>
+<tr>
+<td>Cost / time / fruit consumed (0.24)</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">4</td>
+</tr>
+<tr>
+<td>Coverage of the envelope (0.20)</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">5</td>
+</tr>
+<tr>
+<td>Safety of testing failures (0.14)</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">4</td>
+</tr>
+<tr>
+<td>Statistical power achievable (0.12)</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">4</td>
+</tr>
+<tr>
+<td><strong>Weighted total</strong></td>
+<td style="text-align:center"><strong>4.06</strong></td>
+<td style="text-align:center"><strong>3.24</strong></td>
+<td style="text-align:center"><strong>3.86</strong></td>
+<td style="text-align:center"><strong>4.58</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Selected: D (matched).</strong> Use the validated twin (CEC-06) for claims it can support at admissible fidelity (reach, much of timing, budget composition), HIL for real-timing/resource claims, and field data for the fidelity-sensitive and adversarial claims that only reality can settle (grasp-bruise across real fruit, envelope-edge validation). This maximizes trustworthy coverage per unit of cost and fruit, the V&amp;V-side expression of CEC-06. Recorded weakness: &quot;matched&quot; requires correctly judging which claims the twin can bear, so the evidence matrix is reviewed as field data either confirms or overturns twin predictions (reliability growth for the evidence itself).</p>
+<h3>11.2 TS-28: Reliability strategy (summary)</h3>
+<p><strong>Alternatives:</strong> test-to-target only, FMEA-driven dominant-mode attack, redundancy-everywhere, run-to-failure-and-fix. <strong>Criteria:</strong> reliability gain per effort, cost/mass, coverage of real modes. <strong>Outcome:</strong> <strong>FMEA-driven dominant-mode attack with reliability growth</strong>, find the dominant failure mode, fix it, retest, repeat (EI-05); add redundancy only where the dominant mode and the safety case (M15) demand it. Redundancy-everywhere is rejected (cost/mass without targeting the real risk, an anti-EI-08/EI-05 pattern).</p>
+<h3>11.3 Explicit Core Engineering Concept evaluation <em>(standing requirement)</em></h3>
+<p>Per instructor direction after M13, the <strong>CEC set is treated as complete</strong> (six anchors); the evaluation's default outcome is &quot;existing anchor applied,&quot; and a new CEC requires an extraordinary case.</p>
+<ul>
+<li><strong>V&amp;V methodology / reliability analysis (FMEA, test planning).</strong> <em>Verdict: no new CEC.</em> Mastered <em>techniques</em>, captured in the V&amp;V/reliability thread, not new analytical anchors.</li>
+<li><strong>Evidence-to-fidelity matching.</strong> <em>Verdict: no new CEC, this is CEC-06 applied</em> to verification (the fidelity ladder governing which evidence is admissible for which claim). A prime example of the completed set covering the new domain.</li>
+<li><strong>Dominant-failure-mode attack.</strong> <em>Verdict: no new CEC, this is EI-05 applied</em> to reliability (the dominant-term method, now over failure rates), reinforcing that one method spans accuracy, energy, heat, and reliability.</li>
+<li><strong>EI-14 (Validate Adversarially)</strong> is added as this module's Engineering Insight, reinforcing EI-10 (the field is the spec) with the proving-stage judgment to <em>seek</em> failure. <em>(No new CEC; one EI added, within discipline, and consistent with the set-complete direction.)</em></li>
+</ul>
+<blockquote class="callout note">
+<p><strong>Cross-module synthesis note (lightweight).</strong> Three of the course's anchors converge on the acceptance table: <strong>CEC-06</strong> decides <em>what evidence is admissible</em> for each requirement, <strong>EI-05</strong> decides <em>where reliability effort goes</em> (the dominant failure mode), and <strong>EI-10/EI-14</strong> decide <em>where to test</em> (the envelope's adversarial edges). Proving the machine is not one activity but the disciplined application of tools the course already built, the clearest sign the anchor set is complete.</p>
+</blockquote>
+<blockquote class="callout hook">
+<p><strong>Simulation-first hook.</strong> The validated twin (CEC-06) supplies admissible evidence for the claims it can bear and is itself <em>validated</em> against field data here; where the twin cannot bear a claim (fidelity-sensitive grasp-bruise, adversarial edges), field evidence is mandatory, the honest boundary of the simulation-first bet.</p>
+</blockquote>
+</section>
+<section class="section"><h2 id="sec-12-simulation-activities"><span class="secnum">12</span><span class="sectitle">Simulation Activities</span></h2><p>M14 runs at <strong>HIL -&gt; Prototype -&gt; Field</strong> for evidence generation; the validated twin (M13/CEC-06) is one evidence source among several.</p>
+<p><strong>SA-1, Evidence-matrix build.</strong> For each top-level requirement, assign the evidence and its fidelity rung (twin/HIL/field) and flag field-mandatory claims (Section 6.2, SR-V-05). <em>Outcome:</em> the requirement-to-evidence backbone.</p>
+<p><strong>SA-2, Test-plan sizing.</strong> For grasp success and placement, compute the sample size and envelope stratification needed for a target confidence (Section 7.1 to 7.2, SR-V-06). <em>Outcome:</em> statistically defensible test plans.</p>
+<p><strong>SA-3, FMEA &amp; dominant-mode analysis.</strong> Enumerate failure modes in the (validated) twin and from design; estimate rates; identify the dominant mode and simulate its reduction (Section 6.4, Section 7.3, EI-05). <em>Outcome:</em> reliability effort directed.</p>
+<p><strong>SA-4, Adversarial edge campaign.</strong> Drive the twin/HIL to the envelope's edges (slope, light, occlusion, dust, wear) and to fidelity-sensitive cases; record where the machine fails (Section 6.5, EI-14). <em>Outcome:</em> failures found in sim/HIL before the field.</p>
+</section>
+<section class="section"><h2 id="sec-13-digital-twin-activities"><span class="secnum">13</span><span class="sectitle">Digital Twin Activities</span></h2><p><strong>DTA-1, Twin-as-evidence validation &amp; admissibility (CEC-06).</strong> Specify how each twin-sourced verification claim is validated against field data to its tolerance, and the admissibility record (rung, validation, confidence). <em>Outcome:</em> SR-V-05; twin evidence that is citable, not assumed.</p>
+<p><strong>DTA-2, Reliability-growth instrument.</strong> Specify the twin/HIL loop for reliability growth: run -&gt; identify dominant mode -&gt; fix -&gt; retest, with the failure-rate trend recorded. <em>Outcome:</em> a reliability-growth trajectory (feeds SR-R-01/02).</p>
+<p><strong>DTA-3, Acceptance-evidence package.</strong> Package the verified composed budgets (CEC-01/03, power/thermal) with their evidence fidelity for M15 (safety) and M16 (economics). <em>Outcome:</em> the honest acceptance table (SR-V-07).</p>
+</section>
+<section class="section"><h2 id="sec-14-hardware-activities"><span class="secnum">14</span><span class="sectitle">Hardware Activities</span></h2><p><em>(Tiered: field/durability protocols at specification level, hardware and field data are where much of this module's evidence must come from.)</em></p>
+<p><strong>HA-1, Field validation campaign.</strong> Specify the statistically sound, envelope-stratified field trials for grasp success/no-bruise, placement, and cycle time (SR-V-06/07), including adversarial edge cases (SR-V-08). <em>Deliverable:</em> field evidence with confidence bounds.</p>
+<p><strong>HA-2, Durability / reliability-growth test.</strong> Specify sustained/accelerated operation over a representative season-equivalent (wear, dust, heat, vibration) with failure logging and dominant-mode tracking (SR-R-01/02). <em>Deliverable:</em> reliability-growth data and MTBF estimate.</p>
+<p><strong>HA-3, Calibration-drift check.</strong> Specify periodic re-verification of the placement budget (CEC-03) as the machine wears/drifts. <em>Deliverable:</em> drift data (feeds maintenance/M16).</p>
+</section>
+<section class="section"><h2 id="sec-15-software-activities"><span class="secnum">15</span><span class="sectitle">Software Activities</span></h2><p><strong>SWA-1, V&amp;V data pipeline &amp; test harness.</strong> Specify automated logging, metrics, and confidence computation for the test campaign (grasp outcomes, placement, timing, failures) with envelope-stratum tagging. <em>Outcome:</em> reproducible, statistically summarized evidence.</p>
+<p><strong>SWA-2, Regression &amp; reliability dashboards.</strong> Specify continuous regression (the M13 system suite) plus a reliability dashboard (failure-mode counts, dominant mode, MTBF trend). <em>Outcome:</em> living V&amp;V/reliability evidence (feeds M15/M16).</p>
+</section>
+<section class="section"><h2 id="sec-16-ros-2-integration"><span class="secnum">16</span><span class="sectitle">ROS 2 Integration</span></h2><p>V&amp;V instruments the integrated node graph (M11/M13): logging and metrics nodes capture per-cycle outcomes (grasp force vs. window, placement error, loop latencies, guard/monitor activations, faults) with envelope-stratum tags. The fault-injection harness (M11) is reused for reliability and adversarial testing. The safety monitor's activations are logged as reliability/safety events (feeds M15). On-robot logging respects the compute/power budgets (M6/M12). M14 does not change the architecture; it <em>proves</em> it with recorded evidence.</p>
+</section>
+<section class="section"><h2 id="sec-17-ai-integration"><span class="secnum">17</span><span class="sectitle">AI Integration</span></h2><p>The learned components (perception M4, grasp policy M7/M9, row-following M10) are among the hardest things to verify, and this module treats them honestly:</p>
+<ul>
+<li><strong>Statistical validation, not demonstration.</strong> Learned-component performance (recall, grasp success) is validated statistically across the envelope (Section 6.3), not shown on easy cases, the adversarial discipline (EI-14) matters most for opaque models.</li>
+<li><strong>Fidelity-appropriate evidence (CEC-06).</strong> A policy validated only in low-fidelity sim is inadmissible for a field claim; grasp-bruise needs the validated contact rung and field data (CR-03).</li>
+<li><strong>Bounded-learner verification.</strong> V&amp;V confirms the bounds (EI-07) and the independent monitor (EI-11) actually contain the learned components under adversarial and fault conditions, verifying the <em>system</em> even though the policy is opaque.</li>
+<li><strong>Reliability of learning.</strong> Distribution shift over a season (new fruit, conditions) is a reliability/failure mode (drift); monitored and re-validated (feeds M16 maintenance).</li>
+</ul>
+<p>The bounded system, not the policy, is what gets certified, verified adversarially and statistically.</p>
+</section>
+<section class="section"><h2 id="sec-18-edge-computing-integration"><span class="secnum">18</span><span class="sectitle">Edge Computing Integration</span></h2><p>V&amp;V verifies the edge system's real behavior: worst-case timing under field-representative load (CEC-01/M11), power/thermal margin at the envelope edge (M12/EI-12), and their stability over a season (drift, thermal cycling). These are verified in HIL and field (the admissible rungs for timing/thermal), since a bench average (CEC-06) is inadmissible for a worst-case field claim. Thermal/timing failures are logged as reliability events. The no-cloud boundary (CEC-04) means all evidence is generated on-device, in the field.</p>
+</section>
+<section class="section"><h2 id="sec-19-fluid-power-integration"><span class="secnum">19</span><span class="sectitle">Fluid Power Integration</span></h2><p>The fluid grasp (M9) is the machine's central function and its hardest V&amp;V target. Three points: (1) grasp success and <strong>no-bruise rates</strong> must be validated <em>statistically across real fruit and the envelope</em>, the fidelity-sensitive claim that only the validated contact rung (CR-03/CEC-06) plus field data can settle; (2) fluid-power <strong>reliability</strong> modes (seal wear, leaks, pump duty, relief drift) enter the FMEA and are candidates for the dominant failure mode (EI-05), a drifting relief is both a reliability and a <em>safety</em> concern (M15); (3) the <strong>relief and compliance</strong> safety functions (EI-09) are verified under adversarial and fault conditions (does the relief still cap force after a season of wear?). The grasp's proof is a statistical, envelope-covering, season-long argument, not a bench demo.</p>
+</section>
+<section class="section lab"><h2 id="sec-24-laboratory"><span class="secnum">24</span><span class="sectitle">Laboratory</span></h2><p><strong>Lab M14, Proving the Machine: Evidence, Statistics, and Reliability</strong></p>
+<ul>
+<li><strong>Objectives.</strong> (1) Build a requirement-to-evidence matrix with fidelity rungs; (2) size a statistically sound, envelope-stratified test plan; (3) perform an FMEA and find/attack the dominant failure mode; (4) design adversarial validation at the envelope edges; (5) assemble the composed-budget acceptance table with evidence fidelity.</li>
+<li><strong>Equipment.</strong> The validated twin + HIL harness (M13); the requirements set (M1 to M13); field/durability data or a data model [VERIFY@PUB]; statistics tools; notebook. <strong>Safety:</strong> any hardware/field testing follows the safety architecture (M11) and envelope limits (M10/M15).</li>
+<li><strong>Procedure.</strong>
+<ol>
+<li>For each top-level requirement, assign evidence and its fidelity rung; flag field-mandatory (fidelity-sensitive/adversarial) claims (Section 6.2, SR-V-05).</li>
+<li>For grasp success and placement, compute required sample size for a target confidence and stratify across the envelope (Section 7.1 to 7.2, SR-V-06).</li>
+<li>Build an FMEA; estimate failure rates; identify the dominant mode and quantify the MTBF gain from attacking it vs. a minor mode (Section 7.3, EI-05, SR-R-01).</li>
+<li>Design an adversarial validation plan targeting the envelope edges and fidelity-sensitive cases; predict where the machine fails (Section 6.5, EI-14, SR-V-08).</li>
+<li>Assemble the composed-budget acceptance table (placement, cycle-time, power/thermal) with each claim's evidence fidelity and confidence (Section 6.7/Section 7.4, SR-V-07).</li>
+</ol>
+</li>
+<li><strong>Data collection.</strong> Evidence matrix; test-plan sizes/strata; FMEA and dominant mode with MTBF sensitivity; adversarial plan; acceptance table.</li>
+<li><strong>Analysis.</strong> Which claims are field-mandatory? How many trials does the reliability target need? What is the dominant failure mode and how much does attacking it help? Where do you predict the machine fails adversarially?</li>
+<li><strong>Discussion.</strong> Why is evidence fidelity (CEC-06) the backbone of honest V&amp;V? Why validate adversarially (EI-14)? Why does the dominant-mode discipline (EI-05) recur yet again? What can the twin prove, and what must the field prove?</li>
+<li><strong>Deliverables.</strong> A 5 to 6 page V&amp;V/reliability plan: evidence matrix, test plans, FMEA/dominant mode, adversarial plan, acceptance table.</li>
+<li><strong>Rubric (100 pts).</strong> Evidence matrix with fidelity (20, CEC-06); test-plan sizing/coverage (18); FMEA &amp; dominant mode (20, EI-05); adversarial validation plan (18, EI-14); acceptance table (14); communication (10). <em>Graduate band adds:</em> wear-out vs. random-failure hazard modeling (Section 7.3 grad) and a cited source.</li>
+<li><strong>Expected results.</strong> An evidence matrix that reveals several claims are field-mandatory (not twin-provable); a sample size far larger than a demo; a clear dominant failure mode whose attack moves MTBF most; an adversarial plan that predicts the machine's weak edges; and an acceptance table where every claim honestly carries its evidence fidelity, the difference between &quot;should work&quot; and &quot;proven.&quot;</li>
+</ul>
+</section>
+<section class="section hw"><h2 id="sec-25-homework"><span class="secnum">25</span><span class="sectitle">Homework</span></h2><p>Tiered: all do 1 to 4; graduate add 5 to 6.</p>
+<ol>
+<li><strong>Evidence matrix.</strong> For five given requirements, assign evidence and fidelity rung; identify which are field-mandatory and why (CEC-06).</li>
+<li><strong>Sample size.</strong> For a target reliability and confidence with zero allowed failures, compute the required number of trials; interpret what a demo (n=1) actually proves.</li>
+<li><strong>FMEA / dominant mode.</strong> Given failure modes and rates, compute system MTBF, identify the dominant mode, and quantify the MTBF gain from a stated reduction there vs. a minor mode (EI-05).</li>
+<li><strong>Adversarial plan.</strong> For the operating envelope, design a validation plan that targets the edges; state the pass/fail criteria and what a failure would tell you (EI-14).</li>
+<li><strong>(Grad) Wear-out.</strong> Distinguish random from wear-out failures for two SIM2FIELD modes; model the increasing hazard and its effect on a season-long reliability estimate.</li>
+<li><strong>(Grad) Evidence admissibility.</strong> Argue whether a validated-twin result is admissible for a stated grasp-bruise requirement; specify exactly what validation (rung, tolerance, field confirmation) would make it admissible (CEC-06).</li>
+</ol>
+</section>
+<section class="section quiz"><h2 id="sec-26-quiz"><span class="secnum">26</span><span class="sectitle">Quiz</span></h2><ol>
+<li><strong>(MC)</strong> Verification vs. validation: verification asks, validation asks, (a) same thing; (b) &quot;built it right (meets spec)?&quot; vs. &quot;built the right thing (does the field job)?&quot;; (c) cost vs. speed; (d) sim vs. hardware.</li>
+<li><strong>(MC)</strong> A grasp-will-not-bruise claim is admissibly verified by: (a) a kinematic twin; (b) the validated contact rung + field data (CEC-06); (c) a single demo; (d) a datasheet.</li>
+<li><strong>(MC)</strong> &quot;It worked in the demo&quot; is: (a) sufficient evidence; (b) a sample of one with no coverage; (c) a reliability proof; (d) a confidence interval.</li>
+<li><strong>(MC)</strong> Reliability effort moves MTBF most when aimed at: (a) any mode; (b) the dominant failure mode (EI-05); (c) the rarest mode; (d) the cheapest fix.</li>
+<li><strong>(Short)</strong> State EI-14 and one SIM2FIELD example.</li>
+<li><strong>(Calc)</strong> To demonstrate R=0.99 reliability at 95% confidence with zero failures, how many trials?</li>
+<li><strong>(Calc)</strong> Modes with rates 5, 2, 1 (per 1000 cycles). System rate and dominant mode?</li>
+<li><strong>(Design)</strong> Why match evidence to fidelity rung (CEC-06) in V&amp;V?</li>
+<li><strong>(Critical thinking)</strong> Why can a machine pass verification but fail validation?</li>
+<li><strong>(Critical thinking)</strong> Why is one perfect grasp not a reliability result?</li>
+</ol>
+</section>
+<section class="section challenge"><h2 id="sec-27-challenge-problems"><span class="secnum">27</span><span class="sectitle">Challenge Problems</span></h2><ul>
+<li><strong>CP-M14-A, The acceptance argument.</strong> Assemble the full acceptance case for the machine: each top requirement, its evidence, the fidelity rung, the statistical confidence, and the residual (unproven or field-only) items. Identify the weakest link in the argument. (Directly feeds M15's safety case and M16's go/no-go.)</li>
+<li><strong>CP-M14-B, Dominant-mode reliability growth.</strong> Given an FMEA and a reliability target, plan a reliability-growth campaign (test -&gt; fix dominant mode -&gt; retest) and estimate the iterations/MTBF trajectory to reach the target (EI-05). (Operationalizes reliability growth.)</li>
+<li><strong>CP-M14-C, Adversarial campaign design.</strong> Design the adversarial validation campaign that would most efficiently expose the machine's true failure boundary across the envelope; specify strata, sample allocation, and stop criteria (EI-14/EI-10). (Feeds M15/M16.)</li>
+</ul>
+</section>
+<section class="section"><h2 id="sec-engineering-design-review" class="unnum">Engineering Design Review</h2><p><em>Not graded. The questions a review board would ask; argue with evidence.</em></p>
+<ol>
+<li><strong>Assumptions.</strong> Your acceptance argument leans on twin evidence for several claims. What are you assuming about the twin's validation (CEC-06), and for which claims would a reviewer rightly demand field data instead? Where is twin evidence being stretched past its validated rung?</li>
+<li><strong>Tradeoffs.</strong> You matched evidence sources per claim (twin/HIL/field) to control cost and fruit consumed. Defend that to a reviewer who wants everything field-validated. What do you lose by twin-verifying a claim, and how do you bound that risk?</li>
+<li><strong>Risk.</strong> Your reliability effort targets the dominant failure mode. What if the FMEA missed a mode, or a minor mode becomes dominant under wear/season effects? How does your plan catch a wrong dominant-mode judgment before deployment?</li>
+<li><strong>Verification.</strong> Your grasp success rate is a statistical claim. Is your sample size and envelope coverage sufficient for the target confidence, including the rare no-bruise failures? What's the true confidence interval, and does it meet the grower's need?</li>
+<li><strong>Subsystem interaction.</strong> Reliability and safety overlap (a drifting relief is both). Who owns a failure mode that is both a reliability and a safety concern, and how do the M14 reliability evidence and the M15 safety case stay consistent about it?</li>
+<li><strong>Adversarial honesty.</strong> Did your validation genuinely try to break the machine at the envelope's hard edges, or did it accumulate easy successes? Show the failures you found, a validation campaign that found no failures is more suspicious than one that found and fixed several (EI-14).</li>
+</ol>
+</section>
+<section class="section"><h2 id="sec-29-research-frontiers"><span class="secnum">29</span><span class="sectitle">Research Frontiers</span></h2><ul>
+<li><strong>Landmark grounding.</strong> Verification-and-validation and systems-engineering test references; reliability-engineering references (FMEA, failure-rate/MTBF, reliability growth); statistical test-design references. <em>(Consult current editions; entries in the reference set, not reproduced here.)</em></li>
+<li><strong>Recent advances (survey current literature [VERIFY@PUB]).</strong> Validation of learning-enabled autonomous systems (statistical guarantees, adversarial/edge-case testing); simulation-based/credibility-assessed evidence for certification; scenario-based and coverage-driven testing for field robots; reliability growth and prognostics/health management for agricultural machinery; rare-failure estimation for high-reliability autonomy.</li>
+<li><strong>Open problems.</strong> Admissible simulation-based evidence for safety-relevant claims; statistically sound validation of opaque learned components; efficient adversarial discovery of an autonomy's failure boundary; season-long reliability prediction from accelerated tests.</li>
+<li><strong>Suggested thesis directions.</strong> (1) A credibility-assessed twin-plus-field evidence framework that states, per requirement, the admissible confidence. (2) Adversarial validation that efficiently maps a harvester's failure boundary across its envelope. (3) Reliability-growth and prognostics for a fluid-powered field manipulator over a season.</li>
+</ul>
+</section>
+<section class="section"><h2 id="sec-30-references"><span class="secnum">30</span><span class="sectitle">References</span></h2><p><em>Cited by role; consult current editions. No copyrighted text is reproduced. Full entries in <code>references/bibliography.md</code> [-&gt;Doc H].</em></p>
+<ul>
+<li>Verification-and-validation / systems-engineering test references, V&amp;V structure, evidence, acceptance (Section 6.1 to 6.2).</li>
+<li>Reliability-engineering references (FMEA, failure rate/MTBF, reliability growth), Section 6.4/Section 6.6, Section 7.3.</li>
+<li>Statistical test-design references, sample size, confidence, coverage (Section 6.3, Section 7.1 to 7.2).</li>
+<li>Learning-enabled-system validation / adversarial-testing literature, verifying opaque components (Section 6.5; EI-14).</li>
+<li>SIM2FIELD governing documents, <code>PHASE-0-FOUNDATION.md</code>, <code>PHASE-1-CURRICULUM-ARCHITECTURE.md</code>, <code>curriculum/_core-concepts.md</code>, <strong>Modules 1 to 13</strong>, and (forthcoming) Doc B, Doc C, Doc G.</li>
+</ul>
+</section>
+    <footer>Rendered from <b>MODULE-14.md</b> by Module Rendering Pipeline v1.3. Student edition. The module is the single source of truth.<br>
+    Finished media only; production specifications and author notes live in the author edition.<br>
+    SIM2FIELD / Autonomous Watermelon Harvesting Robotics</footer>
+  </div></main>
+</div>
+<script>
+(function(){var links=[].slice.call(document.querySelectorAll('.toc a'));var map={};
+ links.forEach(function(a){map[a.getAttribute('href').slice(1)]=a;});
+ if(!('IntersectionObserver' in window))return;
+ var io=new IntersectionObserver(function(es){es.forEach(function(e){var id=e.target.id;
+   if(e.isIntersecting&&map[id]){links.forEach(function(l){l.classList.remove('active');});map[id].classList.add('active');map[id].scrollIntoView({block:'nearest'});}});},
+   {rootMargin:'-12% 0px -78% 0px'});
+ document.querySelectorAll('.section h2[id]').forEach(function(h){io.observe(h);});})();
+</script>
+</body></html>

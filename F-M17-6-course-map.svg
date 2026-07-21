@@ -1,0 +1,60 @@
+<svg viewBox="0 0 760 452" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The course as one practice: six analytical tools (the Core Engineering Concepts) and thirteen judgment insights grouped into seven families (the Engineering Insights), unified by the synthesizing meta-insight to own the whole; the test of the practice is transfer to a new crop, platform, or constraint." font-family="'IBM Plex Mono',monospace">
+<text x="20" y="26" font-size="12" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">The course as one practice: six tools, thirteen insights</text>
+<rect x="20" y="38" width="724" height="34" rx="9" fill="var(--accent-strong)" fill-opacity="0.16" stroke="var(--accent-strong)" stroke-width="1.4"/>
+<text x="34" y="53" font-size="9" fill="var(--accent)" font-weight="700">EI-17  the synthesizing meta-insight</text>
+<text x="34" y="65" font-size="7.6" fill="var(--text-secondary)">own the whole: the composed budgets, the coupled tradeoffs, the emergent behavior, the residual risk, the where-not-to-deploy.</text>
+<rect x="20" y="86" width="224" height="316" rx="9" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="32" y="106" font-size="9" fill="var(--accent)" font-weight="700">Six analytical tools (CECs)</text>
+<text x="32" y="118" font-size="6.8" fill="var(--text-muted)">the structure you compute with</text>
+<rect x="30" y="132" width="204" height="40" rx="6" fill="var(--surface)" stroke="var(--accent)" stroke-opacity="0.5"/>
+<text x="38" y="145" font-size="7.8" fill="var(--accent)" font-weight="700">CEC-01</text>
+<text x="82" y="145" font-size="7.4" fill="var(--text-secondary)">Signal-to-Action Spine</text>
+<text x="38" y="159" font-size="6.6" fill="var(--text-muted)">organizing structure</text>
+<rect x="30" y="178" width="204" height="30" rx="6" fill="var(--surface)" stroke="var(--accent)" stroke-opacity="0.5"/>
+<text x="38" y="191" font-size="7.8" fill="var(--accent)" font-weight="700">CEC-02</text>
+<text x="82" y="191" font-size="7.4" fill="var(--text-secondary)">Grip-Force Window</text>
+<rect x="30" y="214" width="204" height="30" rx="6" fill="var(--surface)" stroke="var(--accent)" stroke-opacity="0.5"/>
+<text x="38" y="227" font-size="7.8" fill="var(--accent)" font-weight="700">CEC-03</text>
+<text x="82" y="227" font-size="7.4" fill="var(--text-secondary)">Placement Error Budget</text>
+<rect x="30" y="250" width="204" height="30" rx="6" fill="var(--surface)" stroke="var(--accent)" stroke-opacity="0.5"/>
+<text x="38" y="263" font-size="7.8" fill="var(--accent)" font-weight="700">CEC-04</text>
+<text x="82" y="263" font-size="7.4" fill="var(--text-secondary)">No-Cloud Edge Boundary</text>
+<rect x="30" y="286" width="204" height="30" rx="6" fill="var(--surface)" stroke="var(--accent)" stroke-opacity="0.5"/>
+<text x="38" y="299" font-size="7.8" fill="var(--accent)" font-weight="700">CEC-05</text>
+<text x="82" y="299" font-size="7.4" fill="var(--text-secondary)">Sim-to-Real Pipeline</text>
+<rect x="30" y="322" width="204" height="30" rx="6" fill="var(--surface)" stroke="var(--accent)" stroke-opacity="0.5"/>
+<text x="38" y="335" font-size="7.8" fill="var(--accent)" font-weight="700">CEC-06</text>
+<text x="82" y="335" font-size="7.4" fill="var(--text-secondary)">Fidelity Ladder</text>
+<text x="258" y="106" font-size="9" fill="var(--info)" font-weight="700">Thirteen judgment insights (EIs), in seven families</text>
+<text x="258" y="118" font-size="6.8" fill="var(--text-muted)">the judgment that guides the tools</text>
+<rect x="256" y="130" width="238" height="74" rx="7" fill="var(--surface-2)" stroke="var(--info)" stroke-opacity="0.7"/>
+<text x="265" y="144" font-size="7.8" fill="var(--info)" font-weight="700">measure-and-design-for-reality</text>
+<text x="268" y="156" font-size="7" fill="var(--text-secondary)"><tspan fill="var(--info)" font-weight="700">EI-06</tspan>  measure on target</text>
+<text x="268" y="168" font-size="7" fill="var(--text-secondary)"><tspan fill="var(--info)" font-weight="700">EI-10</tspan>  the field is the spec</text>
+<text x="268" y="180" font-size="7" fill="var(--text-secondary)"><tspan fill="var(--info)" font-weight="700">EI-12</tspan>  size to the worst case</text>
+<text x="268" y="192" font-size="7" fill="var(--text-secondary)"><tspan fill="var(--info)" font-weight="700">EI-14</tspan>  validate adversarially</text>
+<rect x="256" y="212" width="238" height="50" rx="7" fill="var(--surface-2)" stroke="var(--accent-2)" stroke-opacity="0.7"/>
+<text x="265" y="226" font-size="7.8" fill="var(--accent-2)" font-weight="700">simplicity-and-physics</text>
+<text x="268" y="238" font-size="7" fill="var(--text-secondary)"><tspan fill="var(--accent-2)" font-weight="700">EI-08</tspan>  design the DOF out</text>
+<text x="268" y="250" font-size="7" fill="var(--text-secondary)"><tspan fill="var(--accent-2)" font-weight="700">EI-09</tspan>  let physics regulate</text>
+<rect x="256" y="270" width="238" height="38" rx="7" fill="var(--surface-2)" stroke="var(--accent-strong)" stroke-opacity="0.7"/>
+<text x="265" y="284" font-size="7.8" fill="var(--accent-strong)" font-weight="700">integration</text>
+<text x="268" y="296" font-size="7" fill="var(--text-secondary)"><tspan fill="var(--accent-strong)" font-weight="700">EI-13</tspan>  integrate early</text>
+<rect x="502" y="130" width="238" height="62" rx="7" fill="var(--surface-2)" stroke="var(--danger)" stroke-opacity="0.7"/>
+<text x="511" y="144" font-size="7.8" fill="var(--danger)" font-weight="700">bounded-autonomy-and-safety</text>
+<text x="514" y="156" font-size="7" fill="var(--text-secondary)"><tspan fill="var(--danger)" font-weight="700">EI-07</tspan>  bound the learner</text>
+<text x="514" y="168" font-size="7" fill="var(--text-secondary)"><tspan fill="var(--danger)" font-weight="700">EI-11</tspan>  independent guard</text>
+<text x="514" y="180" font-size="7" fill="var(--text-secondary)"><tspan fill="var(--danger)" font-weight="700">EI-15</tspan>  argue for safety</text>
+<rect x="502" y="200" width="238" height="38" rx="7" fill="var(--surface-2)" stroke="var(--warn)" stroke-opacity="0.7"/>
+<text x="511" y="214" font-size="7.8" fill="var(--warn)" font-weight="700">dominant-term discipline</text>
+<text x="514" y="226" font-size="7" fill="var(--text-secondary)"><tspan fill="var(--warn)" font-weight="700">EI-05</tspan>  across accuracy/energy/reliability/cost</text>
+<rect x="502" y="246" width="238" height="38" rx="7" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.7"/>
+<text x="511" y="260" font-size="7.8" fill="var(--accent)" font-weight="700">mission-alignment</text>
+<text x="514" y="272" font-size="7" fill="var(--text-secondary)"><tspan fill="var(--accent)" font-weight="700">EI-04</tspan>  optimize the mission metric</text>
+<rect x="502" y="292" width="238" height="38" rx="7" fill="var(--surface-2)" stroke="var(--warn)" stroke-opacity="0.7"/>
+<text x="511" y="306" font-size="7.8" fill="var(--warn)" font-weight="700">economics</text>
+<text x="514" y="318" font-size="7" fill="var(--text-secondary)"><tspan fill="var(--warn)" font-weight="700">EI-16</tspan>  pencil out</text>
+<rect x="20" y="414" width="724" height="30" rx="8" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.5"/>
+<text x="34" y="428" font-size="8.2" fill="var(--text-secondary)" font-weight="700">Tools + judgment = one practice. The test is transfer:</text>
+<text x="34" y="439" font-size="7.8" fill="var(--text-muted)">apply the same tools and insights to a different problem, a new crop, a new platform, a new constraint. Then the course taught a way of engineering, not one machine.</text>
+</svg>

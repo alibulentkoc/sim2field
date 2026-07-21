@@ -1,0 +1,22 @@
+<svg viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Stereo depth error grows with the square of range; a larger baseline lowers the curve, and staging each fruit to a close pick station keeps depth error small where accuracy matters most." font-family="'IBM Plex Mono',monospace">
+<rect x="70" y="52" width="636" height="128.0" fill="var(--danger)" fill-opacity="0.07"/>
+<line x1="70" y1="48" x2="70" y2="322" stroke="var(--border-strong)" stroke-width="1.5"/>
+<line x1="70" y1="322" x2="706" y2="322" stroke="var(--border-strong)" stroke-width="1.5"/>
+<path d="M66,52 L70,45 L74,52 z" fill="var(--border-strong)"/>
+<path d="M706,318 L713,322 L706,326 z" fill="var(--border-strong)"/>
+<text x="62" y="187.0" text-anchor="middle" font-size="10" fill="var(--text-muted)" transform="rotate(-90 62 187.0)">depth error  &#948;Z</text>
+<text x="388.0" y="352" text-anchor="middle" font-size="10" fill="var(--text-muted)">range  Z  (standoff to fruit)</text>
+<line x1="70" y1="180.0" x2="706" y2="180.0" stroke="var(--danger)" stroke-width="1.5" stroke-dasharray="6 3"/>
+<text x="700" y="174.0" text-anchor="end" font-size="9.5" fill="var(--danger-text)" font-weight="700">required depth accuracy  &#948;Z<tspan dy="3" font-size="70%">req</tspan></text>
+<polyline points="70.0,322.0 80.6,321.9 91.2,321.7 101.8,321.3 112.4,320.8 123.0,320.1 133.6,319.3 144.2,318.3 154.8,317.2 165.4,315.9 176.0,314.5 186.6,312.9 197.2,311.2 207.8,309.3 218.4,307.3 229.0,305.1 239.6,302.8 250.2,300.3 260.8,297.7 271.4,294.9 282.0,292.0 292.6,288.9 303.2,285.7 313.8,282.3 324.4,278.8 335.0,275.1 345.6,271.3 356.2,267.3 366.8,263.2 377.4,258.9 388.0,254.5 398.6,249.9 409.2,245.2 419.8,240.3 430.4,235.3 441.0,230.1 451.6,224.8 462.2,219.3 472.8,213.7 483.4,207.9 494.0,202.0 504.6,195.9 515.2,189.7 525.8,183.3 536.4,176.8 547.0,170.1 557.6,163.3 568.2,156.3 578.8,149.2 589.4,141.9 600.0,134.5 610.6,126.9 621.2,119.2 631.8,111.3 642.4,103.3 653.0,95.1 663.6,86.8 674.2,78.3 684.8,69.7 695.4,60.9 706.0,52.0" fill="none" stroke="var(--warn)" stroke-width="2.4"/>
+<polyline points="70.0,322.0 80.6,322.0 91.2,321.9 101.8,321.7 112.4,321.4 123.0,321.1 133.6,320.6 144.2,320.2 154.8,319.6 165.4,319.0 176.0,318.2 186.6,317.5 197.2,316.6 207.8,315.7 218.4,314.6 229.0,313.6 239.6,312.4 250.2,311.2 260.8,309.9 271.4,308.5 282.0,307.0 292.6,305.5 303.2,303.9 313.8,302.2 324.4,300.4 335.0,298.6 345.6,296.6 356.2,294.7 366.8,292.6 377.4,290.5 388.0,288.2 398.6,286.0 409.2,283.6 419.8,281.2 430.4,278.6 441.0,276.1 451.6,273.4 462.2,270.7 472.8,267.9 483.4,265.0 494.0,262.0 504.6,259.0 515.2,255.9 525.8,252.7 536.4,249.4 547.0,246.1 557.6,242.6 568.2,239.2 578.8,235.6 589.4,232.0 600.0,228.2 610.6,224.5 621.2,220.6 631.8,216.7 642.4,212.6 653.0,208.6 663.6,204.4 674.2,200.2 684.8,195.9 695.4,191.5 706.0,187.0" fill="none" stroke="var(--accent)" stroke-width="2.4"/>
+<text x="686.9" y="79.0" text-anchor="end" font-size="9" fill="var(--warn)" font-weight="700">small baseline b</text>
+<text x="699.6" y="183.0" text-anchor="end" font-size="9" fill="var(--accent)" font-weight="700">larger baseline b</text>
+<line x1="260.8" y1="52" x2="260.8" y2="322" stroke="var(--accent)" stroke-width="1.2" stroke-dasharray="3 3"/>
+<text x="260.8" y="337" text-anchor="middle" font-size="8.5" fill="var(--accent)">pick station</text>
+<text x="260.8" y="348" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">staged close (DD-2)</text>
+<line x1="610.6" y1="126.9" x2="610.6" y2="322" stroke="var(--warn)" stroke-width="1" stroke-dasharray="2 2"/>
+<text x="610.6" y="337" text-anchor="middle" font-size="8.5" fill="var(--warn)">field standoff</text>
+<text x="78" y="74" font-size="9" fill="var(--text-secondary)">&#948;Z ~ Z&#178;/(f b): double the range -> quadruple the error</text>
+<text x="78" y="89" font-size="9" fill="var(--text-muted)">levers: shorter Z (stage close), larger baseline b, larger f, sub-pixel &#948;d</text>
+</svg>

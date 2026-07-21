@@ -1,0 +1,43 @@
+<svg viewBox="0 0 760 344" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Dominant cost driver: BOM line items ranked by cost with the largest highlighted as the dominant driver to attack first, and a cumulative Pareto line showing a few items account for most of the build cost; cost-reduction leverage pays most when aimed at the dominant driver." font-family="'IBM Plex Mono',monospace">
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Dominant cost driver (BOM ranked)</text>
+<line x1="112" y1="68" x2="112" y2="288" stroke="var(--border-strong)" stroke-width="1.4"/>
+<line x1="112" y1="288" x2="564" y2="288" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="104" y="180.0" text-anchor="middle" font-size="8" fill="var(--text-muted)" transform="rotate(-90 104 180.0)">share of build cost</text>
+<rect x="126.8" y="86.4" width="44.4" height="201.6" rx="2" fill="var(--danger)" fill-opacity="0.9" stroke="var(--danger)"/>
+<text x="149.0" y="300" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">edge compute</text>
+<rect x="200.8" y="129.6" width="44.4" height="158.4" rx="2" fill="var(--accent-strong)" fill-opacity="0.55" stroke="var(--accent-strong)"/>
+<text x="223.0" y="300" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">fluid-power</text>
+<rect x="274.8" y="172.8" width="44.4" height="115.2" rx="2" fill="var(--accent-strong)" fill-opacity="0.55" stroke="var(--accent-strong)"/>
+<text x="297.0" y="300" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">sensors</text>
+<rect x="348.8" y="187.2" width="44.4" height="100.8" rx="2" fill="var(--accent-strong)" fill-opacity="0.55" stroke="var(--accent-strong)"/>
+<text x="371.0" y="300" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">platform/rover</text>
+<rect x="422.8" y="201.6" width="44.4" height="86.4" rx="2" fill="var(--accent-strong)" fill-opacity="0.55" stroke="var(--accent-strong)"/>
+<text x="445.0" y="300" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">arm/mech</text>
+<rect x="496.8" y="230.4" width="44.4" height="57.6" rx="2" fill="var(--accent-strong)" fill-opacity="0.55" stroke="var(--accent-strong)"/>
+<text x="519.0" y="300" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">wiring/misc</text>
+<polyline points="149.0,227.5 223.0,180.0 297.0,145.4 371.0,115.2 445.0,89.3 519.0,72.0" fill="none" stroke="var(--info)" stroke-width="1.8"/>
+<circle cx="149.0" cy="227.5" r="3" fill="var(--info)"/>
+<circle cx="223.0" cy="180.0" r="3" fill="var(--info)"/>
+<circle cx="297.0" cy="145.4" r="3" fill="var(--info)"/>
+<circle cx="371.0" cy="115.2" r="3" fill="var(--info)"/>
+<circle cx="445.0" cy="89.3" r="3" fill="var(--info)"/>
+<circle cx="519.0" cy="72.0" r="3" fill="var(--info)"/>
+<text x="525" y="75" font-size="7.4" fill="var(--info)">cumulative</text>
+<line x1="112" y1="115.2" x2="564" y2="115.2" stroke="var(--info)" stroke-width="1" stroke-dasharray="3 3" opacity="0.6"/>
+<text x="566" y="118" font-size="7" fill="var(--info)">80%</text>
+<text x="149" y="78" text-anchor="middle" font-size="7.8" fill="var(--danger-text)" font-weight="700">dominant</text>
+<text x="149" y="68" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">attack here (EI-05)</text>
+<text x="584" y="86" font-size="8.6" fill="var(--text-secondary)" font-weight="700">Attack the dominant driver,</text>
+<text x="584" y="99" font-size="8.6" fill="var(--text-secondary)">not the convenient cheap part.</text>
+<text x="584" y="120" font-size="7.6" fill="var(--text-muted)">&#8706;cost/&#8706;c_i is largest at the</text>
+<text x="584" y="131" font-size="7.6" fill="var(--text-muted)">dominant item; volume sourcing,</text>
+<text x="584" y="142" font-size="7.6" fill="var(--text-muted)">design simplification, and</text>
+<text x="584" y="153" font-size="7.6" fill="var(--text-muted)">substitution move it most.</text>
+<rect x="584" y="168" width="160" height="72" rx="8" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.5"/>
+<text x="594" y="185" font-size="7.4" fill="var(--accent)" font-weight="700">The course already attacked</text>
+<text x="594" y="197" font-size="7.4" fill="var(--accent)" font-weight="700">dominant drivers:</text>
+<text x="594" y="212" font-size="7" fill="var(--text-muted)">- DOF reduction (EI-08)</text>
+<text x="594" y="224" font-size="7" fill="var(--text-muted)">- pneumatic choice (M9)</text>
+<text x="594" y="236" font-size="7" fill="var(--text-muted)">- edge, no cloud (M6)</text>
+<text x="20" y="326" font-size="8.2" fill="var(--text-muted)">Rank BOM line items by cost; the largest is the dominant driver. Shares illustrative; values [VERIFY@PUB].</text>
+</svg>

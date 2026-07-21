@@ -1,0 +1,18 @@
+{
+  "_comment": "Single source of truth for the SIM2FIELD KaTeX pre-render pipeline. Each key is a TeX-delimited source in this build/ dir; each value is the generated, pre-rendered HTML that ships at the repo root. verify-build.js re-renders every source through prerender.js and byte-compares against the committed output, so a hand-edited output cannot drift from its source. Add a line here when a new asset is migrated.",
+  "assets": {
+    "M4-src.html": "M4-detection-operating-point-worked-example.html",
+    "M5-src.html": "M5-placement-error-budget-worked-example.html",
+    "M6-src.html": "M6-edge-latency-boundary-worked-example.html",
+    "M8-src.html": "M8-kinematics-singularity-explorer.html",
+    "M9-src.html": "M9-grip-force-window-worked-example.html",
+    "CEC01-src.html": "CEC01-signal-to-action-spine-worked-example.html",
+    "CEC05-src.html": "CEC05-sim-to-real-pipeline-worked-example.html",
+    "CEC06-src.html": "CEC06-fidelity-ladder-worked-example.html",
+    "EI05-src.html": "EI05-dominant-term-through-line-worked-example.html",
+    "index-src.html": "index.html",
+    "M5-homework-src.html": "M5-placement-error-budget-homework.html",
+    "M9-homework-src.html": "M9-grip-force-window-homework.html",
+    "CEC01-fragment-src.html": "CEC01-signal-to-action-spine-fragment.html"
+  }
+}

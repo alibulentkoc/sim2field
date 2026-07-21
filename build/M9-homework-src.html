@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0e120d">
+<title>Homework - The Grip-Force Window (M9 / CEC-02)</title>
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<style>
+  :root{
+    --ground:#0e120d; --panel:#161c14; --panel-2:#1c231a; --line:#2b3527; --seed:#0b0e0a;
+    --rind:#9bcf3b; --rind-dim:#6f9a2c; --flesh:#f0556a; --flesh-dim:#b93b4c;
+    --amber:#e0a03b; --water:#6fb0d9; --ink:#e9ede2; --mute2:#adb4a2;
+    --ink-2:var(--ink-2); --ink-3:var(--ink-3); --ink-4:var(--ink-4); color-scheme:dark;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{background:var(--ground); color:var(--ink); -webkit-text-size-adjust:100%; text-size-adjust:100%; scroll-behavior:smooth}
+  body{background:var(--ground); color:var(--ink); font-family:'Inter',system-ui,sans-serif;
+    line-height:1.62; -webkit-font-smoothing:antialiased; padding:0 0 5rem}
+  .wrap{max-width:860px; margin:0 auto; padding:0 1.5rem; background:var(--ground); color:var(--ink)}
+  code,.mono{font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums}
+  a{color:var(--rind)}
+
+  header{border-bottom:1px solid var(--line); padding:3.2rem 0 2.2rem; margin-bottom:2.2rem}
+  .eyebrow{font-family:'IBM Plex Mono',monospace; font-size:.74rem; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--rind); margin-bottom:1rem; display:flex; gap:.8rem; flex-wrap:wrap}
+  .eyebrow span{color:var(--mute2)}
+  h1{font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(1.8rem,4.5vw,2.6rem);
+    line-height:1.06; letter-spacing:-.02em; margin-bottom:.9rem}
+  .lede{font-size:1.02rem; color:var(--ink-2); max-width:64ch}
+  .meta{display:flex; gap:1.6rem; flex-wrap:wrap; margin-top:1.3rem; font-family:'IBM Plex Mono',monospace; font-size:.72rem; color:var(--mute2)}
+  .meta b{color:var(--ink)}
+
+  .box{background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:1.2rem 1.4rem; margin:1.6rem 0}
+  .box .eq{font-family:'IBM Plex Mono',monospace; font-size:1.05rem; color:var(--ink-4); margin-bottom:.5rem}
+  .box p{color:var(--ink-2); font-size:.9rem; margin:0}
+
+  table{border-collapse:collapse; width:100%; margin:.6rem 0; font-size:.88rem}
+  th,td{text-align:left; padding:.5rem .7rem; border-bottom:1px solid var(--line)}
+  th{font-family:'IBM Plex Mono',monospace; font-size:.66rem; letter-spacing:.05em; text-transform:uppercase; color:var(--mute2); font-weight:500}
+  td.mono{font-family:'IBM Plex Mono',monospace; color:var(--ink)}
+
+  .link-note{font-family:'IBM Plex Mono',monospace; font-size:.8rem; color:var(--mute2); background:var(--seed);
+    border:1px solid var(--line); border-radius:8px; padding:.75rem .9rem; margin:1.4rem 0}
+
+  section{margin-top:2.4rem}
+  .kicker{font-family:'IBM Plex Mono',monospace; font-size:.72rem; letter-spacing:.2em; text-transform:uppercase; color:var(--rind-dim); margin-bottom:.7rem}
+  h2{font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:1.35rem; margin-bottom:.4rem}
+
+  .prob{border:1px solid var(--line); border-left:3px solid var(--rind-dim); border-radius:10px;
+    padding:1.2rem 1.4rem; margin:1rem 0; background:var(--panel)}
+  .prob .ph{display:flex; justify-content:space-between; align-items:baseline; gap:1rem; margin-bottom:.5rem}
+  .prob .pn{font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:1.05rem}
+  .prob .lvl{font-family:'IBM Plex Mono',monospace; font-size:.62rem; letter-spacing:.05em; text-transform:uppercase;
+    padding:.2rem .5rem; border-radius:4px; background:var(--seed); border:1px solid var(--line); color:var(--mute2); flex:none}
+  .prob .lvl.warm{color:var(--rind)} .prob .lvl.core{color:var(--water)} .prob .lvl.chal{color:var(--flesh)}
+  .prob p{color:var(--ink-3); margin:.5rem 0} .prob .mono{color:var(--ink)}
+  .prob ol,.prob ul{margin:.4rem 0 .4rem 1.2rem; color:var(--ink-3)}
+
+  .soltoggle{display:flex; align-items:center; gap:1rem; margin:2.4rem 0 1rem; flex-wrap:wrap}
+  .soltoggle button{font-family:'IBM Plex Mono',monospace; font-size:.82rem; padding:.6rem 1.1rem; border-radius:8px;
+    cursor:pointer; background:var(--rind-dim); color:var(--ground); border:none; font-weight:600}
+  .soltoggle .n{font-family:'IBM Plex Mono',monospace; font-size:.74rem; color:var(--mute2)}
+  #solutions{display:none} #solutions.show{display:block}
+
+  .sol{border:1px solid var(--line); border-left:3px solid var(--water); border-radius:10px;
+    padding:1.2rem 1.4rem; margin:1rem 0; background:var(--panel-2)}
+  .sol .pn{font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:1rem; color:var(--water); margin-bottom:.5rem}
+  .sol p{color:var(--ink-3); margin:.5rem 0}
+  .calc{font-family:'IBM Plex Mono',monospace; font-size:.86rem; background:var(--seed);
+    border:1px solid var(--line); border-radius:7px; padding:.8rem 1rem; margin:.6rem 0; color:var(--ink-4); line-height:1.85; overflow-x:auto}
+  .calc b{color:var(--rind)} .calc .hot{color:var(--flesh)}
+  .ans{font-family:'IBM Plex Mono',monospace; font-size:.84rem; color:var(--rind); margin-top:.4rem}
+
+  footer{margin-top:3.4rem; padding-top:1.4rem; border-top:1px solid var(--line);
+    font-family:'IBM Plex Mono',monospace; font-size:.74rem; color:var(--mute2); line-height:1.8}
+  sup{font-size:.7em}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+  @media print{ .soltoggle{display:none} #solutions{display:block!important} body{padding-bottom:1rem} }
+  .katex{font-size:1.05em}
+  .katex-display{margin:.4rem 0}
+  .box .eq .katex-display,.calc .katex-display{margin:0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Homework <span>/</span> Module 9 <span>/</span> CEC-02 <span>/</span> The Grip-Force Window</div>
+    <h1>Problem set: gripping inside the window</h1>
+    <p class="lede">Six problems on the grip-force window between slip and bruise - computing the force, sizing the actuator to land inside the window, reasoning about compliance, and defending the independent safety relief. Every quantitative answer is a single number you can check. Attempt them before revealing the worked solutions.</p>
+    <div class="meta">
+      <span>Realizes <b>CEC-02</b>, <b>EI-09</b></span>
+      <span>Problems <b>6</b></span>
+      <span>Estimated <b>60-90 min</b></span>
+    </div>
+  </header>
+
+  <div class="box">
+    <div class="eq">\[ F = P\,A \qquad \text{and} \qquad F_{\mathrm{slip}} \le F_{\mathrm{grip}} \le F_{\mathrm{bruise}} \]</div>
+    <p>Grip force is cylinder pressure times piston area. A successful grasp holds the fruit (above the slip bound) without damaging it (below the bruise bound). The design job is to land the operating force inside that window with margin on both sides.</p>
+  </div>
+
+  <h3 style="font-family:'Space Grotesk';font-weight:500;font-size:1rem;margin-bottom:.4rem">Ratified baseline (Doc B Sec. 5.3, Doc C)</h3>
+  <table>
+    <thead><tr><th>Quantity</th><th>Symbol</th><th>Value</th></tr></thead>
+    <tbody>
+      <tr><td>Slip bound (min grip)</td><td class="mono">\(F_{\mathrm{slip}}\)</td><td class="mono">250 N</td></tr>
+      <tr><td>Bruise bound (max grip)</td><td class="mono">\(F_{\mathrm{bruise}}\)</td><td class="mono">800 N</td></tr>
+      <tr><td>Cylinder pressure at slip</td><td class="mono">\(P_{\mathrm{slip}}\)</td><td class="mono">~221 kPa</td></tr>
+      <tr><td>Cylinder pressure at bruise</td><td class="mono">\(P_{\mathrm{bruise}}\)</td><td class="mono">~708 kPa</td></tr>
+      <tr><td>Piston bore / area</td><td class="mono">\(d\ /\ A\)</td><td class="mono">\(\sim\!38\ \mathrm{mm}\ /\ \sim\!1130\ \mathrm{mm^2}\)</td></tr>
+      <tr><td>Gripper stiffness</td><td class="mono">\(k_{\mathrm{eff}}\)</td><td class="mono">\(\ge 20\ \mathrm{N/mm}\)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="link-note">
+    Explore the window interactively: open the
+    <a href="M9-grip-force-window-worked-example.html">M9 Grip-Force Window instrument</a>
+    to move the force gauge between the slip and bruise bounds and toggle the software-clip fault against the mechanical relief.
+  </div>
+
+  <!-- PROBLEMS -->
+  <section id="problems">
+    <div class="kicker">Problems</div>
+    <h2>Attempt these first</h2>
+
+    <div class="prob">
+      <div class="ph"><span class="pn">1. Compute the grip force</span><span class="lvl warm">warm-up</span></div>
+      <p>The pneumatic cylinder runs at \(P = 450\ \mathrm{kPa}\) with piston area \(A = 1130\ \mathrm{mm^2}\). Compute the grip force \(F = P\,A\). Is it inside the window \([250, 800]\ \mathrm{N}\)? State the margin to each bound.</p>
+    </div>
+
+    <div class="prob">
+      <div class="ph"><span class="pn">2. Map the window to pressure</span><span class="lvl core">core</span></div>
+      <p>Using \(A = 1130\ \mathrm{mm^2}\), compute the cylinder pressures that produce the two window bounds (\(F_{\mathrm{slip}}\) and \(F_{\mathrm{bruise}}\)). What is the usable operating pressure band, and how wide is it? Confirm your numbers against the ratified \(P_{\mathrm{slip}}\) and \(P_{\mathrm{bruise}}\).</p>
+    </div>
+
+    <div class="prob">
+      <div class="ph"><span class="pn">3. Size the actuator</span><span class="lvl core">core</span></div>
+      <p>You want the nominal grip force at the <em>middle</em> of the window (\(525\ \mathrm{N}\)) using a comfortable supply pressure of \(500\ \mathrm{kPa}\). What piston bore diameter do you need? Compare it to the ratified ~38 mm and explain the direction of the difference.</p>
+    </div>
+
+    <div class="prob">
+      <div class="ph"><span class="pn">4. Compliance and force error</span><span class="lvl core">core</span></div>
+      <p>The gripper has finite stiffness \(k_{\mathrm{eff}}\), so a position error \(\delta\) at contact produces a force error \(dF = k_{\mathrm{eff}}\,\delta\). (a) For \(k_{\mathrm{eff}} = 20\ \mathrm{N/mm}\), compute \(dF\) at \(\delta = 2\ \mathrm{mm}\) and \(\delta = 5\ \mathrm{mm}\). (b) If you must keep \(dF\) within 275 N (half the window) for position errors up to 5 mm, what is the maximum allowable stiffness? (c) In one sentence, explain why a <em>more compliant</em> gripper widens the effective window.</p>
+    </div>
+
+    <div class="prob">
+      <div class="ph"><span class="pn">5. Defend the safety relief</span><span class="lvl core">judgment</span></div>
+      <p>The force controller already clips commanded force at 800 N in software. Argue why an <em>independent</em> mechanical pressure-relief valve is still required. (a) Give the single-point-failure scenario the software clip does not cover. (b) State the pressure the relief should be set at and why. (c) Explain why it is set at the <em>bruise</em> bound rather than the slip bound. Three to five sentences.</p>
+    </div>
+
+    <div class="prob">
+      <div class="ph"><span class="pn">6. A firmer cultivar</span><span class="lvl chal">challenge</span></div>
+      <p>A firmer, heavier cultivar shifts both bounds: \(F_{\mathrm{slip}} = 300\ \mathrm{N}\) (slicker skin needs more grip) and \(F_{\mathrm{bruise}} = 900\ \mathrm{N}\) (tougher rind). With the ~38 mm bore (\(A = 1130\ \mathrm{mm^2}\)): (a) compute the new window width and the new pressure band. (b) Does the Problem-1 operating point still sit safely inside? Give both margins. (c) Recommend a new operating pressure that re-centers the grip in the shifted window, and show the value.</p>
+    </div>
+  </section>
+
+  <!-- SOLUTIONS -->
+  <div class="soltoggle">
+    <button id="solBtn">Reveal reference solutions</button>
+    <span class="n" id="solNote">attempt all six before revealing</span>
+  </div>
+
+  <div id="solutions">
+
+    <div class="sol">
+      <div class="pn">Solution 1 - Compute the grip force</div>
+      <div class="calc">\[ F = P\,A = 450\times10^{3}\ \mathrm{Pa} \times 1130\times10^{-6}\ \mathrm{m^2} = 508\ \mathrm{N} \]</div>
+      <p class="ans">Inside the window: 250 &lt;= 508 &lt;= 800. Margin to slip = 508 - 250 = <b>258 N</b>; margin to bruise = 800 - 508 = <b>292 N</b>. A well-centered operating point.</p>
+    </div>
+
+    <div class="sol">
+      <div class="pn">Solution 2 - Map the window to pressure</div>
+      <div class="calc">\[ \begin{aligned} P_{\mathrm{slip}} &= F_{\mathrm{slip}}/A = 250/1130\times10^{-6} = 221\ \mathrm{kPa} \\ P_{\mathrm{bruise}} &= F_{\mathrm{bruise}}/A = 800/1130\times10^{-6} = 708\ \mathrm{kPa} \\ \text{band width} &= 708-221 = 487\ \mathrm{kPa} \end{aligned} \]</div>
+      <p>These match the ratified P_slip ~221 kPa and P_bruise ~708 kPa - confirming the ~38 mm bore is consistent with the force window. You have a 487 kPa operating band to place the grip inside.</p>
+    </div>
+
+    <div class="sol">
+      <div class="pn">Solution 3 - Size the actuator</div>
+      <div class="calc">\[ \begin{aligned} A &= F/P = 525/500\times10^{3} = 1.05\times10^{-3}\ \mathrm{m^2} = 1050\ \mathrm{mm^2} \\ d &= 2\sqrt{A/\pi} = 2\sqrt{1050/\pi} = 36.6\ \mathrm{mm} \end{aligned} \]</div>
+      <p>Slightly smaller than the ratified ~38 mm. The direction is right: a higher supply pressure (500 vs the ~465 kPa the 38 mm bore needs for 525 N) lets a <em>smaller</em> piston produce the same force, since \(F = P\,A\) trades pressure against area.</p>
+    </div>
+
+    <div class="sol">
+      <div class="pn">Solution 4 - Compliance and force error</div>
+      <div class="calc">\[ \begin{aligned} \text{(a)}\quad dF = k_{\mathrm{eff}}\,\delta:\ & \text{at } 2\ \mathrm{mm} \to 20\times2 = 40\ \mathrm{N};\ \ \text{at } 5\ \mathrm{mm} \to 20\times5 = 100\ \mathrm{N} \\ \text{(b)}\quad k_{\max} &= dF_{\max}/\delta = 275/5 = 55\ \mathrm{N/mm} \end{aligned} \]</div>
+      <p>The ratified 20 N/mm is well under the 55 N/mm ceiling - at 5 mm of overshoot it adds only 100 N, comfortably inside the window. <strong>(c)</strong> A softer gripper turns the same position error into a smaller force error, so more of the position-error range still lands inside the force window - compliance widens the effective tolerance.</p>
+    </div>
+
+    <div class="sol">
+      <div class="pn">Solution 5 - Defend the safety relief (model answer)</div>
+      <p><strong>(a)</strong> The software clip depends on the force sensor, the controller, and the actuator all working; if the sensor drifts, the controller hangs, or a command is corrupted, the clip fails and cylinder pressure can rise to full supply - crushing the fruit. That entire chain is a single failure domain. <strong>(b)</strong> An independent mechanical relief valve set at the bruise pressure (~708 kPa) caps the cylinder pressure regardless of software state, so grip force cannot exceed ~800 N even with total controller failure. <strong>(c)</strong> It is set at the <em>bruise</em> bound because the relief's job is to prevent <em>damage</em> - exceeding slip only loses the fruit (a performance miss), while exceeding bruise destroys it (a quality/safety failure). This two-domain independence is the point of EI-09/EI-11: the safe bound must not share a failure path with the thing it protects against.</p>
+    </div>
+
+    <div class="sol">
+      <div class="pn">Solution 6 - A firmer cultivar</div>
+      <div class="calc">\[ \begin{aligned} \text{(a)}\quad & \text{window } [300, 900]\ \mathrm{N} \to \text{width } 600\ \mathrm{N}\ (\text{was } 550) \\ & P_{\mathrm{slip}} = 300/1130\times10^{-6} = 266\ \mathrm{kPa};\ \ P_{\mathrm{bruise}} = 900/1130\times10^{-6} = 797\ \mathrm{kPa} \\ \text{(b)}\quad & \text{op point } 508\ \mathrm{N} \in [300,900]?\ \text{yes};\ \text{slip margin } 508-300 = 208\ \mathrm{N},\ \text{bruise margin } 900-508 = 392\ \mathrm{N} \\ \text{(c)}\quad & \text{re-center at mid} = (300+900)/2 = 600\ \mathrm{N} \to P = 600/1130\times10^{-6} = 531\ \mathrm{kPa} \end{aligned} \]</div>
+      <p>The window shifted up and widened, so the old operating point still holds but now sits closer to slip (208 N vs 258 N margin). Raising the supply to <b>531 kPa</b> re-centers the grip at 600 N, restoring symmetric margin. The lesson: a window is defined by the fruit, not the actuator - re-characterize the bounds when the crop changes, then re-center.</p>
+    </div>
+
+  </div>
+
+  <footer>
+    SIM2FIELD - Autonomous Watermelon Harvesting Robotics<br>
+    Homework set for Module 9 (Grip-Force Window) - realizes CEC-02 and EI-09; built to the frozen M5 homework template<br>
+    Values ratified in Doc B Sec. 5.3 / Doc C (window [250,800] N, pressures [221,708] kPa, bore ~38 mm, k_eff &gt;= 20 N/mm) - all solutions independently checked<br>
+    Production Phase asset - configuration-controlled
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  const btn=document.getElementById('solBtn'), sol=document.getElementById('solutions'), note=document.getElementById('solNote');
+  let shown=false;
+  btn.addEventListener('click',()=>{
+    shown=!shown;
+    sol.classList.toggle('show',shown);
+    btn.textContent = shown ? 'Hide reference solutions' : 'Reveal reference solutions';
+    note.textContent = shown ? 'solutions shown - all six answers are independently checked' : 'attempt all six before revealing';
+    if(shown) sol.scrollIntoView({behavior:'smooth',block:'nearest'});
+  });
+})();
+</script>
+</body>
+</html>

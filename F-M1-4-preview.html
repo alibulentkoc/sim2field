@@ -1,0 +1,61 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="color-scheme" content="dark"><title>F-M1-4 preview - Requirement traceability</title><style>:root{--bg:#0e120d;--surface:#161c14;--surface-2:#0b0e0a;--surface-3:#12160f;--border:#2b3527;--border-strong:#3a4633;--text-primary:#eef2e6;--text-secondary:#c8cfbe;--text-muted:#adb4a2;--accent:#9bcf3b;--info:#6fb0d9;--warn:#e0a03b;--accent-2:#b98bd9}
+body{margin:0;background:var(--bg);color:var(--text-primary);font-family:'IBM Plex Mono',ui-monospace,monospace;padding:2rem}
+.figure{max-width:840px;margin:0 auto;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.figbody{padding:1rem 1.1rem;background:var(--surface-3);overflow-x:auto} .figbody svg{display:block;width:100%;height:auto;min-width:600px}
+figcaption{padding:.7rem 1rem;font-size:.82rem;color:var(--text-muted);border-top:1px solid var(--border)} .fid{font-size:.64rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-right:.5rem}</style></head>
+<body><figure class="figure"><div class="figbody"><svg viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Requirement traceability: a need is refined into a verifiable requirement, proven by a verification method, and traced forward to the subsystem that implements it; every requirement is one of four types." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="6" y="18" font-size="10" fill="var(--text-muted)">The chain (a worked thread):</text>
+<rect x="6" y="58" width="150" height="74" rx="9" fill="var(--surface)" stroke="var(--border)" stroke-width="1.4"/>
+<text x="81.0" y="74" text-anchor="middle" font-size="8" fill="var(--text-secondary)" font-weight="700" letter-spacing=".03em">NEED</text>
+<text x="81.0" y="92" text-anchor="middle" font-size="9.5" fill="var(--text-primary)">harvest fast</text>
+<text x="81.0" y="106" text-anchor="middle" font-size="9.5" fill="var(--text-primary)">enough to be</text>
+<text x="81.0" y="120" text-anchor="middle" font-size="9.5" fill="var(--text-primary)">economical</text>
+<rect x="196" y="58" width="180" height="74" rx="9" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="286.0" y="74" text-anchor="middle" font-size="8" fill="var(--accent)" font-weight="700" letter-spacing=".03em">REQUIREMENT (performance)</text>
+<text x="286.0" y="92" text-anchor="middle" font-size="9.5" fill="var(--text-primary)">one pick-place cycle</text>
+<text x="286.0" y="106" text-anchor="middle" font-size="9.5" fill="var(--text-primary)">in &#8804; T seconds</text>
+<rect x="416" y="58" width="150" height="74" rx="9" fill="var(--surface)" stroke="var(--info)" stroke-width="1.4"/>
+<text x="491.0" y="74" text-anchor="middle" font-size="8" fill="var(--info)" font-weight="700" letter-spacing=".03em">VERIFICATION</text>
+<text x="491.0" y="92" text-anchor="middle" font-size="9.5" fill="var(--text-primary)">timed</text>
+<text x="491.0" y="106" text-anchor="middle" font-size="9.5" fill="var(--text-primary)">field trials</text>
+<rect x="606" y="58" width="148" height="74" rx="9" fill="var(--surface)" stroke="var(--accent-2)" stroke-width="1.4"/>
+<text x="680.0" y="74" text-anchor="middle" font-size="8" fill="var(--accent-2)" font-weight="700" letter-spacing=".03em">TRACES TO</text>
+<text x="680.0" y="92" text-anchor="middle" font-size="9.5" fill="var(--text-primary)">cycle-time budget</text>
+<text x="680.0" y="106" text-anchor="middle" font-size="9.5" fill="var(--text-primary)">(Sec. 7.1);</text>
+<text x="680.0" y="120" text-anchor="middle" font-size="9.5" fill="var(--text-primary)">M8 / M9 / M10</text>
+<line x1="156" y1="95.0" x2="193" y2="95.0" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#a4)"/>
+<text x="176.0" y="89.0" text-anchor="middle" font-size="7" fill="var(--text-muted)">becomes</text>
+<line x1="376" y1="95.0" x2="413" y2="95.0" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#a4)"/>
+<text x="396.0" y="89.0" text-anchor="middle" font-size="7" fill="var(--text-muted)">proven by</text>
+<line x1="566" y1="95.0" x2="603" y2="95.0" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#a4)"/>
+<text x="586.0" y="89.0" text-anchor="middle" font-size="7" fill="var(--text-muted)">traces to</text>
+<text x="286" y="147" text-anchor="middle" font-size="8.5" fill="var(--text-muted)" font-style="italic">a well-formed requirement is verifiable, unambiguous, necessary, and traceable</text>
+<text x="6" y="176" font-size="10" fill="var(--text-muted)">Every requirement is one of four types (Section 6.5):</text>
+<rect x="6" y="188" width="180" height="96" rx="9" fill="var(--surface)" stroke="var(--border)"/>
+<rect x="6" y="188" width="180" height="22" rx="9" fill="var(--accent)" fill-opacity="0.14"/>
+<text x="18" y="203" font-size="10" fill="var(--accent)" font-weight="700">FUNCTIONAL</text>
+<text x="176" y="203" text-anchor="end" font-size="7.5" fill="var(--text-muted)">a behavior</text>
+<text x="18" y="230" font-size="9.5" fill="var(--text-secondary)">shall detect</text>
+<text x="18" y="245" font-size="9.5" fill="var(--text-secondary)">mature fruit</text>
+<rect x="196" y="188" width="180" height="96" rx="9" fill="var(--surface)" stroke="var(--border)"/>
+<rect x="196" y="188" width="180" height="22" rx="9" fill="var(--info)" fill-opacity="0.14"/>
+<text x="208" y="203" font-size="10" fill="var(--info)" font-weight="700">PERFORMANCE</text>
+<text x="366" y="203" text-anchor="end" font-size="7.5" fill="var(--text-muted)">how well</text>
+<text x="208" y="230" font-size="9.5" fill="var(--text-secondary)">shall achieve success</text>
+<text x="208" y="245" font-size="9.5" fill="var(--text-secondary)">rate &#8805; target</text>
+<rect x="386" y="188" width="180" height="96" rx="9" fill="var(--surface)" stroke="var(--border)"/>
+<rect x="386" y="188" width="180" height="22" rx="9" fill="var(--warn)" fill-opacity="0.14"/>
+<text x="398" y="203" font-size="10" fill="var(--warn)" font-weight="700">CONSTRAINT</text>
+<text x="556" y="203" text-anchor="end" font-size="7.5" fill="var(--text-muted)">an imposed limit</text>
+<text x="398" y="230" font-size="9.5" fill="var(--text-secondary)">shall not require network</text>
+<text x="398" y="245" font-size="9.5" fill="var(--text-secondary)">connectivity in the</text>
+<text x="398" y="260" font-size="9.5" fill="var(--text-secondary)">control loop</text>
+<rect x="576" y="188" width="180" height="96" rx="9" fill="var(--surface)" stroke="var(--border)"/>
+<rect x="576" y="188" width="180" height="22" rx="9" fill="var(--accent-2)" fill-opacity="0.14"/>
+<text x="588" y="203" font-size="10" fill="var(--accent-2)" font-weight="700">INTERFACE</text>
+<text x="746" y="203" text-anchor="end" font-size="7.5" fill="var(--text-muted)">a boundary</text>
+<text x="588" y="230" font-size="9.5" fill="var(--text-secondary)">shall mount to the</text>
+<text x="588" y="245" font-size="9.5" fill="var(--text-secondary)">Amiga rail pattern</text>
+<text x="6" y="306" font-size="8.5" fill="var(--text-muted)">Traceability links every need to a requirement to the evidence that proves it, and forward to the subsystem that implements it (Section 9).</text>
+</svg></div><figcaption><span class="fid">F-M1-4</span>Requirement traceability: a need is refined into a verifiable requirement, proven by a verification method, and traced forward to the subsystem that implements it. Below, the four requirement types with their Section 6.5 examples.</figcaption></figure></body></html>

@@ -1,0 +1,25 @@
+<svg viewBox="0 0 760 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Compliance absorbs placement error and latency: a rigid gripper meeting a misaligned or late grasp spikes the contact force out of the window and bruises, while a compliant gripper yields to the misalignment and to latency-induced force error, keeping the force inside the window; the same compliance that limits control bandwidth makes imperfect control gentle." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Compliance absorbs placement error and latency (EI-09)</text>
+<text x="140" y="72" font-size="8.6" fill="var(--text-primary)" font-weight="700" text-anchor="middle">RIGID gripper</text>
+<rect x="70" y="122" width="140" height="40" fill="var(--accent)" fill-opacity="0.14" stroke="var(--accent)"/>
+<line x1="64" y1="162" x2="216" y2="162" stroke="var(--info)" stroke-width="1.2"/>
+<text x="220" y="165.2" font-size="6.2" fill="var(--info)">F_slip</text>
+<line x1="64" y1="122" x2="216" y2="122" stroke="var(--danger)" stroke-width="1.2"/>
+<text x="220" y="125.24000000000001" font-size="6.2" fill="var(--danger-text)">F_bruise</text>
+<text x="140" y="142.76" font-size="6.2" fill="var(--accent)" text-anchor="middle">window</text>
+<path d="M 80,146 L 120,146 L 140,92 L 160,146 L 200,146" fill="none" stroke="var(--danger)" stroke-width="2"/>
+<text x="140" y="88.0" font-size="6.6" fill="var(--danger-text)" text-anchor="middle">force spikes out of window -> bruise</text>
+<text x="500" y="72" font-size="8.6" fill="var(--text-primary)" font-weight="700" text-anchor="middle">COMPLIANT gripper</text>
+<rect x="430" y="122" width="140" height="40" fill="var(--accent)" fill-opacity="0.14" stroke="var(--accent)"/>
+<line x1="424" y1="162" x2="576" y2="162" stroke="var(--info)" stroke-width="1.2"/>
+<text x="580" y="165.2" font-size="6.2" fill="var(--info)">F_slip</text>
+<line x1="424" y1="122" x2="576" y2="122" stroke="var(--danger)" stroke-width="1.2"/>
+<text x="580" y="125.24000000000001" font-size="6.2" fill="var(--danger-text)">F_bruise</text>
+<text x="500" y="142.76" font-size="6.2" fill="var(--accent)" text-anchor="middle">window</text>
+<path d="M 440,146 L 480,146 Q 500,129 520,146 L 560,146" fill="none" stroke="var(--accent)" stroke-width="2"/>
+<text x="500" y="118.24000000000001" font-size="6.6" fill="var(--accent)" text-anchor="middle">compliance absorbs it -> stays in window</text>
+<text x="20" y="224" font-size="7.8" fill="var(--text-muted)">A misaligned grasp (placement error) or a late force command (latency) drives a rigid contact out of the window. Passive compliance yields,</text>
+<text x="20" y="236" font-size="7.8" fill="var(--text-muted)">absorbing the error so the force stays inside [F_slip, F_bruise]. The same compliance that limits bandwidth makes imperfect control gentle (EI-09). Sections 6.4 and 7.4.</text>
+<text x="20" y="250" font-size="7.4" fill="var(--text-muted)">Illustrative traces.</text>
+</svg>

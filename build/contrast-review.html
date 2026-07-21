@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0e120d">
+<title>Contrast review - readability-first</title>
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
+<style>
+  :root{
+    color-scheme: dark;
+    --bg:#0e120d; --surface:#161c14; --surface-2:#0b0e0a; --border:#2b3527;
+    --text-primary:#eef2e6; --text-secondary:#c8cfbe; --text-muted:#adb4a2;
+    --accent:#9bcf3b; --accent-dim:#86ba35;
+    --t-flesh-old:#f0556a; --t-flesh-new:#f697a4;
+    --t-rd-old:#6f9a2c;    --t-rd-new:#86ba35;
+    --t-mute-old:#96a088;  --t-mute-new:#adb4a2;
+    --t-svg-old:#8b9382;   --t-svg-new:#a4ab9d;
+    --font-sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --font-display:'Space Grotesk',var(--font-sans);
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  html{background:var(--bg); color:var(--text-primary); -webkit-text-size-adjust:100%; text-size-adjust:100%}
+  body{background:var(--bg); color:var(--text-primary); font-family:var(--font-sans);
+    line-height:1.6; -webkit-font-smoothing:antialiased; padding:2rem 1.4rem 4rem}
+  .wrap{max-width:780px; margin:0 auto; background:var(--bg); color:var(--text-primary)}
+  h1{font-family:var(--font-display); color:var(--text-primary); font-weight:600; font-size:1.4rem; margin-bottom:.5rem}
+  .sub{font-family:var(--font-mono); color:var(--text-muted); font-size:.82rem; font-weight:500; margin-bottom:2rem}
+  h2{font-family:var(--font-display); color:var(--text-primary); font-weight:600; font-size:1.02rem; margin:2.1rem 0 .8rem;
+    display:flex; align-items:center; gap:.5rem; flex-wrap:wrap}
+  .code{font-family:var(--font-mono); color:var(--text-secondary); font-size:.82rem; font-weight:500}
+  .grid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:.8rem}
+  .card{background:var(--surface); color:var(--text-secondary); border:1px solid var(--border); border-radius:10px; padding:1rem}
+  .card.bg-page{background:var(--bg)}
+  .card.bg-surface{background:var(--surface)}
+  .card.bg-inset{background:var(--surface-2)}
+  .card-name{font-family:var(--font-mono); color:var(--text-muted); font-size:.62rem; font-weight:500;
+    letter-spacing:.12em; text-transform:uppercase; margin-bottom:.7rem}
+  .row{display:flex; justify-content:space-between; align-items:baseline; gap:.5rem;
+    padding:.42rem 0; border-bottom:1px solid var(--border)}
+  .row:last-child{border-bottom:none}
+  .label{font-family:var(--font-mono); color:var(--text-secondary); font-size:.64rem; font-weight:500}
+  .ratio{font-family:var(--font-mono); color:var(--text-muted); font-size:.6rem; font-weight:500}
+  .sample{font-family:var(--font-mono); font-size:.82rem; font-weight:500}
+  .sample.kick{font-size:.72rem; letter-spacing:.18em; text-transform:uppercase}
+  .sample.tick{font-size:.64rem}
+  .dot{display:inline-block; width:12px; height:12px; border-radius:3px; vertical-align:middle}
+  .note{background:var(--surface); color:var(--text-secondary); border:1px solid var(--border); border-radius:10px;
+    padding:1rem 1.15rem; margin-top:1.9rem; font-family:var(--font-mono); font-size:.75rem; font-weight:500; line-height:1.85}
+  .note b{color:var(--text-primary)}
+  .swatch-legend{color:var(--text-muted)}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1>Contrast review - readability-first</h1>
+  <p class="sub">Proposed values at real sizes. Labels and text use stable, high-contrast tokens; only the swatch words below use the candidate colors being tested.</p>
+
+  <h2><span class="dot" style="background:var(--accent-dim)"></span>kickers &amp; tick labels
+    <span class="code">#6f9a2c &rarr; #86ba35</span></h2>
+  <div class="grid">
+    <div class="card bg-page">
+      <div class="card-name">on --bg</div>
+      <div class="row"><span class="label">now</span><span class="sample kick" style="color:var(--t-rd-new)">FULL DERIVATION</span><span class="ratio">8.2</span></div>
+      <div class="row"><span class="label">was</span><span class="sample kick" style="color:var(--t-rd-old)">FULL DERIVATION</span><span class="ratio">5.7</span></div>
+    </div>
+    <div class="card bg-inset">
+      <div class="card-name">on --surface-2</div>
+      <div class="row"><span class="label">now</span><span class="sample tick" style="color:var(--t-rd-new)">recall target &gt;= 0.90</span><span class="ratio">8.4</span></div>
+      <div class="row"><span class="label">was</span><span class="sample tick" style="color:var(--t-rd-old)">recall target &gt;= 0.90</span><span class="ratio">5.9</span></div>
+    </div>
+    <div class="card bg-surface">
+      <div class="card-name">vs full accent</div>
+      <div class="row"><span class="label">dim</span><span class="sample kick" style="color:var(--t-rd-new)">dimmed label</span><span class="ratio">7.5</span></div>
+      <div class="row"><span class="label">full</span><span class="sample kick" style="color:var(--accent)">full accent</span><span class="ratio">9.4</span></div>
+    </div>
+  </div>
+
+  <h2><span class="dot" style="background:var(--t-mute-new)"></span>muted labels
+    <span class="code">#96a088 &rarr; #adb4a2</span>
+    <span class="dot" style="background:var(--t-svg-new)"></span><span class="code">svg #8b9382 &rarr; #a4ab9d</span></h2>
+  <div class="grid">
+    <div class="card bg-surface">
+      <div class="card-name">on --surface</div>
+      <div class="row"><span class="label">now</span><span class="sample" style="color:var(--t-mute-new)">threshold tau</span><span class="ratio">8.1</span></div>
+      <div class="row"><span class="label">was</span><span class="sample" style="color:var(--t-mute-old)">threshold tau</span><span class="ratio">6.4</span></div>
+    </div>
+    <div class="card bg-inset">
+      <div class="card-name">svg axis on --surface-2</div>
+      <div class="row"><span class="label">now</span><span class="sample" style="color:var(--t-svg-new)">recall R(tau)</span><span class="ratio">8.2</span></div>
+      <div class="row"><span class="label">was</span><span class="sample" style="color:var(--t-svg-old)">recall R(tau)</span><span class="ratio">6.1</span></div>
+    </div>
+    <div class="card bg-page">
+      <div class="card-name">on --bg</div>
+      <div class="row"><span class="label">now</span><span class="sample" style="color:var(--t-mute-new)">variance contribution</span><span class="ratio">8.9</span></div>
+      <div class="row"><span class="label">was</span><span class="sample" style="color:var(--t-mute-old)">variance contribution</span><span class="ratio">6.9</span></div>
+    </div>
+  </div>
+
+  <h2><span class="dot" style="background:var(--t-flesh-new)"></span>flesh emphasis text
+    <span class="code">#f0556a &rarr; #f697a4</span></h2>
+  <div class="grid">
+    <div class="card bg-page">
+      <div class="card-name">on --bg</div>
+      <div class="row"><span class="label">now</span><span class="sample" style="color:var(--t-flesh-new)">missed melon</span><span class="ratio">8.9</span></div>
+      <div class="row"><span class="label">was</span><span class="sample" style="color:var(--t-flesh-old)">missed melon</span><span class="ratio">5.6</span></div>
+    </div>
+    <div class="card bg-surface">
+      <div class="card-name">on --surface</div>
+      <div class="row"><span class="label">now</span><span class="sample" style="color:var(--t-flesh-new)">3-sigma exceeds gate</span><span class="ratio">8.2</span></div>
+      <div class="row"><span class="label">was</span><span class="sample" style="color:var(--t-flesh-old)">3-sigma exceeds gate</span><span class="ratio">5.1</span></div>
+    </div>
+    <div class="card bg-inset">
+      <div class="card-name">on --surface-2</div>
+      <div class="row"><span class="label">now</span><span class="sample" style="color:var(--t-flesh-new)">bruise 708 kPa</span><span class="ratio">9.1</span></div>
+      <div class="row"><span class="label">was</span><span class="sample" style="color:var(--t-flesh-old)">bruise 708 kPa</span><span class="ratio">5.7</span></div>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>How to read this:</b> every "was" line is a currently shipped color; the "now" line above it is the proposed replacement. All labels, ratios, and headings use fixed high-contrast tokens (they never change with the test colors), so this page stays readable even where a candidate is very light or very dim.<br><br>
+    <span class="swatch-legend">Body text, headings, and status messages elsewhere are already 10-16:1 and unchanged. Small mono labels also move from weight 400 to 500.</span>
+  </div>
+</main>
+</body>
+</html>

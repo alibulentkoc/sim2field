@@ -1,0 +1,48 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="color-scheme" content="dark"><title>F-M6-4 preview - Amdahl</title><style>:root{--bg:#0e120d;--surface:#161c14;--surface-2:#0b0e0a;--surface-3:#12160f;--border:#2b3527;--border-strong:#3a4633;--grid-line:#1c231a;--text-primary:#eef2e6;--text-secondary:#c8cfbe;--text-muted:#adb4a2;--accent:#9bcf3b;--warn:#e0a03b;--danger:#f0556a;--danger-text:#f697a4}
+body{margin:0;background:var(--bg);color:var(--text-primary);font-family:'IBM Plex Mono',ui-monospace,monospace;padding:2rem}
+.figure{max-width:840px;margin:0 auto;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.figbody{padding:1rem 1.1rem;background:var(--surface-3);overflow-x:auto} .figbody svg{display:block;width:100%;height:auto;min-width:620px}
+figcaption{padding:.7rem 1rem;font-size:.82rem;color:var(--text-muted);border-top:1px solid var(--border)} .fid{font-size:.64rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-right:.5rem}</style></head>
+<body><figure class="figure"><div class="figbody"><svg viewBox="0 0 760 372" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Amdahl law: overall speedup versus the acceleration factor on the accelerated fraction p; each curve saturates at 1/(1-p), so accelerating a small fraction caps the gain, for example a 20 percent stage yields at most 1.25 times even at infinite speed." font-family="'IBM Plex Mono',monospace">
+<line x1="84" y1="58" x2="84" y2="322" stroke="var(--border-strong)" stroke-width="1.5"/>
+<line x1="84" y1="322" x2="690" y2="322" stroke="var(--border-strong)" stroke-width="1.5"/>
+<path d="M80,62 L84,55 L88,62 z" fill="var(--border-strong)"/>
+<path d="M690,318 L697,322 L690,326 z" fill="var(--border-strong)"/>
+<text x="76" y="192.0" text-anchor="middle" font-size="9.5" fill="var(--text-muted)" transform="rotate(-90 76 192.0)">overall speedup</text>
+<text x="387.0" y="352" text-anchor="middle" font-size="9.5" fill="var(--text-muted)">acceleration factor s on the accelerated fraction</text>
+<line x1="81" y1="322.0" x2="690" y2="322.0" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="77" y="325.0" text-anchor="end" font-size="7.5" fill="var(--text-muted)">1x</text>
+<line x1="81" y1="270.0" x2="690" y2="270.0" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="77" y="273.0" text-anchor="end" font-size="7.5" fill="var(--text-muted)">2x</text>
+<line x1="81" y1="218.0" x2="690" y2="218.0" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="77" y="221.0" text-anchor="end" font-size="7.5" fill="var(--text-muted)">3x</text>
+<line x1="81" y1="166.0" x2="690" y2="166.0" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="77" y="169.0" text-anchor="end" font-size="7.5" fill="var(--text-muted)">4x</text>
+<line x1="81" y1="114.0" x2="690" y2="114.0" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="77" y="117.0" text-anchor="end" font-size="7.5" fill="var(--text-muted)">5x</text>
+<line x1="81" y1="62.0" x2="690" y2="62.0" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="77" y="65.0" text-anchor="end" font-size="7.5" fill="var(--text-muted)">6x</text>
+<text x="84.0" y="335" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">1</text>
+<text x="205.2" y="335" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">4</text>
+<text x="366.8" y="335" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">8</text>
+<text x="528.4" y="335" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">12</text>
+<text x="690.0" y="335" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">16</text>
+<polyline points="84.0,322.0 94.1,319.8 104.2,318.3 114.3,317.1 124.4,316.2 134.5,315.5 144.6,314.9 154.7,314.4 164.8,314.0 174.9,313.6 185.0,313.3 195.1,313.1 205.2,312.8 215.3,312.6 225.4,312.4 235.5,312.2 245.6,312.1 255.7,312.0 265.8,311.8 275.9,311.7 286.0,311.6 296.1,311.5 306.2,311.4 316.3,311.3 326.4,311.2 336.5,311.2 346.6,311.1 356.7,311.0 366.8,311.0 376.9,310.9 387.0,310.9 397.1,310.8 407.2,310.8 417.3,310.7 427.4,310.7 437.5,310.6 447.6,310.6 457.7,310.5 467.8,310.5 477.9,310.5 488.0,310.4 498.1,310.4 508.2,310.4 518.3,310.4 528.4,310.3 538.5,310.3 548.6,310.3 558.7,310.2 568.8,310.2 578.9,310.2 589.0,310.2 599.1,310.2 609.2,310.1 619.3,310.1 629.4,310.1 639.5,310.1 649.6,310.1 659.7,310.0 669.8,310.0 679.9,310.0 690.0,310.0" fill="none" stroke="var(--danger)" stroke-width="2.4"/>
+<line x1="84" y1="309.0" x2="690" y2="309.0" stroke="var(--danger)" stroke-width="1" stroke-dasharray="3 3" opacity="0.7"/>
+<text x="686" y="305.0" text-anchor="end" font-size="7.6" fill="var(--danger)">asymptote 1/(1-p) = 1.25x</text>
+<text x="407.2" y="305.8" font-size="8" fill="var(--danger)" font-weight="700">p = 0.2  (20% of time)</text>
+<polyline points="84.0,322.0 94.1,316.2 104.2,311.6 114.3,307.8 124.4,304.7 134.5,302.0 144.6,299.7 154.7,297.7 164.8,296.0 174.9,294.5 185.0,293.1 195.1,291.9 205.2,290.8 215.3,289.8 225.4,288.9 235.5,288.1 245.6,287.3 255.7,286.6 265.8,286.0 275.9,285.4 286.0,284.9 296.1,284.3 306.2,283.9 316.3,283.4 326.4,283.0 336.5,282.6 346.6,282.2 356.7,281.9 366.8,281.6 376.9,281.2 387.0,280.9 397.1,280.7 407.2,280.4 417.3,280.1 427.4,279.9 437.5,279.7 447.6,279.5 457.7,279.2 467.8,279.0 477.9,278.9 488.0,278.7 498.1,278.5 508.2,278.3 518.3,278.2 528.4,278.0 538.5,277.8 548.6,277.7 558.7,277.6 568.8,277.4 578.9,277.3 589.0,277.2 599.1,277.1 609.2,276.9 619.3,276.8 629.4,276.7 639.5,276.6 649.6,276.5 659.7,276.4 669.8,276.3 679.9,276.2 690.0,276.1" fill="none" stroke="var(--warn)" stroke-width="2.4"/>
+<line x1="84" y1="270.0" x2="690" y2="270.0" stroke="var(--warn)" stroke-width="1" stroke-dasharray="3 3" opacity="0.7"/>
+<text x="686" y="266.0" text-anchor="end" font-size="7.6" fill="var(--warn)">asymptote 1/(1-p) = 2x</text>
+<text x="407.2" y="275.4" font-size="8" fill="var(--warn)" font-weight="700">p = 0.5</text>
+<polyline points="84.0,322.0 94.1,312.1 104.2,303.1 114.3,294.9 124.4,287.3 134.5,280.4 144.6,274.0 154.7,268.1 164.8,262.6 174.9,257.4 185.0,252.7 195.1,248.2 205.2,244.0 215.3,240.1 225.4,236.4 235.5,232.9 245.6,229.6 255.7,226.4 265.8,223.5 275.9,220.7 286.0,218.0 296.1,215.5 306.2,213.0 316.3,210.7 326.4,208.5 336.5,206.4 346.6,204.4 356.7,202.5 366.8,200.7 376.9,198.9 387.0,197.2 397.1,195.6 407.2,194.0 417.3,192.5 427.4,191.0 437.5,189.6 447.6,188.3 457.7,187.0 467.8,185.7 477.9,184.5 488.0,183.3 498.1,182.2 508.2,181.1 518.3,180.0 528.4,179.0 538.5,178.0 548.6,177.0 558.7,176.1 568.8,175.2 578.9,174.3 589.0,173.4 599.1,172.6 609.2,171.8 619.3,171.0 629.4,170.2 639.5,169.5 649.6,168.7 659.7,168.0 669.8,167.3 679.9,166.7 690.0,166.0" fill="none" stroke="var(--accent)" stroke-width="2.4"/>
+<line x1="84" y1="114.0" x2="690" y2="114.0" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 3" opacity="0.7"/>
+<text x="686" y="110.0" text-anchor="end" font-size="7.6" fill="var(--accent)">asymptote 1/(1-p) = 5x</text>
+<text x="407.2" y="189.0" font-size="8" fill="var(--accent)" font-weight="700">p = 0.8</text>
+<circle cx="690.0" cy="309.0" r="4" fill="var(--danger)"/>
+<text x="508.2" y="325.0" font-size="7.6" fill="var(--danger-text)">a 20%-of-time stage caps at 1.25x even as s -&gt; infinity</text>
+<rect x="92" y="64" width="212" height="30" rx="7" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="102" y="76" font-size="8.5" fill="var(--text-secondary)">speedup = 1 / ((1 - p) + p/s)</text>
+<text x="102" y="88" font-size="7.3" fill="var(--text-muted)">p = fraction of time accelerated</text>
+<text x="20" y="362" font-size="8.4" fill="var(--text-muted)">The un-accelerated part caps the gain: the bottleneck governs. This is EI-05 (attack the dominant term) in the time domain.</text>
+</svg></div><figcaption><span class="fid">F-M6-4</span>Amdahl's law. Overall speedup saturates at 1/(1-p), so accelerating a small fraction of the work caps the gain: a 20%-of-time stage yields at most 1.25x even at infinite speed. The bottleneck governs, the time-domain form of attacking the dominant term. Companion to the roofline. Module 6, Section 6.4.</figcaption></figure></body></html>

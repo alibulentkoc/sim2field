@@ -1,0 +1,24 @@
+<svg viewBox="0 0 760 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The hardware-in-the-loop rig: the digital twin generates sensor streams and scenes that drive the real edge device running the deployed stack, measuring true latency, power, and thermal behavior against the budgets, the last validation before field hardware and the honest test that catches worked-on-my-laptop." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Software- to hardware-in-the-loop (SIL -> HIL)</text>
+<rect x="30" y="70" width="180" height="90" rx="10" fill="var(--surface)" stroke="var(--info)" stroke-width="1.6"/>
+<text x="120" y="92" font-size="9" fill="var(--info)" font-weight="700" text-anchor="middle">DIGITAL TWIN (sim)</text>
+<text x="120" y="110" font-size="6.8" fill="var(--text-muted)" text-anchor="middle">generates sensor streams</text>
+<text x="120" y="122" font-size="6.8" fill="var(--text-muted)" text-anchor="middle">+ scenes (M3 virtual sensors)</text>
+<text x="120" y="142" font-size="6.6" fill="var(--accent)" text-anchor="middle">rendered / played-back data</text>
+<line x1="210" y1="115" x2="270" y2="115" stroke="var(--border-strong)" stroke-width="1.6" marker-end="url(#a)"/>
+<text x="240" y="108" font-size="6.4" fill="var(--text-muted)">feeds</text>
+<rect x="272" y="70" width="200" height="90" rx="10" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.8"/>
+<text x="372" y="92" font-size="9" fill="var(--accent)" font-weight="700" text-anchor="middle">REAL EDGE DEVICE</text>
+<text x="372" y="108" font-size="6.8" fill="var(--text-muted)" text-anchor="middle">Jetson-class, the DEPLOYED stack</text>
+<text x="372" y="124" font-size="6.8" fill="var(--text-secondary)" text-anchor="middle">perceive -> decide -> act</text>
+<text x="372" y="144" font-size="6.6" fill="var(--warn-text)" text-anchor="middle">hot, loaded, real hardware</text>
+<rect x="534" y="70" width="200" height="90" rx="10" fill="var(--surface-2)" stroke="var(--warn)" stroke-width="1.5"/>
+<text x="634" y="92" font-size="8.4" fill="var(--warn-text)" font-weight="700" text-anchor="middle">MEASURE vs budgets</text>
+<text x="634" y="110" font-size="7" fill="var(--text-secondary)" text-anchor="middle">true latency (CEC-01)</text>
+<text x="634" y="122" font-size="7" fill="var(--text-secondary)" text-anchor="middle">power + thermal (M12)</text>
+<text x="634" y="142" font-size="6.6" fill="var(--text-muted)" text-anchor="middle">datasheet != delivered (EI-06)</text>
+<line x1="472" y1="115" x2="532" y2="115" stroke="var(--border-strong)" stroke-width="1.6" marker-end="url(#a)"/>
+<text x="20" y="192" font-size="7.8" fill="var(--text-secondary)" font-weight="700">The last validation before field hardware, and the honest test that catches "worked on my laptop."</text>
+<text x="20" y="206" font-size="7.8" fill="var(--text-muted)">SIL (stack against pure sim) advances to HIL (real edge/actuators driven by the sim). Prove it in hardware-in-the-loop before the field. Section 6.8.</text>
+</svg>

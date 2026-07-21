@@ -1,0 +1,52 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="color-scheme" content="dark"><title>F-M15-4 preview - Safety case</title><style>:root{--bg:#0e120d;--surface:#161c14;--surface-2:#0b0e0a;--surface-3:#12160f;--border:#2b3527;--border-strong:#3a4633;--text-primary:#eef2e6;--text-secondary:#c8cfbe;--text-muted:#adb4a2;--accent:#9bcf3b;--info:#6fb0d9;--warn:#e0a03b;--warn-text:#eed9b4;--danger:#f0556a;--danger-text:#f697a4;--accent-2:#b98bd9}
+body{margin:0;background:var(--bg);color:var(--text-primary);font-family:'IBM Plex Mono',ui-monospace,monospace;padding:2rem}
+.figure{max-width:860px;margin:0 auto;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.figbody{padding:1rem 1.1rem;background:var(--surface-3);overflow-x:auto} .figbody svg{display:block;width:100%;height:auto;min-width:680px}
+figcaption{padding:.7rem 1rem;font-size:.82rem;color:var(--text-muted);border-top:1px solid var(--border)} .fid{font-size:.64rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-right:.5rem}</style></head>
+<body><figure class="figure"><div class="figbody"><svg viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The safety case as a goal-structured argument: a top claim that residual risk is acceptable is decomposed per hazard into sub-claims, each supported by a mitigation strategy and by evidence with its fidelity stated, and the case states residual risk and assumptions honestly and must be falsifiable." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<rect x="268" y="40" width="224" height="46" rx="5" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="275" y="52" font-size="6.5" fill="var(--accent)" font-weight="700">CLAIM (top goal)</text>
+<text x="380.0" y="70.0" text-anchor="middle" font-size="8" fill="var(--text-primary)" font-weight="700">residual risk is acceptable</text>
+<text x="380.0" y="81.0" text-anchor="middle" font-size="6.8" fill="var(--text-muted)">for the defined operation</text>
+<ellipse cx="620" cy="63" rx="108" ry="24" fill="var(--surface-2)" stroke="var(--accent-2)" stroke-width="1.2"/>
+<text x="620" y="58" text-anchor="middle" font-size="6.5" fill="var(--accent-2)" font-weight="700">CONTEXT</text>
+<text x="620" y="70" text-anchor="middle" font-size="6.8" fill="var(--text-muted)">defined envelope (slope, thermal, cultivar)</text>
+<line x1="492" y1="63" x2="512" y2="63" stroke="var(--border-strong)" stroke-width="1.1"/>
+<polygon points="274.0,104 510.0,104 486.0,144 250.0,144" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.3"/>
+<text x="380" y="117" text-anchor="middle" font-size="6.5" fill="var(--warn-text)" font-weight="700">STRATEGY</text>
+<text x="380" y="128" text-anchor="middle" font-size="7.2" fill="var(--text-secondary)">argue over each identified hazard</text>
+<text x="380" y="138" text-anchor="middle" font-size="6.5" fill="var(--text-muted)">(M15 hazard register, one sub-claim per hazard)</text>
+<line x1="380" y1="86" x2="380" y2="104" stroke="var(--border-strong)" stroke-width="1.3" marker-end="url(#a)"/>
+<rect x="96" y="162" width="220" height="44" rx="5" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="103" y="174" font-size="6.5" fill="var(--accent)" font-weight="700">SUB-CLAIM</text>
+<text x="206.0" y="191.0" text-anchor="middle" font-size="8" fill="var(--text-primary)" font-weight="700">no bruise (hazard A)</text>
+<rect x="444" y="162" width="220" height="44" rx="5" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="451" y="174" font-size="6.5" fill="var(--accent)" font-weight="700">SUB-CLAIM</text>
+<text x="554.0" y="191.0" text-anchor="middle" font-size="8" fill="var(--text-primary)" font-weight="700">no tip-over (hazard B)</text>
+<line x1="320" y1="144" x2="206" y2="162" stroke="var(--border-strong)" stroke-width="1.3" marker-end="url(#a)"/>
+<line x1="440" y1="144" x2="554" y2="162" stroke="var(--border-strong)" stroke-width="1.3" marker-end="url(#a)"/>
+<polygon points="120.0,220 316.0,220 292.0,258 96.0,258" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.3"/>
+<text x="206" y="233" text-anchor="middle" font-size="6.5" fill="var(--warn-text)" font-weight="700">STRATEGY</text>
+<text x="206" y="244" text-anchor="middle" font-size="7.2" fill="var(--text-secondary)">grip-force window + relief</text>
+<text x="206" y="254" text-anchor="middle" font-size="6.5" fill="var(--text-muted)">(EI-09 physical bound)</text>
+<polygon points="468.0,220 664.0,220 640.0,258 444.0,258" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.3"/>
+<text x="554" y="233" text-anchor="middle" font-size="6.5" fill="var(--warn-text)" font-weight="700">STRATEGY</text>
+<text x="554" y="244" text-anchor="middle" font-size="7.2" fill="var(--text-secondary)">track width + low CoG + slope limit</text>
+<text x="554" y="254" text-anchor="middle" font-size="6.5" fill="var(--text-muted)">(M10 stability)</text>
+<line x1="206" y1="206" x2="206" y2="220" stroke="var(--border-strong)" stroke-width="1.3" marker-end="url(#a)"/>
+<line x1="554" y1="206" x2="554" y2="220" stroke="var(--border-strong)" stroke-width="1.3" marker-end="url(#a)"/>
+<rect x="103.0" y="278" width="206" height="40" rx="20.0" fill="var(--info)" fill-opacity="0.12" stroke="var(--info)" stroke-width="1.3"/>
+<text x="206" y="291" text-anchor="middle" font-size="6.5" fill="var(--info)" font-weight="700">EVIDENCE</text>
+<text x="206" y="302" text-anchor="middle" font-size="7" fill="var(--text-secondary)">M14 tests, fault injection</text>
+<text x="206" y="312" text-anchor="middle" font-size="6.5" fill="var(--accent)">fidelity: validated contact rung + field</text>
+<rect x="451.0" y="278" width="206" height="40" rx="20.0" fill="var(--info)" fill-opacity="0.12" stroke="var(--info)" stroke-width="1.3"/>
+<text x="554" y="291" text-anchor="middle" font-size="6.5" fill="var(--info)" font-weight="700">EVIDENCE</text>
+<text x="554" y="302" text-anchor="middle" font-size="7" fill="var(--text-secondary)">dynamic twin + field trials</text>
+<text x="554" y="312" text-anchor="middle" font-size="6.5" fill="var(--accent)">fidelity: validated (CR-03)</text>
+<line x1="206" y1="258" x2="206" y2="278" stroke="var(--border-strong)" stroke-width="1.3" marker-end="url(#a)"/>
+<line x1="554" y1="258" x2="554" y2="278" stroke="var(--border-strong)" stroke-width="1.3" marker-end="url(#a)"/>
+<rect x="40" y="332" width="680" height="34" rx="8" fill="var(--surface-2)" stroke="var(--danger)" stroke-opacity="0.6"/>
+<text x="52" y="348" font-size="8.2" fill="var(--danger-text)" font-weight="700">RESIDUAL RISK + ASSUMPTIONS / LIMITS, stated honestly.</text>
+<text x="52" y="360" font-size="7.8" fill="var(--text-muted)">The case is what a reviewer or regulator evaluates; its integrity depends on being falsifiable (EI-15). Evidence is only as strong as its fidelity rung (CEC-06).</text>
+</svg></div><figcaption><span class="fid">F-M15-4</span>The safety case. A top claim that residual risk is acceptable is decomposed per hazard into sub-claims, each supported by a mitigation strategy and by evidence with its fidelity stated. The case states residual risk and assumptions honestly and must be falsifiable. Companion to the defense-in-depth figure. Module 15, Section 6.6.</figcaption></figure></body></html>

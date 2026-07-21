@@ -1,0 +1,65 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="color-scheme" content="dark"><title>F-M12-5 preview - Power distribution</title><style>:root{--bg:#0e120d;--surface:#161c14;--surface-2:#0b0e0a;--surface-3:#12160f;--border:#2b3527;--border-strong:#3a4633;--text-primary:#eef2e6;--text-secondary:#c8cfbe;--text-muted:#adb4a2;--text-on-accent:#0e120d;--accent:#9bcf3b;--accent-strong:#6f9a2c;--info:#6fb0d9;--warn:#e0a03b;--warn-text:#eed9b4;--danger:#f0556a;--danger-text:#f697a4}
+body{margin:0;background:var(--bg);color:var(--text-primary);font-family:'IBM Plex Mono',ui-monospace,monospace;padding:2rem}
+.figure{max-width:880px;margin:0 auto;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.figbody{padding:1rem 1.1rem;background:var(--surface-3);overflow-x:auto} .figbody svg{display:block;width:100%;height:auto;min-width:680px}
+figcaption{padding:.7rem 1rem;font-size:.82rem;color:var(--text-muted);border-top:1px solid var(--border)} .fid{font-size:.64rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-right:.5rem}</style></head>
+<body><figure class="figure"><div class="figbody"><svg viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Power distribution architecture: the battery feeds a protected main bus that splits into clean regulated rails for compute, sensors, logic, and the safety monitor, isolated from noisy high-current rails for actuation and drive; sequencing brings up the safety monitor before actuators are enabled." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker><marker id="en" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/></marker></defs>
+<rect x="16" y="150" width="90" height="64" rx="7" fill="var(--surface)" stroke="var(--text-secondary)" stroke-width="1.4"/>
+<text x="61.0" y="168" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">BATTERY</text>
+<text x="61.0" y="181" text-anchor="middle" font-size="7.3" fill="var(--text-muted)">main pack</text>
+<rect x="118" y="160" width="120" height="44" rx="7" fill="var(--surface)" stroke="var(--danger)" stroke-width="1.4"/>
+<text x="178.0" y="178" text-anchor="middle" font-size="9.5" fill="var(--danger-text)" font-weight="700">PROTECTION</text>
+<text x="178.0" y="191" text-anchor="middle" font-size="7.3" fill="var(--text-muted)">fuse / rev-pol / brownout</text>
+<line x1="106" y1="182" x2="116" y2="182" stroke="var(--border-strong)" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="238" y1="182" x2="248" y2="182" stroke="var(--border-strong)" stroke-width="1.4" marker-end="url(#a)"/>
+<rect x="248" y="64" width="6" height="268" rx="2" fill="var(--accent)"/>
+<text x="244" y="58" text-anchor="middle" font-size="8.5" fill="var(--accent)" font-weight="700">main bus</text>
+<line x1="254" y1="110" x2="284" y2="110" stroke="var(--border-strong)" stroke-width="1.4" marker-end="url(#a)"/>
+<rect x="286" y="96" width="66" height="28" rx="7" fill="var(--surface)" stroke="var(--info)" stroke-width="1.4"/>
+<text x="319.0" y="114.0" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">reg</text>
+<line x1="352" y1="110" x2="370" y2="110" stroke="var(--border-strong)" stroke-width="1.4" marker-end="url(#a)"/>
+<rect x="372" y="62" width="374" height="150" rx="9" fill="var(--info)" fill-opacity="0.05" stroke="var(--info)" stroke-opacity="0.4"/>
+<text x="384" y="80" font-size="9" fill="var(--info)" font-weight="700">CLEAN RAILS (regulated, low-noise)</text>
+<rect x="386" y="92" width="160" height="40" rx="7" fill="var(--surface)" stroke="var(--info)" stroke-width="1.4"/>
+<text x="466.0" y="116.0" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">Compute (Jetson)</text>
+<circle cx="398" cy="112" r="8" fill="var(--accent-strong)"/>
+<text x="398" y="115" text-anchor="middle" font-size="9" fill="var(--text-on-accent)" font-weight="700">2</text>
+<rect x="560" y="92" width="172" height="40" rx="7" fill="var(--surface)" stroke="var(--info)" stroke-width="1.4"/>
+<text x="646.0" y="116.0" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">Logic / IO</text>
+<circle cx="572" cy="112" r="8" fill="var(--accent-strong)"/>
+<text x="572" y="115" text-anchor="middle" font-size="9" fill="var(--text-on-accent)" font-weight="700">1</text>
+<rect x="386" y="150" width="160" height="44" rx="7" fill="var(--surface)" stroke="var(--info)" stroke-width="1.4"/>
+<text x="466.0" y="176.0" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">Sensors (OAK-D)</text>
+<circle cx="398" cy="172" r="8" fill="var(--accent-strong)"/>
+<text x="398" y="175" text-anchor="middle" font-size="9" fill="var(--text-on-accent)" font-weight="700">2</text>
+<rect x="560" y="150" width="172" height="44" rx="7" fill="var(--surface)" stroke="var(--info)" stroke-width="1.4"/>
+<text x="646.0" y="168" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">Safety monitor (M11)</text>
+<text x="646.0" y="181" text-anchor="middle" font-size="7.3" fill="var(--text-muted)">+ hw controller</text>
+<circle cx="572" cy="172" r="8" fill="var(--accent-strong)"/>
+<text x="572" y="175" text-anchor="middle" font-size="9" fill="var(--text-on-accent)" font-weight="700">1</text>
+<line x1="372" y1="222" x2="746" y2="222" stroke="var(--warn)" stroke-width="1.4" stroke-dasharray="6 4"/>
+<text x="374" y="234" font-size="7.6" fill="var(--warn-text)">noise isolation: switching drive/pump must not corrupt sensors or reset compute</text>
+<line x1="254" y1="284" x2="284" y2="284" stroke="var(--border-strong)" stroke-width="1.4" marker-end="url(#a)"/>
+<rect x="286" y="270" width="66" height="28" rx="7" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.4"/>
+<text x="319.0" y="288.0" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">rail</text>
+<line x1="352" y1="284" x2="370" y2="284" stroke="var(--border-strong)" stroke-width="1.4" marker-end="url(#a)"/>
+<rect x="372" y="240" width="374" height="94" rx="9" fill="var(--warn)" fill-opacity="0.05" stroke="var(--warn)" stroke-opacity="0.4"/>
+<text x="384" y="258" font-size="9" fill="var(--warn-text)" font-weight="700">NOISY RAILS (high-current)</text>
+<rect x="386" y="266" width="160" height="50" rx="7" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.4"/>
+<text x="466.0" y="284" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">Actuation</text>
+<text x="466.0" y="297" text-anchor="middle" font-size="7.3" fill="var(--text-muted)">pump / valves</text>
+<circle cx="398" cy="290" r="8" fill="var(--accent-strong)"/>
+<text x="398" y="293" text-anchor="middle" font-size="9" fill="var(--text-on-accent)" font-weight="700">3</text>
+<rect x="560" y="266" width="172" height="50" rx="7" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.4"/>
+<text x="646.0" y="295.0" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">Drive motors</text>
+<circle cx="572" cy="290" r="8" fill="var(--accent-strong)"/>
+<text x="572" y="293" text-anchor="middle" font-size="9" fill="var(--text-on-accent)" font-weight="700">3</text>
+<path d="M646,194 L646,214 L646,240" fill="none" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#en)"/>
+<text x="652" y="230" font-size="7.5" fill="var(--accent)">enable only after M11 OK</text>
+<text x="16" y="256" font-size="8.5" fill="var(--text-primary)" font-weight="700">Power sequencing</text>
+<text x="16" y="270" font-size="7.8" fill="var(--text-muted)">(1) safety monitor + logic</text>
+<text x="16" y="282" font-size="7.8" fill="var(--text-muted)">(2) compute + sensors</text>
+<text x="16" y="294" font-size="7.8" fill="var(--text-muted)">(3) actuators enabled last</text>
+<text x="16" y="364" font-size="8.5" fill="var(--text-secondary)">Clean compute/sensor rails are separated from noisy actuation/drive rails; protection guards the bus, and sequencing brings the safety monitor up first. This is the electrical realization of the M11 integration.</text>
+</svg></div><figcaption><span class="fid">F-M12-5</span>Power distribution architecture. The battery feeds a protected main bus that splits into clean regulated rails (compute, sensors, logic, safety monitor) isolated from noisy high-current rails (actuation, drive). Protection guards the bus, and sequencing brings the safety monitor up first, enabling actuators last. Module 12, Section 6.6.</figcaption></figure></body></html>

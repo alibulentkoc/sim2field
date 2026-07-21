@@ -1,0 +1,28 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="color-scheme" content="dark"><title>F-M13-5 preview - Composed budgets</title><style>:root{--bg:#0e120d;--surface:#161c14;--surface-2:#0b0e0a;--surface-3:#12160f;--border:#2b3527;--border-strong:#3a4633;--text-primary:#eef2e6;--text-secondary:#c8cfbe;--text-muted:#adb4a2;--text-on-accent:#0e120d;--accent:#9bcf3b;--warn:#e0a03b;--warn-text:#eed9b4;--danger:#f0556a;--danger-text:#f697a4}
+body{margin:0;background:var(--bg);color:var(--text-primary);font-family:'IBM Plex Mono',ui-monospace,monospace;padding:2rem}
+.figure{max-width:840px;margin:0 auto;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.figbody{padding:1rem 1.1rem;background:var(--surface-3);overflow-x:auto} .figbody svg{display:block;width:100%;height:auto;min-width:640px}
+figcaption{padding:.7rem 1rem;font-size:.82rem;color:var(--text-muted);border-top:1px solid var(--border)} .fid{font-size:.64rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-right:.5rem}</style></head>
+<body><figure class="figure"><div class="figbody"><svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Composed budgets versus limits: the placement, cycle-time, and power budgets are assembled from all real contributors at once and each tested against its limit; composition can reveal an emergent overrun no single allocation predicted, shown as the cycle-time budget pushed toward its limit by shared-resource effects." font-family="'IBM Plex Mono',monospace">
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Composed budgets, all at once, vs limits</text>
+<text x="20" y="42" font-size="8.2" fill="var(--text-muted)">Per-subsystem allocations were checked alone; integration verifies they hold together. Composition can reveal an emergent overrun (EI-13).</text>
+<line x1="637" y1="60" x2="637" y2="248" stroke="var(--danger)" stroke-width="1.6" stroke-dasharray="5 3"/>
+<text x="637" y="54" text-anchor="middle" font-size="8.5" fill="var(--danger-text)" font-weight="700">limit</text>
+<defs><pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="var(--warn)" stroke-width="1.4"/></pattern></defs>
+<text x="16" y="84" font-size="8.6" fill="var(--text-primary)" font-weight="700">Placement budget</text>
+<text x="16" y="96" font-size="7.2" fill="var(--text-muted)">3&#963;_place = sqrt(sum &#963;_i^2)  vs c   test: 3&#963;_place &lt;= c</text>
+<rect x="196" y="102" width="374.9" height="26" rx="2" fill="var(--accent)" fill-opacity="0.6" stroke="var(--accent)"/>
+<text x="604" y="142" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">margin</text>
+<text x="202" y="119" font-size="6.6" fill="var(--text-on-accent)">dominant: &#963;_Z</text>
+<text x="16" y="154" font-size="8.6" fill="var(--text-primary)" font-weight="700">Cycle-time budget</text>
+<text x="16" y="166" font-size="7.2" fill="var(--text-muted)">T_cycle = sum stage times  vs  d/v   test: T_cycle &lt;= d/v</text>
+<rect x="196" y="172" width="344.0" height="26" rx="2" fill="var(--accent)" fill-opacity="0.6" stroke="var(--accent)"/>
+<rect x="540.0" y="172" width="70.6" height="26" fill="url(#hatch)" stroke="var(--warn)" stroke-width="1"/>
+<text x="615" y="182" font-size="6.8" fill="var(--warn-text)">+ shared-resource (EI-13)</text>
+<text x="624" y="212" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">margin</text>
+<text x="16" y="224" font-size="8.6" fill="var(--text-primary)" font-weight="700">Power / thermal</text>
+<text x="16" y="236" font-size="7.2" fill="var(--text-muted)">P_coincident  vs  delivery capacity   test: &lt;= capacity</text>
+<rect x="196" y="242" width="361.7" height="26" rx="2" fill="var(--accent)" fill-opacity="0.6" stroke="var(--accent)"/>
+<text x="597" y="282" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">margin</text>
+<text x="20" y="286" font-size="8.2" fill="var(--text-muted)">Placement is assembled by RSS over all real contributors; cycle time and power are summed with shared-resource effects. Fractions of limit shown; values [VERIFY@PUB].</text>
+</svg></div><figcaption><span class="fid">F-M13-5</span>Composed budgets vs limits. The placement, cycle-time, and power budgets are assembled from all real contributors at once and each tested against its limit; composition can reveal an emergent overrun no single allocation predicted, shown as shared-resource effects pushing the cycle-time budget toward its limit. Companion to the coupling map. Fractions of limit, illustrative. Module 13, Sections 6.5 and 7.2.</figcaption></figure></body></html>

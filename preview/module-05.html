@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Integration &amp; System Design — SIM2FIELD</title>
+<meta name="description" content="A short university course on the engineering of an autonomous watermelon/pumpkin harvesting robot: perception, edge AI, manipulation, and field deployment.">
+<link rel="stylesheet" href="assets/style.css">
+
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a class="brand" href="index.html"><span class="dot"></span>SIM2FIELD</a>
+  <div class="nav-links"><a href="index.html">Home</a><a href="index.html#modules" class="active">Modules</a><a href="demo-page.html">Live Demo</a><a href="index.html#specs">Specs</a><a href="capstone.html">Capstone</a></div>
+</div></nav>
+<header class="article-head"><div class="inner"><p class="eyebrow">Module 5</p><h1>Integration &amp; System Design</h1><div class="dur">◷ 4 hours</div></div></header><main class="page prose">
+
+<h2 id="learning-outcomes">Learning outcomes</h2>
+<p>By the end of this module, students can:</p>
+<ol>
+<li>Draw a hardware architecture for the harvester: sensors, compute, actuation,
+   power, and the buses that connect them.</li>
+<li>Draw a software architecture: nodes, message flow, the supervisory state
+   machine, and the real-time boundary.</li>
+<li>Write measurable design specifications and distinguish functional,
+   performance, and constraint requirements.</li>
+<li>Produce a bill of materials organized by subsystem and reason about cost,
+   sourcing, and replaceability.</li>
+<li>Explain integration hazards — timing, power, EMI, mechanical fit — that only
+   appear when subsystems meet.</li>
+</ol>
+<h2 id="core-concepts">Core concepts</h2>
+<h3 id="hardware-architecture">Hardware architecture</h3>
+<p>The machine is a small distributed system. A workable reference architecture:</p>
+<ul>
+<li><strong>Mobility:</strong> four-wheel rover (Amiga), hub motors, wheel encoders, RTK-GNSS
+  for row following.</li>
+<li><strong>Sensing:</strong> front stereo camera(s) for detection/localization; optional
+  close-range wrist camera for grasp verification; optional NIR module for
+  maturity; a solid-state lidar for canopy structure and bumper safety.</li>
+<li><strong>Compute:</strong> a platform controller ("Brain") for drive, CAN, and safety; a
+  Jetson-class edge module for perception and the grasp policy. Split real-time
+  control from heavy inference deliberately.</li>
+<li><strong>Actuation:</strong> two telescopic linear actuators (the parallel struts) with
+  encoders; the gripper with load cells and a tactile array; the canopy tool.</li>
+<li><strong>Power:</strong> platform battery, DC distribution, per-domain fusing; budget peak vs.
+  continuous draw, and account for the edge device's thermal load.</li>
+<li><strong>Buses:</strong> CAN for real-time motor/safety traffic; Ethernet/USB for camera and
+  inference data; a ROS 2 bridge tying the high-level nodes together.</li>
+</ul>
+<p>The key architectural decision students must be able to defend: <strong>separate the
+hard-real-time, safety-critical control plane (CAN, on the Brain) from the
+best-effort, compute-heavy perception plane (Ethernet, on the Jetson).</strong> Mixing
+them means a slow inference frame can stall a safety loop — unacceptable.</p>
+<h3 id="software-architecture">Software architecture</h3>
+<p>A ROS 2-style graph is the teaching baseline:</p>
+<pre><code>[camera driver] → [detector] → [localizer] → [supervisor / state machine]
+                                                   │
+                    [grasp policy] ← ─ ─ ─ ─ ─ ─ ─ ┤ (commands)
+                                                   ▼
+                                   [drive controller]  [arm controller]  [safety monitor]
+                                                   │        │                 │
+                                                   └──────── CAN bus ─────────┘
+</code></pre>
+<ul>
+<li>The <strong>supervisor</strong> owns the mission state machine
+  (<code>DRIVE → STAGE → ALIGN → GRAB → LIFT → SWING → LOWER → RELEASE</code>) and is the
+  single place decisions are made.</li>
+<li>The <strong>safety monitor</strong> runs independently and can halt the machine regardless
+  of what the supervisor believes — it is not a state in the mission FSM but a
+  parallel guardian (e-stop, bumper lidar, geofence).</li>
+<li>The <strong>real-time boundary</strong> separates nodes that must meet deadlines (drive, arm,
+  safety) from those that are best-effort (detection, logging, telemetry).</li>
+</ul>
+<h3 id="writing-specifications-that-can-be-tested">Writing specifications that can be tested</h3>
+<p>A specification that cannot be measured cannot be verified. Teach the discipline
+of measurable requirements. Compare:</p>
+<ul>
+<li>Weak: <em>"The system shall harvest melons quickly and gently."</em></li>
+<li>Strong: <em>"The system shall complete a pick-to-place cycle in ≤ N seconds at a
+  rover speed of ≥ V m/s, with visible bruising in ≤ 5% of placed fruit, verified
+  by instrumented firmness audit on a ≥ 100-fruit sample."</em></li>
+</ul>
+<p>The full worked specification lives in
+<a href="../../specs/design-specification.md"><code>specs/design-specification.md</code></a>; students
+read it, critique it, and in the capstone write their own.</p>
+<h3 id="the-bill-of-materials-as-an-engineering-document">The bill of materials as an engineering document</h3>
+<p>A BOM is not a shopping list; it is a design decision made legible. Organized by
+subsystem, it reveals where cost and risk concentrate, what is commercial-off-
+the-shelf vs. fabricated, and what is a single point of failure. The course BOM
+is in <a href="../../specs/bill-of-materials.md"><code>specs/bill-of-materials.md</code></a>. Students
+learn to read it critically: <em>why is the platform the largest line? which item
+would you dual-source? what is the cheapest change that most improves reliability?</em></p>
+<h3 id="integration-hazards-where-good-subsystems-fail-together">Integration hazards — where good subsystems fail together</h3>
+<p>The failures that surprise students are emergent, not local:</p>
+<ul>
+<li><strong>Timing:</strong> a perception frame that is fine in isolation arrives too late once
+  the bus is loaded.</li>
+<li><strong>Power:</strong> simultaneous actuator inrush + inference spike browns out a shared
+  rail.</li>
+<li><strong>EMI:</strong> motor drives inject noise into camera or encoder lines routed beside
+  them.</li>
+<li><strong>Mechanical fit &amp; tolerance:</strong> the arm's real workspace clips the frame that
+  CAD said it cleared; cables snag at full stroke.</li>
+<li><strong>Coordinate frames:</strong> a calibration error between camera and arm frames turns
+  a perfect detection into a missed grasp.</li>
+</ul>
+<p>The remedy is not heroics but discipline: interface control documents, staged
+bring-up (power → buses → sensors → actuation → autonomy), and testing at each
+stage before adding the next.</p>
+<h2 id="grad-extension"><span class="tagpill tag-grad">Graduate</span>Grad extension</h2>
+<p><strong>Interface control.</strong> Pick one interface in the architecture (e.g., localizer →
+supervisor, or supervisor → arm controller) and write a one-page interface
+control document: message contents, units, coordinate frame, rate, timing
+guarantee, and failure behavior. Graduate students additionally propose a bring-up
+test that would catch a frame-calibration error before it reaches the field.</p>
+<h2 id="demo-or-lab"><span class="tagpill tag-lab">Hands-on</span>Demo or lab</h2>
+<p><strong>Lab 5 — Architecture and spec workshop.</strong>
+See <a href="../../labs/lab-05-architecture.md"><code>labs/lab-05-architecture.md</code></a>. In teams,
+students:</p>
+<ol>
+<li>Redraw the hardware and software architecture for a stated variant (e.g., add
+   a second arm, or move to pumpkins) and mark the real-time boundary.</li>
+<li>Take three weak requirements and rewrite them as measurable specifications.</li>
+<li>Audit the course BOM: identify the largest cost, one single point of failure,
+   and one cost-reducing substitution; defend each in two sentences.</li>
+</ol>
+<h2 id="knowledge-check"><span class="tagpill tag-quiz">Quiz</span>Knowledge check</h2><div class="quiz" data-quiz><div class="quiz-head"><span class="ic">◇</span>Module 5 — Knowledge Check<span class="score">0 / 2</span></div><div class="q" data-correct="2"><p class="qtext"><span class="qn">01</span>The safety monitor is architecturally placed:</p><button class="opt" data-q="0" data-o="0">as the final state of the mission state machine<span class="mark"></span></button><button class="opt" data-q="0" data-o="1">inside the detector node<span class="mark"></span></button><button class="opt" data-q="0" data-o="2">as an independent process that can halt motion regardless of mission state<span class="mark"></span></button><button class="opt" data-q="0" data-o="3">on the cloud server<span class="mark"></span></button><div class="qexpl"><b>Why:</b> Safety must not depend on the correctness of the logic it protects against, so the monitor runs in parallel and can halt the machine no matter what state the supervisor believes it is in.</div></div><div class="q" data-correct="1"><p class="qtext"><span class="qn">02</span>Why separate the CAN control plane from the Ethernet perception plane?</p><button class="opt" data-q="1" data-o="0">to save money on cabling<span class="mark"></span></button><button class="opt" data-q="1" data-o="1">so a slow inference frame cannot stall a real-time safety loop<span class="mark"></span></button><button class="opt" data-q="1" data-o="2">because cameras cannot use CAN<span class="mark"></span></button><button class="opt" data-q="1" data-o="3">to allow cloud access<span class="mark"></span></button><div class="qexpl"><b>Why:</b> Keeping real-time motor/safety traffic on a deterministic bus, isolated from heavy perception data, guarantees the safety loop&#x27;s timing.</div></div><div class="quiz-foot"><button class="btn btn-dark" data-reset>Reset</button><span class="msg">Pick an answer to check it instantly.</span></div></div>
+<ol>
+<li>Why separate the CAN control plane from the Ethernet perception plane? Give a
+   concrete failure the separation prevents.</li>
+<li>The safety monitor is drawn <em>outside</em> the mission state machine. Why is that
+   architecturally important?</li>
+<li>Rewrite this as a measurable spec: <em>"The robot should see fruit well in most
+   lighting."</em></li>
+<li>Name three integration hazards that do not appear when subsystems are tested
+   alone, and give a mitigation for each.</li>
+<li>In the BOM, why is buying a commercial platform (rather than fabricating a
+   chassis) itself a design decision with downstream consequences?</li>
+</ol>
+<h2 id="take-home-assignment"><span class="tagpill tag-take">Assignment</span>Take-home assignment</h2>
+<p>Produce a <strong>two-page system design packet</strong> for your capstone concept: a hardware
+architecture diagram, a software/node diagram with the real-time boundary marked,
+and five measurable design specifications (at least one each: functional,
+performance, constraint). Deliverable: <code>assignments/m5-design-packet.md</code> plus
+diagrams. This is a direct down payment on the capstone.</p><div class="pager"><a href="module-04.html"><span class="d">← Previous</span>Module 4: Manipulation &amp; Control</a><a class="next" href="module-06.html"><span class="d">Next →</span>Module 6: Testing, Safety &amp; Deployment</a></div></main>
+<footer class="foot"><div class="inner">
+  <div>SIM2FIELD · Robotic Harvesting Systems — course materials</div>
+  <div><a href="index.html">Home</a> · <a href="demo-page.html">Live Demo</a> · <a href="capstone.html">Capstone</a></div>
+</div></footer>
+
+<script>
+document.querySelectorAll('[data-quiz]').forEach(function(quiz){
+  var total = quiz.querySelectorAll('.q').length;
+  var answered = {};
+  function refresh(){
+    var correct = Object.values(answered).filter(Boolean).length;
+    quiz.querySelector('.score').textContent = correct + ' / ' + total;
+    var msg = quiz.querySelector('.msg');
+    if (Object.keys(answered).length === total){
+      msg.textContent = correct === total ? 'Perfect — all correct.' :
+        'You got ' + correct + ' of ' + total + '. Review the explanations and try again.';
+    }
+  }
+  quiz.querySelectorAll('.opt').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var qEl = btn.closest('.q');
+      if (qEl.dataset.locked) return;
+      qEl.dataset.locked = '1';
+      var correct = parseInt(qEl.dataset.correct,10);
+      var chosen = parseInt(btn.dataset.o,10);
+      qEl.querySelectorAll('.opt').forEach(function(o){
+        o.classList.add('locked');
+        var oi = parseInt(o.dataset.o,10);
+        if (oi === correct) o.classList.add('correct');
+        else if (o === btn) o.classList.add('wrong');
+      });
+      qEl.querySelector('.qexpl').classList.add('show');
+      answered[qEl.dataset.q || btn.dataset.q] = (chosen === correct);
+      refresh();
+    });
+  });
+  quiz.querySelector('[data-reset]').addEventListener('click', function(){
+    answered = {};
+    quiz.querySelectorAll('.q').forEach(function(qEl){
+      delete qEl.dataset.locked;
+      qEl.querySelectorAll('.opt').forEach(function(o){ o.className='opt'; });
+      qEl.querySelector('.qexpl').classList.remove('show');
+    });
+    quiz.querySelector('.msg').textContent = 'Pick an answer to check it instantly.';
+    refresh();
+  });
+});
+</script>
+
+</body>
+</html>

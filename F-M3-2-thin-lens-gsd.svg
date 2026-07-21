@@ -1,0 +1,30 @@
+<svg viewBox="0 0 760 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Thin-lens imaging geometry: a sensor of dimension s at focal length f behind a lens defines a field of view of twice the arctangent of s over 2f; at working distance Z the imaged ground width is Z s over f, and dividing by the pixel count gives the ground sampling distance, the millimeters of fruit each pixel spans that the detector inherits." font-family="'IBM Plex Mono',monospace">
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Thin-lens imaging: field of view and ground sampling</text>
+<line x1="210" y1="152" x2="662" y2="152" stroke="var(--text-muted)" stroke-width="0.8" stroke-dasharray="4 4"/>
+<path d="M 240,130.0 L 620,34.7 L 620,269.3 L 240,174.0 Z" fill="var(--info)" fill-opacity="0.06"/>
+<line x1="240" y1="130.0" x2="620" y2="34.7" stroke="var(--info)" stroke-width="1.2"/>
+<line x1="240" y1="174.0" x2="620" y2="269.3" stroke="var(--info)" stroke-width="1.2"/>
+<ellipse cx="300" cy="152" rx="8" ry="54" fill="var(--accent)" fill-opacity="0.14" stroke="var(--accent)" stroke-width="1.5"/>
+<text x="300" y="92" text-anchor="middle" font-size="8" fill="var(--accent)">lens</text>
+<line x1="240" y1="130.0" x2="240" y2="174.0" stroke="var(--accent-2)" stroke-width="3"/>
+<text x="234" y="155" text-anchor="end" font-size="8" fill="var(--accent-2)">sensor s</text>
+<line x1="620" y1="269.3" x2="620" y2="34.7" stroke="var(--accent)" stroke-width="3"/>
+<text x="628" y="269.3" font-size="8" fill="var(--accent)">ground</text>
+<text x="628" y="280.3" font-size="8" fill="var(--accent)">width W</text>
+<circle cx="620" cy="152" r="16" fill="var(--accent-2)" fill-opacity="0.35" stroke="var(--accent-2)"/>
+<text x="628" y="192" font-size="7" fill="var(--text-muted)">fruit must span</text>
+<text x="628" y="202" font-size="7" fill="var(--text-muted)">enough pixels (M4)</text>
+<line x1="240" y1="190.0" x2="300" y2="190.0" stroke="var(--text-secondary)" stroke-width="0.8"/>
+<text x="270.0" y="201.0" text-anchor="middle" font-size="7.4" fill="var(--text-secondary)">f</text>
+<line x1="300" y1="290" x2="620" y2="290" stroke="var(--text-secondary)" stroke-width="0.8"/>
+<line x1="300" y1="286" x2="300" y2="294" stroke="var(--text-secondary)"/><line x1="620" y1="286" x2="620" y2="294" stroke="var(--text-secondary)"/>
+<text x="460.0" y="301" text-anchor="middle" font-size="7.4" fill="var(--text-secondary)">working distance Z</text>
+<path d="M 334,139 A 36 36 0 0 1 334,165" fill="none" stroke="var(--warn)" stroke-width="1.1"/>
+<text x="342" y="155" font-size="7.4" fill="var(--warn-text)">FoV</text>
+<rect x="20" y="52" width="216" height="70" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="32" y="70" font-size="8.4" fill="var(--text-secondary)">FoV = 2 arctan(s / 2f)</text>
+<text x="32" y="86" font-size="8.4" fill="var(--text-secondary)">W = 2Z tan(FoV/2) = Z s / f</text>
+<text x="32" y="102" font-size="8.4" fill="var(--accent)" font-weight="700">GSD = W / N  (mm per pixel)</text>
+<text x="32" y="115" font-size="6.8" fill="var(--text-muted)">N = pixels across the sensor</text>
+<text x="20" y="322" font-size="7.8" fill="var(--text-muted)">Choose f, sensor, and N so the pick corridor is covered at sufficient ground resolution while the fruit stays within the depth of field. Geometry to scale (FoV = 2 arctan(s/2f)).</text>
+</svg>

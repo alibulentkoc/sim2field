@@ -1,0 +1,24 @@
+<svg viewBox="0 0 760 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two bruising modes matter to a harvester: quasi-static grip damage, where sustained contact pressure exceeds the tissue failure pressure and the controlling variable is peak contact pressure, not total force; and dynamic impact damage, where a drop delivers kinetic energy and the controlling variable is impact energy, which sets a maximum safe placement height and is why the mission lowers fruit rather than dropping it." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Two damage modes: quasi-static vs impact</text>
+<rect x="30" y="54" width="345" height="150" rx="10" fill="var(--surface)" stroke="var(--info)" stroke-width="1.5"/>
+<text x="46" y="74" font-size="9" fill="var(--info)" font-weight="700">QUASI-STATIC (grip) damage</text>
+<text x="46" y="92" font-size="7" fill="var(--text-secondary)">sustained contact pressure exceeds the</text>
+<text x="46" y="103" font-size="7" fill="var(--text-secondary)">rind/tissue failure pressure.</text>
+<text x="46" y="124" font-size="7.6" fill="var(--accent)" font-weight="700">controlling variable: peak contact pressure</text>
+<text x="46" y="137" font-size="6.8" fill="var(--text-muted)">(NOT total force)</text>
+<text x="46" y="158" font-size="7" fill="var(--text-secondary)">lever: contact area, compliance -> how the</text>
+<text x="46" y="169" font-size="7" fill="var(--text-secondary)">force is applied matters as much as how much.</text>
+<text x="46" y="190" font-size="7.4" fill="var(--danger-text)" font-weight="700">threshold: bruise pressure p_br</text>
+<rect x="385" y="54" width="345" height="150" rx="10" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.5"/>
+<text x="401" y="74" font-size="9" fill="var(--warn-text)" font-weight="700">DYNAMIC (impact) damage</text>
+<text x="401" y="92" font-size="7" fill="var(--text-secondary)">a drop or hard placement delivers kinetic</text>
+<text x="401" y="103" font-size="7" fill="var(--text-secondary)">energy to a small contact region.</text>
+<text x="401" y="124" font-size="7.6" fill="var(--accent)" font-weight="700">controlling variable: impact energy</text>
+<text x="401" y="137" font-size="6.8" fill="var(--text-muted)">(and how it is absorbed)</text>
+<text x="401" y="158" font-size="7" fill="var(--text-secondary)">sets a maximum safe placement height -></text>
+<text x="401" y="169" font-size="7" fill="var(--text-secondary)">the mission LOWERS fruit, never drops it.</text>
+<text x="401" y="190" font-size="7.4" fill="var(--danger-text)" font-weight="700">threshold: bruise energy E_br</text>
+<text x="20" y="228" font-size="7.8" fill="var(--text-muted)">Bruising is mechanical damage: cells rupture when local stress exceeds their failure limit, causing internal softening that may appear only days</text>
+<text x="20" y="240" font-size="7.8" fill="var(--text-muted)">after harvest. Both modes become design bounds, the grip-force window (Section 7.4) and the placement-height limit (Section 7.4). Section 6.2.</text>
+</svg>

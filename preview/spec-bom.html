@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bill of Materials — SIM2FIELD</title>
+<meta name="description" content="A short university course on the engineering of an autonomous watermelon/pumpkin harvesting robot: perception, edge AI, manipulation, and field deployment.">
+<link rel="stylesheet" href="assets/style.css">
+
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a class="brand" href="index.html"><span class="dot"></span>SIM2FIELD</a>
+  <div class="nav-links"><a href="index.html">Home</a><a href="index.html#modules">Modules</a><a href="demo-page.html">Live Demo</a><a href="index.html#specs" class="active">Specs</a><a href="capstone.html">Capstone</a></div>
+</div></nav>
+<header class="article-head"><div class="inner"><p class="eyebrow">Specification</p><h1>Bill of Materials</h1></div></header><main class="page prose">
+<blockquote>
+<p><strong>Teaching artifact.</strong> This BOM is organized to teach how to <em>read and reason
+about</em> a hardware budget, not to place an order. Prices are representative
+planning estimates (USD); real procurement requires current vendor quotes.
+The example totals to a <strong>$50,000</strong> prototype cap to mirror a realistic funded
+research budget. In the capstone, students produce a BOM excerpt for their own
+subsystem in this format.</p>
+</blockquote>
+<h2 id="how-to-read-a-bom-as-an-engineering-document">How to read a BOM as an engineering document</h2>
+<p>A bill of materials makes design decisions legible. As you read, ask:</p>
+<ul>
+<li><strong>Where does cost concentrate?</strong> (Here: the platform. That is deliberate — see
+  the note below.)</li>
+<li><strong>What is commercial-off-the-shelf (COTS) vs. fabricated?</strong> COTS is faster and
+  replaceable; fabricated is custom but a schedule and sourcing risk.</li>
+<li><strong>What is a single point of failure?</strong> An item with no backup whose failure
+  stops the machine.</li>
+<li><strong>What would you dual-source or spare?</strong> The cheapest insurance against a
+  season-ending delay.</li>
+</ul>
+<h2 id="bom-by-subsystem">BOM by subsystem</h2>
+<table>
+<thead>
+<tr>
+<th>Subsystem</th>
+<th>Item</th>
+<th>Qty</th>
+<th>Est. unit (USD)</th>
+<th>Est. line (USD)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Mobility</strong></td>
+<td>farm-ng Amiga rover, research config (adjustable 36–90 in. track, 4WD hub motors)</td>
+<td>1</td>
+<td>21,000</td>
+<td>21,000</td>
+</tr>
+<tr>
+<td><strong>Mobility</strong></td>
+<td>Amiga Intelligence Kit (Brain compute, RTK-GNSS, dashboard, CAN microcontroller kit)</td>
+<td>1</td>
+<td>6,500</td>
+<td>6,500</td>
+</tr>
+<tr>
+<td><strong>Vision</strong></td>
+<td>Stereo depth cameras, row-detection head (e.g., Luxonis OAK-D Pro W PoE)</td>
+<td>2</td>
+<td>600</td>
+<td>1,200</td>
+</tr>
+<tr>
+<td><strong>Vision</strong></td>
+<td>Close-range wrist camera, grasp verification (e.g., Intel RealSense D405)</td>
+<td>1</td>
+<td>450</td>
+<td>450</td>
+</tr>
+<tr>
+<td><strong>Vision</strong></td>
+<td>Near-infrared rind-reflectance imaging module (maturity spectra)</td>
+<td>1</td>
+<td>1,800</td>
+<td>1,800</td>
+</tr>
+<tr>
+<td><strong>Manipulation</strong></td>
+<td>IP66 multi-stage telescopic linear actuators w/ encoders (rail-mounted strut pair)</td>
+<td>2</td>
+<td>2,025</td>
+<td>4,050</td>
+</tr>
+<tr>
+<td><strong>Manipulation</strong></td>
+<td>Servo drives, CAN nodes, motion-control microcontrollers</td>
+<td>1</td>
+<td>1,200</td>
+<td>1,200</td>
+</tr>
+<tr>
+<td><strong>Manipulation</strong></td>
+<td>Portal-rail strut mounts, gripper head, node hardware fabrication (6061/7075, machining, clevises, pins, bearings)</td>
+<td>1</td>
+<td>3,150</td>
+<td>3,150</td>
+</tr>
+<tr>
+<td><strong>Manipulation</strong></td>
+<td>Compliant paddle gripper w/ load cells + piezoresistive tactile array (DRL grasp control)</td>
+<td>1</td>
+<td>2,600</td>
+<td>2,600</td>
+</tr>
+<tr>
+<td><strong>Canopy</strong></td>
+<td>Canopy-mgmt module: rotary brush, air-knife blower, lifter fingers, wrist puff nozzle, slip clutch, floating mount, current-sensing driver</td>
+<td>1</td>
+<td>1,200</td>
+<td>1,200</td>
+</tr>
+<tr>
+<td><strong>Logistics</strong></td>
+<td>Side-towed collection trailer: padded slotted bin, offset drawbar hitch, encoder wheels</td>
+<td>1</td>
+<td>2,000</td>
+<td>2,000</td>
+</tr>
+<tr>
+<td><strong>Compute</strong></td>
+<td>Edge-AI module for offline inference (NVIDIA Jetson Orin NX class), PoE switch, field radio link</td>
+<td>1</td>
+<td>1,600</td>
+<td>1,600</td>
+</tr>
+<tr>
+<td><strong>Safety</strong></td>
+<td>Solid-state 3D lidar (canopy structure + bumper safety), e-stops, beacons, guarding</td>
+<td>1</td>
+<td>1,350</td>
+<td>1,350</td>
+</tr>
+<tr>
+<td><strong>Support</strong></td>
+<td>Batteries, chargers, cabling, connectors, field spares</td>
+<td>1</td>
+<td>1,300</td>
+<td>1,300</td>
+</tr>
+<tr>
+<td><strong>Support</strong></td>
+<td>Field instrumentation: fruit firmness tester, scales, data-logging weather node</td>
+<td>1</td>
+<td>600</td>
+<td>600</td>
+</tr>
+<tr>
+<td><strong>Vision</strong></td>
+<td>(reserved / contingency and integration hardware)</td>
+<td>1</td>
+<td>200</td>
+<td>200</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td><strong>Total</strong></td>
+<td><strong>50,000</strong></td>
+</tr>
+</tbody>
+</table>
+<p><em>(Line values are illustrative and chosen to sum to the cap; adjust with real
+quotes. The point for students is the structure and the reasoning, not the exact
+cents.)</em></p>
+<h2 id="reading-notes-the-decisions-this-bom-encodes">Reading notes — the decisions this BOM encodes</h2>
+<ul>
+<li><strong>The platform is the largest line, on purpose.</strong> Buying a commercially
+  supported, open rover rather than fabricating a one-off chassis is what makes
+  the whole system <em>replicable</em> by another lab. The cost buys reproducibility and
+  schedule certainty — a legitimate engineering trade, not an extravagance.</li>
+<li><strong>Manipulation cost sits in actuation and fabrication, not motors everywhere.</strong>
+  Because the design reduced actuated DOF to two frame-mounted struts, there are
+  only two large actuators to buy — a direct budget consequence of the Module 4
+  design idea.</li>
+<li><strong>Vision is multi-modal but modest.</strong> Stereo + close-range + NIR covers the
+  same-color camouflage problem without an exotic sensor suite.</li>
+<li><strong>Safety and compute are small line items with outsized importance.</strong> Cheap to
+  buy, expensive to omit — a recurring lesson.</li>
+</ul>
+<h2 id="student-exercises">Student exercises</h2>
+<ol>
+<li><strong>Cost concentration.</strong> What fraction of the BOM is the platform? Argue whether
+   that concentration is a strength or a risk for a research prototype.</li>
+<li><strong>Single point of failure.</strong> Identify the item whose failure most likely stops
+   a harvest, and propose a spare or dual-source strategy within a stated budget.</li>
+<li><strong>Cheapest reliability win.</strong> Name the single lowest-cost change that most
+   improves field reliability, and justify it.</li>
+<li><strong>Crop swap.</strong> If you retargeted this BOM from watermelon to pumpkin, which
+   lines change and why? (Consider mass, geometry, and canopy.)</li>
+</ol></main>
+<footer class="foot"><div class="inner">
+  <div>SIM2FIELD · Robotic Harvesting Systems — course materials</div>
+  <div><a href="index.html">Home</a> · <a href="demo-page.html">Live Demo</a> · <a href="capstone.html">Capstone</a></div>
+</div></footer>
+
+</body>
+</html>

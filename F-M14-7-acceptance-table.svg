@@ -1,0 +1,45 @@
+<svg viewBox="0 0 760 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The composed-budget acceptance table reports each verified budget with its evidence fidelity and a confidence or margin: a budget met only in an unvalidated twin is reported as such, not as field-proven, so every claim carries the rung of evidence beneath it." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Composed-budget acceptance table (honest evidence)</text>
+<text x="36" y="64" font-size="7.4" fill="var(--text-primary)" font-weight="700">budget</text>
+<text x="181" y="64" font-size="7.4" fill="var(--text-primary)" font-weight="700">value vs limit</text>
+<text x="351" y="64" font-size="7.4" fill="var(--text-primary)" font-weight="700">margin</text>
+<text x="441" y="64" font-size="7.4" fill="var(--text-primary)" font-weight="700">evidence rung</text>
+<text x="616" y="64" font-size="7.4" fill="var(--text-primary)" font-weight="700">status</text>
+<rect x="30" y="76" width="700" height="28" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+<text x="36" y="94" font-size="7" fill="var(--text-secondary)">placement 3sigma</text>
+<text x="181" y="94" font-size="7" fill="var(--text-muted)">2.4 vs 3.0 mm</text>
+<text x="351" y="94" font-size="7" fill="var(--text-muted)">0.6 mm</text>
+<text x="441" y="94" font-size="6.6" fill="var(--info)">contact rung + field</text>
+<rect x="610" y="80" width="112" height="20" rx="4" fill="var(--accent)" fill-opacity="0.18" stroke="var(--accent)"/>
+<text x="666" y="94" font-size="6.8" fill="var(--accent)" font-weight="700" text-anchor="middle">proven</text>
+<rect x="30" y="108" width="700" height="28" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+<text x="36" y="126" font-size="7" fill="var(--text-secondary)">cycle time</text>
+<text x="181" y="126" font-size="7" fill="var(--text-muted)">11.2 vs 12 s</text>
+<text x="351" y="126" font-size="7" fill="var(--text-muted)">0.8 s</text>
+<text x="441" y="126" font-size="6.6" fill="var(--info)">HIL under load</text>
+<rect x="610" y="112" width="112" height="20" rx="4" fill="var(--accent)" fill-opacity="0.18" stroke="var(--accent)"/>
+<text x="666" y="126" font-size="6.8" fill="var(--accent)" font-weight="700" text-anchor="middle">proven</text>
+<rect x="30" y="140" width="700" height="28" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+<text x="36" y="158" font-size="7" fill="var(--text-secondary)">power / thermal</text>
+<text x="181" y="158" font-size="7" fill="var(--text-muted)">exceeds at 45C</text>
+<text x="351" y="158" font-size="7" fill="var(--text-muted)">-</text>
+<text x="441" y="158" font-size="6.6" fill="var(--info)">dynamic twin</text>
+<rect x="610" y="144" width="112" height="20" rx="4" fill="var(--warn)" fill-opacity="0.18" stroke="var(--warn)"/>
+<text x="666" y="158" font-size="6.8" fill="var(--warn)" font-weight="700" text-anchor="middle">projection</text>
+<rect x="30" y="172" width="700" height="28" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+<text x="36" y="190" font-size="7" fill="var(--text-secondary)">grasp success</text>
+<text x="181" y="190" font-size="7" fill="var(--text-muted)">0.94 est (n=180)</text>
+<text x="351" y="190" font-size="7" fill="var(--text-muted)">+/-0.03</text>
+<text x="441" y="190" font-size="6.6" fill="var(--info)">field sample</text>
+<rect x="610" y="176" width="112" height="20" rx="4" fill="var(--accent)" fill-opacity="0.18" stroke="var(--accent)"/>
+<text x="666" y="190" font-size="6.8" fill="var(--accent)" font-weight="700" text-anchor="middle">proven</text>
+<rect x="30" y="204" width="700" height="28" rx="4" fill="var(--surface)" stroke="var(--border)"/>
+<text x="36" y="222" font-size="7" fill="var(--text-secondary)">reliability / season</text>
+<text x="181" y="222" font-size="7" fill="var(--text-muted)">target R(t)</text>
+<text x="351" y="222" font-size="7" fill="var(--text-muted)">tbd</text>
+<text x="441" y="222" font-size="6.6" fill="var(--info)">accelerated life</text>
+<rect x="610" y="208" width="112" height="20" rx="4" fill="var(--danger)" fill-opacity="0.18" stroke="var(--danger)"/>
+<text x="666" y="222" font-size="6.8" fill="var(--danger)" font-weight="700" text-anchor="middle">not yet</text>
+<text x="20" y="236" font-size="7.8" fill="var(--text-muted)">A budget met in an unvalidated twin (CEC-06) is reported as a projection, not as field-proven. Every claim carries its evidence rung. Illustrative entries. Section 7.4.</text>
+</svg>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0e120d">
+<title>The Signal-to-Action Spine - Worked Example (CEC-01)</title>
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<style>
+  /* ================= THEME DEFINITION - the ONLY place raw color values live ================= */
+  :root{
+    color-scheme: dark;
+    --bg:#0e120d; --surface:#161c14; --surface-2:#0b0e0a; --surface-3:#12160f;
+    --border:#2b3527; --border-strong:#3a4633; --grid-line:#1c231a;
+    --text-primary:#eef2e6; --text-secondary:#c8cfbe; --text-muted:#adb4a2;
+    --text-lede:#c9d0bf; --text-cons:#d4dbc9; --text-on-accent:#0e120d;
+    --accent:#9bcf3b; --accent-dim:#86ba35; --accent-strong:#6f9a2c;
+    --danger:#f0556a; --danger-text:#f697a4; --danger-dim:#b93b4c;
+    --warn:#e0a03b; --info:#6fb0d9; --accent-2:#b98bd9; --marker:#ffffff;
+    /* mission-FSM stage palette */
+    --stage-drive:#7fb0a0; --stage-stage:#6fb0d9; --stage-align:#9bcf3b; --stage-grab:#c9e06a;
+    --stage-lift:#b98bd9; --stage-swing:#f0556a; --stage-lower:#e0a03b; --stage-release:#d98b8b;
+    /* tints */
+    --tint-accent:rgba(155,207,59,.07); --tint-accent-soft:rgba(155,207,59,.05); --tint-hero:rgba(155,207,59,.06);
+    --tint-danger:rgba(240,85,106,.08); --tint-warn:rgba(224,160,59,.08);
+    --status-ok-text:#d0d7c6; --status-warn-text:#eed9b4; --status-danger-text:#f3ccd2;
+    --font-sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --font-display:'Space Grotesk',var(--font-sans);
+  }
+  /* ========================================================================================== */
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{background:var(--bg); color:var(--text-primary); -webkit-text-size-adjust:100%; text-size-adjust:100%; scroll-behavior:smooth}
+  body{background:var(--bg); color:var(--text-primary); font-family:var(--font-sans);
+    line-height:1.7; -webkit-font-smoothing:antialiased; padding:0 0 6rem; letter-spacing:.002em}
+  .wrap{max-width:820px; margin:0 auto; padding:0 1.6rem; background:var(--bg); color:var(--text-primary)}
+  code,.mono,.num{font-family:var(--font-mono); font-variant-numeric:tabular-nums}
+  a{color:var(--accent)}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+  .katex{font-size:1.06em}
+  .katex-display{margin:0}
+  .eq{background:var(--surface-3); color:var(--text-primary); border:1px solid var(--border); border-radius:10px;
+    padding:1.15rem 1.3rem; margin:1.15rem 0; overflow-x:auto; overflow-y:hidden}
+  .eq .katex-display{margin:0}
+
+  header{background:var(--bg); color:var(--text-primary); border-bottom:1px solid var(--border); padding:3.6rem 0 2.6rem; margin-bottom:2.6rem}
+  .eyebrow{font-family:var(--font-mono); font-size:.73rem; font-weight:500; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--accent); margin-bottom:1.15rem; display:flex; gap:.85rem; flex-wrap:wrap}
+  .eyebrow span{color:var(--text-muted)}
+  h1{font-family:var(--font-display); font-weight:600; font-size:clamp(2rem,5vw,3rem);
+    line-height:1.05; letter-spacing:-.021em; margin-bottom:1.05rem; color:var(--text-primary)}
+  h1 em{font-style:normal; color:var(--accent)}
+  .lede{font-size:1.08rem; color:var(--text-lede); max-width:64ch}
+
+  .hero{position:relative; margin:2.4rem 0 .6rem; padding:2.2rem 1.6rem 1.9rem; isolation:isolate}
+  .hero-bg{position:absolute; inset:0; width:100%; height:100%; z-index:-1}
+  .hero-inner{position:relative; text-align:center}
+  .hero-tab{display:inline-block; font-family:var(--font-mono); font-size:.66rem; font-weight:500; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--accent); background:var(--bg); padding:.28rem .7rem;
+    border:1px solid var(--accent-strong); border-radius:5px; margin-bottom:1.2rem}
+  .hero-eq{margin:.4rem 0 1rem}
+  .hero-eq .katex{font-size:1.3em}
+  .hero-sub{font-size:.92rem; color:var(--text-muted); max-width:54ch; margin:0 auto}
+
+  section{margin-top:3.4rem}
+  .kicker{font-family:var(--font-mono); font-size:.71rem; font-weight:500; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--accent-dim); margin-bottom:.7rem}
+  h2{font-family:var(--font-display); font-weight:600; font-size:1.55rem; letter-spacing:-.012em; margin-bottom:1rem; color:var(--text-primary)}
+  p{margin-bottom:1.05rem; color:var(--text-secondary)} strong{color:var(--text-primary); font-weight:600}
+  .rind-t{color:var(--accent)} .flesh-t{color:var(--danger-text)} .amber-t{color:var(--warn)} .water-t{color:var(--info)}
+  .note{font-size:.86rem; color:var(--text-muted)}
+
+  .spine{display:flex; flex-wrap:wrap; gap:.4rem; margin:1.2rem 0}
+  .spine .node{flex:1; min-width:88px; background:var(--surface-2); color:var(--text-secondary); border:1px solid var(--border);
+    border-radius:9px; padding:.7rem .6rem; text-align:center}
+  .spine .node .ph{font-family:var(--font-mono); font-size:.62rem; font-weight:500; letter-spacing:.08em; text-transform:uppercase; color:var(--accent-dim); margin-bottom:.3rem}
+  .spine .node .nm{font-family:var(--font-display); font-weight:600; font-size:.9rem; color:var(--text-primary)}
+  .spine .node .mod{font-family:var(--font-mono); font-size:.6rem; color:var(--text-muted); margin-top:.15rem}
+  .spine .arrow{align-self:center; color:var(--text-muted); font-family:var(--font-mono)}
+
+  .dstep{margin:2rem 0; padding-left:1.5rem; border-left:2px solid var(--border); position:relative}
+  .dstep::before{content:attr(data-n); position:absolute; left:-.9rem; top:-.1rem;
+    font-family:var(--font-mono); font-size:.7rem; font-weight:600; color:var(--text-on-accent);
+    background:var(--accent-strong); width:1.6rem; height:1.6rem; border-radius:50%; display:grid; place-items:center}
+  .d-state{font-family:var(--font-display); font-weight:500; font-size:1.12rem; color:var(--text-primary); margin-bottom:.2rem; line-height:1.4}
+  .d-exp{color:var(--text-secondary); margin:.9rem 0}
+  .d-exp .hot{color:var(--danger-text); font-weight:600}
+  .d-cons{display:flex; gap:.7rem; align-items:flex-start; margin-top:.9rem; padding:.75rem .95rem;
+    background:var(--tint-accent-soft); border:1px solid var(--accent-strong); border-radius:8px}
+  .d-cons .lab{font-family:var(--font-mono); font-size:.63rem; font-weight:500; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--accent); flex:none; margin-top:.18rem}
+  .d-cons p{margin:0; color:var(--text-cons); font-size:.94rem}
+
+  .insight{border:1px solid var(--accent-strong); border-radius:12px; padding:1.4rem 1.6rem; margin-top:1.6rem;
+    background:linear-gradient(180deg,var(--tint-hero),transparent)}
+  .insight .tag{font-family:var(--font-mono); font-size:.72rem; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin-bottom:.55rem}
+  .insight p{color:var(--text-cons); margin-bottom:0} .insight strong{color:var(--accent)}
+  .takeaway{border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:12px; padding:1.5rem 1.7rem; background:var(--surface)}
+  .tk-list{list-style:none}
+  .tk-list li{display:flex; gap:.85rem; align-items:flex-start; padding:.6rem 0; color:var(--text-secondary); border-bottom:1px solid var(--border)}
+  .tk-list li:last-child{border-bottom:none; padding-top:.95rem}
+  .tk-mark{font-family:var(--font-mono); color:var(--text-muted); flex:none; margin-top:.1rem}
+  .tk-mark.tk-hot{color:var(--accent)} .tk-list strong{color:var(--text-primary)}
+  footer{margin-top:4rem; padding-top:1.6rem; border-top:1px solid var(--border);
+    font-family:var(--font-mono); font-size:.74rem; color:var(--text-muted); line-height:1.85}
+
+  @media(max-width:640px){ .spine .node{min-width:70px} }
+  @media(prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <header>
+    <div class="eyebrow">Foundational Concept <span>/</span> CEC-01 <span>/</span> Module 1 <span>/</span> The Signal-to-Action Spine</div>
+    <h1>One machine turns a camera frame into a <em>grasped fruit</em>.</h1>
+    <p class="lede">Everything the harvester does is one loop: perceive, decide, act - bound by integrate and deploy. Every module you have studied advances one stage of that loop, and every subsystem exists because the loop requires it. The budget that ties it together is time: each fruit must be fully handled before the next one arrives. Here is that loop, timed, and the tension it exposes.</p>
+
+    <div class="hero">
+      <svg class="hero-bg" viewBox="0 0 800 230" preserveAspectRatio="none" role="presentation" aria-hidden="true" focusable="false">
+        <defs>
+          <pattern id="grid" width="26" height="26" patternUnits="userSpaceOnUse">
+            <path d="M26 0H0V26" fill="none" style="stroke:var(--grid-line)" stroke-width="1" vector-effect="non-scaling-stroke"/>
+          </pattern>
+        </defs>
+        <rect x="6" y="6" width="788" height="218" rx="12" style="fill:var(--surface-3)"/>
+        <rect x="6" y="6" width="788" height="218" rx="12" fill="url(#grid)" opacity="0.5"/>
+        <rect x="6" y="6" width="788" height="218" rx="12" fill="none" style="stroke:var(--border)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M20 6V22 M6 20H22" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M780 6V22 M778 20H794" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M20 224V208 M6 210H22" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M780 224V208 M778 210H794" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+      </svg>
+      <div class="hero-inner">
+        <div class="hero-tab">Governing relation</div>
+        <div class="hero-eq" role="math" aria-label="T cycle less than or equal to T arrival equals d over v; therefore v less than or equal to d over T cycle">\[ T_{\mathrm{cycle}} \le T_{\mathrm{arrival}} = \frac{d}{v} \quad\Longrightarrow\quad v \le \frac{d}{T_{\mathrm{cycle}}} \]</div>
+        <div class="hero-sub">Each fruit must be fully handled before the next arrives - so the cycle time caps the rover speed.</div>
+      </div>
+    </div>
+  </header>
+
+  <section id="spine" aria-labelledby="spine-h">
+    <div class="kicker">The spine - perceive, decide, act</div>
+    <h2 id="spine-h">The mission loop, stage by stage</h2>
+    <p>The harvester decomposes by <strong>function</strong>, not by part. Each stage of the mission FSM is owned by a module you have already met - the worked examples for perception, placement, reach, and grip are the four stations of this one loop.</p>
+    <div class="spine">
+      <div class="node"><div class="ph">perceive</div><div class="nm">ALIGN</div><div class="mod">M4 / M5</div></div>
+      <div class="arrow" aria-hidden="true">-&gt;</div>
+      <div class="node"><div class="ph">act</div><div class="nm">GRAB</div><div class="mod">M9</div></div>
+      <div class="arrow" aria-hidden="true">-&gt;</div>
+      <div class="node"><div class="ph">act</div><div class="nm">LIFT / SWING</div><div class="mod">M8</div></div>
+      <div class="arrow" aria-hidden="true">-&gt;</div>
+      <div class="node"><div class="ph">act</div><div class="nm">LOWER / RELEASE</div><div class="mod">M8 / M9</div></div>
+    </div>
+    <p class="note">Framed by DRIVE and STAGE (the platform, M10) at the front, and by Integrate and Deploy (M13, M17) around the whole.</p>
+  </section>
+
+  <section id="derivation" aria-labelledby="deriv-h">
+    <div class="kicker">Full derivation - the cycle-time budget</div>
+    <h2 id="deriv-h">Why time is the binding constraint</h2>
+
+    <div class="dstep" data-n="1">
+      <div class="d-state">The whole pick cycle must finish before the next fruit arrives.</div>
+      <div class="eq">\[ T_{\mathrm{arrival}} = \frac{d}{v} \qquad T_{\mathrm{cycle}} \le T_{\mathrm{arrival}} \]</div>
+      <p class="d-exp">The arrival interval \(T_{\mathrm{arrival}} = d/v\) is the time between fruit reaching the station. The whole pick cycle must finish inside it, or the machine falls behind and fruit passes unpicked.</p>
+      <div class="d-cons"><span class="lab">Consequence</span><p><strong>Time is the binding constraint</strong> that ties the spine together - one number every subsystem is measured against.</p></div>
+    </div>
+
+    <div class="dstep" data-n="2">
+      <div class="d-state">Sum the mission-FSM stage times to size the cycle.</div>
+      <div class="eq">\[ T_{\mathrm{cycle}} = 0.3 + 0.2 + 1.0 + 1.0 + 0.8 + 1.5 + 0.8 + 1.0 = 6.6\ \mathrm{s} \]</div>
+      <p class="d-exp">Adding the stage times (illustrative, Module 1 Sec. 7.1): DRIVE 0.3 + STAGE 0.2 + ALIGN 1.0 + GRAB 1.0 + LIFT 0.8 + <span class="hot">SWING 1.5</span> + LOWER 0.8 + RELEASE 1.0. The dominant stage is <span class="hot">SWING</span> at 1.5 s - the transfer swing that moves the fruit from vine to bin.</p>
+      <div class="d-cons"><span class="lab">Consequence</span><p>The sum reveals feasibility and <strong>names the stage to attack first</strong> (EI-05): SWING carries the most time.</p></div>
+    </div>
+
+    <div class="dstep" data-n="3">
+      <div class="d-state">The constraint bites: the cycle time caps the rover speed.</div>
+      <div class="eq">\[ v \le \frac{d}{T_{\mathrm{cycle}}} = \frac{1.2}{6.6} = 0.18\ \mathrm{m/s} \]</div>
+      <p class="d-exp">The ratified target is <strong>\(v \le 0.20\ \mathrm{m/s}\)</strong> at <strong>\(T_{\mathrm{cycle}} \le 6.0\ \mathrm{s}\)</strong> (Doc B). The naive single-arm cycle (6.6 s) forces the rover <em>below</em> the target - the budget did not describe a design, it <strong>constrained</strong> one and exposed a tension.</p>
+      <div class="d-cons"><span class="lab">Consequence</span><p>The levers: attack the dominant stage (SWING), or change the architecture (a second arm, buffering, a faster transfer). <strong>Modules 8-10 and the capstone exist to resolve exactly this.</strong></p></div>
+    </div>
+  </section>
+
+  <section id="instrument" aria-labelledby="inst-h">
+    <div class="kicker">The cycle, live - resolve the tension</div>
+    <h2 id="inst-h">Fit the loop inside the budget</h2>
+    <p>The timeline below is the mission cycle, stage by stage, against the <span class="rind-t">6-second budget line</span>. Attack the dominant <span class="flesh-t">SWING</span> stage with a faster transfer, or add a second arm to parallelize the pick - and watch the cycle time, the rover speed, and the throughput respond.</p>
+
+    <!--#include "CEC01-fragment-src.html"-->
+    </section>
+
+  <section id="cec01" aria-labelledby="cec-h">
+    <div class="kicker">The concept - a budget constrains, it does not describe</div>
+    <h2 id="cec-h">What a systems budget is for</h2>
+    <div class="insight">
+      <div class="tag">CEC-01 - The Signal-to-Action Spine</div>
+      <p><strong>The harvester is one machine that turns a camera frame into a grasped fruit; it decomposes by function into Perceive, Decide, Act - and every subsystem exists because the spine requires it.</strong> The cycle-time budget is what makes the spine verifiable: it converts a qualitative loop into a per-stage time allocation, and the moment you sum the stages it exposes whether the architecture can meet the mission. Here it forced a choice - a faster transfer or a second arm - long before any part was built. That is what a systems budget is for: not to describe a design, but to constrain one and reveal its tensions early, when they are cheap to fix.</p>
+    </div>
+  </section>
+
+  <section id="takeaway" aria-labelledby="tk-h">
+    <div class="kicker">Engineering takeaway - what to do next</div>
+    <h2 id="tk-h">Where the next effort belongs</h2>
+    <div class="takeaway">
+      <ul class="tk-list">
+        <li><span class="tk-mark" aria-hidden="true">-&gt;</span> Build the budget <strong>before</strong> the mechanism. Summing the stage times tells you whether the architecture can meet the mission - and which stage to fix - before any hardware is committed.</li>
+        <li><span class="tk-mark tk-hot" aria-hidden="true">-&gt;</span> The single-arm cycle is dominated by <strong class="rind-t">SWING (transfer)</strong>. The first move is a faster transfer path; if that is not enough, a second arm parallelizes the pick and roughly doubles throughput. Attack the dominant stage before adding complexity.</li>
+        <li><span class="tk-mark" aria-hidden="true">-&gt;</span> Speed and throughput are the <strong>same budget</strong> seen two ways: \(v = d / T_{\mathrm{cycle}}\). Cutting the cycle both raises the safe rover speed and the fruit-per-hour - confirm the faster speed still respects the placement budget (CEC-03) and the edge latency (CEC-04).</li>
+        <li><span class="tk-mark" aria-hidden="true">-&gt;</span> <strong>Decision:</strong> treat the cycle-time budget as the <strong class="rind-t">integrating contract</strong> for the whole spine - it is where perception, reach, grip, and mobility are reconciled against one mission number. Resolve its tension by architecture first, tuning second.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    SIM2FIELD / Autonomous Watermelon Harvesting Robotics<br>
+    Worked example for the Signal-to-Action Spine (CEC-01), Module 1 - the loop that integrates M4/M5 (perceive), M8 (reach), M9 (grip), M10 (mobility)<br>
+    Values illustrative from Module 1 Sec. 7.1; budget ratified in Doc B (T_cycle &lt;= 6 s, v &lt;= 0.2 m/s, d ~ 1.2 m) - frozen Rev 1.0<br>
+    Production Phase asset - configuration-controlled
+  </footer>
+</main>
+
+</body>
+</html>

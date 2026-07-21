@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark"><meta name="theme-color" content="#0e120d">
+<title>Module 11: ROS 2, Real-Time Systems &amp; Software Integration (SIM2FIELD)</title>
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<style>:root{
+  color-scheme:dark;
+  --bg:#0e120d; --surface:#161c14; --surface-2:#0b0e0a; --surface-3:#12160f;
+  --border:#2b3527; --border-strong:#3a4633; --grid-line:#1c231a;
+  --text-primary:#eef2e6; --text-secondary:#c8cfbe; --text-muted:#adb4a2;
+  --text-lede:#c9d0bf; --text-cons:#d4dbc9; --text-on-accent:#0e120d;
+  --accent:#9bcf3b; --accent-dim:#86ba35; --accent-strong:#6f9a2c;
+  --danger:#f0556a; --danger-text:#f697a4; --danger-dim:#b93b4c;
+  --warn:#e0a03b; --warn-text:#eed9b4; --info:#6fb0d9; --info-text:#bfe0f2; --accent-2:#b98bd9; --marker:#ffffff;
+  --tint-accent:rgba(155,207,59,.07); --tint-accent-soft:rgba(155,207,59,.05); --tint-hero:rgba(155,207,59,.06);
+  --tint-danger:rgba(240,85,106,.07); --tint-warn:rgba(224,160,59,.08); --tint-info:rgba(111,176,217,.08); --tint-gov:rgba(185,139,217,.07);
+  --font-sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --font-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --font-display:'Space Grotesk',var(--font-sans);
+  --rail:300px; --topbar:54px; --measure:54rem;
+
+  /* mission-FSM stage palette (used by inlined worked-example fragments) */
+  --stage-drive:#7fb0a0; --stage-stage:#6fb0d9; --stage-align:#9bcf3b; --stage-grab:#c9e06a;
+  --stage-lift:#b98bd9; --stage-swing:#f0556a; --stage-lower:#e0a03b; --stage-release:#d98b8b;
+  --status-ok-text:#d0d7c6; --status-warn-text:#eed9b4; --status-danger-text:#f3ccd2;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);color:var(--text-primary);-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text-primary);font-family:var(--font-sans);line-height:1.72;-webkit-font-smoothing:antialiased;letter-spacing:.002em}
+a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+code,.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.skip{position:absolute;left:-999px;top:0;background:var(--accent);color:var(--text-on-accent);padding:.5rem .8rem;border-radius:6px;z-index:60}
+.skip:focus{left:.5rem;top:.5rem}
+.katex{font-size:1.04em}
+
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar);z-index:40;background:var(--surface-2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem;padding:0 1.1rem}
+.topbar .mk{font-family:var(--font-display);font-weight:600;font-size:1rem;letter-spacing:-.01em}
+.topbar .cx{flex:1;min-width:0;font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar .src{flex:none;font-family:var(--font-mono);font-size:.66rem;color:var(--accent);border:1px solid var(--accent-strong);border-radius:6px;padding:.3rem .6rem}
+body.ed-author .topbar{border-bottom-color:var(--accent-2)}
+body.ed-author .topbar .src{color:var(--accent-2);border-color:var(--accent-2)}
+
+.book{display:grid;grid-template-columns:var(--rail) 1fr;padding-top:var(--topbar)}
+.rail{position:sticky;top:var(--topbar);align-self:start;height:calc(100vh - var(--topbar));overflow-y:auto;background:var(--surface);border-right:1px solid var(--border);padding:1.3rem 1rem 3rem}
+.rail h2{font-family:var(--font-mono);font-size:.64rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-dim);margin:0 .4rem .7rem}
+.toc{list-style:none} .toc li{margin:.05rem 0}
+.toc a{display:flex;gap:.5rem;align-items:baseline;color:var(--text-secondary);font-size:.83rem;line-height:1.35;padding:.32rem .5rem;border-radius:7px;border-left:2px solid transparent}
+.toc a:hover{background:var(--surface-3);text-decoration:none;color:var(--text-primary)}
+.toc a.active{background:var(--tint-accent);border-left-color:var(--accent);color:var(--text-primary)}
+.toc .tn{font-family:var(--font-mono);font-size:.68rem;color:var(--text-muted);flex:none;min-width:1.3em}
+.toc a.active .tn{color:var(--accent)}
+.toc .tt{margin-left:auto;font-family:var(--font-mono);font-size:.54rem;letter-spacing:.05em;text-transform:uppercase;padding:.05rem .3rem;border-radius:4px;border:1px solid var(--border);color:var(--text-muted)}
+.toc .tt.instr{color:var(--accent-2);border-color:var(--accent-2)} .toc .tt.spec{color:var(--warn);border-color:var(--warn)}
+
+.main{min-width:0;background:var(--bg)}
+.inner{max-width:var(--measure);margin:0 auto;padding:2.4rem 2rem 7rem}
+
+/* ---------- MISSION OPENING ---------- */
+.mission{margin-bottom:.5rem}
+.mission-hero{padding:1.2rem 0 2.4rem;border-bottom:1px solid var(--border)}
+.mission-hero .eyebrow{font-family:var(--font-mono);font-size:.72rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:1.4rem}
+.mission-hero .hook{font-family:var(--font-display);font-weight:600;font-size:clamp(1.7rem,3.6vw,2.55rem);line-height:1.12;letter-spacing:-.018em;color:var(--text-primary);max-width:22em;margin-bottom:1.3rem}
+.mission-hero h1{font-family:var(--font-display);font-weight:500;font-size:1.12rem;color:var(--text-secondary);letter-spacing:-.008em;margin-bottom:.7rem}
+.mission-hero .slim{font-family:var(--font-mono);font-size:.74rem;color:var(--text-muted);letter-spacing:.02em}
+.movement{padding:2.1rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:190px 1fr;gap:1.6rem}
+.movement .mv-label{font-family:var(--font-mono);font-size:.7rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-dim);padding-top:.25rem}
+.movement .mv-label::before{content:"";display:block;width:30px;height:2px;background:var(--accent-strong);margin-bottom:.75rem}
+.movement .mv-body p{color:var(--text-secondary);font-size:1.02rem;margin:0 0 .9rem}
+.movement .mv-body p:last-child{margin-bottom:0}
+.movement .mv-body strong{color:var(--text-primary);font-weight:600}
+.movement .mv-body em{color:var(--text-cons)}
+.movement.objectives .mv-body ul{list-style:none;margin:0}
+.movement.objectives .mv-body li{position:relative;padding-left:1.5rem;margin:.5rem 0;color:var(--text-secondary)}
+.movement.objectives .mv-body li::before{content:"\2192";position:absolute;left:0;color:var(--accent);font-family:var(--font-mono)}
+.movement.objectives .mv-body strong{color:var(--text-primary)}
+.chapter-start{display:flex;align-items:center;gap:1rem;margin:2.8rem 0 .3rem}
+.chapter-start::before,.chapter-start::after{content:"";height:1px;background:var(--border);flex:1}
+.chapter-start span{font-family:var(--font-mono);font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;color:var(--accent-dim)}
+
+/* ---------- PROSE ---------- */
+.section{margin-top:3.2rem}
+.section h2{font-family:var(--font-display);font-weight:600;font-size:1.6rem;letter-spacing:-.012em;line-height:1.15;margin-bottom:1rem;scroll-margin-top:calc(var(--topbar) + 1rem);display:flex;gap:.7rem;align-items:baseline;border-top:1px solid var(--border);padding-top:1.7rem}
+.section h2.unnum{display:block}
+.section h2 .secnum{font-family:var(--font-mono);font-size:.9rem;font-weight:600;color:var(--accent);flex:none}
+.section h3{font-family:var(--font-display);font-weight:600;font-size:1.14rem;color:var(--text-primary);margin:1.6rem 0 .5rem}
+.section p{margin:0 0 1rem;color:var(--text-secondary)}
+.section strong{color:var(--text-primary);font-weight:600}
+.section em{color:var(--text-cons)}
+.section ul,.section ol{margin:0 0 1.1rem 1.3rem;color:var(--text-secondary)}
+.section li{margin:.35rem 0} .section li::marker{color:var(--accent-dim)}
+.section code{background:var(--surface-3);border:1px solid var(--border);border-radius:4px;padding:.05rem .35rem;font-size:.88em;color:var(--text-cons)}
+.section pre{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem;overflow-x:auto;margin:0 0 1.1rem}
+.section pre code{background:none;border:none;padding:0;color:var(--text-secondary);font-size:.82rem;line-height:1.6}
+hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
+
+.eqwrap{background:var(--surface-3);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem;margin:0 0 1.15rem;overflow-x:auto}
+.eqwrap .katex-display{margin:0}
+
+.twrap{overflow-x:auto;margin:0 0 1.2rem;border:1px solid var(--border);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:.86rem}
+th,td{text-align:left;padding:.6rem .8rem;border-bottom:1px solid var(--border);vertical-align:top}
+thead th{font-family:var(--font-mono);font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);font-weight:500;background:var(--surface-3)}
+tbody tr:last-child td{border-bottom:none} td strong{color:var(--accent)}
+
+.callout{border-radius:12px;padding:1.1rem 1.35rem;margin:0 0 1.3rem;border:1px solid var(--border);background:var(--surface)}
+.callout p{margin:0 0 .6rem;color:var(--text-cons)} .callout p:last-child{margin-bottom:0}
+.callout.cec{border-color:var(--accent-strong);background:linear-gradient(180deg,var(--tint-hero),transparent)}
+.callout.cec h3{color:var(--accent);margin:.1rem 0 .5rem;font-size:1.05rem} .callout.cec strong{color:var(--accent)}
+.callout.industry{border-color:var(--info);background:var(--tint-info)}
+.callout.industry h3{color:var(--info-text);font-size:1rem;margin:.1rem 0 .6rem} .callout.industry strong{color:var(--info-text)}
+.callout.hook{border-color:var(--accent-strong);background:var(--tint-accent-soft)}
+.callout.note{border-left:3px solid var(--border-strong);background:var(--surface-3)}
+.callout.gov{border-color:var(--accent-2);background:var(--tint-gov)}
+.section.failure ul{list-style:none;margin-left:0}
+.section.failure ul li{padding:.55rem 0;border-bottom:1px solid var(--border)}
+.section.failure li::before{content:"\2020";color:var(--danger-text);font-family:var(--font-mono);margin-right:.6rem}
+
+.figure{margin:0 0 1.4rem;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.figure.diagram .ascii{margin:0;border:none;border-radius:0;background:var(--surface-3)}
+.figure.diagram .ascii code{color:var(--accent-dim);font-size:.8rem}
+.figure .figbody{padding:1rem 1.1rem;background:var(--surface-3);overflow-x:auto}
+.figure .figbody svg{display:block;width:100%;height:auto;min-width:520px}
+.figure figcaption{padding:.7rem 1rem;font-size:.82rem;color:var(--text-muted);border-top:1px solid var(--border)}
+.figure .fid{font-family:var(--font-mono);font-size:.64rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-right:.5rem}
+.figure.slot{border-style:dashed;border-color:var(--border-strong)}
+.figure.slot .slotbox{display:flex;flex-direction:column;gap:.3rem;padding:1.6rem 1.4rem;background:repeating-linear-gradient(135deg,var(--surface-3),var(--surface-3) 10px,transparent 10px,transparent 20px);border:none}
+.figure.slot .slit{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--warn-text)}
+.figure.slot b{color:var(--text-primary);font-size:.95rem} .figure.slot .desc{color:var(--text-muted);font-size:.84rem}
+
+.widget-embed{margin:1.6rem 0;border:0;background:transparent;overflow:visible}
+.we-head{display:flex;align-items:baseline;gap:.7rem;flex-wrap:wrap;padding:0 .2rem .6rem;background:transparent}
+.we-head .wid{font-family:var(--font-mono);font-size:.62rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-on-accent);background:var(--accent-strong);padding:.15rem .5rem;border-radius:5px}
+.we-head .wid.live{background:var(--accent)}
+.we-head b{font-family:var(--font-display);font-weight:600;color:var(--text-primary);font-size:1rem}
+.we-open{margin-left:auto;font-family:var(--font-mono);font-size:.72rem;color:var(--accent)}
+.we-cap{margin:.65rem 0 0;padding:0 .2rem;font-size:.8rem;color:var(--text-muted)}
+
+.answers,.instructor-wrap{border:1px solid var(--border-strong);border-radius:10px;background:var(--surface-3);margin:1.2rem 0}
+.answers summary,.instructor-wrap summary{cursor:pointer;padding:.8rem 1.1rem;font-family:var(--font-mono);font-size:.78rem;color:var(--accent-2);list-style:none}
+.answers summary::-webkit-details-marker,.instructor-wrap summary::-webkit-details-marker{display:none}
+.answers summary::before,.instructor-wrap summary::before{content:"\25B8 ";color:var(--accent-2)}
+.answers[open] summary::before,.instructor-wrap[open] summary::before{content:"\25BE "}
+.answers .keylist{margin:.2rem 1.4rem 1rem;color:var(--text-secondary);font-size:.88rem}
+.answers .keylist .qn{font-family:var(--font-mono);color:var(--accent);margin-right:.3rem}
+.instructor-wrap{margin-top:2.4rem}
+.instructor-wrap > :not(summary){padding:0 1.2rem} .instructor-wrap > :last-child{padding-bottom:1rem}
+.instructor-wrap p,.instructor-wrap li{color:var(--text-muted)}
+.cover-meta{font-family:var(--font-mono);font-size:.8rem;color:var(--text-muted);line-height:1.9}
+.cover-meta strong{color:var(--text-secondary);font-weight:600} .cover-meta p{margin:.1rem 0}
+.section.instructor{margin-top:2.6rem}
+
+footer{max-width:var(--measure);margin:0 auto;padding:2.5rem 2rem;border-top:1px solid var(--border);font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);line-height:1.85}
+
+@media(max-width:900px){:root{--rail:0px}.book{grid-template-columns:1fr}.rail{display:none}.inner{padding:1.6rem 1.2rem 5rem}}
+@media(max-width:720px){.movement{grid-template-columns:1fr;gap:.5rem}.movement .mv-label::before{margin-bottom:.4rem}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style></head>
+<body class="ed-student">
+<a class="skip" href="#main">Skip to chapter</a>
+<div class="topbar"><span class="mk">SIM2FIELD</span>
+  <span class="cx">Digital textbook / Student edition</span>
+  <span class="src">source: MODULE-11.md</span></div>
+<div class="book">
+  <nav class="rail" aria-label="Chapter contents"><h2>Chapter contents</h2><ul class="toc"><li><a href="#sec-2-learning-objectives"><span class="tn">2</span>Learning Objectives</a></li><li><a href="#sec-3-student-outcomes"><span class="tn">3</span>Student Outcomes</a></li><li><a href="#sec-4-engineering-motivation"><span class="tn">4</span>Engineering Motivation</a></li><li><a href="#sec-engineering-failure-cases-integration-an">Engineering Failure Cases (integration-and-timing-specific)</a></li><li><a href="#sec-5-background-knowledge"><span class="tn">5</span>Background Knowledge</a></li><li><a href="#sec-6-theory"><span class="tn">6</span>Theory</a></li><li><a href="#sec-7-mathematics"><span class="tn">7</span>Mathematics</a></li><li><a href="#sec-8-engineering-principles"><span class="tn">8</span>Engineering Principles</a></li><li><a href="#sec-9-system-requirements"><span class="tn">9</span>System Requirements</a></li><li><a href="#sec-10-design-decisions"><span class="tn">10</span>Design Decisions</a></li><li><a href="#sec-11-trade-studies"><span class="tn">11</span>Trade Studies</a></li><li><a href="#sec-12-simulation-activities"><span class="tn">12</span>Simulation Activities</a></li><li><a href="#sec-13-digital-twin-activities"><span class="tn">13</span>Digital Twin Activities</a></li><li><a href="#sec-14-hardware-activities"><span class="tn">14</span>Hardware Activities</a></li><li><a href="#sec-15-software-activities"><span class="tn">15</span>Software Activities</a></li><li><a href="#sec-16-ros-2-integration"><span class="tn">16</span>ROS 2 Integration</a></li><li><a href="#sec-17-ai-integration"><span class="tn">17</span>AI Integration</a></li><li><a href="#sec-18-edge-computing-integration"><span class="tn">18</span>Edge Computing Integration</a></li><li><a href="#sec-19-fluid-power-integration"><span class="tn">19</span>Fluid Power Integration</a></li><li><a href="#sec-24-laboratory"><span class="tn">24</span>Laboratory</a></li><li><a href="#sec-25-homework"><span class="tn">25</span>Homework</a></li><li><a href="#sec-26-quiz"><span class="tn">26</span>Quiz</a></li><li><a href="#sec-27-challenge-problems"><span class="tn">27</span>Challenge Problems</a></li><li><a href="#sec-engineering-design-review">Engineering Design Review</a></li><li><a href="#sec-29-research-frontiers"><span class="tn">29</span>Research Frontiers</a></li><li><a href="#sec-30-references"><span class="tn">30</span>References</a></li></ul></nav>
+  <main class="main" id="main"><div class="inner">
+    <header class="mission">
+    <div class="mission-hero">
+      <div class="eyebrow">Module 11 / Mission briefing</div>
+      
+      <h1>ROS 2, Real-Time Systems &amp; Software Integration</h1>
+      <div class="slim">Part V, Integrate  /  5 to 6 contact hours + a 2 to 3 hour laboratory + homework</div>
+    </div>
+    <section class="movement"><div class="mv-label">Mission</div><div class="mv-body"><p>This module takes the interfaces the course has fixed and composes them into one running distributed system, a graph of ROS 2 nodes exchanging typed messages under timing contracts, and it makes that system meet the property no single node can guarantee alone: real-time correctness.</p>
+</div></section><section class="movement"><div class="mv-label">Previous milestone</div><div class="mv-body"><p>Every module so far has designed a piece of software and, at its edge, described an interface: perception publishes a detection, localization a pose-with-covariance, the behavior layer a bounded grasp proposal, the grasp controller a valve command. Each module said &quot;M11 realizes the node graph.&quot;</p>
+</div></section><section class="movement"><div class="mv-label">Engineering problem</div><div class="mv-body"><p>The central discipline is real-time systems. The machine's control loops, grasp-force regulation (M9), drive/stability (M10), motion (M8), need not merely fast average behavior but bounded worst-case latency: a single late cycle can bruise a fruit, miss a target, or tip the machine. Meanwhile the perception plane moves heavy, bursty sensor and inference data whose jitter must never leak into the control plane.</p>
+</div></section><section class="movement"><div class="mv-label">Design tension</div><div class="mv-body"><p>So the architecture separates the two: a real-time control plane with guaranteed timing, and a best-effort perception plane with high throughput, isolated so that a slow neural network never starves the force loop. This separation, introduced as a requirement in Module 6, is finally engineered here.</p>
+</div></section><section class="movement"><div class="mv-label">What this module resolves</div><div class="mv-body"><p>This is where the machine's most important safety element is built: the independent safety monitor. Every prior module produced a guard, the grasp bound (M7/M9), the singularity keep-out (M8), the stability limit (M10), and every one of them noted &quot;feeds the safety monitor, M11/M15.&quot; That monitor is an independent node that can command a safe stop or release regardless of what the mission logic, the grasp policy, or any other node believes. Its independence is the point: a safety function that depends on the correctness of the thing it protects against is not a safety function. That principle, build the guard so it cannot be defeated by the failure it guards against, is this module's Engineering Insight.</p>
+</div></section>
+    
+    
+    <div class="chapter-start"><span>The chapter</span></div>
+  </header>
+    <section class="section"><h2 id="sec-2-learning-objectives"><span class="secnum">2</span><span class="sectitle">Learning Objectives</span></h2><ul>
+<li><strong>LO-M11.1</strong> Compose the machine's subsystems into a ROS 2 node/topic graph with typed interfaces and quality-of-service contracts., <em>Bloom: Create</em></li>
+<li><strong>LO-M11.2</strong> Distinguish real-time from best-effort computation and separate the control plane from the perception plane., <em>Bloom: Analyze (with Create)</em></li>
+<li><strong>LO-M11.3</strong> Analyze worst-case latency and jitter for a control loop and choose scheduling/executors to bound them., <em>Bloom: Analyze</em></li>
+<li><strong>LO-M11.4</strong> Design an independent safety monitor that can halt/safe the machine regardless of other nodes' state (EI-11)., <em>Bloom: Create (with Evaluate)</em></li>
+<li><strong>LO-M11.5</strong> Integrate the per-module guards (grasp bound, singularity, stability) into a coherent runtime safety architecture., <em>Bloom: Create</em></li>
+<li><strong>LO-M11.6</strong> Verify timing and integration in SIL and hardware-in-the-loop against the cycle-time budget (CEC-01) and bounded-latency requirement (M6)., <em>Bloom: Evaluate</em></li>
+<li><strong>LO-M11.7</strong> Specify the twin's role in software integration and timing verification., <em>Bloom: Create</em></li>
+</ul>
+<p>Maps to course objectives <strong>LO7</strong> (primary), <strong>LO5/LO6</strong> (reinforcing), and ABET <strong>SO1, SO2, SO6</strong>. [-&gt;Doc I]</p>
+</section>
+<section class="section"><h2 id="sec-3-student-outcomes"><span class="secnum">3</span><span class="sectitle">Student Outcomes</span></h2><p>A student who has mastered this module can, without prompting:</p>
+<ol>
+<li>Draw the machine's node/topic graph with interfaces and QoS., <em>Bloom: Create</em></li>
+<li>Separate real-time control from best-effort perception and justify the isolation., <em>Bloom: Analyze</em></li>
+<li>Estimate a control loop's worst-case latency and choose scheduling to bound it., <em>Bloom: Analyze</em></li>
+<li>Design an independent safety monitor and argue its independence., <em>Bloom: Create</em></li>
+<li>Assemble the per-module guards into one runtime safety architecture., <em>Bloom: Create</em></li>
+<li>Verify integration and timing in SIL/HIL against the budgets., <em>Bloom: Evaluate</em></li>
+</ol>
+</section>
+<section class="section"><h2 id="sec-4-engineering-motivation"><span class="secnum">4</span><span class="sectitle">Engineering Motivation</span></h2><p>Module 1's failure taxonomy called <em>integration failure</em> the hardest to find, because it lives <em>between</em> components: each subsystem works alone, and the machine fails together. This module is the defense against that class, and it exists because the properties that matter most in a running robot, timing, ordering, isolation, and safe failure, are <strong>system</strong> properties that no individual node can establish.</p>
+<p>Consider what has been designed in isolation. The grasp-force loop (M9) is stable <em>given</em> a bounded control latency; the localizer (M5) is honest <em>given</em> correct timestamps; the behavior layer (M7) is safe <em>given</em> that its bounds are actually enforced; the drive (M10) is stable <em>given</em> that its guard fires in time. Every one of those &quot;given&quot;s is a real-time integration requirement, and if the software that composes these nodes lets perception jitter delay the force loop, or lets a message arrive stale, or lets a guard run too late, the isolated correctness evaporates. A neural network that occasionally takes 80 ms instead of 20 ms is fine on the perception plane and catastrophic if it shares a thread with the force controller. The motivation for real-time discipline is that <strong>correctness in the field is a timing property</strong>, not just a logical one.</p>
+<p>And the safety motivation is starker. The machine exerts force on a fragile fruit and moves a heavy payload, soon, near people. Every prior module built a guard, but a guard is only as good as its <em>independence</em>: if the safety stop depends on the same mission logic, the same policy, or the same thread that might fail, it fails with them. The motivation for the independent safety monitor is that the one function you cannot allow to fail must not share fate with the functions it protects against. Building that independence correctly, and composing all the guards into one coherent, verifiable safety architecture, is the reason this module is where the machine becomes trustworthy, not just functional.</p>
+</section>
+<section class="section failure"><h2 id="sec-engineering-failure-cases-integration-an" class="unnum">Engineering Failure Cases (integration-and-timing-specific)</h2><p>Sharpening Module 1's <em>integration</em> class at its real-time roots:</p>
+<ul>
+<li><strong>Priority inversion / plane bleed.</strong> Best-effort perception jitter delays the real-time control loop; force regulation (M9) destabilizes or the drive guard (M10) fires late. <em>Motivates</em> control/perception plane separation and scheduling (Section 6.3 to 6.4).</li>
+<li><strong>Stale message.</strong> A perception or pose message is consumed after it is valid on the moving rover; the target is mislocated (σ_sync, CEC-03). <em>Motivates</em> timestamping, QoS, and time synchronization (Section 6.2, Section 6.5).</li>
+<li><strong>Non-independent safety.</strong> The safety stop shares logic/thread with the mission and fails when the mission fails. <em>Motivates</em> the independent safety monitor (Section 6.6, EI-11).</li>
+<li><strong>Guard race.</strong> Two guards (singularity, stability, grasp bound) conflict or a command slips between checks. <em>Motivates</em> the unified runtime safety architecture (Section 6.7).</li>
+<li><strong>Unbounded worst case.</strong> The loop meets its average deadline but occasionally overruns; the rare late cycle bruises or misses. <em>Motivates</em> worst-case (not average) timing analysis (Section 6.4, Section 7).</li>
+</ul>
+<p>Each is a real-time design decision away from prevention.</p>
+</section>
+<section class="section"><h2 id="sec-5-background-knowledge"><span class="secnum">5</span><span class="sectitle">Background Knowledge</span></h2><p><strong>Assumed (from prerequisites):</strong> basic operating-systems/concurrency concepts (threads, scheduling, latency); the M1 cycle-time budget (CEC-01) and spine; the M6 edge substrate, no-cloud boundary (CEC-04), and bounded-worst-case-latency requirement (SR-P-22, DD-33); the node interfaces fixed by M5/M7/M8/M9/M10; the per-module guards those modules specified.</p>
+<p><strong>Introduced here, used later:</strong> the vocabulary of ROS 2 and real-time systems, <em>node, topic, service, action, message type, quality-of-service (QoS), executor, callback, real-time vs. best-effort, control plane vs. perception plane, worst-case execution time, jitter, deadline, priority, scheduling, time synchronization, safety monitor, watchdog, fail-safe/fail-operational</em>. Developed at applied (L2) depth; formal real-time schedulability is referenced [-&gt;Doc H].</p>
+<p><strong>Where this sits in the dependency graph.</strong> M11 hard-depends on M6 (timing substrate) and consumes the node interfaces of M5/M7/M8/M9/M10. It <strong>masters</strong> the ROS 2 / real-time / software-integration thread and the <strong>runtime safety architecture (the independent safety monitor)</strong>; it <strong>applies</strong> CEC-01 (composes the pipeline within the cycle-time budget), CEC-04 (all nodes on-robot), and realizes the M6 bounded-latency requirement. It hands forward: the integrated, timing-verified software system to M13 (system integration/bring-up); the safety architecture to M15 (safety case); and the runtime timing evidence to M14 (V&amp;V).</p>
+</section>
+<section class="section"><h2 id="sec-6-theory"><span class="secnum">6</span><span class="sectitle">Theory</span></h2><h3>6.1 The machine as a distributed system (ROS 2)</h3>
+<p>The harvester is a set of concurrent <strong>nodes</strong> exchanging <strong>messages</strong> on <strong>topics</strong> (publish/subscribe), with request/response <strong>services</strong> and long-running <strong>actions</strong>. This is the ROS 2 model, and the course has been building its graph all along: perception nodes (M4), a localizer (M5), a behavior node + grasp-policy node + bounding layer (M7), a kinematics service + singularity guard (M8), a grasp-force controller (M9), navigation + drive + stability guard (M10), and, added here, an <strong>independent safety monitor</strong>. The message <em>types</em> are the interfaces the prior modules fixed (e.g., pose-with-covariance, bounded grasp proposal); this module composes them.</p>
+<h3>6.2 Quality of service and time</h3>
+<p>ROS 2 topics carry <strong>QoS</strong> contracts, reliability (reliable vs. best-effort), durability, history/depth, and deadlines, chosen per link: reliable, low-latency QoS for control commands; best-effort, high-throughput QoS for bursty images. <strong>Time</strong> is first-class: every message is timestamped, and nodes must share a synchronized clock so fused/consumed data refers to the correct instant, the σ_sync term of the placement budget (CEC-03) is a <em>timing</em> property enforced here.</p>
+<h3>6.3 Real-time vs. best-effort, and plane separation</h3>
+<p>Not all computation is equal. <strong>Real-time</strong> work (grasp-force loop M9, drive/stability M10, motion M8, the safety monitor) must meet deadlines with <strong>bounded worst-case latency</strong>; <strong>best-effort</strong> work (detection/localization M4/M5) wants high throughput but tolerates jitter. The architecture therefore separates a <strong>control plane</strong> (real-time, deterministic, isolated) from a <strong>perception plane</strong> (best-effort, high-throughput), so that a neural network occasionally taking longer cannot delay the force loop. This separation was <em>required</em> in M6 (DD-33); it is <em>engineered</em> here through executor/thread assignment, priorities, and (where available) a real-time OS/scheduler.</p>
+<h3>6.4 Worst-case latency, jitter, and scheduling</h3>
+<p>A control loop's guarantee is its <strong>worst-case</strong> latency, not its average: the rare 80 ms cycle is what bruises or misses. Analysis sums worst-case execution times along the loop, accounts for scheduling delay and blocking, and compares to the deadline. <strong>Scheduling</strong> (priority assignment, executor choice, CPU/core affinity) is chosen to keep the control plane's worst case bounded, e.g., pinning the force loop to a core, giving it priority, and preventing priority inversion. The result must fit the relevant share of the cycle-time budget (CEC-01) and satisfy M9's stability-under-latency analysis (which used the <em>measured</em> latency, EI-06).</p>
+<h3>6.5 Time synchronization</h3>
+<p>On a moving rover, a timing error is a position error (σ_sync, CEC-03). Nodes and sensors must share a synchronized clock so that a pose fused from stereo + IMU + odometry refers to one instant, and a command executes against a current, not stale, target. Synchronization (and bounded message age via QoS deadlines) is how the integration prevents the stale-message failure.</p>
+<h3>6.6 The independent safety monitor (the safety keystone)</h3>
+<p>The machine's safety rests on a node that is <strong>independent</strong> of the mission logic it protects against. The safety monitor:</p>
+<ul>
+<li><strong>watches</strong> the guards and states the prior modules produce, grasp force vs. the window (M9), manipulability/γ (M8), stability margin (M10), heartbeat/watchdog from every critical node;</li>
+<li><strong>can act</strong>, command a safe stop, a safe grasp release, or a bounded halt, <strong>regardless</strong> of what the behavior node, grasp policy, or any other node commands;</li>
+<li><strong>does not depend</strong> on the correctness of the mission logic, the learned policy, or the perception it guards: it has its own inputs, its own simple verified logic, and (ideally) its own execution context, so a failure in the system it protects cannot disable it.</li>
+</ul>
+<p>This independence is what turns a pile of guards into a safety <em>function</em>. Combined with the <em>physical</em> bounds from earlier modules (the mechanical relief M9/EI-09, the singularity-free workspace M8), the machine has defense in depth: physical bounds that cannot be commanded past, and an independent monitor that can always command a stop. The learned components (M7) are bounded by both (EI-07). This is the architectural realization of the system-level AI-safety rule carried since Module 1.</p>
+<h3>6.7 Composing the guards</h3>
+<p>The per-module guards must form one coherent architecture, not a race: a single arbitration point decides the machine's safe state, guards have defined precedence (safety stop overrides motion overrides mission), and no command reaches an actuator without passing the relevant checks. The bounding layer (M7), kinematics/singularity guard (M8), grasp bound (M9), and stability guard (M10) are composed under the safety monitor's authority. Verifying this composition, that no command slips between checks, is a core deliverable (and a hand-off to the M15 safety case).</p>
+<h3>6.8 Fail-safe and fail-operational</h3>
+<p>When something fails, the machine must reach a <strong>safe state</strong>: a fail-safe stop (halt, release the fruit gently via compliance, M9/EI-09) for most faults, and fail-operational (degrade to a reduced mode) for others (e.g., lose vision row-following -&gt; fall back to RTK, M10). Watchdogs detect node death/hang; the safe state is defined and reachable from any fault the analysis identifies. What &quot;safe&quot; means (stop vs. degrade) is a safety-case decision (M15); M11 builds the mechanism.</p>
+<figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 780 412" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The harvester as a ROS 2 node and topic graph: a best-effort perception plane feeds a real-time control plane over fixed message interfaces, and an independent safety monitor subscribes across both planes and can override the actuators." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="e" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker><marker id="ov" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--danger)"/></marker><marker id="sub" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--text-muted)"/></marker></defs>
+<rect x="14" y="34" width="752" height="92" rx="8" fill="var(--info)" fill-opacity="0.05" stroke="var(--info)" stroke-opacity="0.35"/>
+<text x="24" y="50" font-size="8.5" fill="var(--info)" font-weight="700">PERCEPTION PLANE  (best-effort, high-throughput)</text>
+<rect x="14" y="134" width="752" height="150" rx="8" fill="var(--accent)" fill-opacity="0.05" stroke="var(--accent)" stroke-opacity="0.35"/>
+<text x="24" y="150" font-size="8.5" fill="var(--accent)" font-weight="700">CONTROL PLANE  (real-time, deterministic, isolated)</text>
+<rect x="40" y="58" width="140" height="44" rx="7" fill="var(--surface)" stroke="var(--info)" stroke-width="1.4"/>
+<text x="110.0" y="74" text-anchor="middle" font-size="9" fill="var(--text-primary)" font-weight="700">Perception (M4)</text>
+<text x="110.0" y="86" text-anchor="middle" font-size="7.3" fill="var(--text-muted)">detector / ripeness</text>
+<rect x="250" y="58" width="140" height="44" rx="7" fill="var(--surface)" stroke="var(--info)" stroke-width="1.4"/>
+<text x="320.0" y="74" text-anchor="middle" font-size="9" fill="var(--text-primary)" font-weight="700">Localizer (M5)</text>
+<text x="320.0" y="86" text-anchor="middle" font-size="7.3" fill="var(--text-muted)">state estimation</text>
+<line x1="180" y1="80" x2="248" y2="80" stroke="var(--border-strong)" stroke-width="1.3" marker-end="url(#e)"/>
+<text x="214.0" y="77.0" text-anchor="middle" font-size="7" fill="var(--text-muted)">/detections</text>
+<rect x="40" y="160" width="120" height="44" rx="7" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="100.0" y="176" text-anchor="middle" font-size="9" fill="var(--text-primary)" font-weight="700">Behavior (M7)</text>
+<text x="100.0" y="188" text-anchor="middle" font-size="7.3" fill="var(--text-muted)">mission FSM</text>
+<rect x="196" y="160" width="120" height="44" rx="7" fill="var(--surface)" stroke="var(--accent-2)" stroke-width="1.4"/>
+<text x="256.0" y="176" text-anchor="middle" font-size="9" fill="var(--text-primary)" font-weight="700">Grasp policy (M7)</text>
+<text x="256.0" y="188" text-anchor="middle" font-size="7.3" fill="var(--text-muted)">proposal</text>
+<rect x="352" y="160" width="128" height="44" rx="7" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="416.0" y="176" text-anchor="middle" font-size="9" fill="var(--text-primary)" font-weight="700">Bounding layer (M7)</text>
+<text x="416.0" y="188" text-anchor="middle" font-size="7.3" fill="var(--text-muted)">clip to safe set</text>
+<rect x="516" y="160" width="120" height="44" rx="7" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="576.0" y="176" text-anchor="middle" font-size="9" fill="var(--text-primary)" font-weight="700">Force ctrl (M9)</text>
+<text x="576.0" y="188" text-anchor="middle" font-size="7.3" fill="var(--text-muted)">pressure loop</text>
+<rect x="668" y="160" width="86" height="44" rx="7" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.4"/>
+<text x="711.0" y="176" text-anchor="middle" font-size="9" fill="var(--text-primary)" font-weight="700">Actuators</text>
+<text x="711.0" y="188" text-anchor="middle" font-size="7.3" fill="var(--text-muted)">valves/drive</text>
+<line x1="160" y1="182" x2="194" y2="182" stroke="var(--border-strong)" stroke-width="1.3" marker-end="url(#e)"/>
+<text x="177.0" y="179.0" text-anchor="middle" font-size="7" fill="var(--text-muted)">/goal</text>
+<line x1="316" y1="182" x2="350" y2="182" stroke="var(--border-strong)" stroke-width="1.3" marker-end="url(#e)"/>
+<text x="333" y="176" text-anchor="middle" font-size="7" fill="var(--text-muted)">/grasp_proposal</text>
+<line x1="480" y1="182" x2="514" y2="182" stroke="var(--border-strong)" stroke-width="1.3" marker-end="url(#e)"/>
+<text x="497" y="176" text-anchor="middle" font-size="7" fill="var(--text-muted)">/bounded_cmd</text>
+<line x1="636" y1="182" x2="666" y2="182" stroke="var(--border-strong)" stroke-width="1.3" marker-end="url(#e)"/>
+<text x="651" y="176" text-anchor="middle" font-size="7" fill="var(--text-muted)">/valve_cmd</text>
+<line x1="300" y1="102" x2="100" y2="158" stroke="var(--border-strong)" stroke-width="1.3" marker-end="url(#e)"/>
+<text x="196" y="134" text-anchor="middle" font-size="7" fill="var(--text-muted)">/pose_with_covariance</text>
+<rect x="196" y="232" width="150" height="42" rx="7" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="271.0" y="248" text-anchor="middle" font-size="9" fill="var(--text-primary)" font-weight="700">Kinematics + guard (M8)</text>
+<text x="271.0" y="260" text-anchor="middle" font-size="7.3" fill="var(--text-muted)">IK / singularity</text>
+<rect x="40" y="232" width="120" height="42" rx="7" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="100.0" y="248" text-anchor="middle" font-size="9" fill="var(--text-primary)" font-weight="700">Nav+drive (M10)</text>
+<text x="100.0" y="260" text-anchor="middle" font-size="7.3" fill="var(--text-muted)">stability guard</text>
+<line x1="300" y1="232" x2="410" y2="206" stroke="var(--border-strong)" stroke-width="1.3" marker-end="url(#e)"/>
+<text x="372" y="224" text-anchor="middle" font-size="7" fill="var(--text-muted)">/joint_limits</text>
+<line x1="150" y1="232" x2="690" y2="206" stroke="var(--border-strong)" stroke-width="1.3" marker-end="url(#e)"/>
+<text x="250" y="250" text-anchor="middle" font-size="7" fill="var(--text-muted)">/drive_cmd</text>
+<rect x="40" y="322" width="714" height="72" rx="9" fill="var(--danger)" fill-opacity="0.06" stroke="var(--danger)" stroke-width="1.5"/>
+<text x="52" y="342" font-size="10.5" fill="var(--danger-text)" font-weight="700">INDEPENDENT SAFETY MONITOR (M11)</text>
+<text x="52" y="357" font-size="7.8" fill="var(--text-muted)">subscribes across both planes; on a violation, commands a safe state independent of the autonomy stack (EI-11, defense in depth)</text>
+<line x1="100" y1="322" x2="100" y2="206" stroke="var(--border-strong)" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#sub)"/>
+<line x1="258" y1="322" x2="258" y2="206" stroke="var(--border-strong)" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#sub)"/>
+<line x1="414" y1="322" x2="414" y2="206" stroke="var(--border-strong)" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#sub)"/>
+<line x1="576" y1="322" x2="576" y2="206" stroke="var(--border-strong)" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#sub)"/>
+<text x="150" y="316" font-size="7" fill="var(--text-muted)">subscribe (monitor topics)</text>
+<line x1="700" y1="322" x2="700" y2="206" stroke="var(--danger)" stroke-width="1.8" marker-end="url(#ov)"/>
+<text x="706" y="300" font-size="7.5" fill="var(--danger-text)">/override</text>
+<text x="706" y="311" font-size="7" fill="var(--text-muted)">e-stop / safe-state</text>
+<text x="16" y="408" font-size="8" fill="var(--text-secondary)">Message types are the interfaces prior modules fixed (pose-with-covariance, bounded grasp proposal); this module composes them. Plane separation (DD-33) keeps a slow network from delaying the force loop.</text>
+</svg></div><figcaption><span class="fid">F-M11-1</span>The machine as a ROS 2 node and topic graph. A best-effort perception plane (M4/M5) feeds a real-time control plane (M7/M8/M9/M10) over the fixed message interfaces prior modules set (pose-with-covariance, bounded grasp proposal). An independent safety monitor subscribes across both planes and can override the actuators (EI-11, defense in depth). Plane separation (DD-33) keeps a slow network from delaying the force loop. Sections 6.1 and 6.3.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Worst-case control-loop latency versus deadline: the loop latency is the sum along the nodes of execution plus scheduling and communication delay; the worst-case total, not the average, must fit under the deadline, and scheduling keeps that worst case bounded." font-family="'IBM Plex Mono',monospace">
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Worst-case loop latency vs deadline</text>
+<line x1="652" y1="60" x2="652" y2="210" stroke="var(--danger)" stroke-width="1.6" stroke-dasharray="5 3"/>
+<text x="652" y="54" text-anchor="middle" font-size="8.5" fill="var(--danger-text)" font-weight="700">deadline</text>
+<text x="656" y="224" font-size="6.8" fill="var(--text-muted)">CEC-01 share; M9 stability-under-latency</text>
+<text x="16" y="76" font-size="7.6" fill="var(--text-muted)">L_wc</text>
+<rect x="132.0" y="84" width="52.0" height="30" fill="var(--accent)" fill-opacity="0.75" stroke="var(--bg)" stroke-width="0.6"/>
+<rect x="184.0" y="84" width="26.0" height="30" fill="var(--warn)" fill-opacity="0.7" stroke="var(--bg)" stroke-width="0.6"/>
+<text x="158.0" y="80" text-anchor="middle" font-size="6.4" fill="var(--text-muted)">sensor</text>
+<rect x="210.0" y="84" width="104.0" height="30" fill="var(--accent)" fill-opacity="0.75" stroke="var(--bg)" stroke-width="0.6"/>
+<rect x="314.0" y="84" width="52.0" height="30" fill="var(--warn)" fill-opacity="0.7" stroke="var(--bg)" stroke-width="0.6"/>
+<text x="262.0" y="80" text-anchor="middle" font-size="6.4" fill="var(--text-muted)">compute</text>
+<rect x="366.0" y="84" width="43.3" height="30" fill="var(--accent)" fill-opacity="0.75" stroke="var(--bg)" stroke-width="0.6"/>
+<rect x="409.3" y="84" width="26.0" height="30" fill="var(--warn)" fill-opacity="0.7" stroke="var(--bg)" stroke-width="0.6"/>
+<text x="387.7" y="80" text-anchor="middle" font-size="6.4" fill="var(--text-muted)">control</text>
+<rect x="435.3" y="84" width="34.7" height="30" fill="var(--accent)" fill-opacity="0.75" stroke="var(--bg)" stroke-width="0.6"/>
+<rect x="470.0" y="84" width="86.7" height="30" fill="var(--warn)" fill-opacity="0.7" stroke="var(--bg)" stroke-width="0.6"/>
+<text x="452.7" y="80" text-anchor="middle" font-size="6.4" fill="var(--text-muted)">comms</text>
+<rect x="556.7" y="84" width="34.7" height="30" fill="var(--accent)" fill-opacity="0.75" stroke="var(--bg)" stroke-width="0.6"/>
+<rect x="591.3" y="84" width="8.7" height="30" fill="var(--warn)" fill-opacity="0.7" stroke="var(--bg)" stroke-width="0.6"/>
+<text x="574.0" y="80" text-anchor="middle" font-size="6.4" fill="var(--text-muted)">actuate</text>
+<text x="16" y="103" font-size="8" fill="var(--text-secondary)" font-weight="700">worst case</text>
+<text x="606" y="103" font-size="7.6" fill="var(--accent)" font-weight="700">L_wc &lt;= deadline (fits)</text>
+<rect x="132.0" y="150" width="52.0" height="30" fill="var(--accent)" fill-opacity="0.75" stroke="var(--bg)" stroke-width="0.6"/>
+<rect x="184.0" y="150" width="8.7" height="30" fill="var(--warn)" fill-opacity="0.7" stroke="var(--bg)" stroke-width="0.6"/>
+<rect x="192.7" y="150" width="104.0" height="30" fill="var(--accent)" fill-opacity="0.75" stroke="var(--bg)" stroke-width="0.6"/>
+<rect x="296.7" y="150" width="13.0" height="30" fill="var(--warn)" fill-opacity="0.7" stroke="var(--bg)" stroke-width="0.6"/>
+<rect x="309.7" y="150" width="43.3" height="30" fill="var(--accent)" fill-opacity="0.75" stroke="var(--bg)" stroke-width="0.6"/>
+<rect x="353.0" y="150" width="6.9" height="30" fill="var(--warn)" fill-opacity="0.7" stroke="var(--bg)" stroke-width="0.6"/>
+<rect x="359.9" y="150" width="34.7" height="30" fill="var(--accent)" fill-opacity="0.75" stroke="var(--bg)" stroke-width="0.6"/>
+<rect x="394.6" y="150" width="17.3" height="30" fill="var(--warn)" fill-opacity="0.7" stroke="var(--bg)" stroke-width="0.6"/>
+<rect x="411.9" y="150" width="34.7" height="30" fill="var(--accent)" fill-opacity="0.75" stroke="var(--bg)" stroke-width="0.6"/>
+<rect x="446.6" y="150" width="4.3" height="30" fill="var(--warn)" fill-opacity="0.7" stroke="var(--bg)" stroke-width="0.6"/>
+<text x="16" y="169" font-size="8" fill="var(--text-secondary)" font-weight="700">average</text>
+<text x="16" y="142" font-size="7.6" fill="var(--text-muted)">avg</text>
+<rect x="132" y="238" width="12" height="10" fill="var(--accent)" fill-opacity="0.75"/><text x="148" y="247" font-size="7.4" fill="var(--text-secondary)">execution C_i</text>
+<rect x="252" y="238" width="12" height="10" fill="var(--warn)" fill-opacity="0.7"/><text x="268" y="247" font-size="7.4" fill="var(--text-secondary)">scheduling + comms  S_i + D_i</text>
+<text x="452" y="247" font-size="8" fill="var(--text-secondary)">L_wc = &#931;_i (C_i + S_i + D_i) &lt;= deadline</text>
+<text x="20" y="270" font-size="8.3" fill="var(--danger-text)">The guarantee is the worst case, not the average: the rare long cycle is what bruises or misses.</text>
+<text x="20" y="284" font-size="8.3" fill="var(--text-muted)">Scheduling (priority, core pinning, no priority inversion) keeps the worst case bounded; M9 uses the MEASURED latency (EI-06).</text>
+</svg></div><figcaption><span class="fid">F-M11-3</span>Worst-case loop latency vs deadline. Loop latency L_wc = sum over nodes of (execution C + scheduling S + comms D) must fit under the deadline; the worst case, not the average, is the guarantee, since the rare long cycle bruises or misses. Scheduling (priority, core pinning, no priority inversion) keeps the worst case bounded; the deadline derives from CEC-01 and M9 stability-under-latency. Sections 6.4 and 7.1.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 336" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Time synchronization and message age: on a moving rover a timing error becomes a position error equal to velocity times message age, feeding the sync term of the placement budget; a shared clock makes a fused pose refer to one instant and a QoS deadline bounds message age so the sync error stays within its allocation." font-family="'IBM Plex Mono',monospace">
+<text x="20" y="26" font-size="10" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">A timing error is a position error</text>
+<text x="20" y="42" font-size="7.6" fill="var(--text-muted)">on the moving rover (feeds &#963;_sync, CEC-03)</text>
+<line x1="40" y1="150" x2="360" y2="150" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="360" y="164" text-anchor="end" font-size="7.2" fill="var(--text-muted)">rover travel  (velocity v) -&gt;</text>
+<circle cx="120" cy="150" r="6" fill="var(--info)"/>
+<text x="120" y="176" text-anchor="middle" font-size="7.2" fill="var(--info)">measured @ t-&#916;</text>
+<circle cx="228" cy="150" r="6" fill="var(--accent)"/>
+<text x="228" y="176" text-anchor="middle" font-size="7.2" fill="var(--accent)">true now @ t</text>
+<defs><marker id="m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--danger)"/></marker></defs>
+<line x1="120" y1="122" x2="228" y2="122" stroke="var(--danger)" stroke-width="1.6" marker-end="url(#m)"/>
+<text x="174" y="116" text-anchor="middle" font-size="8" fill="var(--danger-text)" font-weight="700">v &#183; &#916;</text>
+<text x="174" y="104" text-anchor="middle" font-size="6.8" fill="var(--text-muted)">position error</text>
+<line x1="120" y1="206" x2="228" y2="206" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="120" y1="202" x2="120" y2="210" stroke="var(--text-muted)"/><line x1="228" y1="202" x2="228" y2="210" stroke="var(--text-muted)"/>
+<text x="174" y="220" text-anchor="middle" font-size="7.2" fill="var(--text-muted)">message age &#916;</text>
+<text x="20" y="250" font-size="8" fill="var(--text-secondary)">position error = v &#183; (message age): stale data displaces</text>
+<text x="20" y="262" font-size="8" fill="var(--text-secondary)">the target. Slow or unsynced compute misplaces the grasp.</text>
+<line x1="384" y1="20" x2="384" y2="300" stroke="var(--border)" stroke-width="1"/>
+<text x="404" y="26" font-size="10" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Shared clock + bounded message age</text>
+<line x1="410" y1="64" x2="720" y2="64" stroke="var(--border-strong)" stroke-width="1"/>
+<text x="406" y="67" text-anchor="end" font-size="7" fill="var(--text-muted)">stereo</text>
+<line x1="430" y1="60" x2="430" y2="68" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="466" y1="60" x2="466" y2="68" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="502" y1="60" x2="502" y2="68" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="538" y1="60" x2="538" y2="68" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="574" y1="60" x2="574" y2="68" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="610" y1="60" x2="610" y2="68" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="646" y1="60" x2="646" y2="68" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="682" y1="60" x2="682" y2="68" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="718" y1="60" x2="718" y2="68" stroke="var(--text-muted)" stroke-width="1"/>
+<circle cx="598" cy="64" r="4.5" fill="var(--accent)"/>
+<line x1="410" y1="96" x2="720" y2="96" stroke="var(--border-strong)" stroke-width="1"/>
+<text x="406" y="99" text-anchor="end" font-size="7" fill="var(--text-muted)">IMU</text>
+<line x1="430" y1="92" x2="430" y2="100" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="466" y1="92" x2="466" y2="100" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="502" y1="92" x2="502" y2="100" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="538" y1="92" x2="538" y2="100" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="574" y1="92" x2="574" y2="100" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="610" y1="92" x2="610" y2="100" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="646" y1="92" x2="646" y2="100" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="682" y1="92" x2="682" y2="100" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="718" y1="92" x2="718" y2="100" stroke="var(--text-muted)" stroke-width="1"/>
+<circle cx="598" cy="96" r="4.5" fill="var(--accent)"/>
+<line x1="410" y1="128" x2="720" y2="128" stroke="var(--border-strong)" stroke-width="1"/>
+<text x="406" y="131" text-anchor="end" font-size="7" fill="var(--text-muted)">odometry</text>
+<line x1="430" y1="124" x2="430" y2="132" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="466" y1="124" x2="466" y2="132" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="502" y1="124" x2="502" y2="132" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="538" y1="124" x2="538" y2="132" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="574" y1="124" x2="574" y2="132" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="610" y1="124" x2="610" y2="132" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="646" y1="124" x2="646" y2="132" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="682" y1="124" x2="682" y2="132" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="718" y1="124" x2="718" y2="132" stroke="var(--text-muted)" stroke-width="1"/>
+<circle cx="598" cy="128" r="4.5" fill="var(--accent)"/>
+<line x1="598" y1="52" x2="598" y2="140" stroke="var(--accent)" stroke-width="1.4" stroke-dasharray="4 3"/>
+<text x="598" y="48" text-anchor="middle" font-size="7.4" fill="var(--accent)" font-weight="700">one fused instant</text>
+<rect x="410" y="150" width="120" height="18" rx="4" fill="var(--danger)" fill-opacity="0.10" stroke="var(--danger)" stroke-dasharray="3 2"/>
+<text x="470" y="162" text-anchor="middle" font-size="6.8" fill="var(--danger-text)">too old: dropped</text>
+<line x1="530" y1="146" x2="530" y2="172" stroke="var(--warn)" stroke-width="1.4"/>
+<text x="536" y="162" font-size="7" fill="var(--warn-text)">QoS deadline (max age)</text>
+<text x="404" y="196" font-size="7.8" fill="var(--text-secondary)">A shared clock makes the fused pose refer to one instant;</text>
+<text x="404" y="208" font-size="7.8" fill="var(--text-secondary)">a QoS deadline bounds message age (no stale-message use).</text>
+<text x="404" y="228" font-size="7.8" fill="var(--text-muted)">Bound period jitter &#916;T and end-to-end age so</text>
+<text x="404" y="240" font-size="7.8" fill="var(--text-muted)">3&#963;_sync stays within its placement allocation (CEC-03).</text>
+<text x="20" y="292" font-size="8.2" fill="var(--text-muted)">This connects scheduling quality to placement accuracy: a timing property with a mechanical consequence. Jitter also threatens control stability (M9).</text>
+</svg></div><figcaption><span class="fid">F-M11-4</span>Time synchronization and message age. On a moving rover a timing error is a position error (= v x message age), feeding the sync term of the placement budget (CEC-03). A shared clock makes a fused pose refer to one instant; a QoS deadline bounds message age so no stale message is used. Bound period jitter and end-to-end age so 3 sigma_sync stays within its placement allocation; jitter also threatens control stability (M9). Sections 6.5 and 7.2.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The independent safety monitor watches the guards the prior modules produce (grip force vs window, manipulability, stability, heartbeats) and can command a safe stop, release, or halt regardless of what the behavior node or grasp policy commands, because it has its own inputs, its own simple verified logic, and its own execution context, so a failure in what it guards cannot disable it." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">The independent safety monitor</text>
+<rect x="30" y="52" width="150" height="30" rx="6" fill="var(--surface)" stroke="var(--info)" stroke-opacity="0.6"/>
+<text x="105" y="71" font-size="7.8" fill="var(--info)" font-weight="700" text-anchor="middle">task FSM (M7)</text>
+<rect x="30" y="92" width="150" height="30" rx="6" fill="var(--surface)" stroke="var(--accent-2)" stroke-opacity="0.6"/>
+<text x="105" y="111" font-size="7.8" fill="var(--accent-2)" font-weight="700" text-anchor="middle">grasp policy (M7/M9)</text>
+<rect x="250" y="66" width="120" height="44" rx="7" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.4"/>
+<text x="310" y="86" font-size="8" fill="var(--warn-text)" font-weight="700" text-anchor="middle">command</text>
+<text x="310" y="99" font-size="8" fill="var(--warn-text)" font-weight="700" text-anchor="middle">arbitration</text>
+<line x1="180" y1="67" x2="248" y2="80" stroke="var(--border-strong)" stroke-width="1.2" marker-end="url(#a)"/>
+<line x1="180" y1="107" x2="248" y2="96" stroke="var(--border-strong)" stroke-width="1.2" marker-end="url(#a)"/>
+<rect x="440" y="66" width="120" height="44" rx="7" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="500" y="92" font-size="8.4" fill="var(--accent)" font-weight="700" text-anchor="middle">actuators</text>
+<line x1="370" y1="88" x2="438" y2="88" stroke="var(--border-strong)" stroke-width="1.4" marker-end="url(#a)"/>
+<rect x="250" y="150" width="310" height="86" rx="9" fill="var(--danger)" fill-opacity="0.07" stroke="var(--danger)" stroke-width="1.8"/>
+<text x="405" y="170" font-size="9.5" fill="var(--danger-text)" font-weight="700" text-anchor="middle">INDEPENDENT SAFETY MONITOR</text>
+<text x="405" y="184" font-size="6.8" fill="var(--text-muted)" font-weight="anc=middle">own inputs - own simple verified logic - own execution context</text>
+<text x="266" y="202" font-size="7" fill="var(--text-secondary)">watches guards: grip force vs window (M9), &#956;/&#947; (M8),</text>
+<text x="266" y="213" font-size="7" fill="var(--text-secondary)">stability margin (M10), heartbeat/watchdog of every node</text>
+<text x="266" y="227" font-size="7.2" fill="var(--danger-text)" font-weight="700">can OVERRIDE: safe-stop / safe-release / bounded halt</text>
+<line x1="405" y1="150" x2="405" y2="112" stroke="var(--danger)" stroke-width="1.8" stroke-dasharray="4 2" marker-end="url(#a)"/>
+<text x="412" y="132" font-size="6.8" fill="var(--danger-text)">overrides, regardless of any node</text>
+<line x1="500" y1="110" x2="500" y2="150" stroke="var(--danger)" stroke-width="1" stroke-dasharray="2 2"/>
+<text x="20" y="262" font-size="8" fill="var(--text-muted)">Independence is what turns a pile of guards into a safety function: the monitor does not depend on the correctness of the mission logic,</text>
+<text x="20" y="274" font-size="8" fill="var(--text-muted)">the learned policy, or the perception it guards, so a failure in the system it protects cannot disable it (EI-11). Section 6.6.</text>
+<text x="20" y="288" font-size="7.4" fill="var(--text-muted)">Physical bounds (relief M9/EI-09, singularity-free workspace M8) act even faster, at physics speed: defense in depth.</text>
+</svg></div><figcaption><span class="fid">F-M11-5</span>The independent safety monitor. An independent node watches the guards the prior modules produce (grip force vs window M9, manipulability/gamma M8, stability M10, heartbeats) and can command a safe stop, release, or bounded halt regardless of what any node commands, because it has its own inputs, its own simple verified logic, and its own execution context. Independence turns a pile of guards into a safety function (EI-11); physical bounds act even faster. Section 6.6.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A fail-safe and fail-operational state machine: from normal operation a recoverable fault degrades to reduced operation (fail-operational) while an unrecoverable fault or the safety monitor forces a safe stop (fail-safe); the safe state is reachable from every state and the reaction path must complete before harm occurs." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Fail-safe / fail-operational state machine</text>
+<rect x="60" y="70" width="180" height="50" rx="10" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.6"/>
+<text x="150.0" y="90" font-size="9" fill="var(--accent)" font-weight="700" text-anchor="middle">NORMAL</text>
+<text x="150.0" y="104" font-size="6.8" fill="var(--text-muted)" text-anchor="middle">full mission capability</text>
+<rect x="300" y="70" width="180" height="50" rx="10" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.6"/>
+<text x="390.0" y="90" font-size="9" fill="var(--warn)" font-weight="700" text-anchor="middle">DEGRADED</text>
+<text x="390.0" y="104" font-size="6.8" fill="var(--text-muted)" text-anchor="middle">fail-operational: reduced</text>
+<rect x="540" y="150" width="180" height="50" rx="10" fill="var(--surface)" stroke="var(--danger)" stroke-width="1.6"/>
+<text x="630.0" y="170" font-size="9" fill="var(--danger)" font-weight="700" text-anchor="middle">SAFE STOP</text>
+<text x="630.0" y="184" font-size="6.8" fill="var(--text-muted)" text-anchor="middle">fail-safe: bounded halt</text>
+<line x1="240" y1="88" x2="298" y2="88" stroke="var(--border-strong)" stroke-width="1.4" marker-end="url(#a)"/>
+<text x="269" y="82" font-size="6.6" fill="var(--warn-text)" font-weight="anc=middle">recoverable</text>
+<text x="269" y="98" font-size="6.6" fill="var(--warn-text)" font-weight="anc=middle">fault</text>
+<line x1="300" y1="108" x2="240" y2="108" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#a)"/>
+<text x="269" y="120" font-size="6.4" fill="var(--text-muted)" font-weight="anc=middle">recover</text>
+<path d="M 180,120 Q 360,200 538,175" fill="none" stroke="var(--danger)" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="420" y1="120" x2="540" y2="160" stroke="var(--danger)" stroke-width="1.4" marker-end="url(#a)"/>
+<text x="300" y="205" font-size="6.8" fill="var(--danger-text)" font-weight="anc=middle">unrecoverable fault OR safety-monitor command (from any state)</text>
+<rect x="60" y="150" width="420" height="52" rx="8" fill="var(--surface-2)" stroke="var(--danger)" stroke-opacity="0.5"/>
+<text x="72" y="168" font-size="8" fill="var(--text-secondary)" font-weight="700">The safe state is reachable from EVERY state (the monitor's last resort).</text>
+<text x="72" y="182" font-size="7.4" fill="var(--text-muted)">Reaction must beat harm:  L_detect + L_react  &lt;=  T_harm  (M11 Sec 7.4).</text>
+<text x="72" y="195" font-size="7.4" fill="var(--text-muted)">Physical bounds (relief, compliance) act at physics speed and buy margin.</text>
+<text x="20" y="232" font-size="8" fill="var(--text-muted)">Fail-operational keeps the mission going through recoverable faults; fail-safe halts safely when it cannot. Sections 6.6 and 7.4.</text>
+<text x="20" y="246" font-size="7.4" fill="var(--text-muted)">A rare late cycle is a real failure: guarantee the worst case, not the average.</text>
+</svg></div><figcaption><span class="fid">F-M11-6</span>Fail-safe / fail-operational state machine. From normal operation a recoverable fault degrades to reduced operation (fail-operational) while an unrecoverable fault or a safety-monitor command forces a safe stop (fail-safe). The safe state is reachable from every state, and the reaction must beat harm: L_detect + L_react <= T_harm; physical bounds buy margin. Sections 6.6 and 7.4.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The architecture separates a real-time control plane (grasp-force loop, drive and stability, motion, safety monitor) that must meet deadlines with bounded worst-case latency from a best-effort perception plane (detection, localization) that wants throughput but tolerates jitter, isolated so a neural network occasionally taking longer cannot delay the force loop." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Control plane vs perception plane</text>
+<rect x="30" y="60" width="340" height="150" rx="10" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.7"/>
+<text x="46" y="80" font-size="9.5" fill="var(--accent)" font-weight="700">CONTROL PLANE  (real-time)</text>
+<text x="46" y="93" font-size="6.8" fill="var(--text-muted)">deadlines, bounded worst-case latency, isolated</text>
+<rect x="46" y="104" width="308" height="19" rx="5" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.4"/>
+<text x="54" y="117" font-size="7.4" fill="var(--text-secondary)">grasp-force loop (M9)</text>
+<rect x="46" y="128" width="308" height="19" rx="5" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.4"/>
+<text x="54" y="141" font-size="7.4" fill="var(--text-secondary)">drive / stability (M10)</text>
+<rect x="46" y="152" width="308" height="19" rx="5" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.4"/>
+<text x="54" y="165" font-size="7.4" fill="var(--text-secondary)">motion (M8)</text>
+<rect x="46" y="176" width="308" height="19" rx="5" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.4"/>
+<text x="54" y="189" font-size="7.4" fill="var(--text-secondary)">safety monitor (M11/M15)</text>
+<text x="46" y="206" font-size="6.6" fill="var(--danger-text)">a rare late cycle is a real failure</text>
+<rect x="410" y="60" width="320" height="150" rx="10" fill="var(--surface)" stroke="var(--info)" stroke-width="1.7"/>
+<text x="426" y="80" font-size="9.5" fill="var(--info)" font-weight="700">PERCEPTION PLANE  (best-effort)</text>
+<text x="426" y="93" font-size="6.8" fill="var(--text-muted)">high throughput, tolerates jitter</text>
+<rect x="426" y="104" width="288" height="19" rx="5" fill="var(--surface-2)" stroke="var(--info)" stroke-opacity="0.4"/>
+<text x="434" y="117" font-size="7.4" fill="var(--text-secondary)">detection (M4)</text>
+<rect x="426" y="128" width="288" height="19" rx="5" fill="var(--surface-2)" stroke="var(--info)" stroke-opacity="0.4"/>
+<text x="434" y="141" font-size="7.4" fill="var(--text-secondary)">localization / fusion (M5)</text>
+<text x="426" y="170" font-size="6.8" fill="var(--text-muted)">a neural net occasionally taking longer</text>
+<text x="426" y="181" font-size="6.8" fill="var(--text-muted)">must not delay the force loop</text>
+<line x1="390" y1="66" x2="390" y2="204" stroke="var(--danger)" stroke-width="1.8" stroke-dasharray="5 3"/>
+<text x="390" y="222" font-size="7" fill="var(--danger-text)" font-weight="anc=middle">isolation: jitter must not cross</text>
+<text x="20" y="246" font-size="7.8" fill="var(--text-muted)">Required in M6 (DD-33); engineered here via executor/thread assignment, priorities, core affinity, and (where available) a real-time scheduler,</text>
+<text x="20" y="258" font-size="7.8" fill="var(--text-muted)">so the control plane's worst case is bounded independent of perception load. Section 6.3.</text>
+</svg></div><figcaption><span class="fid">F-M11-2</span>Control plane vs perception plane. The architecture separates a real-time control plane (grasp-force loop M9, drive/stability M10, motion M8, safety monitor) with bounded worst-case latency from a best-effort perception plane (detection M4, localization M5) that tolerates jitter, isolated so a neural network occasionally taking longer cannot delay the force loop. Engineered via executor/thread assignment, priorities, affinity, RTOS. Section 6.3.</figcaption></figure></section>
+<section class="section"><h2 id="sec-7-mathematics"><span class="secnum">7</span><span class="sectitle">Mathematics</span></h2><p>Rigor tier for M11: <strong>L2</strong>. Central results: worst-case latency composition and the bounded-latency/deadline test.</p>
+<h3>7.1 Worst-case loop latency</h3>
+<p>For a control loop traversing nodes <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1..</mn><mi>n</mi></mrow><annotation encoding="application/x-tex">1..n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1..</span><span class="mord mathnormal">n</span></span></span></span> with worst-case execution times <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">C_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>, scheduling/queuing delays <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">S_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>, and communication delays <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>D</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">D_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>:
+<div class="eqwrap"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>L</mi><mtext>wc</mtext></msub><mo>=</mo><munder><mo>∑</mo><mi>i</mi></munder><mo stretchy="false">(</mo><msub><mi>C</mi><mi>i</mi></msub><mo>+</mo><msub><mi>S</mi><mi>i</mi></msub><mo>+</mo><msub><mi>D</mi><mi>i</mi></msub><mo stretchy="false">)</mo><mtext>  </mtext><mo>≤</mo><mtext>  </mtext><mtext>deadline</mtext><mi mathvariant="normal">.</mi></mrow><annotation encoding="application/x-tex">L_\text{wc} = \sum_i (C_i + S_i + D_i) \;\le\; \text{deadline}.</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">wc</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.3277em;vertical-align:-1.2777em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2777em;"><span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord text"><span class="mord">deadline</span></span><span class="mord">.</span></span></span></span></span></div>
+<em>Use:</em> verify the grasp-force and drive loops meet their deadlines under worst case, not average; the deadline derives from CEC-01 (cycle-time share) and M9 (stability-under-latency).</p>
+<h3>7.2 Jitter and its budget</h3>
+<p>Jitter (variation in latency/period) feeds σ_sync (CEC-03) and control instability (M9). Bound period jitter <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>T</mi></mrow><annotation encoding="application/x-tex">\Delta T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">Δ</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span></span></span></span> and end-to-end age so <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><msub><mi>σ</mi><mtext>sync</mtext></msub></mrow><annotation encoding="application/x-tex">3\sigma_\text{sync}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9305em;vertical-align:-0.2861em;"></span><span class="mord">3</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">sync</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span> stays within its placement-budget allocation. <em>Use:</em> connect scheduling quality to placement accuracy, a timing property with a mechanical consequence.</p>
+<h3>7.3 Schedulability (introduced)</h3>
+<p>For periodic real-time tasks, a utilization/response-time test decides whether all deadlines are met; plane separation and priority assignment are chosen so the control plane is schedulable independent of perception load. <em>Use:</em> justify that the force/drive loops keep their deadlines regardless of what perception is doing. <strong>Grad (L3):</strong> response-time analysis with blocking (priority-inheritance) for the control tasks.</p>
+<h3>7.4 Safety-monitor coverage and latency</h3>
+<p>The safety monitor must detect a hazardous state and act within a <strong>safety reaction time</strong> shorter than the time for harm to occur (e.g., detect over-force/instability and release/stop before a bruise or tip). Require <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mtext>detect</mtext></msub><mo>+</mo><msub><mi>L</mi><mtext>react</mtext></msub><mo>≤</mo><msub><mi>T</mi><mtext>harm</mtext></msub></mrow><annotation encoding="application/x-tex">L_\text{detect}+L_\text{react} \le T_\text{harm}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">detect</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">react</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">harm</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>. <em>Use:</em> size the monitor's rate and the actuator's safe-stop time; note the physical bounds (relief M9, compliance EI-09) buy margin because they act at physics speed, not software speed.</p>
+<figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 265" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Safety reaction time versus time-to-harm, seen through the monitor rate: the detection latency is roughly one monitor period plus processing, so a faster monitor shrinks it; the total of detection plus actuator reaction must stay below the time for harm, which sets a minimum monitor rate, and the physical bounds act at physics speed to buy margin." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Safety reaction time vs time-to-harm (monitor rate)</text>
+<polyline points="146.0,77.5 200.0,130.8 267.5,155.3 357.5,169.7 470.0,178.3 560.0,181.2" fill="none" stroke="var(--info)" stroke-width="1.8" stroke-dasharray="4 3"/>
+<text x="335.0" y="171.68" font-size="6.8" fill="var(--info)">L_detect ~ 1/rate + processing</text>
+<polyline points="146.0,60.2 200.0,113.5 267.5,138.0 357.5,152.4 470.0,161.0 560.0,163.9" fill="none" stroke="var(--accent)" stroke-width="2.2"/>
+<text x="299.0" y="140.0" font-size="6.8" fill="var(--accent)">L_detect + L_react (total)</text>
+<line x1="110" y1="150" x2="560" y2="150" stroke="var(--danger)" stroke-width="1.6" stroke-dasharray="5 3"/>
+<text x="560" y="145.52" font-size="7" fill="var(--danger-text)" font-weight="end" text-anchor="end">T_harm</text>
+<line x1="268" y1="66" x2="268" y2="210" stroke="var(--warn)" stroke-width="1.2" stroke-dasharray="3 3"/>
+<text x="267.5" y="68.88" font-size="6.8" fill="var(--warn-text)" text-anchor="middle">min monitor rate</text>
+<text x="357.5" y="80.4" font-size="6.6" fill="var(--accent)">feasible (total &lt; T_harm)</text>
+<line x1="110" y1="62" x2="110" y2="210" stroke="var(--border-strong)" stroke-width="1.4"/>
+<line x1="110" y1="210" x2="560" y2="210" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="102" y="138.0" text-anchor="middle" font-size="8" fill="var(--text-muted)" transform="rotate(-90 102 138.0)">reaction time</text>
+<text x="335.0" y="238" font-size="8" fill="var(--text-muted)" text-anchor="middle">safety-monitor rate  -></text>
+<rect x="588" y="70" width="154" height="96" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="598" y="88" font-size="7" fill="var(--danger-text)" font-weight="700">L_detect + L_react</text>
+<text x="598" y="99" font-size="7" fill="var(--danger-text)" font-weight="700">&lt;= T_harm</text>
+<text x="598" y="116" font-size="6.4" fill="var(--text-muted)">faster monitor -> smaller</text>
+<text x="598" y="126" font-size="6.4" fill="var(--text-muted)">L_detect -> more margin</text>
+<text x="598" y="144" font-size="6.4" fill="var(--accent)">physical bounds (relief,</text>
+<text x="598" y="154" font-size="6.4" fill="var(--accent)">compliance) act at</text>
+<text x="598" y="164" font-size="6.4" fill="var(--accent)">physics speed: extra margin</text>
+<text x="20" y="246" font-size="7.8" fill="var(--text-muted)">The monitor's rate sets its detection latency; size the rate and the actuator's safe-stop time so the worst-case total beats T_harm. Complements the</text>
+<text x="20" y="258" font-size="7.8" fill="var(--text-muted)">reaction-time-margin timeline (M15). Section 7.4.</text>
+</svg></div><figcaption><span class="fid">F-M11-7</span>Safety reaction time vs time-to-harm (monitor rate). Seen through the monitor rate: detection latency is roughly one monitor period plus processing, so a faster monitor shrinks it, and the total of detect plus actuator reaction must stay below the time-to-harm (L_detect + L_react <= T_harm), which sets a minimum monitor rate. Physical bounds act at physics speed to buy margin. Complements the M15 reaction-time-margin timeline. Section 7.4.</figcaption></figure></section>
+<section class="section"><h2 id="sec-8-engineering-principles"><span class="secnum">8</span><span class="sectitle">Engineering Principles</span></h2><ol>
+<li><strong>Compose by interface</strong>, the message types the modules fixed are the integration contract.</li>
+<li><strong>Separate the planes</strong>, real-time control isolated from best-effort perception; jitter must not cross.</li>
+<li><strong>Guarantee the worst case, not the average</strong>, a rare late cycle is a real failure.</li>
+<li><strong>Time is data</strong>, synchronize clocks; stale is wrong (σ_sync, CEC-03).</li>
+<li><strong>Safety must be independent</strong> (EI-11): the guard cannot share fate with what it guards against.</li>
+<li><strong>Defense in depth</strong>, physical bounds (relief, workspace) <em>plus</em> an independent monitor <em>plus</em> bounded learning (EI-07).</li>
+<li><strong>Define and reach a safe state</strong> for every identified fault (fail-safe/fail-operational).</li>
+</ol>
+</section>
+<section class="section"><h2 id="sec-9-system-requirements"><span class="secnum">9</span><span class="sectitle">System Requirements</span></h2><p>Derived from the integration mission; realize the M6 timing requirement and master the safety architecture. IDs continue; [-&gt;Doc B] formalizes. Targets [VERIFY@PUB].</p>
+<div class="twrap"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Type</th>
+<th>Requirement (abbreviated)</th>
+<th>Verification method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SR-P-35</td>
+<td>Performance</td>
+<td>Each control loop shall meet its deadline with bounded worst-case latency <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mtext>wc</mtext></msub><mo>≤</mo></mrow><annotation encoding="application/x-tex">L_\text{wc}\le</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">wc</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span></span></span></span> deadline (CEC-01/M9).</td>
+<td>Timing analysis + HIL test</td>
+</tr>
+<tr>
+<td>SR-C-10</td>
+<td>Constraint</td>
+<td>The real-time control plane shall be isolated from best-effort perception jitter.</td>
+<td>Load test</td>
+</tr>
+<tr>
+<td>SR-F-15</td>
+<td>Functional</td>
+<td>An <strong>independent safety monitor</strong> shall be able to command a safe stop/release regardless of any other node's state (EI-11).</td>
+<td>Fault-injection test</td>
+</tr>
+<tr>
+<td>SR-F-16</td>
+<td>Functional</td>
+<td>The per-module guards (grasp bound, singularity, stability, watchdogs) shall compose under a single arbitration with defined precedence.</td>
+<td>Review + test</td>
+</tr>
+<tr>
+<td>SR-P-36</td>
+<td>Performance</td>
+<td>Safety reaction time shall satisfy <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mtext>detect</mtext></msub><mo>+</mo><msub><mi>L</mi><mtext>react</mtext></msub><mo>≤</mo><msub><mi>T</mi><mtext>harm</mtext></msub></mrow><annotation encoding="application/x-tex">L_\text{detect}+L_\text{react}\le T_\text{harm}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">detect</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">react</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">harm</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> for identified hazards.</td>
+<td>Timing test</td>
+</tr>
+<tr>
+<td>SR-C-11</td>
+<td>Constraint</td>
+<td>Clocks/messages shall be synchronized so consumed data meets its σ_sync allocation (CEC-03).</td>
+<td>Timing test</td>
+</tr>
+<tr>
+<td>SR-I-16</td>
+<td>Interface</td>
+<td>A twin/HIL harness shall verify node-graph integration and timing.</td>
+<td>Review (-&gt;Doc G)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Traceability: SR-P-35/SR-C-10 -&gt; CEC-01/M6/M9; <strong>SR-F-15/16, SR-P-36 -&gt; M15 (safety case), EI-11</strong>; SR-C-11 -&gt; CEC-03; SR-I-16 -&gt; twin/M13.</p>
+</section>
+<section class="section"><h2 id="sec-10-design-decisions"><span class="secnum">10</span><span class="sectitle">Design Decisions</span></h2><ul>
+<li><strong>DD-62 ROS 2 node graph with typed interfaces and per-link QoS.</strong> <em>Rationale:</em> Section 6.1 to 6.2; compose the fixed interfaces. <em>Serves:</em> SR-C-11.</li>
+<li><strong>DD-63 Control-plane / perception-plane separation</strong> (executors, priorities, core affinity, RT scheduler). <em>Rationale:</em> Section 6.3 to 6.4; isolate real-time from best-effort. <em>Serves:</em> SR-P-35, SR-C-10.</li>
+<li><strong>DD-64 Independent safety monitor</strong> with its own inputs, verified logic, and execution context. <em>Rationale:</em> Section 6.6, EI-11. <em>Serves:</em> SR-F-15, SR-P-36.</li>
+<li><strong>DD-65 Unified guard arbitration with defined precedence</strong> (safety &gt; motion &gt; mission). <em>Rationale:</em> Section 6.7; no command bypasses checks. <em>Serves:</em> SR-F-16.</li>
+<li><strong>DD-66 Worst-case timing verification</strong> (analysis + HIL under load). <em>Rationale:</em> Section 6.4/Section 7; guarantee deadlines. <em>Serves:</em> SR-P-35.</li>
+<li><strong>DD-67 Defined safe states + watchdogs</strong> (fail-safe default; fail-operational where specified). <em>Rationale:</em> Section 6.8. <em>Serves:</em> SR-F-15.</li>
+<li><strong>DD-68 Time synchronization across nodes/sensors.</strong> <em>Rationale:</em> Section 6.5; bound message age. <em>Serves:</em> SR-C-11.</li>
+</ul>
+</section>
+<section class="section"><h2 id="sec-11-trade-studies"><span class="secnum">11</span><span class="sectitle">Trade Studies</span></h2><h3>11.1 TS-21: Safety-monitor architecture</h3>
+<p><strong>Alternatives:</strong> (A) <strong>independent monitor node, separate context</strong>; (B) <strong>monitor as a high-priority thread in the main process</strong>; (C) <strong>distributed checks in each node, no central monitor</strong>; (D) <strong>hardware safety controller (separate MCU)</strong>. Scored 1 to 5 (weights illustrative; ratified in -&gt;Doc B).</p>
+<div class="twrap"><table>
+<thead>
+<tr>
+<th>Criterion (weight)</th>
+<th style="text-align:center">A: Indep. node</th>
+<th style="text-align:center">B: HP thread</th>
+<th style="text-align:center">C: Distributed</th>
+<th style="text-align:center">D: HW controller</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Independence from mission failure (0.30)</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">5</td>
+</tr>
+<tr>
+<td>Reaction latency (0.20)</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">5</td>
+</tr>
+<tr>
+<td>Coverage / global view of hazards (0.18)</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">3</td>
+</tr>
+<tr>
+<td>Verifiability / simplicity (0.16)</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">5</td>
+</tr>
+<tr>
+<td>Cost / complexity (0.16)</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">2</td>
+</tr>
+<tr>
+<td><strong>Weighted total</strong></td>
+<td style="text-align:center"><strong>4.18</strong></td>
+<td style="text-align:center"><strong>3.24</strong></td>
+<td style="text-align:center"><strong>2.68</strong></td>
+<td style="text-align:center"><strong>4.30</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Selected: a hybrid of A + D</strong>, an <strong>independent monitor node</strong> for rich, global hazard logic (grasp/singularity/stability/watchdog arbitration) <em>and</em> a <strong>minimal hardware safety controller</strong> for the last-resort stop that cannot depend on any software (an e-stop/relief-enable path). Together they give both coverage and true independence, defense in depth in the safety architecture itself. Pure distributed checks (C) are rejected: no global view, hard to verify. Recorded weakness: two safety layers must be reconciled (precedence, avoiding conflict), a verification burden handed to M15.</p>
+<h3>11.2 TS-22: Executor / scheduling strategy (summary)</h3>
+<p><strong>Alternatives:</strong> single default executor, multi-threaded executor with priorities, separate RT process for control, RTOS/PREEMPT-RT. <strong>Criteria:</strong> worst-case bound, isolation, complexity, portability. <strong>Outcome:</strong> <strong>control in a separate high-priority RT context (RT-patched OS or separate process/core), perception in a best-effort executor</strong>, the plane separation of DD-63, giving the control loop a bounded worst case independent of perception load.</p>
+<h3>11.3 Explicit Core Engineering Concept evaluation <em>(standing requirement)</em></h3>
+<ul>
+<li><strong>The independent safety monitor / defense-in-depth safety architecture.</strong> <em>Verdict: evaluated as a candidate; not minted as a CEC, captured as EI-11 plus a Knowledge-Architecture thread.</em> It is architecturally central, but its <em>recurring design-tool</em> character is best expressed as the <strong>judgment</strong> &quot;make the guard independent of what it guards&quot; (EI-11), which reinforces the existing bounding anchors (EI-07, EI-09) rather than adding a parallel design <em>tool</em> like a budget or a window. The concrete safety <em>architecture</em> is mastered here and carried into the M15 safety case as a thread, not a new CEC. <em>(Consistent with &quot;promote CECs only when they become enduring cross-module design tools&quot;, this is judgment + architecture, not a new analytical tool.)</em></li>
+<li><strong>ROS 2 / real-time scheduling.</strong> <em>Verdict: not a CEC.</em> Mastered techniques, captured in the integration/real-time thread.</li>
+<li><strong>Worst-case latency composition.</strong> <em>Verdict: not a new CEC, it is CEC-01 applied</em> to software timing (the cycle-time budget realized as loop deadlines), and it feeds CEC-03 (σ_sync). <em>(No new CEC this module; one EI added, EI-11.)</em></li>
+</ul>
+<blockquote class="callout note">
+<p><strong>Cross-module synthesis note (lightweight).</strong> Every guard the course built now converges under one authority: the grasp bound (M7), the singularity keep-out (M8), the mechanical relief and compliance (M9/EI-09), and the stability guard (M10) are composed here beneath the <strong>independent safety monitor</strong>, physical bounds that cannot be commanded past, plus a monitor that can always command a stop, plus learning bounded by both (EI-07). Defense in depth is not one mechanism but the <em>composition</em> this module assembles.</p>
+</blockquote>
+<blockquote class="callout hook">
+<p><strong>Simulation-first hook.</strong> The node graph, timing, and safety monitor are verified in SIL and then <strong>HIL</strong> (Section 12, Section 13), including fault-injection (kill a node, stall a loop, command an out-of-bounds action) to prove the monitor and guards respond within the safety reaction time before any field run.</p>
+</blockquote>
+</section>
+<section class="section"><h2 id="sec-12-simulation-activities"><span class="secnum">12</span><span class="sectitle">Simulation Activities</span></h2><p>M11 runs at <strong>SIL -&gt; HIL</strong>; the twin becomes the integration and timing test bench.</p>
+<p><strong>SA-1, Compose the node graph.</strong> Bring up all nodes (perception, localizer, behavior/bounding, kinematics, grasp control, nav/drive, safety monitor) against the twin; verify the interfaces connect and a full DRIVE-&gt;...-&gt;RELEASE cycle runs (Section 6.1). <em>Outcome:</em> the integrated system running in sim.</p>
+<p><strong>SA-2, Plane-separation load test.</strong> Inject heavy/bursty perception load and confirm the control-plane loops (grasp force, drive) keep their deadlines regardless (Section 6.3 to 6.4, SR-C-10). <em>Outcome:</em> isolation verified under stress.</p>
+<p><strong>SA-3, Worst-case timing.</strong> Measure loop latency distributions under load; confirm <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mtext>wc</mtext></msub><mo>≤</mo></mrow><annotation encoding="application/x-tex">L_\text{wc}\le</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">wc</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span></span></span></span> deadline (Section 7.1, SR-P-35) and jitter within the σ_sync budget (Section 7.2, CEC-03). <em>Outcome:</em> timing guarantees evidenced.</p>
+<p><strong>SA-4, Safety-monitor fault injection.</strong> Kill/stall nodes, command out-of-bounds actions, and force hazard states; confirm the independent monitor and composed guards reach the safe state within the reaction time (Section 6.6 to 6.7, Section 7.4, SR-F-15/16/SR-P-36). <em>Outcome:</em> the safety architecture proven in sim before HIL/field.</p>
+</section>
+<section class="section"><h2 id="sec-13-digital-twin-activities"><span class="secnum">13</span><span class="sectitle">Digital Twin Activities</span></h2><p><strong>DTA-1, Integration/HIL harness spec (deliverable to Doc G).</strong> Specify the SIL and hardware-in-the-loop harness: which nodes run against the twin vs. real edge hardware (M6), timing instrumentation, and the fault-injection suite. <em>Outcome:</em> SR-I-16; the integration/timing verification bench.</p>
+<p><strong>DTA-2, Timing regression suite.</strong> A fixed set of load/timing scenarios every software change must pass (deadlines met, jitter bounded, monitor reaction within budget). <em>Outcome:</em> continuous timing V&amp;V (hand-off to M14).</p>
+<p><strong>DTA-3, Safety-architecture verification package.</strong> Package the guard-composition and monitor-independence evidence (fault-injection results, precedence tests) for the M15 safety case. <em>Outcome:</em> safety evidence traced from build to case.</p>
+</section>
+<section class="section"><h2 id="sec-14-hardware-activities"><span class="secnum">14</span><span class="sectitle">Hardware Activities</span></h2><p><em>(Tiered: HIL and bring-up protocols at specification level.)</em></p>
+<p><strong>HA-1, HIL timing verification.</strong> Specify running the control plane on the real edge device (M6) driving simulated/real actuators, measuring worst-case latency and jitter under realistic load (SR-P-35). <em>Deliverable:</em> HIL timing evidence.</p>
+<p><strong>HA-2, Hardware safety-controller verification.</strong> Specify verification that the minimal hardware safety controller (TS-21 option D) executes a last-resort stop independent of all software (SR-F-15). <em>Deliverable:</em> an independent-stop verification record (feeds M15).</p>
+</section>
+<section class="section"><h2 id="sec-15-software-activities"><span class="secnum">15</span><span class="sectitle">Software Activities</span></h2><p><strong>SWA-1, Node-graph &amp; launch/config.</strong> Specify the full node graph, message types (the fixed interfaces), per-link QoS, executor/thread/core assignment, and launch/configuration (CEC-04, on-robot). <em>Outcome:</em> the runnable integrated system (bring-up in M13).</p>
+<p><strong>SWA-2, Safety monitor &amp; watchdogs.</strong> Specify the independent safety-monitor node (inputs, verified logic, safe-state commands), the guard arbitration with precedence, and per-node watchdogs/heartbeats (EI-11, DD-64/65/67). <em>Outcome:</em> the runtime safety architecture in software.</p>
+</section>
+<section class="section"><h2 id="sec-16-ros-2-integration"><span class="secnum">16</span><span class="sectitle">ROS 2 Integration</span></h2><p>This module <em>is</em> the ROS 2 integration, the mastery point of the thread every prior module deferred to it. It composes the fixed interfaces into a running graph, assigns QoS and scheduling to separate the control and perception planes, synchronizes time, and adds the independent safety monitor and guard arbitration. It realizes the M6 bounded-latency requirement (DD-33/SR-P-22) as engineered scheduling, and it makes the mission FSM (M7 behavior layer) the sequencer over a real-time substrate. Downstream, M13 brings this graph up on the integrated machine; M14 verifies its timing; M15 certifies its safety architecture.</p>
+</section>
+<section class="section"><h2 id="sec-17-ai-integration"><span class="secnum">17</span><span class="sectitle">AI Integration</span></h2><p>M11 hosts the learned components but does not add one; its job is to <strong>run them safely in real time</strong>:</p>
+<ul>
+<li><strong>Perception on the best-effort plane.</strong> Detection/localization/row-following (M4/M5/M10) live on the perception plane, where their variable latency (a slow inference) cannot delay control (Section 6.3), the systemic expression of &quot;measure and isolate the learned component's timing&quot; (EI-06).</li>
+<li><strong>The bounded policy under the monitor.</strong> The grasp policy's proposal (M7) is bounded by the M7 layer, executed by M9, and overseen by the independent safety monitor, three layers, none of which trusts the policy (EI-07/EI-11).</li>
+<li><strong>Timing determinism for control, throughput for learning.</strong> The architecture gives each what it needs, and prevents the learned components from ever holding the real-time loops hostage.</li>
+</ul>
+<p>No cloud in the loop (CEC-04); all learned inference is on-robot and plane-isolated.</p>
+</section>
+<section class="section"><h2 id="sec-18-edge-computing-integration"><span class="secnum">18</span><span class="sectitle">Edge Computing Integration</span></h2><p>M11 turns the M6 edge substrate into a correctly scheduled real-time machine. The edge device runs both planes: the control plane with bounded worst-case latency (pinned, prioritized) and the perception plane with high throughput (best-effort). Two couplings fixed here: (1) the compute budget (M6) must be <em>partitioned</em> so perception cannot starve control, plane separation is how; (2) the bounded-latency requirement M6 stated as a target is here <em>achieved and verified</em> through scheduling and HIL measurement (EI-06). The no-cloud boundary (CEC-04) is why all of this must be solved on the device rather than offloaded.</p>
+</section>
+<section class="section"><h2 id="sec-19-fluid-power-integration"><span class="secnum">19</span><span class="sectitle">Fluid Power Integration</span></h2><p>M11 does not build fluid hardware, but it <strong>hosts and safeguards the fluid grasp control (M9)</strong> in real time. Three couplings: (1) the grasp-force loop is a <strong>control-plane, real-time</strong> task whose bounded latency M11 guarantees, the stability M9 proved <em>assumed</em> this (Section 6.4/Section 7.1); (2) the mechanical relief and passive compliance (M9/EI-09) are the <em>physics-speed</em> safety layer beneath the software safety monitor, they act faster than any software reaction and buy the monitor timing margin (Section 7.4); (3) a safe-release command (fail-safe, Section 6.8) uses the gripper's compliance to set the fruit down gently rather than dropping it. The software safety architecture and the fluid physical bounds are complementary layers of the same defense in depth.</p>
+</section>
+<section class="section lab"><h2 id="sec-24-laboratory"><span class="secnum">24</span><span class="sectitle">Laboratory</span></h2><p><strong>Lab M11, Integrating the Machine and Building the Independent Safety Monitor</strong></p>
+<ul>
+<li><strong>Objectives.</strong> (1) Compose the node graph from the fixed interfaces; (2) separate control and perception planes and verify isolation under load; (3) analyze/measure worst-case control-loop latency; (4) build an independent safety monitor and guard arbitration; (5) verify the safety architecture by fault injection in SIL/HIL.</li>
+<li><strong>Equipment.</strong> The digital twin + SIL/HIL harness; the edge device (M6) [VERIFY@PUB]; the prior modules' node stubs/interfaces; timing instrumentation; notebook. <strong>Safety:</strong> SIL/HIL (no field motion); fault-injection is simulated.</li>
+<li><strong>Procedure.</strong>
+<ol>
+<li>Bring up the node graph against the twin; run a full harvest cycle; confirm the interfaces connect (Section 6.1, SA-1).</li>
+<li>Assign QoS/executors to separate the planes; inject perception load; measure control-loop latency with and without separation (Section 6.3 to 6.4, SR-C-10).</li>
+<li>Compute the worst-case latency of the grasp-force loop (<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∑</mo><msub><mi>C</mi><mi>i</mi></msub><mo>+</mo><msub><mi>S</mi><mi>i</mi></msub><mo>+</mo><msub><mi>D</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\sum C_i+S_i+D_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>) and compare to its deadline (Section 7.1, SR-P-35); check jitter vs. σ_sync (CEC-03).</li>
+<li>Implement the independent safety monitor (inputs from the guards, safe-state commands) and guard arbitration with precedence (Section 6.6 to 6.7, EI-11).</li>
+<li>Fault-inject (kill a node, stall a loop, command out-of-bounds, force a hazard state); confirm the machine reaches a safe state within <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mtext>detect</mtext></msub><mo>+</mo><msub><mi>L</mi><mtext>react</mtext></msub><mo>≤</mo><msub><mi>T</mi><mtext>harm</mtext></msub></mrow><annotation encoding="application/x-tex">L_\text{detect}+L_\text{react}\le T_\text{harm}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">detect</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">react</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">harm</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> (Section 7.4, SR-F-15/16, SR-P-36); repeat with a deliberately <em>non-independent</em> monitor and observe the failure.</li>
+</ol>
+</li>
+<li><strong>Data collection.</strong> Node-graph diagram; latency distributions (separated vs. shared); worst-case latency vs. deadline; fault-injection outcomes and reaction times; independent vs. non-independent comparison.</li>
+<li><strong>Analysis.</strong> Does separation bound the control worst case? Does the monitor act in time under every injected fault? What fails when the monitor is not independent?</li>
+<li><strong>Discussion.</strong> Why is worst-case (not average) the guarantee that matters? Why must the safety monitor be independent (EI-11)? How do the physical bounds (relief, compliance) complement the software monitor?</li>
+<li><strong>Deliverables.</strong> A 5 to 6 page report: node graph, plane-separation result, worst-case timing, safety-monitor design, fault-injection verification.</li>
+<li><strong>Rubric (100 pts).</strong> Node-graph integration (16); plane separation &amp; isolation (18); worst-case timing analysis (18); independent safety monitor &amp; arbitration (24, EI-11); fault-injection verification (14); communication (10). <em>Graduate band adds:</em> response-time analysis with blocking (Section 7.3 grad) and a cited source.</li>
+<li><strong>Expected results.</strong> A control plane whose worst-case latency stays bounded regardless of perception load; a safety monitor that reaches the safe state within the reaction time under every injected fault; and a clear demonstration that a <em>non-independent</em> monitor fails exactly when it is needed, the empirical case for EI-11.</li>
+</ul>
+</section>
+<section class="section hw"><h2 id="sec-25-homework"><span class="secnum">25</span><span class="sectitle">Homework</span></h2><p>Tiered: all do 1 to 4; graduate add 5 to 6.</p>
+<ol>
+<li><strong>Node graph.</strong> Draw the machine's node/topic graph from the fixed interfaces; label each link real-time vs. best-effort and assign a QoS.</li>
+<li><strong>Worst-case latency.</strong> Given per-node <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mi>i</mi></msub><mo separator="true">,</mo><msub><mi>S</mi><mi>i</mi></msub><mo separator="true">,</mo><msub><mi>D</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">C_i,S_i,D_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> for the grasp-force loop, compute <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mtext>wc</mtext></msub></mrow><annotation encoding="application/x-tex">L_\text{wc}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">wc</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> and compare to a deadline; identify the dominant term (EI-05 recurs).</li>
+<li><strong>Plane separation.</strong> Explain how a slow perception inference could bruise a fruit if it shared a thread with the force loop, and how plane separation prevents it.</li>
+<li><strong>Safety monitor.</strong> Specify an independent safety monitor for one hazard (over-force or tip-over): its inputs, logic, safe-state command, and reaction-time requirement; argue its independence.</li>
+<li><strong>(Grad) Schedulability.</strong> For a set of periodic control tasks, apply a response-time test (with blocking) to show the control plane meets deadlines independent of perception load.</li>
+<li><strong>(Grad) Defense in depth.</strong> For the grasp, enumerate the layers (learned bound M7, controller M9, mechanical relief EI-09, independent monitor EI-11) and analyze the residual risk if each single layer fails; state what the M15 safety case must close.</li>
+</ol>
+</section>
+<section class="section quiz"><h2 id="sec-26-quiz"><span class="secnum">26</span><span class="sectitle">Quiz</span></h2><ol>
+<li><strong>(MC)</strong> A control loop's real-time guarantee is its: (a) average latency; (b) worst-case latency vs. deadline; (c) best case; (d) throughput.</li>
+<li><strong>(MC)</strong> Separating the control and perception planes prevents: (a) high throughput; (b) perception jitter from delaying real-time control; (c) time sync; (d) grasping.</li>
+<li><strong>(MC)</strong> The safety monitor must be independent because: (a) it is faster; (b) a guard that shares fate with what it guards fails with it; (c) it saves compute; (d) ROS 2 requires it.</li>
+<li><strong>(MC)</strong> A stale (out-of-date) message on a moving rover causes: (a) faster picking; (b) a position/target error (σ_sync); (c) better stability; (d) nothing.</li>
+<li><strong>(Short)</strong> State EI-11 and one SIM2FIELD example.</li>
+<li><strong>(Calc)</strong> Loop nodes with <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mo>+</mo><mi>S</mi><mo>+</mo><mi>D</mi></mrow><annotation encoding="application/x-tex">C+S+D</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span></span></span></span> of 4, 6, 3, 5 ms. Compute <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mtext>wc</mtext></msub></mrow><annotation encoding="application/x-tex">L_\text{wc}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">wc</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>; deadline 20 ms, met?</li>
+<li><strong>(Calc)</strong> Detect latency 8 ms, react latency 10 ms, time-to-harm 25 ms. Is the safety reaction adequate?</li>
+<li><strong>(Design)</strong> How do the physical bounds (relief, compliance) complement the software safety monitor?</li>
+<li><strong>(Critical thinking)</strong> Why verify timing in HIL under load, not just average in SIL?</li>
+<li><strong>(Critical thinking)</strong> Why does the learned grasp policy never get real-time priority over the safety monitor?</li>
+</ol>
+</section>
+<section class="section challenge"><h2 id="sec-27-challenge-problems"><span class="secnum">27</span><span class="sectitle">Challenge Problems</span></h2><ul>
+<li><strong>CP-M11-A, The full safety architecture.</strong> Assemble the machine's defense in depth: the learned bound (M7), controller (M9), mechanical relief/compliance (M9/EI-09), composed guards (M8/M10), and the independent monitor + hardware controller (this module). Specify precedence, the safe states, and the single residual risk after all layers. (Directly feeds the M15 safety case.)</li>
+<li><strong>CP-M11-B, Worst-case timing under contention.</strong> Given the perception and control tasks with execution times and periods, design the scheduling (priorities, cores, executors) that guarantees the grasp-force and drive loops meet deadlines under maximum perception load; prove the bound. (Realizes M6/M9 timing.)</li>
+<li><strong>CP-M11-C, Fail-operational degradation.</strong> Design the degradation ladder for the identified faults (lose vision -&gt; RTK; lose a sensor -&gt; slow/stop; node hang -&gt; watchdog safe-stop); specify which faults are fail-safe vs. fail-operational and why. (Feeds M14/M15.)</li>
+</ul>
+</section>
+<section class="section"><h2 id="sec-engineering-design-review" class="unnum">Engineering Design Review</h2><p><em>Not graded. The questions a review board would ask; argue with evidence.</em></p>
+<ol>
+<li><strong>Assumptions.</strong> Your worst-case latency analysis assumes bounded execution times for every node, including the learned ones. How do you bound a neural network's execution time, and what happens to your guarantee if a perception node occasionally exceeds its assumed worst case?</li>
+<li><strong>Tradeoffs.</strong> You split the safety function between an independent software monitor and a minimal hardware controller. Defend the added complexity to a reviewer who wants one mechanism. What does each layer catch that the other cannot, and how do you prevent them from conflicting?</li>
+<li><strong>Risk.</strong> Suppose the independent safety monitor node itself hangs. What detects that, and what is the machine's behavior, does it fail safe, and how fast? Is there anything the monitor's own failure cannot make safe?</li>
+<li><strong>Verification.</strong> You verified timing in SIL and HIL under synthetic load. A reviewer notes the field's load (dust, dense fruit, edge cases) may exceed your synthetic worst case. How do you make the timing verification represent the real worst case (EI-10), and what margin do you carry?</li>
+<li><strong>Subsystem interaction.</strong> The grasp-force loop's stability (M9) assumed a bounded latency this module must guarantee. If the guarantee is violated in a rare corner, does M9 degrade gracefully (compliance, EI-09) or fail? Who owns the contract between the timing you provide and the stability M9 assumed?</li>
+<li><strong>Safety independence.</strong> State precisely what the safety monitor depends on. If any of those dependencies (its inputs, clock, power, compute) is shared with the mission logic, is it truly independent? What is the weakest link in its independence, and how is it hardened (feeds M15)?</li>
+</ol>
+</section>
+<section class="section"><h2 id="sec-29-research-frontiers"><span class="secnum">29</span><span class="sectitle">Research Frontiers</span></h2><ul>
+<li><strong>Landmark grounding.</strong> ROS 2 / DDS architecture and real-time robotics references; real-time scheduling and response-time analysis references; the functional-safety literature (independent monitors, safety architectures, watchdogs). <em>(Consult current editions; entries in the reference set, not reproduced here.)</em></li>
+<li><strong>Recent advances (survey current literature [VERIFY@PUB]).</strong> Real-time ROS 2 executors and deterministic scheduling for mobile manipulators; runtime monitoring / runtime assurance (simplex-style architectures) for learning-enabled robots; bounded-time inference and timing-predictable ML on edge devices; formal verification of safety monitors and guard composition; time synchronization for distributed robot systems.</li>
+<li><strong>Open problems.</strong> Bounding worst-case execution time for learned components; provably-independent safety monitors for learning-enabled autonomy; certifiable real-time guarantees on general-purpose edge hardware; verifying that composed guards leave no gap.</li>
+<li><strong>Suggested thesis directions.</strong> (1) A runtime-assurance architecture with a formally independent safety monitor for a learning-enabled harvester. (2) Timing-predictable scheduling that guarantees control-plane deadlines under worst-case perception load. (3) Formal verification of guard composition (no command bypasses a check) for a mobile manipulator.</li>
+</ul>
+</section>
+<section class="section"><h2 id="sec-30-references"><span class="secnum">30</span><span class="sectitle">References</span></h2><p><em>Cited by role; consult current editions. No copyrighted text is reproduced. Full entries in <code>references/bibliography.md</code> [-&gt;Doc H].</em></p>
+<ul>
+<li>ROS 2 / DDS and real-time robotics references, node graph, QoS, executors (Section 6.1 to 6.3).</li>
+<li>Real-time scheduling / response-time analysis references, worst-case latency, schedulability (Section 6.4, Section 7).</li>
+<li>Functional-safety / runtime-assurance literature, independent monitors, safety architectures, watchdogs (Section 6.6 to 6.8; EI-11).</li>
+<li>Time-synchronization references, clock sync and message age (Section 6.5; CEC-03).</li>
+<li>SIM2FIELD governing documents, <code>PHASE-0-FOUNDATION.md</code>, <code>PHASE-1-CURRICULUM-ARCHITECTURE.md</code>, <code>curriculum/_core-concepts.md</code>, <strong>Modules 1 to 10</strong>, and (forthcoming) Doc B, Doc E, Doc G.</li>
+</ul>
+</section>
+    <footer>Rendered from <b>MODULE-11.md</b> by Module Rendering Pipeline v1.3. Student edition. The module is the single source of truth.<br>
+    Finished media only; production specifications and author notes live in the author edition.<br>
+    SIM2FIELD / Autonomous Watermelon Harvesting Robotics</footer>
+  </div></main>
+</div>
+<script>
+(function(){var links=[].slice.call(document.querySelectorAll('.toc a'));var map={};
+ links.forEach(function(a){map[a.getAttribute('href').slice(1)]=a;});
+ if(!('IntersectionObserver' in window))return;
+ var io=new IntersectionObserver(function(es){es.forEach(function(e){var id=e.target.id;
+   if(e.isIntersecting&&map[id]){links.forEach(function(l){l.classList.remove('active');});map[id].classList.add('active');map[id].scrollIntoView({block:'nearest'});}});},
+   {rootMargin:'-12% 0px -78% 0px'});
+ document.querySelectorAll('.section h2[id]').forEach(function(h){io.observe(h);});})();
+</script>
+</body></html>

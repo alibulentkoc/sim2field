@@ -1,0 +1,304 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="color-scheme" content="dark"><title>Batch review C: 10 new figures</title><style>
+:root{--bg:#0e120d;--surface:#161c14;--surface-2:#0b0e0a;--surface-3:#12160f;--border:#2b3527;--border-strong:#3a4633;--text-primary:#eef2e6;--text-secondary:#c8cfbe;--text-muted:#adb4a2;--text-on-accent:#0e120d;--accent:#9bcf3b;--accent-strong:#6f9a2c;--info:#6fb0d9;--warn:#e0a03b;--warn-text:#eed9b4;--danger:#f0556a;--danger-text:#f697a4;--accent-2:#b98bd9}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text-primary);font-family:'IBM Plex Mono',ui-monospace,monospace;padding:2rem 2.2rem 4rem}
+h1{font-family:'Space Grotesk',system-ui,sans-serif;font-size:1.4rem;margin:0 0 .3rem}
+.lead{color:var(--text-muted);font-size:.82rem;max-width:80ch;line-height:1.5;margin:.2rem 0 1.4rem}
+.grid{display:grid;grid-template-columns:1fr;gap:1.1rem;max-width:900px}
+.card{border:1px solid var(--border);border-radius:11px;overflow:hidden;background:var(--surface)}
+figcaption{padding:.55rem .8rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.fid{font-size:.62rem;font-weight:700;color:var(--accent);border:1px solid var(--accent-strong);border-radius:5px;padding:.05rem .4rem}
+.sec{font-size:.6rem;color:var(--text-muted);border:1px solid var(--border-strong);border-radius:5px;padding:.05rem .4rem}
+.ttl{font-size:.8rem;color:var(--text-secondary)}
+.body{padding:.8rem;background:var(--surface-3);overflow-x:auto}.body svg{display:block;width:100%;height:auto;min-width:660px}
+</style></head><body>
+<h1>Batch review C: 10 new figures</h1>
+<p class="lead">Ten more buildable-backlog figures across Modules 4, 6, 8, 9, 10, 12, 13, 14, 15, and 16. Each is bound to its module, rendered in both editions, and passes the drift and typography guards. Illustrative values are labeled on each figure.</p>
+<div class="grid"><figure class="card"><figcaption><span class="fid">F-M4-5</span><span class="sec">Section 6</span><span class="ttl">Data strategy: real + annotated + synthetic</span></figcaption><div class="body"><svg viewBox="0 0 760 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A sound data strategy has three parts feeding one dataset that must cover the field's variability: real field capture, expensive annotation, and synthetic generation in the twin (where labels are free and rare or hazardous cases can be manufactured), with domain randomization combating the sim-to-real gap; if the union fails to cover the field, the model inherits a blind spot." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Data strategy: real + annotated + synthetic</text>
+<rect x="30" y="64" width="250" height="44" rx="8" fill="var(--surface)" stroke="var(--info)" stroke-width="1.4"/>
+<text x="42" y="81" font-size="8.4" fill="var(--info)" font-weight="700">REAL CAPTURE</text>
+<text x="42" y="94" font-size="6.6" fill="var(--text-muted)">field imagery: lighting,</text>
+<text x="42" y="104" font-size="6.6" fill="var(--text-muted)">occlusion, maturity, cultivar</text>
+<line x1="280" y1="86" x2="360" y2="140" stroke="var(--border-strong)" stroke-width="1.2" marker-end="url(#a)"/>
+<rect x="30" y="116" width="250" height="44" rx="8" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.4"/>
+<text x="42" y="133" font-size="8.4" fill="var(--warn)" font-weight="700">ANNOTATION</text>
+<text x="42" y="146" font-size="6.6" fill="var(--text-muted)">boxes, masks, ripeness labels</text>
+<text x="42" y="156" font-size="6.6" fill="var(--text-muted)">expensive, quality-critical</text>
+<line x1="280" y1="138" x2="360" y2="140" stroke="var(--border-strong)" stroke-width="1.2" marker-end="url(#a)"/>
+<rect x="30" y="168" width="250" height="44" rx="8" fill="var(--surface)" stroke="var(--accent-2)" stroke-width="1.4"/>
+<text x="42" y="185" font-size="8.4" fill="var(--accent-2)" font-weight="700">SYNTHETIC (twin)</text>
+<text x="42" y="198" font-size="6.6" fill="var(--text-muted)">rendered scenes, free labels,</text>
+<text x="42" y="208" font-size="6.6" fill="var(--text-muted)">rare/hazardous cases made</text>
+<line x1="280" y1="190" x2="360" y2="140" stroke="var(--border-strong)" stroke-width="1.2" marker-end="url(#a)"/>
+<text x="150" y="240" font-size="6.8" fill="var(--accent-2)">domain randomization (lighting, texture, pose, clutter) combats the sim-to-real gap</text>
+<rect x="362" y="108" width="150" height="66" rx="9" fill="var(--surface-2)" stroke="var(--accent)" stroke-width="1.7"/>
+<text x="437" y="132" font-size="8.6" fill="var(--accent)" font-weight="700" text-anchor="middle">DATASET</text>
+<text x="437" y="148" font-size="6.6" fill="var(--text-muted)" font-weight="anc=middle">must COVER the</text>
+<text x="437" y="159" font-size="6.6" fill="var(--text-muted)" font-weight="anc=middle">field variability</text>
+<line x1="512" y1="141" x2="560" y2="141" stroke="var(--border-strong)" stroke-width="1.4" marker-end="url(#a)"/>
+<rect x="562" y="118" width="170" height="46" rx="8" fill="var(--surface)" stroke="var(--info)" stroke-width="1.4"/>
+<text x="647" y="140" font-size="8" fill="var(--info)" font-weight="700" text-anchor="middle">model (M4)</text>
+<text x="647" y="154" font-size="6.4" fill="var(--text-muted)" font-weight="anc=middle">field competence</text>
+<text x="20" y="258" font-size="7.8" fill="var(--text-muted)">The dataset is the product: field competence comes from data coverage. If the union does not cover the field's variability, the model inherits a blind spot (a distribution-shift failure). Section 6.5.</text>
+</svg></div></figure><figure class="card"><figcaption><span class="fid">F-M6-5</span><span class="sec">Section 6</span><span class="ttl">Accuracy-latency-energy frontier</span></figcaption><div class="body"><svg viewBox="0 0 760 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The accuracy-latency frontier: model-optimization techniques trade accuracy for speed and energy, tracing a Pareto frontier of variants; the feasible operating region is bounded on the right by the latency budget and below by the recall threshold that protects yield, and the operating point is chosen from consequence within that box." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Accuracy-latency-energy frontier</text>
+<rect x="110" y="70" width="279" height="76" fill="var(--accent)" fill-opacity="0.06"/>
+<line x1="389" y1="70" x2="389" y2="240" stroke="var(--danger)" stroke-width="1.4" stroke-dasharray="5 3"/>
+<text x="393.0" y="80" font-size="7" fill="var(--danger-text)">latency budget (CEC-01)</text>
+<line x1="110" y1="146" x2="560" y2="146" stroke="var(--warn)" stroke-width="1.4" stroke-dasharray="5 3"/>
+<text x="560" y="142.5" font-size="7" fill="var(--warn-text)" font-weight="end" text-anchor="end">recall / yield threshold (M4)</text>
+<polyline points="200.0,134.6 263.0,107.4 335.0,93.8 407.0,85.3 479.0,80.2 537.5,77.7" fill="none" stroke="var(--info)" stroke-width="2.2"/>
+<circle cx="200.0" cy="134.6" r="3" fill="var(--info)"/>
+<circle cx="263.0" cy="107.4" r="3" fill="var(--info)"/>
+<circle cx="335.0" cy="93.8" r="3" fill="var(--info)"/>
+<circle cx="407.0" cy="85.3" r="3" fill="var(--info)"/>
+<circle cx="479.0" cy="80.2" r="3" fill="var(--info)"/>
+<circle cx="537.5" cy="77.7" r="3" fill="var(--info)"/>
+<circle cx="335.0" cy="93.8" r="6" fill="var(--accent)"/>
+<text x="343.0" y="95.80000000000001" font-size="7.6" fill="var(--accent)" font-weight="700">operating point</text>
+<line x1="110" y1="66" x2="110" y2="240" stroke="var(--border-strong)" stroke-width="1.4"/>
+<line x1="110" y1="240" x2="560" y2="240" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="102" y="155.0" text-anchor="middle" font-size="8" fill="var(--text-muted)" transform="rotate(-90 102 155.0)">accuracy / recall</text>
+<text x="335.0" y="268" font-size="8" fill="var(--text-muted)" text-anchor="middle">faster / lower energy   &lt;-   speed (latency, energy)   ->   slower / more accurate</text>
+<rect x="580" y="70" width="162" height="170" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="592" y="88" font-size="7.6" fill="var(--text-primary)" font-weight="700">Levers:</text>
+<text x="592" y="104" font-size="6.8" fill="var(--info)" font-weight="700">quantization</text>
+<text x="592" y="113" font-size="6.2" fill="var(--text-muted)">INT8: big speed win</text>
+<text x="592" y="130" font-size="6.8" fill="var(--info)" font-weight="700">pruning</text>
+<text x="592" y="139" font-size="6.2" fill="var(--text-muted)">drop weak weights</text>
+<text x="592" y="156" font-size="6.8" fill="var(--info)" font-weight="700">distillation</text>
+<text x="592" y="165" font-size="6.2" fill="var(--text-muted)">small mimics large</text>
+<text x="592" y="182" font-size="6.8" fill="var(--info)" font-weight="700">fusion / compile</text>
+<text x="592" y="191" font-size="6.2" fill="var(--text-muted)">free (no accuracy loss)</text>
+<text x="592" y="208" font-size="6.8" fill="var(--info)" font-weight="700">accelerator map</text>
+<text x="592" y="217" font-size="6.2" fill="var(--text-muted)">GPU/DLA/NPU</text>
+<text x="20" y="266" font-size="7.8" fill="var(--text-muted)">Every technique except pure compilation trades accuracy for speed/energy. Accuracy that overruns latency is worthless; accuracy below the yield</text>
+<text x="20" y="278" font-size="7.8" fill="var(--text-muted)">threshold is also worthless. The operating point is chosen from consequence (EI-04): the optimum lives between. Sections 6.5 and 7.4.</text>
+</svg></div></figure><figure class="card"><figcaption><span class="fid">F-M8-3</span><span class="sec">Section 6</span><span class="ttl">Workspace extent vs track width</span></figcaption><div class="body"><svg viewBox="0 0 760 285" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Workspace vs track width: with the anchor separation set by the track width and the actuator stroke fixing inner and outer reach circles, the reachable transverse span is their annular intersection, which must cover the bed width plus margin; reach sets a minimum track width while stability and maneuverability set a maximum, and the design point is the intersection." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Workspace extent vs track width</text>
+<circle cx="150" cy="150" r="90" fill="none" stroke="var(--info)" stroke-width="0.9" stroke-dasharray="3 3" opacity="0.7"/>
+<circle cx="150" cy="150" r="40" fill="none" stroke="var(--info)" stroke-width="0.9" stroke-dasharray="3 3" opacity="0.7"/>
+<circle cx="150" cy="150" r="5" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.5"/>
+<text x="150" y="168" font-size="7" fill="var(--accent)" text-anchor="middle">B1</text>
+<circle cx="330" cy="150" r="90" fill="none" stroke="var(--info)" stroke-width="0.9" stroke-dasharray="3 3" opacity="0.7"/>
+<circle cx="330" cy="150" r="40" fill="none" stroke="var(--info)" stroke-width="0.9" stroke-dasharray="3 3" opacity="0.7"/>
+<circle cx="330" cy="150" r="5" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.5"/>
+<text x="330" y="168" font-size="7" fill="var(--accent)" text-anchor="middle">B2</text>
+<line x1="60" y1="150" x2="420" y2="150" stroke="var(--border-strong)" stroke-width="2.5"/>
+<path d="M 175,95 Q 240,70 305,95 Q 300,120 240,124 Q 180,120 175,95 Z" fill="var(--accent)" fill-opacity="0.18" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="240" y="92" font-size="7" fill="var(--accent)" font-weight="700" text-anchor="middle">workspace</text>
+<text x="240" y="104" font-size="6" fill="var(--text-muted)" text-anchor="middle">(annular intersection)</text>
+<line x1="175" y1="128" x2="305" y2="128" stroke="var(--accent-2)" stroke-width="1.4"/>
+<text x="240" y="140" font-size="6.8" fill="var(--accent-2)" text-anchor="middle">must cover W_bed + margin</text>
+<text x="240" y="70" font-size="6.6" fill="var(--text-muted)" text-anchor="middle">stroke [L_min, L_max]</text>
+<line x1="150" y1="185" x2="330" y2="185" stroke="var(--text-secondary)" stroke-width="1"/>
+<text x="240.0" y="197" font-size="7" fill="var(--text-secondary)" text-anchor="middle">anchor sep w (track width)</text>
+<line x1="470" y1="110" x2="730" y2="110" stroke="var(--border-strong)" stroke-width="5" stroke-linecap="round"/>
+<rect x="540" y="105" width="120" height="10" rx="3" fill="var(--accent)" fill-opacity="0.35" stroke="var(--accent)"/>
+<line x1="540" y1="94" x2="540" y2="126" stroke="var(--info)" stroke-width="1.4"/>
+<text x="540" y="88" font-size="6.8" fill="var(--info)" font-weight="anc=middle">min: reach</text>
+<text x="540" y="138" font-size="6" fill="var(--text-muted)" font-weight="anc=middle">span >= W_bed</text>
+<line x1="660" y1="94" x2="660" y2="126" stroke="var(--danger)" stroke-width="1.4"/>
+<text x="660" y="88" font-size="6.8" fill="var(--danger-text)" font-weight="anc=middle">max: stability</text>
+<text x="660" y="138" font-size="6" fill="var(--text-muted)" font-weight="anc=middle">+ maneuver (M10)</text>
+<text x="600.0" y="114" font-size="6.6" fill="var(--accent)" font-weight="700" text-anchor="middle">feasible w</text>
+<text x="470" y="80" font-size="7.4" fill="var(--text-secondary)" font-weight="700">track width w</text>
+<text x="470" y="165" font-size="7" fill="var(--text-muted)">If the interval is empty, the architecture</text>
+<text x="470" y="176" font-size="7" fill="var(--text-muted)">must change: taller stroke, offset station,</text>
+<text x="470" y="187" font-size="7" fill="var(--text-muted)">or a second actuator pair.</text>
+<text x="20" y="238" font-size="7.8" fill="var(--text-muted)">span(w, L_min, L_max) >= W_bed + margin sets a minimum track width for reach; stability and maneuverability set a maximum. The design point is</text>
+<text x="20" y="250" font-size="7.8" fill="var(--text-muted)">the intersection, a bounded feasibility problem that resolves the TS-1 track-width coupling. Sections 6.3 and 7.2.</text>
+</svg></div></figure><figure class="card"><figcaption><span class="fid">F-M9-5</span><span class="sec">Section 7</span><span class="ttl">Stability under compliance + latency</span></figcaption><div class="body"><svg viewBox="0 0 760 275" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Stability under compliance and latency: control latency erodes phase margin, so the compliant force loop is stable only for crossover bandwidth below a limit that falls as latency rises; too aggressive and the loop oscillates through the fluid, too slow and force lags the motion, and more compliance both lowers the achievable bandwidth and increases tolerance to latency-induced force error." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Stability under compliance + latency</text>
+<polygon points="146.0,230 146.0,74.2 200.0,128.3 267.5,164.4 357.5,187.4 470.0,202.1 560.0,208.7 560.0,230" fill="var(--accent)" fill-opacity="0.08"/>
+<polyline points="146.0,74.2 200.0,128.3 267.5,164.4 357.5,187.4 470.0,202.1 560.0,208.7" fill="none" stroke="var(--danger)" stroke-width="2.2"/>
+<text x="299.0" y="139.8" font-size="7.4" fill="var(--danger-text)" font-weight="700">&#969;_c ~ 1/(k &#964;_d)</text>
+<text x="357.5" y="208.68" font-size="7" fill="var(--accent)">STABLE (bandwidth below the limit)</text>
+<text x="164.0" y="95.52000000000001" font-size="7" fill="var(--danger-text)">too aggressive</text>
+<text x="164.0" y="108.64" font-size="6.4" fill="var(--danger-text)">-> oscillates through the fluid</text>
+<circle cx="312.5" cy="220.2" r="4" fill="var(--warn)"/>
+<text x="326.0" y="223.16" font-size="6.6" fill="var(--warn-text)">too slow -> force lags the motion</text>
+<circle cx="267.5" cy="180.8" r="5.5" fill="var(--accent)"/>
+<text x="274.5" y="180.8" font-size="6.8" fill="var(--accent)">chosen from measured latency (EI-06)</text>
+<line x1="110" y1="62" x2="110" y2="230" stroke="var(--border-strong)" stroke-width="1.4"/>
+<line x1="110" y1="230" x2="560" y2="230" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="102" y="148.0" text-anchor="middle" font-size="8" fill="var(--text-muted)" transform="rotate(-90 102 148.0)">loop bandwidth &#969;_c</text>
+<text x="335.0" y="258" font-size="8" fill="var(--text-muted)" text-anchor="middle">control + compute latency &#964;_d (from M6)  -></text>
+<rect x="580" y="66" width="162" height="150" rx="8" fill="var(--surface-2)" stroke="var(--accent-2)" stroke-opacity="0.6"/>
+<text x="592" y="84" font-size="7.8" fill="var(--accent-2)" font-weight="700">Compliance both:</text>
+<text x="592" y="104" font-size="6.8" fill="var(--text-secondary)">- constrains: lowers the</text>
+<text x="592" y="114" font-size="6.8" fill="var(--text-muted)">  achievable bandwidth</text>
+<text x="592" y="134" font-size="6.8" fill="var(--text-secondary)">- protects: raises tolerance</text>
+<text x="592" y="144" font-size="6.8" fill="var(--text-muted)">  to latency-induced force error</text>
+<text x="592" y="168" font-size="6.6" fill="var(--text-muted)">the same softness that</text>
+<text x="592" y="178" font-size="6.6" fill="var(--text-muted)">limits the loop makes its</text>
+<text x="592" y="188" font-size="6.6" fill="var(--text-muted)">errors gentle (EI-09).</text>
+<text x="20" y="256" font-size="7.8" fill="var(--text-muted)">Delay erodes phase margin: choose bandwidth and gain from the measured edge latency, not a guess. Section 7.4.</text>
+</svg></div></figure><figure class="card"><figcaption><span class="fid">F-M12-3</span><span class="sec">Section 6</span><span class="ttl">Dominant-load analysis</span></figcaption><div class="body"><svg viewBox="0 0 760 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Dominant-load analysis: endurance is moved by attacking whichever load dominates average energy (edge compute, fluid-power pump, or drive), which must be computed for the specific machine rather than assumed; the ranking redirects effort to the matched lever, EI-05 applied in the power domain." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Dominant-load analysis (EI-05 in power)</text>
+
+
+
+<rect x="250" y="70" width="370" height="26" rx="4" fill="var(--danger)" fill-opacity="0.5" stroke="var(--danger)"/>
+<text x="244" y="86" font-size="8" fill="var(--text-secondary)" font-weight="700" text-anchor="end">drive</text>
+<text x="258" y="86" font-size="7" fill="var(--text-on-accent)" font-weight="700">44% avg energy</text>
+<text x="250" y="108" font-size="6.6" fill="var(--text-muted)">sustained motion  ->  lever: lighter / slower / regen</text>
+<text x="627.6" y="86" font-size="7" fill="var(--danger-text)" font-weight="700">dominant</text>
+<rect x="250" y="114" width="286" height="26" rx="4" fill="var(--accent-strong)" fill-opacity="0.5" stroke="var(--accent-strong)"/>
+<text x="244" y="130" font-size="8" fill="var(--text-secondary)" font-weight="700" text-anchor="end">fluid-power pump</text>
+<text x="258" y="130" font-size="7" fill="var(--text-on-accent)" font-weight="700">34% avg energy</text>
+<text x="250" y="152" font-size="6.6" fill="var(--text-muted)">pressure maintenance  ->  lever: accumulators, sealing, lower P (M9)</text>
+<rect x="250" y="158" width="185" height="26" rx="4" fill="var(--accent-strong)" fill-opacity="0.5" stroke="var(--accent-strong)"/>
+<text x="244" y="174" font-size="8" fill="var(--text-secondary)" font-weight="700" text-anchor="end">edge compute</text>
+<text x="258" y="174" font-size="7" fill="var(--text-on-accent)" font-weight="700">22% avg energy</text>
+<text x="250" y="196" font-size="6.6" fill="var(--text-muted)">steady tens of watts  ->  lever: model / edge efficiency (M6)</text>
+<text x="20" y="232" font-size="7.8" fill="var(--text-muted)">The dominant load is machine-specific and must be computed, not assumed. Attack the dominant term, not the convenient one (EI-05): a fractional</text>
+<text x="20" y="244" font-size="7.8" fill="var(--text-muted)">reduction of the dominant load moves endurance most. Illustrative split [VERIFY@PUB]. Section 6.4.</text>
+</svg></div></figure><figure class="card"><figcaption><span class="fid">F-M14-3</span><span class="sec">Section 6</span><span class="ttl">Sample size vs confidence</span></figcaption><div class="body"><svg viewBox="0 0 760 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sample size versus confidence: a success rate estimated from n trials has a confidence interval that narrows as n grows, so a single demo is one trial with no coverage and no evidence, while claiming high reliability requires many trials, and rare failures need very large samples or accelerated edge-case testing." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Sample size vs confidence</text>
+<polygon points="110.0,66.0 181.6,66.0 260.0,66.0 331.6,66.0 410.0,70.9 481.6,79.2 560.0,84.4 560.0,96.8 481.6,102.0 410.0,110.3 331.6,126.5 260.0,152.8 181.6,204.2 110.0,230.0" fill="var(--info)" fill-opacity="0.14"/>
+<polyline points="110.0,66.0 181.6,66.0 260.0,66.0 331.6,66.0 410.0,70.9 481.6,79.2 560.0,84.4" fill="none" stroke="var(--info)" stroke-width="1.4"/>
+<polyline points="110.0,230.0 181.6,204.2 260.0,152.8 331.6,126.5 410.0,110.3 481.6,102.0 560.0,96.8" fill="none" stroke="var(--info)" stroke-width="1.4"/>
+<line x1="110" y1="91" x2="560" y2="91" stroke="var(--accent)" stroke-width="1.4" stroke-dasharray="4 3"/>
+<text x="560" y="86.6" font-size="7" fill="var(--accent)" font-weight="end" text-anchor="end">estimate p_hat</text>
+<circle cx="110.0" cy="90.6" r="4" fill="var(--danger)"/>
+<text x="116.0" y="200.2" font-size="6.8" fill="var(--danger-text)">n=1: the demo</text>
+<text x="116.0" y="213.32" font-size="6.2" fill="var(--danger-text)">huge interval, no coverage</text>
+<line x1="110" y1="62" x2="110" y2="230" stroke="var(--border-strong)" stroke-width="1.4"/>
+<line x1="110" y1="230" x2="560" y2="230" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="102" y="148.0" text-anchor="middle" font-size="8" fill="var(--text-muted)" transform="rotate(-90 102 148.0)">success rate + confidence interval</text>
+<text x="335.0" y="258" font-size="8" fill="var(--text-muted)" text-anchor="middle">sample size n (log scale)  -></text>
+<text x="110.0" y="244" font-size="6.6" fill="var(--text-muted)" text-anchor="middle">1</text>
+<text x="260.0" y="244" font-size="6.6" fill="var(--text-muted)" text-anchor="middle">10</text>
+<text x="410.0" y="244" font-size="6.6" fill="var(--text-muted)" text-anchor="middle">100</text>
+<text x="560.0" y="244" font-size="6.6" fill="var(--text-muted)" text-anchor="middle">1000</text>
+<rect x="580" y="66" width="162" height="120" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="592" y="86" font-size="7.6" fill="var(--text-primary)" font-weight="700">A claim is statistical:</text>
+<text x="592" y="104" font-size="6.8" fill="var(--text-muted)">- interval narrows with n</text>
+<text x="592" y="120" font-size="6.8" fill="var(--text-muted)">- high reliability needs</text>
+<text x="592" y="130" font-size="6.8" fill="var(--text-muted)">  many trials</text>
+<text x="592" y="148" font-size="6.8" fill="var(--text-muted)">- rare failures need very</text>
+<text x="592" y="158" font-size="6.8" fill="var(--text-muted)">  large n or accelerated /</text>
+<text x="592" y="168" font-size="6.8" fill="var(--text-muted)">  edge-case testing</text>
+<text x="20" y="256" font-size="7.8" fill="var(--text-muted)">Coverage of the operating envelope (fruit, slope, light, dust) must make the sample represent the field. "It worked in the demo" is n=1, not evidence. Section 6.3.</text>
+</svg></div></figure><figure class="card"><figcaption><span class="fid">F-M15-2</span><span class="sec">Section 6</span><span class="ttl">Two stored-energy domains</span></figcaption><div class="body"><svg viewBox="0 0 760 265" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The machine stores energy in two domains, pressurized fluid and the battery, each a hazard on its own (burst or sudden release; arc or fire) and capable of a combined fault where one energizes or breaches the other; the safety case treats them together as a common-cause concern rather than as two separate problems." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Two stored-energy domains</text>
+<rect x="30" y="60" width="330" height="120" rx="10" fill="var(--surface)" stroke="var(--info)" stroke-width="1.6"/>
+<text x="46" y="80" font-size="9.5" fill="var(--info)" font-weight="700">PRESSURIZED FLUID (M9)</text>
+<text x="46" y="98" font-size="7.2" fill="var(--danger-text)">hazard: burst, sudden release</text>
+<text x="46" y="118" font-size="7.4" fill="var(--text-secondary)" font-weight="700">mitigation:</text>
+<text x="46" y="132" font-size="7" fill="var(--text-muted)">- relief / bleed-down</text>
+<text x="46" y="145" font-size="7" fill="var(--text-muted)">- burst-rated components</text>
+<text x="46" y="158" font-size="7" fill="var(--text-muted)">- guarding + lockout</text>
+<rect x="400" y="60" width="330" height="120" rx="10" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.6"/>
+<text x="416" y="80" font-size="9.5" fill="var(--warn-text)" font-weight="700">BATTERY / ELECTRICAL (M12)</text>
+<text x="416" y="98" font-size="7.2" fill="var(--danger-text)">hazard: arc, fire, thermal runaway</text>
+<text x="416" y="118" font-size="7.4" fill="var(--text-secondary)" font-weight="700">mitigation:</text>
+<text x="416" y="132" font-size="7" fill="var(--text-muted)">- fusing, isolation</text>
+<text x="416" y="145" font-size="7" fill="var(--text-muted)">- thermal management, safe-shutdown</text>
+<text x="416" y="158" font-size="7" fill="var(--text-muted)">- guarding + lockout</text>
+<line x1="360" y1="120" x2="400" y2="120" stroke="var(--danger)" stroke-width="1.8" stroke-dasharray="4 2"/>
+<rect x="300" y="192" width="160" height="30" rx="7" fill="var(--danger)" fill-opacity="0.10" stroke="var(--danger)"/>
+<text x="380" y="206" font-size="7.4" fill="var(--danger-text)" font-weight="700" text-anchor="middle">COMBINED FAULT</text>
+<text x="380" y="217" font-size="6.2" fill="var(--text-muted)" text-anchor="middle">electrical energizes a valve; collision breaches both</text>
+<line x1="195" y1="180" x2="330" y2="192" stroke="var(--danger)" stroke-width="1" stroke-dasharray="2 2"/>
+<line x1="565" y1="180" x2="430" y2="192" stroke="var(--danger)" stroke-width="1" stroke-dasharray="2 2"/>
+<text x="20" y="248" font-size="7.8" fill="var(--text-muted)">The safety case treats the two domains together, not as separate problems: a fault could involve both, so their interaction is a common-cause-failure</text>
+<text x="20" y="260" font-size="7.8" fill="var(--text-muted)">concern that a naive independent-layer product would miss (M15 residual-risk analysis). Section 6.3.</text>
+</svg></div></figure><figure class="card"><figcaption><span class="fid">F-M16-4</span><span class="sec">Section 7</span><span class="ttl">Marketable yield to revenue</span></figcaption><div class="body"><svg viewBox="0 0 760 265" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Marketable-yield value: gross yield per acre is eroded by the bruise-and-damage rate and the missed-fruit rate into marketable yield, which times price gives revenue per acre, and subtracting cost per acre gives net value; a percentage point of bruise rate is a direct revenue loss, so quality is economics." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Marketable yield to revenue</text>
+<rect x="130" y="76.7" width="90" height="133.3" rx="3" fill="var(--accent)" fill-opacity="0.55" stroke="var(--accent)"/>
+<text x="175.0" y="224" font-size="7.2" fill="var(--text-secondary)" font-weight="700" text-anchor="middle">gross yield</text>
+<rect x="260" y="76.7" width="90" height="18.7" rx="3" fill="var(--danger)" fill-opacity="0.55" stroke="var(--danger)"/>
+<text x="305.0" y="224" font-size="7.2" fill="var(--text-secondary)" font-weight="700" text-anchor="middle">- bruise loss</text>
+<text x="305.0" y="235" font-size="5.8" fill="var(--text-muted)" text-anchor="middle">damage rate (M9/CEC-02)</text>
+<line x1="220" y1="76.7" x2="260" y2="76.7" stroke="var(--text-muted)" stroke-width="0.8" stroke-dasharray="3 2"/>
+<rect x="390" y="95.3" width="90" height="14.7" rx="3" fill="var(--warn)" fill-opacity="0.55" stroke="var(--warn)"/>
+<text x="435.0" y="224" font-size="7.2" fill="var(--text-secondary)" font-weight="700" text-anchor="middle">- miss loss</text>
+<text x="435.0" y="235" font-size="5.8" fill="var(--text-muted)" text-anchor="middle">missed-fruit rate (recall, M4)</text>
+<line x1="350" y1="95.3" x2="390" y2="95.3" stroke="var(--text-muted)" stroke-width="0.8" stroke-dasharray="3 2"/>
+<rect x="520" y="110.0" width="90" height="100.0" rx="3" fill="var(--accent-strong)" fill-opacity="0.55" stroke="var(--accent-strong)"/>
+<text x="565.0" y="224" font-size="7.2" fill="var(--text-secondary)" font-weight="700" text-anchor="middle">marketable</text>
+<text x="565.0" y="235" font-size="5.8" fill="var(--text-muted)" text-anchor="middle">x price = revenue/acre</text>
+<line x1="480" y1="110.0" x2="520" y2="110.0" stroke="var(--text-muted)" stroke-width="0.8" stroke-dasharray="3 2"/>
+<line x1="110" y1="210" x2="710" y2="210" stroke="var(--border-strong)" stroke-width="1.2"/>
+<rect x="520" y="70" width="222" height="120" rx="9" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.6"/>
+<text x="534" y="90" font-size="8.2" fill="var(--accent)" font-weight="700">revenue / acre =</text>
+<text x="534" y="104" font-size="7" fill="var(--text-secondary)">yield x (1 - loss rate) x price</text>
+<text x="534" y="124" font-size="8" fill="var(--text-primary)" font-weight="700">net value / acre =</text>
+<text x="534" y="138" font-size="7" fill="var(--text-secondary)">revenue/acre - cost/acre</text>
+<text x="534" y="160" font-size="7" fill="var(--warn-text)">1 point of bruise rate</text>
+<text x="534" y="171" font-size="7" fill="var(--warn-text)">= a direct revenue loss.</text>
+<text x="534" y="183" font-size="7.2" fill="var(--accent)" font-weight="700">Quality is economics.</text>
+<text x="20" y="244" font-size="7.8" fill="var(--text-muted)">A bruised melon is a harvested melon that earns nothing; loss rate combines the bruise/damage rate (M9) and the missed-fruit rate (recall, M4).</text>
+<text x="20" y="256" font-size="7.8" fill="var(--text-muted)">Illustrative rates. Section 7.2.</text>
+</svg></div></figure><figure class="card"><figcaption><span class="fid">F-M13-4</span><span class="sec">Section 6</span><span class="ttl">Fidelity-decision sensitivity</span></figcaption><div class="body"><svg viewBox="0 0 760 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Fidelity-decision sensitivity: some decisions stabilize at a low fidelity rung (reach settles at the kinematic level and does not change higher up) while others keep changing until a high rung (grasp-will-not-bruise settles only at the contact/fluid level); the rung where a decision stabilizes is where fidelity investment and validation must go." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Where fidelity is binding: decision sensitivity</text>
+<line x1="140" y1="66" x2="140" y2="220" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="140.0" y="234" font-size="6.4" fill="var(--text-muted)" text-anchor="middle">kinematic</text>
+<line x1="242" y1="66" x2="242" y2="220" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="242.0" y="234" font-size="6.4" fill="var(--text-muted)" text-anchor="middle">dynamic</text>
+<line x1="344" y1="66" x2="344" y2="220" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="344.0" y="234" font-size="6.4" fill="var(--text-muted)" text-anchor="middle">contact/fluid</text>
+<line x1="446" y1="66" x2="446" y2="220" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="446.0" y="234" font-size="6.4" fill="var(--text-muted)" text-anchor="middle">sensor-in-loop</text>
+<line x1="548" y1="66" x2="548" y2="220" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="548.0" y="234" font-size="6.4" fill="var(--text-muted)" text-anchor="middle">HIL</text>
+<line x1="650" y1="66" x2="650" y2="220" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="650.0" y="234" font-size="6.4" fill="var(--text-muted)" text-anchor="middle">field</text>
+<polyline points="140,97 242,97 344,97 446,97 548,97 650,97" fill="none" stroke="var(--accent)" stroke-width="2"/>
+<text x="144.0" y="90.8" font-size="6.8" fill="var(--accent)">reach: stable at kinematic</text>
+<circle cx="140" cy="97" r="4" fill="var(--accent)"/>
+<polyline points="140,189 242,166 344,125 446,123 548,123 650,123" fill="none" stroke="var(--accent-2)" stroke-width="2"/>
+<circle cx="344" cy="125" r="5" fill="var(--accent-2)"/>
+<text x="350.0" y="126.52" font-size="6.8" fill="var(--accent-2)">grasp-no-bruise: binds at contact/fluid (CR-03)</text>
+<text x="144.0" y="183.2" font-size="6.4" fill="var(--text-muted)">outcome still changing at low fidelity (over-trust risk)</text>
+<line x1="140" y1="62" x2="140" y2="220" stroke="var(--border-strong)" stroke-width="1.4"/>
+<line x1="140" y1="220" x2="650" y2="220" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="132" y="143.0" text-anchor="middle" font-size="7.6" fill="var(--text-muted)" transform="rotate(-90 132 143.0)">decision outcome</text>
+<text x="395.0" y="248" font-size="8" fill="var(--text-muted)" text-anchor="middle">fidelity rung (cheap -> faithful)  -></text>
+<rect x="668" y="70" width="76" height="90" rx="7" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="676" y="86" font-size="6.6" fill="var(--text-secondary)" font-weight="700">binding rung</text>
+<text x="676" y="98" font-size="6" fill="var(--text-muted)">= where the</text>
+<text x="676" y="107" font-size="6" fill="var(--text-muted)">outcome stops</text>
+<text x="676" y="116" font-size="6" fill="var(--text-muted)">changing.</text>
+<text x="676" y="132" font-size="6" fill="var(--text-muted)">put validation</text>
+<text x="676" y="141" font-size="6" fill="var(--text-muted)">and investment</text>
+<text x="676" y="150" font-size="6" fill="var(--text-muted)">there.</text>
+<text x="20" y="256" font-size="7.8" fill="var(--text-muted)">Match fidelity to the decision: low fidelity for a fidelity-sensitive decision is over-trust; high fidelity for an insensitive one wastes effort. Section 6.4.</text>
+</svg></div></figure><figure class="card"><figcaption><span class="fid">F-M10-4</span><span class="sec">Section 7</span><span class="ttl">Arm-swing CoG shift erodes stability margin</span></figcaption><div class="body"><svg viewBox="0 0 760 275" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Dynamic stability with arm swing: swinging the payload shifts the center of gravity laterally by the fruit mass times the swing radius over the total mass; on a side slope the worst case is the swing toward the downhill edge, which subtracts from the already reduced slope margin, so the design must keep that reduced margin above the safety margin." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Arm-swing CoG shift erodes the stability margin</text>
+<line x1="60" y1="210" x2="440" y2="150" stroke="var(--border-strong)" stroke-width="2.5"/>
+<text x="70" y="206" font-size="7" fill="var(--text-muted)">side slope &#952;</text>
+<polygon points="150,182 320,155 320,120 150,147" fill="var(--surface)" stroke="var(--text-secondary)" stroke-width="1.3"/>
+<circle cx="160" cy="178" r="6" fill="var(--surface-2)" stroke="var(--text-muted)"/>
+<circle cx="312" cy="154" r="6" fill="var(--surface-2)" stroke="var(--text-muted)"/>
+<text x="312" y="196" font-size="6.4" fill="var(--danger-text)" text-anchor="middle">downhill edge</text>
+<circle cx="235" cy="140" r="5" fill="var(--accent)"/>
+<text x="227" y="134" font-size="6.6" fill="var(--accent)" text-anchor="end">CoG</text>
+<circle cx="272" cy="135" r="5" fill="var(--danger)"/>
+<line x1="235" y1="140" x2="272" y2="135" stroke="var(--danger)" stroke-width="1.4" marker-end="url(#a)"/>
+<text x="253.5" y="132" font-size="6.8" fill="var(--danger-text)" font-weight="700" text-anchor="middle">&#916;</text>
+<path d="M 235,110 A 40 40 0 0 1 285,128" fill="none" stroke="var(--accent-2)" stroke-width="1.3" stroke-dasharray="3 2" marker-end="url(#a)"/>
+<text x="250" y="100" font-size="6.6" fill="var(--accent-2)">arm swings payload downhill</text>
+<line x1="272" y1="164" x2="312" y2="164" stroke="var(--warn)" stroke-width="1.4"/>
+<text x="292.0" y="176" font-size="6.4" fill="var(--warn-text)" text-anchor="middle">reduced margin</text>
+<rect x="470" y="70" width="272" height="120" rx="9" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="484" y="90" font-size="8.4" fill="var(--accent-2)" font-weight="700">&#916; = m_fruit r_swing / m_total</text>
+<text x="484" y="110" font-size="7.4" fill="var(--text-secondary)">slope margin:</text>
+<text x="484" y="123" font-size="7.2" fill="var(--text-muted)">margin(&#952;) = (w/2)cos&#952; - h sin&#952;</text>
+<text x="484" y="143" font-size="7.6" fill="var(--danger-text)" font-weight="700">worst case: margin(&#952;_max) - &#916;_max</text>
+<text x="484" y="163" font-size="7.4" fill="var(--accent)">require  &gt;=  safety margin</text>
+<text x="484" y="181" font-size="6.6" fill="var(--text-muted)">couples arm motion (M8/M9) to base design</text>
+<text x="20" y="250" font-size="7.8" fill="var(--text-muted)">The swing toward the downhill edge subtracts from the slope margin. This may constrain the arm's swing trajectory or the maximum working slope:</text>
+<text x="20" y="262" font-size="7.8" fill="var(--text-muted)">stability is a whole-machine property (arm, payload, slope, and base together). Section 7.3.</text>
+</svg></div></figure></div></body></html>

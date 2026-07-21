@@ -1,0 +1,68 @@
+<svg viewBox="0 0 760 352" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TS-1 weighted decision matrix comparing three harvesting architectures across six weighted criteria; the drive-over straddle wins with a weighted total of 4.55." font-family="'IBM Plex Mono',monospace">
+<text x="10" y="50" font-size="10" fill="var(--text-muted)">Criterion (weight)</text>
+<rect x="350" y="30" width="128" height="30" rx="5" fill="var(--tint-accent)" stroke="var(--accent)" stroke-width="1.5"/>
+<text x="414.0" y="43" text-anchor="middle" font-size="11" fill="var(--accent)" font-weight="700">A: Drive-over</text>
+<text x="414.0" y="55" text-anchor="middle" font-size="7.5" fill="var(--accent-dim)">SELECTED</text>
+<rect x="482" y="30" width="128" height="30" rx="5" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1"/>
+<text x="546.0" y="43" text-anchor="middle" font-size="11" fill="var(--text-secondary)" font-weight="700">B: Side arm</text>
+<text x="546.0" y="55" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">alternative</text>
+<rect x="614" y="30" width="128" height="30" rx="5" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1"/>
+<text x="678.0" y="43" text-anchor="middle" font-size="11" fill="var(--text-secondary)" font-weight="700">C: Gantry</text>
+<text x="678.0" y="55" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">alternative</text>
+<text x="10" y="85.0" font-size="9.5" fill="var(--text-secondary)">Camera-fruit sight line kept clear</text>
+<text x="340" y="85.0" text-anchor="end" font-size="9" fill="var(--text-muted)">0.25</text>
+<rect x="350" y="67" width="128" height="34" rx="4" fill="var(--accent)" fill-opacity="0.82" stroke="var(--border)"/>
+<text x="414.0" y="88.0" text-anchor="middle" font-size="13" fill="var(--text-primary)" font-weight="700">5</text>
+<rect x="482" y="67" width="128" height="34" rx="4" fill="var(--accent)" fill-opacity="0.295" stroke="var(--border)"/>
+<text x="546.0" y="88.0" text-anchor="middle" font-size="13" fill="var(--text-primary)" font-weight="700">2</text>
+<rect x="614" y="67" width="128" height="34" rx="4" fill="var(--accent)" fill-opacity="0.645" stroke="var(--border)"/>
+<text x="678.0" y="88.0" text-anchor="middle" font-size="13" fill="var(--text-primary)" font-weight="700">4</text>
+<text x="10" y="125.0" font-size="9.5" fill="var(--text-secondary)">DOF count / mechanism simplicity</text>
+<text x="340" y="125.0" text-anchor="end" font-size="9" fill="var(--text-muted)">0.20</text>
+<rect x="350" y="107" width="128" height="34" rx="4" fill="var(--accent)" fill-opacity="0.82" stroke="var(--border)"/>
+<text x="414.0" y="128.0" text-anchor="middle" font-size="13" fill="var(--text-primary)" font-weight="700">5</text>
+<rect x="482" y="107" width="128" height="34" rx="4" fill="var(--accent)" fill-opacity="0.47" stroke="var(--border)"/>
+<text x="546.0" y="128.0" text-anchor="middle" font-size="13" fill="var(--text-primary)" font-weight="700">3</text>
+<rect x="614" y="107" width="128" height="34" rx="4" fill="var(--accent)" fill-opacity="0.47" stroke="var(--border)"/>
+<text x="678.0" y="128.0" text-anchor="middle" font-size="13" fill="var(--text-primary)" font-weight="700">3</text>
+<text x="10" y="165.0" font-size="9.5" fill="var(--text-secondary)">Footprint &amp; field maneuverability</text>
+<text x="340" y="165.0" text-anchor="end" font-size="9" fill="var(--text-muted)">0.15</text>
+<rect x="350" y="147" width="128" height="34" rx="4" fill="var(--accent)" fill-opacity="0.645" stroke="var(--border)"/>
+<text x="414.0" y="168.0" text-anchor="middle" font-size="13" fill="var(--text-primary)" font-weight="700">4</text>
+<rect x="482" y="147" width="128" height="34" rx="4" fill="var(--accent)" fill-opacity="0.645" stroke="var(--border)"/>
+<text x="546.0" y="168.0" text-anchor="middle" font-size="13" fill="var(--text-primary)" font-weight="700">4</text>
+<rect x="614" y="147" width="128" height="34" rx="4" fill="var(--accent)" fill-opacity="0.295" stroke="var(--border)"/>
+<text x="678.0" y="168.0" text-anchor="middle" font-size="13" fill="var(--text-primary)" font-weight="700">2</text>
+<text x="10" y="205.0" font-size="9.5" fill="var(--text-secondary)">Payload path / transfer simplicity</text>
+<text x="340" y="205.0" text-anchor="end" font-size="9" fill="var(--text-muted)">0.15</text>
+<rect x="350" y="187" width="128" height="34" rx="4" fill="var(--accent)" fill-opacity="0.645" stroke="var(--border)"/>
+<text x="414.0" y="208.0" text-anchor="middle" font-size="13" fill="var(--text-primary)" font-weight="700">4</text>
+<rect x="482" y="187" width="128" height="34" rx="4" fill="var(--accent)" fill-opacity="0.47" stroke="var(--border)"/>
+<text x="546.0" y="208.0" text-anchor="middle" font-size="13" fill="var(--text-primary)" font-weight="700">3</text>
+<rect x="614" y="187" width="128" height="34" rx="4" fill="var(--accent)" fill-opacity="0.47" stroke="var(--border)"/>
+<text x="678.0" y="208.0" text-anchor="middle" font-size="13" fill="var(--text-primary)" font-weight="700">3</text>
+<text x="10" y="245.0" font-size="9.5" fill="var(--text-secondary)">Stability with heavy payload</text>
+<text x="340" y="245.0" text-anchor="end" font-size="9" fill="var(--text-muted)">0.15</text>
+<rect x="350" y="227" width="128" height="34" rx="4" fill="var(--accent)" fill-opacity="0.645" stroke="var(--border)"/>
+<text x="414.0" y="248.0" text-anchor="middle" font-size="13" fill="var(--text-primary)" font-weight="700">4</text>
+<rect x="482" y="227" width="128" height="34" rx="4" fill="var(--accent)" fill-opacity="0.295" stroke="var(--border)"/>
+<text x="546.0" y="248.0" text-anchor="middle" font-size="13" fill="var(--text-primary)" font-weight="700">2</text>
+<rect x="614" y="227" width="128" height="34" rx="4" fill="var(--accent)" fill-opacity="0.645" stroke="var(--border)"/>
+<text x="678.0" y="248.0" text-anchor="middle" font-size="13" fill="var(--text-primary)" font-weight="700">4</text>
+<text x="10" y="285.0" font-size="9.5" fill="var(--text-secondary)">Integration with Amiga platform</text>
+<text x="340" y="285.0" text-anchor="end" font-size="9" fill="var(--text-muted)">0.10</text>
+<rect x="350" y="267" width="128" height="34" rx="4" fill="var(--accent)" fill-opacity="0.82" stroke="var(--border)"/>
+<text x="414.0" y="288.0" text-anchor="middle" font-size="13" fill="var(--text-primary)" font-weight="700">5</text>
+<rect x="482" y="267" width="128" height="34" rx="4" fill="var(--accent)" fill-opacity="0.47" stroke="var(--border)"/>
+<text x="546.0" y="288.0" text-anchor="middle" font-size="13" fill="var(--text-primary)" font-weight="700">3</text>
+<rect x="614" y="267" width="128" height="34" rx="4" fill="var(--accent)" fill-opacity="0.295" stroke="var(--border)"/>
+<text x="678.0" y="288.0" text-anchor="middle" font-size="13" fill="var(--text-primary)" font-weight="700">2</text>
+<line x1="6" y1="304" x2="742" y2="304" stroke="var(--border-strong)" stroke-width="1.5"/>
+<text x="10" y="326.0" font-size="10.5" fill="var(--text-primary)" font-weight="700">Weighted total</text>
+<rect x="350" y="307" width="128" height="34" rx="5" fill="var(--tint-accent)" stroke="var(--accent)" stroke-width="1.8"/>
+<text x="414.0" y="329.0" text-anchor="middle" font-size="15" fill="var(--accent)" font-weight="700">4.55</text>
+<rect x="482" y="307" width="128" height="34" rx="5" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1"/>
+<text x="546.0" y="329.0" text-anchor="middle" font-size="15" fill="var(--text-secondary)" font-weight="700">2.75</text>
+<rect x="614" y="307" width="128" height="34" rx="5" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1"/>
+<text x="678.0" y="329.0" text-anchor="middle" font-size="15" fill="var(--text-secondary)" font-weight="700">3.20</text>
+</svg>

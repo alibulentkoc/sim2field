@@ -1,0 +1,38 @@
+<svg viewBox="0 0 760 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The requirement-to-evidence matrix names, for each requirement, the evidence and its fidelity rung, and flags where only hardware or field data is admissible: reach needs only a kinematic twin, stability a dynamic twin, grasp-will-not-bruise a validated contact rung plus field data, and timing hardware-in-the-loop under load; an unvalidated or under-fidelity twin result is not admissible evidence." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Requirement-to-evidence matrix (CEC-06 as V&amp;V backbone)</text>
+<text x="310.0" y="80" font-size="7" fill="var(--info)" text-anchor="middle">kinematic</text>
+<text x="430.0" y="80" font-size="7" fill="var(--info)" text-anchor="middle">dynamic</text>
+<text x="550.0" y="80" font-size="7" fill="var(--info)" text-anchor="middle">contact/fluid</text>
+<text x="670.0" y="80" font-size="7" fill="var(--info)" text-anchor="middle">HIL / field</text>
+<text x="30" y="106.0" font-size="7.6" fill="var(--text-secondary)">reach / workspace</text>
+<rect x="250" y="86" width="114" height="28" rx="5" fill="var(--accent)" fill-opacity="0.5" stroke="var(--accent)"/>
+<text x="307.0" y="103.0" font-size="6.4" fill="var(--text-on-accent)" font-weight="700" text-anchor="middle">admissible</text>
+<text x="307.0" y="112.0" font-size="5.8" fill="var(--text-on-accent)" text-anchor="middle">twin ok</text>
+<rect x="370" y="86" width="114" height="28" rx="5" fill="var(--surface-2)" fill-opacity="0.25" stroke="var(--border)"/>
+<rect x="490" y="86" width="114" height="28" rx="5" fill="var(--surface-2)" fill-opacity="0.25" stroke="var(--border)"/>
+<rect x="610" y="86" width="114" height="28" rx="5" fill="var(--surface-2)" fill-opacity="0.25" stroke="var(--border)"/>
+<text x="30" y="140.0" font-size="7.6" fill="var(--text-secondary)">stability on slope</text>
+<rect x="250" y="120" width="114" height="28" rx="5" fill="var(--surface-2)" fill-opacity="0.25" stroke="var(--border)"/>
+<rect x="370" y="120" width="114" height="28" rx="5" fill="var(--accent)" fill-opacity="0.5" stroke="var(--accent)"/>
+<text x="427.0" y="137.0" font-size="6.4" fill="var(--text-on-accent)" font-weight="700" text-anchor="middle">admissible</text>
+<text x="427.0" y="146.0" font-size="5.8" fill="var(--text-on-accent)" text-anchor="middle">twin ok</text>
+<rect x="490" y="120" width="114" height="28" rx="5" fill="var(--surface-2)" fill-opacity="0.25" stroke="var(--border)"/>
+<rect x="610" y="120" width="114" height="28" rx="5" fill="var(--surface-2)" fill-opacity="0.25" stroke="var(--border)"/>
+<text x="30" y="174.0" font-size="7.6" fill="var(--text-secondary)">grasp will not bruise</text>
+<rect x="250" y="154" width="114" height="28" rx="5" fill="var(--surface-2)" fill-opacity="0.25" stroke="var(--border)"/>
+<rect x="370" y="154" width="114" height="28" rx="5" fill="var(--surface-2)" fill-opacity="0.25" stroke="var(--border)"/>
+<rect x="490" y="154" width="114" height="28" rx="5" fill="var(--warn)" fill-opacity="0.5" stroke="var(--warn)"/>
+<text x="547.0" y="171.0" font-size="6.4" fill="var(--text-on-accent)" font-weight="700" text-anchor="middle">admissible</text>
+<text x="547.0" y="180.0" font-size="5.8" fill="var(--text-on-accent)" text-anchor="middle">hardware/field</text>
+<rect x="610" y="154" width="114" height="28" rx="5" fill="var(--surface-2)" fill-opacity="0.25" stroke="var(--border)"/>
+<text x="30" y="208.0" font-size="7.6" fill="var(--text-secondary)">timing / deadlines</text>
+<rect x="250" y="188" width="114" height="28" rx="5" fill="var(--surface-2)" fill-opacity="0.25" stroke="var(--border)"/>
+<rect x="370" y="188" width="114" height="28" rx="5" fill="var(--surface-2)" fill-opacity="0.25" stroke="var(--border)"/>
+<rect x="490" y="188" width="114" height="28" rx="5" fill="var(--surface-2)" fill-opacity="0.25" stroke="var(--border)"/>
+<rect x="610" y="188" width="114" height="28" rx="5" fill="var(--warn)" fill-opacity="0.5" stroke="var(--warn)"/>
+<text x="667.0" y="205.0" font-size="6.4" fill="var(--text-on-accent)" font-weight="700" text-anchor="middle">admissible</text>
+<text x="667.0" y="214.0" font-size="5.8" fill="var(--text-on-accent)" text-anchor="middle">hardware/field</text>
+<text x="20" y="252" font-size="7.8" fill="var(--text-muted)">A claim is only as strong as the rung its evidence lives on. The matrix flags where only hardware/field data is admissible (grasp-no-bruise: the</text>
+<text x="20" y="264" font-size="7.8" fill="var(--text-muted)">CR-03 contact rung + field; timing: HIL under load). An unvalidated or under-fidelity twin result is not admissible evidence (CEC-06). Section 6.2.</text>
+</svg>

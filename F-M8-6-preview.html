@@ -1,0 +1,39 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="color-scheme" content="dark"><title>F-M8-6 preview - sigma_mech</title><style>:root{--bg:#0e120d;--surface:#161c14;--surface-2:#0b0e0a;--surface-3:#12160f;--border:#2b3527;--border-strong:#3a4633;--text-primary:#eef2e6;--text-secondary:#c8cfbe;--text-muted:#adb4a2;--accent:#9bcf3b;--accent-strong:#6f9a2c;--info:#6fb0d9;--warn:#e0a03b;--warn-text:#eed9b4;--danger:#f0556a;--danger-text:#f697a4}
+body{margin:0;background:var(--bg);color:var(--text-primary);font-family:'IBM Plex Mono',ui-monospace,monospace;padding:2rem}
+.figure{max-width:860px;margin:0 auto;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.figbody{padding:1rem 1.1rem;background:var(--surface-3);overflow-x:auto} .figbody svg{display:block;width:100%;height:auto;min-width:680px}
+figcaption{padding:.7rem 1rem;font-size:.82rem;color:var(--text-muted);border-top:1px solid var(--border)} .fid{font-size:.64rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-right:.5rem}</style></head>
+<body><figure class="figure"><div class="figbody"><svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mechanism placement error decomposed into repeatability, backlash, and deflection-under-load combined in quadrature and tested against the Module 5 allocation, with the dominant term attacked; and the stiffness-under-load relation giving the required end-effector stiffness from the payload and the allowed deflection." font-family="'IBM Plex Mono',monospace">
+<text x="20" y="26" font-size="10.5" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Mechanism error budget (&#963;_mech) and stiffness under load</text>
+<line x1="70" y1="82" x2="70" y2="262" stroke="var(--border-strong)" stroke-width="1.4"/>
+<line x1="70" y1="262" x2="350" y2="262" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="62" y="174.0" text-anchor="middle" font-size="8" fill="var(--text-muted)" transform="rotate(-90 62 174.0)">placement error</text>
+<line x1="70" y1="109.0" x2="350" y2="109.0" stroke="var(--danger)" stroke-width="1.4" stroke-dasharray="5 3"/>
+<text x="348" y="105.0" text-anchor="end" font-size="7.4" fill="var(--danger-text)">M5 allocation</text>
+<rect x="92" y="200.8" width="34" height="61.2" rx="2" fill="var(--accent-strong)" fill-opacity="0.6" stroke="var(--accent-strong)"/>
+<text x="109.0" y="274" text-anchor="middle" font-size="7.2" fill="var(--text-muted)">&#963;_rep</text>
+<rect x="140" y="216.1" width="34" height="45.9" rx="2" fill="var(--accent-strong)" fill-opacity="0.6" stroke="var(--accent-strong)"/>
+<text x="157.0" y="274" text-anchor="middle" font-size="7.2" fill="var(--text-muted)">&#963;_bl</text>
+<rect x="188" y="154.9" width="34" height="107.1" rx="2" fill="var(--warn)" fill-opacity="0.6" stroke="var(--warn)"/>
+<text x="205.0" y="274" text-anchor="middle" font-size="7.2" fill="var(--text-muted)">&#963;_defl</text>
+<text x="205.0" y="150.9" text-anchor="middle" font-size="6.6" fill="var(--warn-text)" font-weight="700">dominant</text>
+<rect x="246" y="130.3" width="34" height="131.7" rx="2" fill="var(--accent)" fill-opacity="0.75" stroke="var(--accent)"/>
+<text x="263.0" y="274" text-anchor="middle" font-size="7.2" fill="var(--accent)" font-weight="700">&#963;_mech</text>
+<text x="70" y="288" font-size="7.4" fill="var(--text-secondary)">&#963;_mech = sqrt(&#963;_rep^2 + &#963;_bl^2 + &#963;_defl^2)  &lt;=  M5 allocation   (combined in quadrature, not sum)</text>
+<text x="70" y="300" font-size="7.2" fill="var(--text-muted)">EI-05 recurs: attack whichever term dominates (&#963;_defl here, from payload deflection).</text>
+<line x1="384" y1="46" x2="384" y2="300" stroke="var(--border)" stroke-width="1"/>
+<text x="404" y="66" font-size="9" fill="var(--text-primary)" font-weight="700">Deflection under load</text>
+<line x1="440" y1="82" x2="440" y2="240" stroke="var(--border-strong)" stroke-width="1.4"/>
+<line x1="440" y1="240" x2="700" y2="240" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="432" y="163.0" text-anchor="middle" font-size="7.6" fill="var(--text-muted)" transform="rotate(-90 432 163.0)">&#948; = F/k</text>
+<text x="570.0" y="266" text-anchor="middle" font-size="7.8" fill="var(--text-muted)">end-effector stiffness k_eff</text>
+<polyline points="554.4,87.8 559.6,94.4 564.8,100.5 570.0,106.1 575.2,111.2 580.4,116.0 585.6,120.4 590.8,124.6 596.0,128.4 601.2,132.0 606.4,135.4 611.6,138.6 616.8,141.5 622.0,144.3 627.2,147.0 632.4,149.5 637.6,151.9 642.8,154.2 648.0,156.3 653.2,158.3 658.4,160.3 663.6,162.1 668.8,163.9 674.0,165.6 679.2,167.2 684.4,168.8 689.6,170.3 694.8,171.7 700.0,173.0" fill="none" stroke="var(--info)" stroke-width="2.2"/>
+<line x1="440" y1="173.0" x2="700.0" y2="173.0" stroke="var(--accent)" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="444" y="169.0" font-size="7" fill="var(--accent)">&#948;_allowed</text>
+<line x1="700.0" y1="173.0" x2="700.0" y2="240" stroke="var(--accent)" stroke-width="1.2" stroke-dasharray="4 3"/>
+<circle cx="700.0" cy="173.0" r="4" fill="var(--accent)"/>
+<text x="700.0" y="234.0" text-anchor="middle" font-size="7" fill="var(--accent)">k_eff,min</text>
+<text x="404" y="262" font-size="7.6" fill="var(--text-secondary)">&#963;_defl = F_load / k_eff  ->  required k_eff &gt;= F_load / &#948;_allowed</text>
+<text x="404" y="274" font-size="7.2" fill="var(--text-muted)">payload = 5 to 10 kg fruit (M2) + dynamic swing loads.</text>
+<text x="20" y="300" font-size="7.8" fill="var(--text-muted)">CEC-03 applied: the allocated budget becomes buildable specs (repeatability + stiffness). The Jacobian scales joint error into task error, worst near singularities (small &#956;), another reason for the &#947; keep-out.</text>
+</svg></div><figcaption><span class="fid">F-M8-6</span>Mechanism error budget and stiffness under load. Repeatability, backlash, and deflection-under-load combine in quadrature into sigma_mech, tested against the placement allocation with the dominant term attacked; and the deflection relation gives the required end-effector stiffness from the payload and the allowed deflection. Third Module 8 figure. Module 8, Sections 6.6 and 7.5.</figcaption></figure></body></html>

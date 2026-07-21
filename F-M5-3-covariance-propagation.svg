@@ -1,0 +1,24 @@
+<svg viewBox="0 0 760 255" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Covariance propagation: at each stage the output covariance is the Jacobian times the input covariance times the Jacobian transpose, so chaining stages composes the Jacobians and the per-source noise accumulates into the fruit-pose covariance in the robot frame that the occlusion gate and the grasp module consume." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Covariance propagation through the transform chain</text>
+<ellipse cx="120" cy="120" rx="34" ry="20" fill="var(--info)" fill-opacity="0.18" stroke="var(--info)" stroke-width="1.4"/>
+<circle cx="120" cy="120" r="2.5" fill="var(--info)"/>
+<text x="120" y="168" font-size="7.2" fill="var(--info)" text-anchor="middle">&#931;_x (input)</text>
+<text x="120" y="180" font-size="6.2" fill="var(--text-muted)" text-anchor="middle">per-source noise</text>
+<rect x="230" y="98" width="120" height="44" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="290" y="116" font-size="8" fill="var(--accent)" font-weight="700" text-anchor="middle">transform</text>
+<text x="290" y="130" font-size="6.6" fill="var(--text-muted)" text-anchor="middle">y = f(x),  J = df/dx</text>
+<line x1="164" y1="120" x2="228" y2="120" stroke="var(--border-strong)" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="350" y1="120" x2="414" y2="120" stroke="var(--border-strong)" stroke-width="1.4" marker-end="url(#a)"/>
+<ellipse cx="470" cy="120" rx="42" ry="30" fill="var(--accent-2)" fill-opacity="0.18" stroke="var(--accent-2)" stroke-width="1.4" transform="rotate(28 470 120)"/>
+<circle cx="470" cy="120" r="2.5" fill="var(--accent-2)"/>
+<text x="470" y="172" font-size="7.2" fill="var(--accent-2)" text-anchor="middle">&#931;_y (rotated, scaled)</text>
+<rect x="540" y="86" width="200" height="72" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="554" y="108" font-size="9.5" fill="var(--accent)" font-weight="700">&#931;_y = J &#931;_x J^T</text>
+<text x="554" y="126" font-size="7" fill="var(--text-muted)">chaining stages composes</text>
+<text x="554" y="137" font-size="7" fill="var(--text-muted)">the Jacobians</text>
+<text x="554" y="150" font-size="6.6" fill="var(--text-secondary)">first-order propagation</text>
+<text x="20" y="208" font-size="7.8" fill="var(--text-muted)">Each input carries noise (depth sigma_Z growing as Z^2, calibration/hand-eye residual, rover-pose uncertainty). The deliverable of localization</text>
+<text x="20" y="220" font-size="7.8" fill="var(--text-muted)">is not a point but a pose WITH covariance, the honest statement of where the fruit is and how sure we are. Downstream (M7/M9) must use it.</text>
+<text x="20" y="234" font-size="7.8" fill="var(--text-muted)">The accumulated covariance feeds the occlusion gate and the grasp module. Sections 6.4 and 7.2.</text>
+</svg>

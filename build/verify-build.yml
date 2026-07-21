@@ -1,0 +1,41 @@
+name: verify-build
+
+# Fails the build on (a) drift between any shipped <asset>.html and its build/<asset>-src.html,
+# or (b) forbidden authored Unicode (typography guard) in any md / -src.html / shipped html.
+# The math source of truth is the TeX in each -src.html; the committed .html is a generated
+# artifact. This guard re-renders every source through prerender.js (pinned KaTeX) and
+# byte-compares against the committed output, so a hand-edited or stale output cannot merge.
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'build/**'
+      - '*.html'
+      - '*.md'
+  pull_request:
+    paths:
+      - 'build/**'
+      - '*.html'
+      - '*.md'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # Reproducible install of the pinned KaTeX used for pre-rendering.
+      - name: Install pinned build deps
+        working-directory: build
+        run: npm ci
+
+      # Drift guard (re-render + byte-compare) followed by the authored-typography guard.
+      - name: Verify build drift and authored typography
+        working-directory: build
+        run: npm run verify

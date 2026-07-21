@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Testing, Safety &amp; Deployment — SIM2FIELD</title>
+<meta name="description" content="A short university course on the engineering of an autonomous watermelon/pumpkin harvesting robot: perception, edge AI, manipulation, and field deployment.">
+<link rel="stylesheet" href="assets/style.css">
+
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a class="brand" href="index.html"><span class="dot"></span>SIM2FIELD</a>
+  <div class="nav-links"><a href="index.html">Home</a><a href="index.html#modules" class="active">Modules</a><a href="demo-page.html">Live Demo</a><a href="index.html#specs">Specs</a><a href="capstone.html">Capstone</a></div>
+</div></nav>
+<header class="article-head"><div class="inner"><p class="eyebrow">Module 6</p><h1>Testing, Safety &amp; Deployment</h1><div class="dur">◷ 3 hours</div></div></header><main class="page prose">
+
+<h2 id="learning-outcomes">Learning outcomes</h2>
+<p>By the end of this module, students can:</p>
+<ol>
+<li>Design a staged test plan that moves a system from simulation to field with
+   defensible gates between stages.</li>
+<li>Apply a hazard-analysis mindset to a machine that operates near people and
+   food, and specify appropriate safety interlocks.</li>
+<li>Identify the ethical and labor dimensions of agricultural automation and
+   discuss them without caricature.</li>
+<li>Plan a real farm deployment: cooperator relationships, field logistics,
+   maintenance, and data stewardship.</li>
+</ol>
+<h2 id="core-concepts">Core concepts</h2>
+<h3 id="testing-as-a-staircase-not-a-leap">Testing as a staircase, not a leap</h3>
+<p>A field robot earns trust in stages, each with an entry gate that the previous
+stage must satisfy:</p>
+<ol>
+<li><strong>Simulation / digital twin</strong> — kinematics, planner constraints, and the
+   mission state machine are validated before hardware exists. Every later field
+   anomaly is <em>reproduced here</em> and closed out before a hardware fix is attempted
+   (the twin as regression test bed).</li>
+<li><strong>Bench / subsystem</strong> — each subsystem is tested in isolation against its
+   interface spec: detector accuracy on held-out data, actuator stroke and force,
+   grasp on sample fruit.</li>
+<li><strong>Integrated bench</strong> — subsystems combined under controlled conditions;
+   integration hazards (timing, power, EMI, frames) surface here, indoors, where
+   they are cheap.</li>
+<li><strong>Controlled field</strong> — a research plot with known fruit placement; measure
+   harvest rate, grasp success, damage rate, and cycle time against spec.</li>
+<li><strong>Commercial field trial</strong> — a cooperating grower's production rows; the real
+   test, with real variability and real consequences.</li>
+</ol>
+<p>The pedagogy: <strong>never skip a stair.</strong> Most spectacular field failures are a
+skipped bench test.</p>
+<h3 id="safety-for-a-machine-near-people-and-food">Safety for a machine near people and food</h3>
+<p>Two audiences are at risk — people and the crop — and both belong in the hazard
+analysis. Core practices:</p>
+<ul>
+<li><strong>Layered interlocks.</strong> Physical e-stops; a <strong>bumper lidar</strong> or contact bumper
+  that halts motion on obstacle detection; a <strong>geofenced operating envelope</strong> so
+  the machine stops if it leaves its intended area. These are designed in from
+  first fabrication, not retrofitted.</li>
+<li><strong>Independent safety monitor.</strong> As established in Module 5, safety runs parallel
+  to autonomy and can halt the machine regardless of the mission logic's state.</li>
+<li><strong>Fail-safe defaults.</strong> Loss of power, signal, or a violated envelope should
+  bring the machine to a safe stop, not an undefined state. A learned component
+  degrades to a verified rule-based fallback, never to unpredictability.</li>
+<li><strong>Food safety.</strong> Contact surfaces (gripper pads, bin) must be cleanable and
+  food-appropriate; a bruised or punctured fruit is a quality and sometimes a
+  contamination issue.</li>
+</ul>
+<p>A simple hazard-analysis exercise (a lightweight FMEA — failure mode, effect,
+mitigation) is the workshop deliverable.</p>
+<h3 id="ethics-and-the-labor-question-handled-with-care">Ethics and the labor question — handled with care</h3>
+<p>Agricultural automation sits directly on a real and contested labor economy, and
+students should engage it honestly rather than dismissively. The material presents
+the range of views fairly:</p>
+<ul>
+<li>The <strong>case for automation</strong> cites chronic, worsening labor scarcity, the
+  physical toll of stoop labor and heavy lifting, rising labor costs, and harvest
+  windows missed for want of crews.</li>
+<li>The <strong>concerns</strong> cite displacement of seasonal agricultural workers,
+  concentration of who can afford automation, and the risk that gains accrue to
+  large operations while small growers are left behind.</li>
+<li><strong>Design responses</strong> worth discussing: targeting tasks with genuine labor
+  shortages rather than displacing willing workers; building on an <strong>affordable,
+  open platform</strong> so that small and mid-sized growers — not only large operators —
+  can adopt the technology; and creating higher-skilled local jobs (operators,
+  maintainers) rather than only removing them.</li>
+</ul>
+<p>The course does not prescribe a conclusion. It requires students to articulate the
+trade-offs and take a defensible position, which is the appropriate stance for an
+engineering ethics discussion.</p>
+<h3 id="deployment-on-a-real-farm">Deployment on a real farm</h3>
+<p>A prototype that works in a research plot is not yet deployable. Planning covers:</p>
+<ul>
+<li><strong>Cooperator relationships</strong> — growers give row access, crop, and time; compensate
+  them and respect that a failed run costs them yield.</li>
+<li><strong>Field logistics</strong> — transport, charging, terrain, weather windows, and the
+  reality that fields are muddy, dusty, and unforgiving of sealed-enclosure
+  shortcuts.</li>
+<li><strong>Maintenance &amp; spares</strong> — field-replaceable components, documented procedures,
+  and the humility that the arm <em>will</em> need servicing mid-season.</li>
+<li><strong>Data stewardship</strong> — imagery of a grower's field is the grower's business;
+  handle collection, storage, and any sharing responsibly and transparently.</li>
+</ul>
+<h2 id="grad-extension"><span class="tagpill tag-grad">Graduate</span>Grad extension</h2>
+<p><strong>Mini-FMEA.</strong> Produce a failure-mode-and-effects analysis for one subsystem:
+list plausible failure modes, their effects on people/crop/mission, a severity
+rating, and a mitigation for each. Graduate students additionally write a
+half-page position on one ethical trade-off in agricultural automation, citing at
+least one source and steelmanning the view they ultimately disagree with.</p>
+<h2 id="demo-or-lab"><span class="tagpill tag-lab">Hands-on</span>Demo or lab</h2>
+<p><strong>Lab 6 — Safety and deployment workshop.</strong>
+See <a href="../../labs/lab-06-safety-deploy.md"><code>labs/lab-06-safety-deploy.md</code></a>. In teams:</p>
+<ol>
+<li>Build a five-stage test plan for the case-study robot with an explicit entry
+   gate for each stage.</li>
+<li>Run a lightweight hazard analysis on the manipulation subsystem and specify
+   the interlocks it requires.</li>
+<li>Debate the labor/ethics question in structured form (assigned positions,
+   then open), and each student writes a one-paragraph defensible stance.</li>
+</ol>
+<h2 id="knowledge-check"><span class="tagpill tag-quiz">Quiz</span>Knowledge check</h2><div class="quiz" data-quiz><div class="quiz-head"><span class="ic">◇</span>Module 6 — Knowledge Check<span class="score">0 / 2</span></div><div class="q" data-correct="1"><p class="qtext"><span class="qn">01</span>In the five-stage test plan, what is the entry gate for the commercial field trial?</p><button class="opt" data-q="0" data-o="0">a passing unit test<span class="mark"></span></button><button class="opt" data-q="0" data-o="1">controlled-field metrics (success, damage, cycle time) meet spec<span class="mark"></span></button><button class="opt" data-q="0" data-o="2">a signed grower contract<span class="mark"></span></button><button class="opt" data-q="0" data-o="3">a full charge on the battery<span class="mark"></span></button><div class="qexpl"><b>Why:</b> You do not enter a grower&#x27;s production rows until the controlled-field stage has demonstrated the machine meets its success, damage, and cycle-time specifications.</div></div><div class="q" data-correct="1"><p class="qtext"><span class="qn">02</span>Which is a design response to the labor-displacement concern in ag automation?</p><button class="opt" data-q="1" data-o="0">making the platform as expensive as possible<span class="mark"></span></button><button class="opt" data-q="1" data-o="1">building on an affordable, open platform so small and mid-sized growers can adopt it too<span class="mark"></span></button><button class="opt" data-q="1" data-o="2">hiding the technology from workers<span class="mark"></span></button><button class="opt" data-q="1" data-o="3">removing all human roles<span class="mark"></span></button><div class="qexpl"><b>Why:</b> An affordable, open platform spreads the benefit beyond large operations and can create higher-skilled local operator/maintainer roles rather than only removing jobs.</div></div><div class="quiz-foot"><button class="btn btn-dark" data-reset>Reset</button><span class="msg">Pick an answer to check it instantly.</span></div></div>
+<ol>
+<li>List the five testing stages and give the entry gate for the field-trial
+   stage.</li>
+<li>Why must the safety monitor be able to halt the machine independent of the
+   mission state machine? Give a scenario where mission logic alone would fail
+   to stop.</li>
+<li>Name three safety interlocks appropriate to this machine and the hazard each
+   addresses.</li>
+<li>State one substantive argument <em>for</em> and one <em>against</em> agricultural
+   automation, and one design choice that responds to the concern.</li>
+<li>Why is reproducing every field anomaly in the digital twin part of the <em>test</em>
+   strategy, not just development?</li>
+</ol>
+<h2 id="take-home-assignment"><span class="tagpill tag-take">Assignment</span>Take-home assignment</h2>
+<p>Produce a <strong>two-page field-readiness plan</strong> for your capstone concept: a staged
+test plan with gates, a short hazard analysis with interlocks, a deployment
+logistics checklist, and a one-paragraph ethics statement. Deliverable:
+<code>assignments/m6-field-readiness.md</code>. Together with the M5 packet, this completes
+the scaffolding for your capstone.</p><div class="pager"><a href="module-05.html"><span class="d">← Previous</span>Module 5: Integration &amp; System Design</a><a class="next" href="capstone.html"><span class="d">Next →</span>Capstone Project</a></div></main>
+<footer class="foot"><div class="inner">
+  <div>SIM2FIELD · Robotic Harvesting Systems — course materials</div>
+  <div><a href="index.html">Home</a> · <a href="demo-page.html">Live Demo</a> · <a href="capstone.html">Capstone</a></div>
+</div></footer>
+
+<script>
+document.querySelectorAll('[data-quiz]').forEach(function(quiz){
+  var total = quiz.querySelectorAll('.q').length;
+  var answered = {};
+  function refresh(){
+    var correct = Object.values(answered).filter(Boolean).length;
+    quiz.querySelector('.score').textContent = correct + ' / ' + total;
+    var msg = quiz.querySelector('.msg');
+    if (Object.keys(answered).length === total){
+      msg.textContent = correct === total ? 'Perfect — all correct.' :
+        'You got ' + correct + ' of ' + total + '. Review the explanations and try again.';
+    }
+  }
+  quiz.querySelectorAll('.opt').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var qEl = btn.closest('.q');
+      if (qEl.dataset.locked) return;
+      qEl.dataset.locked = '1';
+      var correct = parseInt(qEl.dataset.correct,10);
+      var chosen = parseInt(btn.dataset.o,10);
+      qEl.querySelectorAll('.opt').forEach(function(o){
+        o.classList.add('locked');
+        var oi = parseInt(o.dataset.o,10);
+        if (oi === correct) o.classList.add('correct');
+        else if (o === btn) o.classList.add('wrong');
+      });
+      qEl.querySelector('.qexpl').classList.add('show');
+      answered[qEl.dataset.q || btn.dataset.q] = (chosen === correct);
+      refresh();
+    });
+  });
+  quiz.querySelector('[data-reset]').addEventListener('click', function(){
+    answered = {};
+    quiz.querySelectorAll('.q').forEach(function(qEl){
+      delete qEl.dataset.locked;
+      qEl.querySelectorAll('.opt').forEach(function(o){ o.className='opt'; });
+      qEl.querySelector('.qexpl').classList.remove('show');
+    });
+    quiz.querySelector('.msg').textContent = 'Pick an answer to check it instantly.';
+    refresh();
+  });
+});
+</script>
+
+</body>
+</html>

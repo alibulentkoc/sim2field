@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Syllabus — SIM2FIELD</title>
+<meta name="description" content="A short university course on the engineering of an autonomous watermelon/pumpkin harvesting robot: perception, edge AI, manipulation, and field deployment.">
+<link rel="stylesheet" href="assets/style.css">
+
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a class="brand" href="index.html"><span class="dot"></span>SIM2FIELD</a>
+  <div class="nav-links"><a href="index.html">Home</a><a href="index.html#modules" class="active">Modules</a><a href="demo-page.html">Live Demo</a><a href="index.html#specs">Specs</a><a href="capstone.html">Capstone</a></div>
+</div></nav>
+<header class="article-head"><div class="inner"><p class="eyebrow">Overview</p><h1>Syllabus</h1></div></header><main class="page prose">
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Module</th>
+<th>Hrs</th>
+<th>Core question it answers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Harvesting Robotics: The Problem and the System</td>
+<td>3</td>
+<td>Why is heavy-fruit harvest still manual, and what does a machine that fixes it look like?</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Seeing the Fruit: Machine Vision and Perception</td>
+<td>5</td>
+<td>How does the robot find a green melon in a green canopy and know where it is in 3D?</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Deciding on the Robot: Edge Computing, ML, and AI</td>
+<td>5</td>
+<td>How do we run modern AI on the machine itself, with no cloud, fast enough and cool enough?</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Reaching the Fruit: Manipulation and Control</td>
+<td>5</td>
+<td>How does the arm get to the fruit, grasp 5–10 kg without bruising it, and place it — reliably?</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Making It One Machine: HW/SW Integration and System Design</td>
+<td>4</td>
+<td>How do vision, compute, drive, and arm become a single dependable system with a real BOM?</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Field-Worthy: Testing, Safety, and Deployment</td>
+<td>3</td>
+<td>How do we prove it works, keep people safe, and deploy it ethically on a real farm?</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Capstone: Design a Harvesting Subsystem</td>
+<td>3+</td>
+<td>Can the student design and defend an original subsystem?</td>
+</tr>
+</tbody>
+</table>
+<p>Total scheduled contact time ≈ 28 hours. The course is designed to run as a
+3–4 week intensive, a half-semester module, or a compressed workshop by
+adjusting lab depth. Modules 2–4 are the technical core and should not be cut;
+Modules 1, 5, and 6 can be compressed if time is short.</p>
+<h2 id="how-each-module-is-structured">How each module is structured</h2>
+<p>Every module file (<code>content/modules/NN-*.md</code>) contains the same sections in the
+same order, so the material is predictable to teach and easy to diff:</p>
+<ul>
+<li><strong>Title &amp; duration</strong></li>
+<li><strong>Learning outcomes</strong> — measurable, verb-first</li>
+<li><strong>Core concepts</strong> — the actual technical content, specific to the harvester</li>
+<li><strong>Grad extension</strong> — the deeper/research-oriented layer for graduate students</li>
+<li><strong>Demo or lab</strong> — something students <em>do</em>, most tied to the browser digital twin</li>
+<li><strong>Knowledge check</strong> — quiz questions (answers in <code>assessments/</code>)</li>
+<li><strong>Take-home</strong> — an assignment that produces an artifact, building toward the capstone</li>
+</ul>
+<h2 id="the-running-case-study">The running case study</h2>
+<p>The course is anchored to one concrete machine so the numbers stay real:</p>
+<ul>
+<li><strong>Platform:</strong> farm-ng Amiga — a commercially available, open-source, four-wheel
+  rover with adjustable track (36–90 in.) and an open tool space beneath the frame.</li>
+<li><strong>Architecture:</strong> <em>drive-over</em> — the rover straddles the crop bed; the fruit
+  passes beneath the frame as the machine advances; picking happens at a fixed
+  station inside the wheelbase.</li>
+<li><strong>Manipulator:</strong> a planar <strong>parallel</strong> two-cylinder mechanism whose telescopic
+  struts converge on a single gripper node — chosen specifically to minimize
+  moving mass and actuated degrees of freedom for a heavy payload.</li>
+<li><strong>Perception:</strong> front-mounted stereo vision with an occlusion-gated detector.</li>
+<li><strong>Compute:</strong> fully on-robot edge inference (NVIDIA Jetson-class + platform
+  controller), no cloud in the control loop.</li>
+</ul>
+<p>Students do not need to build this machine. They study it, simulate it in the
+browser digital twin, and in the capstone either extend it or design a
+competing subsystem.</p></main>
+<footer class="foot"><div class="inner">
+  <div>SIM2FIELD · Robotic Harvesting Systems — course materials</div>
+  <div><a href="index.html">Home</a> · <a href="demo-page.html">Live Demo</a> · <a href="capstone.html">Capstone</a></div>
+</div></footer>
+
+</body>
+</html>

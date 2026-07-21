@@ -1,0 +1,36 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="color-scheme" content="dark"><title>F-M3-8 preview - Sensing error budget</title><style>:root{--bg:#0e120d;--surface:#161c14;--surface-2:#0b0e0a;--surface-3:#12160f;--border:#2b3527;--border-strong:#3a4633;--text-primary:#eef2e6;--text-secondary:#c8cfbe;--text-muted:#adb4a2;--accent:#9bcf3b;--info:#6fb0d9;--danger:#f0556a;--danger-text:#f697a4;--accent-2:#b98bd9}
+body{margin:0;background:var(--bg);color:var(--text-primary);font-family:'IBM Plex Mono',ui-monospace,monospace;padding:2rem}
+.figure{max-width:840px;margin:0 auto;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.figbody{padding:1rem 1.1rem;background:var(--surface-3);overflow-x:auto} .figbody svg{display:block;width:100%;height:auto;min-width:660px}
+figcaption{padding:.7rem 1rem;font-size:.82rem;color:var(--text-muted);border-top:1px solid var(--border)} .fid{font-size:.64rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-right:.5rem}</style></head>
+<body><figure class="figure"><div class="figbody"><svg viewBox="0 0 760 316" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placement error budget with the sensing terms populated: depth, calibration, hand-eye, and temporal-sync errors supplied by this module combine in quadrature with the mechanism term handed from M8 into a total that, at three sigma, must stay within the capture tolerance tied to the grip-force window." font-family="'IBM Plex Mono',monospace">
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Placement error budget: the sensing terms populated</text>
+<line x1="92" y1="70" x2="92" y2="250" stroke="var(--border-strong)" stroke-width="1.4"/>
+<line x1="92" y1="250" x2="700" y2="250" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="84" y="162.0" text-anchor="middle" font-size="8" fill="var(--text-muted)" transform="rotate(-90 84 162.0)">placement error (normalized)</text>
+<line x1="92" y1="97.0" x2="700" y2="97.0" stroke="var(--danger)" stroke-width="1.4" stroke-dasharray="5 3"/>
+<text x="700" y="92.0" text-anchor="end" font-size="7.8" fill="var(--danger-text)" font-weight="700">capture tolerance c/3  (3&#963;_total &lt;= c)</text>
+<rect x="122" y="173.5" width="58" height="76.5" rx="2" fill="var(--info)" fill-opacity="0.55" stroke="var(--info)"/>
+<text x="151.0" y="263" text-anchor="middle" font-size="7.8" fill="var(--text-secondary)">&#963;_Z</text>
+<text x="151.0" y="273" text-anchor="middle" font-size="6.2" fill="var(--text-muted)">M3</text>
+<text x="151.0" y="169.5" text-anchor="middle" font-size="6.6" fill="var(--info)" font-weight="700">dominant</text>
+<rect x="206" y="204.1" width="58" height="45.9" rx="2" fill="var(--info)" fill-opacity="0.55" stroke="var(--info)"/>
+<text x="235.0" y="263" text-anchor="middle" font-size="7.8" fill="var(--text-secondary)">&#963;_cal</text>
+<text x="235.0" y="273" text-anchor="middle" font-size="6.2" fill="var(--text-muted)">M3</text>
+<rect x="290" y="198.0" width="58" height="52.0" rx="2" fill="var(--info)" fill-opacity="0.55" stroke="var(--info)"/>
+<text x="319.0" y="263" text-anchor="middle" font-size="7.8" fill="var(--text-secondary)">&#963;_he</text>
+<text x="319.0" y="273" text-anchor="middle" font-size="6.2" fill="var(--text-muted)">M3</text>
+<rect x="374" y="204.1" width="58" height="45.9" rx="2" fill="var(--info)" fill-opacity="0.55" stroke="var(--info)"/>
+<text x="403.0" y="263" text-anchor="middle" font-size="7.8" fill="var(--text-secondary)">&#963;_sync</text>
+<text x="403.0" y="273" text-anchor="middle" font-size="6.2" fill="var(--text-muted)">M3</text>
+<rect x="458" y="188.8" width="58" height="61.2" rx="2" fill="var(--accent-2)" fill-opacity="0.55" stroke="var(--accent-2)"/>
+<text x="487.0" y="263" text-anchor="middle" font-size="7.8" fill="var(--text-secondary)">&#963;_mech</text>
+<text x="487.0" y="273" text-anchor="middle" font-size="6.2" fill="var(--text-muted)">M8</text>
+<rect x="556" y="121.4" width="58" height="128.6" rx="2" fill="var(--accent)" fill-opacity="0.75" stroke="var(--accent)"/>
+<text x="585.0" y="263" text-anchor="middle" font-size="7.8" fill="var(--accent)" font-weight="700">&#963;_total</text>
+<text x="585.0" y="117.4" text-anchor="middle" font-size="6.8" fill="var(--accent)">0.84</text>
+<line x1="122" y1="280" x2="432" y2="280" stroke="var(--info)" stroke-width="1"/>
+<text x="277.0" y="290" text-anchor="middle" font-size="7" fill="var(--info)">supplied by M3 (sensing)</text>
+<text x="20" y="292" font-size="8" fill="var(--text-secondary)">&#963;_total = sqrt(&#963;_Z^2 + &#963;_cal^2 + &#963;_he^2 + &#963;_sync^2 + &#963;_mech^2).  M3 supplies the sensing terms; M8 owns &#963;_mech; M5 masters the estimation.</text>
+<text x="20" y="305" font-size="7.6" fill="var(--text-muted)">c is the spatial capture tolerance tied to the Grip-Force Window: a misplaced grasp lands outside the window and slips or bruises. EI-05: attack the dominant term (&#963;_Z).</text>
+</svg></div><figcaption><span class="fid">F-M3-8</span>Placement error budget with the sensing terms populated. Depth, calibration, hand-eye, and temporal-sync errors supplied by this module combine in quadrature with the mechanism term handed from M8, and the total at three sigma must fit the capture tolerance tied to the grip-force window. The sensing chapter's view of the shared budget. Module 3, Section 7.5.</figcaption></figure></body></html>

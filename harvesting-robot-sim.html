@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AGRI-HARVEST // Parallel-Linkage Harvesting Rover</title>
+<style>
+ html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #0b0d10; }
+ #app { position: fixed; inset: 0; }
+ .hud {
+ position: fixed; top: 14px; left: 16px; z-index: 10; pointer-events: none;
+ font-family: "SF Mono", "Cascadia Code", Consolas, monospace; color: #cfd6df;
+ }
+ .hud h1 { font-size: 13px; letter-spacing: 0.22em; margin: 0 0 4px 0; color: #e8edf3; font-weight: 600; }
+ .hud h1 span { color: #00ff88; }
+ .hud #status { font-size: 11px; color: #8fa0b3; letter-spacing: 0.06em; }
+ .hud #hint { font-size: 10px; color: #55637a; margin-top: 4px; letter-spacing: 0.05em; }
+ .lil-gui { --widget-color: #1e242c; --focus-color: #2a323d; font-family: Consolas, monospace !important; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="hud">
+ <h1>AGRI-HARVEST <span>//</span> PARALLEL-LINKAGE ROVER</h1>
+ <div id="status">STATE: IDLE</div>
+ <div id="hint">click a fruit to target - drag to orbit - scroll to zoom</div>
+</div>
+
+<script type="importmap">
+{
+ "imports": {
+ "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+ "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+ }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import GUI from 'three/addons/libs/lil-gui.module.min.js';
+
+/* ================================================================
+ AGRI-HARVEST - Two-cylinder parallel-linkage harvesting robot
+ ----------------------------------------------------------------
+ Mechanism summary:
+ - Rover chassis carries a yaw turret.
+ - A parallelogram four-bar (lower + upper link, equal length,
+ equal pivot offset) keeps the tool carrier level at all lift
+ angles. Twin hydraulic cylinders drive the lower link.
+ - A telescopic hydraulic boom (barrel + rod) provides reach.
+ - A tilting wrist carries a two-finger gripper.
+ Kinematics are solved geometrically every frame; cylinders are
+ two-point members that stay pinned to both pivots at all times.
+ ================================================================ */
+
+/* ----------------------- Mechanism constants -------------------- */
+const LINK_LEN = 1.6; // parallelogram link length (m)
+const LINK_OFFSET = 0.28; // vertical spacing of the two links
+const PIVOT_LOWER = new THREE.Vector3(0.12, 0.50, 0); // turret-local
+const PIVOT_UPPER = new THREE.Vector3(0.12, 0.78, 0);
+const CYL_BASE_L = new THREE.Vector3(-0.28, 0.02, 0.18); // lift cyl bases
+const CYL_BASE_R = new THREE.Vector3(-0.28, 0.02, -0.18);
+const CYL_ATTACH_T = 0.72; // attach distance along lower link
+const TURRET_POS = new THREE.Vector3(0.30, 0.85, 0); // world (chassis at origin)
+const WRIST_BASE_X = 0.90; // wrist x at zero extension (carrier-local)
+const TIP_OFFSET_X = 0.38; // gripper tip forward of wrist pivot
+const EXT_MAX = 1.0; // telescopic stroke (m)
+const LIFT_SIN_MIN = -0.78, LIFT_SIN_MAX = 0.87; // lift angle limits (as sin)
+const FRUIT_R = 0.11;
+const PIVOT_WORLD_Y = TURRET_POS.y + PIVOT_LOWER.y; // shoulder height above floor
+
+/* --------------------------- State ------------------------------ */
+// GUI-facing targets (user or auto-pick writes these)
+const params = {
+ height: 1.30, // desired gripper tip height (m) -> solved to lift angle
+ extension: 0.25, // telescopic stroke (m)
+ tilt: 0, // wrist tilt (deg)
+ rotation: 0, // turret yaw (deg)
+ grip: 1.0, // 0 = closed, 1 = open
+ speed: 1.0,
+ pick: () => startPick(),
+ drop: () => startDrop(),
+ reset: () => resetAll(),
+};
+// Smoothed actual state driving the model
+const cur = { height: params.height, extension: params.extension, tilt: 0, rotation: 0, grip: 1 };
+
+let state = 'IDLE'; // IDLE | ALIGN | GRAB | LIFT | RELEASE
+let targetFruit = null; // fruit being picked
+let heldFruit = null; // fruit attached to the wrist
+let selectedFruit = null; // fruit highlighted by mouse click
+let gripClose = 0.12; // grip value that closes on a fruit
+
+/* ------------------------ Scene setup --------------------------- */
+let scene, camera, renderer, controls, clock;
+const statusEl = document.getElementById('status');
+
+function initScene() {
+ scene = new THREE.Scene();
+ scene.background = new THREE.Color(0x0b0d10);
+ scene.fog = new THREE.Fog(0x0b0d10, 18, 42);
+
+ camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 100);
+ camera.position.set(4.6, 3.1, 5.2);
+
+ renderer = new THREE.WebGLRenderer({ antialias: true });
+ renderer.setSize(innerWidth, innerHeight);
+ renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+ renderer.shadowMap.enabled = true;
+ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+ renderer.outputColorSpace = THREE.SRGBColorSpace;
+ renderer.toneMapping = THREE.ACESFilmicToneMapping; // physically based pipeline
+ document.getElementById('app').appendChild(renderer.domElement);
+
+ // Image-based lighting so metals read correctly
+ const pmrem = new THREE.PMREMGenerator(renderer);
+ scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
+ controls = new OrbitControls(camera, renderer.domElement);
+ controls.target.set(0.9, 1.0, 0);
+ controls.enableDamping = true;
+ controls.dampingFactor = 0.08;
+ controls.maxPolarAngle = Math.PI * 0.495;
+
+ // Lights
+ scene.add(new THREE.AmbientLight(0x9fb4cc, 0.35));
+
+ const dir = new THREE.DirectionalLight(0xffffff, 1.1);
+ dir.position.set(6, 9, 4);
+ dir.castShadow = true;
+ dir.shadow.mapSize.set(2048, 2048);
+ dir.shadow.camera.left = -7; dir.shadow.camera.right = 7;
+ dir.shadow.camera.top = 7; dir.shadow.camera.bottom = -7;
+ dir.shadow.bias = -0.0004;
+ scene.add(dir);
+
+ const spot = new THREE.SpotLight(0xdfe9ff, 260, 40, 0.55, 0.45, 2);
+ spot.position.set(-5, 7, 3);
+ spot.castShadow = true;
+ spot.shadow.mapSize.set(1024, 1024);
+ spot.shadow.bias = -0.0004;
+ spot.target.position.set(0.8, 0.8, 0);
+ scene.add(spot, spot.target);
+
+ // Floor: matte plane + engineering grid + world axes
+ const floor = new THREE.Mesh(
+ new THREE.PlaneGeometry(60, 60),
+ new THREE.MeshStandardMaterial({ color: 0x111419, roughness: 0.95, metalness: 0 })
+ );
+ floor.rotation.x = -Math.PI / 2;
+ floor.receiveShadow = true;
+ scene.add(floor);
+ scene.add(new THREE.GridHelper(24, 48, 0x33404e, 0x1b2027));
+ scene.add(new THREE.AxesHelper(1.3));
+
+ addEventListener('resize', () => {
+ camera.aspect = innerWidth / innerHeight;
+ camera.updateProjectionMatrix();
+ renderer.setSize(innerWidth, innerHeight);
+ });
+}
+
+/* --------------------------- Materials -------------------------- */
+const MAT = {
+ frame: new THREE.MeshStandardMaterial({ color: 0x3a3f46, roughness: 0.6, metalness: 0.7 }), // static frame
+ link: new THREE.MeshStandardMaterial({ color: 0x1f6fd0, roughness: 0.35, metalness: 0.6 }), // moving links
+ barrel: new THREE.MeshStandardMaterial({ color: 0xb9c2cc, roughness: 0.3, metalness: 0.9 }), // hydraulic cylinders
+ piston: new THREE.MeshStandardMaterial({ color: 0xe8eef4, roughness: 0.12, metalness: 1.0 }), // polished steel
+ joint: new THREE.MeshStandardMaterial({ color: 0x00ff88, roughness: 0.3, metalness: 0.2,
+ emissive: 0x00ff88, emissiveIntensity: 0.75 }), // neon joints
+ tool: new THREE.MeshStandardMaterial({ color: 0xff7a1a, roughness: 0.45, metalness: 0.4 }), // end effector
+ tire: new THREE.MeshStandardMaterial({ color: 0x181b1f, roughness: 0.9, metalness: 0.1 }),
+};
+
+function shadowed(mesh) { mesh.castShadow = true; mesh.receiveShadow = true; return mesh; }
+function jointSphere(r = 0.045) { return shadowed(new THREE.Mesh(new THREE.SphereGeometry(r, 20, 16), MAT.joint)); }
+
+/* ----------------------- Robot construction --------------------- */
+let robot, turret, lowerLink, upperLink, carrier, extRod, wrist, gripBase, fingerA, fingerB;
+let tipAnchor; // empty at the gripper tip (for targeting)
+const liftCylinders = []; // { group, barrel, piston, rodEnd, baseAnchor, attachAnchor }
+
+function createRobot() {
+ robot = new THREE.Group();
+ scene.add(robot);
+
+ /* -- Rover chassis (static frame) -- */
+ const chassis = shadowed(new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.45, 1.3), MAT.frame));
+ chassis.position.y = 0.58;
+ robot.add(chassis);
+ const deck = shadowed(new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.06, 1.4), MAT.frame));
+ deck.position.y = 0.83;
+ robot.add(deck);
+ const wheelGeo = new THREE.CylinderGeometry(0.32, 0.32, 0.22, 28);
+ wheelGeo.rotateX(Math.PI / 2); // axle along Z
+ for (const sx of [-0.82, 0.82]) for (const sz of [-0.78, 0.78]) {
+ const w = shadowed(new THREE.Mesh(wheelGeo, MAT.tire));
+ w.position.set(sx, 0.32, sz);
+ robot.add(w);
+ const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.24, 16).rotateX(Math.PI / 2), MAT.barrel);
+ hub.position.copy(w.position);
+ robot.add(hub);
+ }
+
+ /* -- Turret (yaw) -- */
+ turret = new THREE.Group();
+ turret.position.copy(TURRET_POS);
+ robot.add(turret);
+ const ring = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.4, 0.1, 32), MAT.frame));
+ ring.position.y = 0.03;
+ turret.add(ring);
+ const mast = shadowed(new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.82, 0.3), MAT.frame));
+ mast.position.set(0.12, 0.46, 0);
+ turret.add(mast);
+ const cylBracket = shadowed(new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.14, 0.5), MAT.frame));
+ cylBracket.position.set(-0.28, 0.06, 0);
+ turret.add(cylBracket);
+
+ /* -- Parallelogram links (equal length, equal pivot offset) -- */
+ const lowGeo = new THREE.BoxGeometry(LINK_LEN, 0.13, 0.13); lowGeo.translate(LINK_LEN / 2, 0, 0);
+ lowerLink = shadowed(new THREE.Mesh(lowGeo, MAT.link));
+ lowerLink.position.copy(PIVOT_LOWER);
+ turret.add(lowerLink);
+ // cross-tube on the lower link where the twin cylinders attach
+ const cross = shadowed(new THREE.Mesh(
+ new THREE.CylinderGeometry(0.04, 0.04, 0.46, 16).rotateX(Math.PI / 2), MAT.barrel));
+ cross.position.set(CYL_ATTACH_T, 0, 0);
+ lowerLink.add(cross);
+
+ const upGeo = new THREE.BoxGeometry(LINK_LEN, 0.08, 0.08); upGeo.translate(LINK_LEN / 2, 0, 0);
+ upperLink = shadowed(new THREE.Mesh(upGeo, MAT.link));
+ upperLink.position.copy(PIVOT_UPPER);
+ turret.add(upperLink);
+
+ for (const p of [PIVOT_LOWER, PIVOT_UPPER]) { const j = jointSphere(0.055); j.position.copy(p); turret.add(j); }
+
+ /* -- Tool carrier (kept level by the parallelogram) -- */
+ carrier = new THREE.Group(); // position solved each frame
+ turret.add(carrier);
+ const plate = shadowed(new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.46, 0.26), MAT.link));
+ plate.position.set(0.0, LINK_OFFSET / 2, 0);
+ carrier.add(plate);
+ const jc1 = jointSphere(); carrier.add(jc1); // lower-link : carrier pin
+ const jc2 = jointSphere(); jc2.position.y = LINK_OFFSET; carrier.add(jc2); // upper-link : carrier pin
+
+ /* -- Telescopic extension cylinder (reach actuator) -- */
+ const extBarrel = shadowed(new THREE.Mesh(
+ new THREE.CylinderGeometry(0.07, 0.07, 1.0, 24).rotateZ(-Math.PI / 2), MAT.barrel));
+ extBarrel.position.set(0.45, 0, 0); // spans x = -0.05 .. 0.95
+ carrier.add(extBarrel);
+ extRod = shadowed(new THREE.Mesh(
+ new THREE.CylinderGeometry(0.042, 0.042, 1.05, 20).rotateZ(-Math.PI / 2), MAT.piston));
+ carrier.add(extRod); // slid along +X in updateRobot()
+
+ /* -- Wrist (tilt) + gripper (end effector) -- */
+ wrist = new THREE.Group();
+ carrier.add(wrist);
+ wrist.add(jointSphere(0.05));
+ gripBase = shadowed(new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.18, 0.22), MAT.tool));
+ gripBase.position.x = 0.1;
+ wrist.add(gripBase);
+ const fGeo = new THREE.BoxGeometry(0.3, 0.05, 0.045); fGeo.translate(0.15, 0, 0);
+ const padGeo = new THREE.BoxGeometry(0.05, 0.09, 0.03);
+ fingerA = shadowed(new THREE.Mesh(fGeo, MAT.tool));
+ fingerB = shadowed(new THREE.Mesh(fGeo, MAT.tool));
+ fingerA.position.x = fingerB.position.x = 0.18;
+ const padA = shadowed(new THREE.Mesh(padGeo, MAT.tool)); padA.position.set(0.28, 0, -0.03);
+ const padB = shadowed(new THREE.Mesh(padGeo, MAT.tool)); padB.position.set(0.28, 0, 0.03);
+ fingerA.add(padA); fingerB.add(padB);
+ wrist.add(fingerA, fingerB);
+ tipAnchor = new THREE.Object3D();
+ tipAnchor.position.x = TIP_OFFSET_X;
+ wrist.add(tipAnchor);
+
+ /* -- Twin lift cylinders: world-space two-point members -- */
+ for (const base of [CYL_BASE_L, CYL_BASE_R]) {
+ const baseAnchor = new THREE.Object3D(); baseAnchor.position.copy(base); turret.add(baseAnchor);
+ const attachAnchor = new THREE.Object3D();
+ attachAnchor.position.set(CYL_ATTACH_T, 0, base.z);
+ lowerLink.add(attachAnchor);
+
+ const group = new THREE.Group(); // scene-level; aimed with lookAt()
+ const barrel = shadowed(new THREE.Mesh(
+ new THREE.CylinderGeometry(0.05, 0.05, 0.68, 20).rotateX(Math.PI / 2), MAT.barrel));
+ barrel.position.z = 0.34;
+ const piston = shadowed(new THREE.Mesh(
+ new THREE.CylinderGeometry(0.03, 0.03, 0.78, 16).rotateX(Math.PI / 2), MAT.piston));
+ const baseJ = jointSphere(0.05);
+ const rodEnd = jointSphere(0.045);
+ group.add(barrel, piston, baseJ, rodEnd);
+ scene.add(group);
+ liftCylinders.push({ group, piston, rodEnd, baseAnchor, attachAnchor });
+ }
+}
+
+/* ---------------------------- Fruits ----------------------------- */
+const fruits = [];
+const FRUIT_SPOTS = [
+ [2.55, 0.35], [2.9, -0.55], [3.2, 0.1], [2.7, 1.0], [3.05, -1.15], [2.45, -0.25],
+]; // [planar radius from turret axis, angle rad]
+
+function createFruits() {
+ const geo = new THREE.SphereGeometry(FRUIT_R, 24, 18);
+ const stemGeo = new THREE.CylinderGeometry(0.012, 0.012, 0.07, 8);
+ FRUIT_SPOTS.forEach(([r, a], i) => {
+ const color = i % 3 === 2 ? 0x9acd32 : 0xd0342c; // apples: red + the odd green
+ const f = shadowed(new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color, roughness: 0.35, metalness: 0.05 })));
+ f.position.set(TURRET_POS.x + r * Math.cos(a), FRUIT_R, r * Math.sin(a));
+ const stem = new THREE.Mesh(stemGeo, new THREE.MeshStandardMaterial({ color: 0x5a3d1e, roughness: 0.9 }));
+ stem.position.y = FRUIT_R + 0.02;
+ f.add(stem);
+ f.userData = { index: i + 1, home: f.position.clone(), vy: 0, falling: false };
+ scene.add(f);
+ fruits.push(f);
+ });
+}
+
+/* ------------------------- Kinematics ---------------------------- */
+// Lift angle from desired tip height (inverse kinematics of the parallelogram)
+function solveIK(tipHeight) {
+ const s = THREE.MathUtils.clamp((tipHeight - PIVOT_WORLD_Y) / LINK_LEN, LIFT_SIN_MIN, LIFT_SIN_MAX);
+ return Math.asin(s);
+}
+
+// Full IK for a world point: yaw, extension, tip height (used by auto-pick)
+function solveIKToPoint(p) {
+ const dx = p.x - TURRET_POS.x, dz = p.z - TURRET_POS.z;
+ const yawDeg = THREE.MathUtils.radToDeg(Math.atan2(-dz, dx));
+ const planar = Math.hypot(dx, dz);
+ const theta = solveIK(p.y);
+ const fixedReach = PIVOT_LOWER.x + LINK_LEN * Math.cos(theta) + WRIST_BASE_X + TIP_OFFSET_X;
+ const ext = planar - fixedReach;
+ return { yawDeg, ext, height: p.y, reachable: ext > -0.05 && ext < EXT_MAX + 0.05 };
+}
+
+/* -------------------- Per-frame model update --------------------- */
+const _vA = new THREE.Vector3(), _vB = new THREE.Vector3(); // reused temporaries
+
+// Pin every hydraulic cylinder to both anchors and set its stroke
+function updateCylinders() {
+ for (const c of liftCylinders) {
+ c.baseAnchor.getWorldPosition(_vA);
+ c.attachAnchor.getWorldPosition(_vB);
+ c.group.position.copy(_vA);
+ c.group.lookAt(_vB); // +Z of the group points at the rod pin
+ const d = _vA.distanceTo(_vB); // L = sqrt(dx^2 + dy^2 + dz^2)
+ c.piston.position.z = d - 0.39; // rod slides along the local axis only
+ c.rodEnd.position.z = d;
+ }
+}
+
+function updateRobot(dt) {
+ const k = 6 * params.speed; // smoothing rate
+ cur.height = THREE.MathUtils.damp(cur.height, params.height, k, dt);
+ cur.extension = THREE.MathUtils.damp(cur.extension, params.extension, k, dt);
+ cur.tilt = THREE.MathUtils.damp(cur.tilt, params.tilt, k, dt);
+ cur.rotation = THREE.MathUtils.damp(cur.rotation, params.rotation, k, dt);
+ cur.grip = THREE.MathUtils.damp(cur.grip, params.grip, k * 1.4, dt);
+
+ // Joint variables
+ const theta = solveIK(cur.height);
+ turret.rotation.y = THREE.MathUtils.degToRad(cur.rotation);
+ lowerLink.rotation.z = theta;
+ upperLink.rotation.z = theta; // parallel by construction
+
+ // Carrier rides the link ends; identity rotation keeps it level
+ carrier.position.set(
+ PIVOT_LOWER.x + LINK_LEN * Math.cos(theta),
+ PIVOT_LOWER.y + LINK_LEN * Math.sin(theta), 0);
+
+ // Telescopic reach + wrist tilt + gripper aperture
+ const wristX = WRIST_BASE_X + THREE.MathUtils.clamp(cur.extension, 0, EXT_MAX);
+ wrist.position.x = wristX;
+ extRod.position.x = wristX - 0.525; // rod stays seated in the barrel
+ wrist.rotation.z = THREE.MathUtils.degToRad(cur.tilt);
+ const gap = 0.055 + cur.grip * 0.13;
+ fingerA.position.z = gap;
+ fingerB.position.z = -gap;
+
+ updateCylinders();
+ runSequencer();
+}
+
+/* --------------------- Pick / drop sequencer --------------------- */
+function setStatus(t) { statusEl.textContent = 'STATE: ' + t; }
+
+function nearestFruit() {
+ tipAnchor.getWorldPosition(_vA);
+ let best = null, bd = Infinity;
+ for (const f of fruits) {
+ if (f === heldFruit || f.userData.falling) continue;
+ const d = _vA.distanceTo(f.position);
+ if (d < bd) { bd = d; best = f; }
+ }
+ return best;
+}
+
+function startPick() {
+ if (heldFruit) { setStatus('ALREADY HOLDING FRUIT #' + heldFruit.userData.index); return; }
+ const f = selectedFruit && !selectedFruit.userData.falling ? selectedFruit : nearestFruit();
+ if (!f) { setStatus('NO FRUIT AVAILABLE'); return; }
+ const ik = solveIKToPoint(f.position);
+ if (!ik.reachable) { setStatus('FRUIT #' + f.userData.index + ' OUT OF REACH'); return; }
+ targetFruit = f;
+ params.rotation = ik.yawDeg;
+ params.extension = THREE.MathUtils.clamp(ik.ext, 0, EXT_MAX);
+ params.height = ik.height;
+ params.tilt = 0;
+ params.grip = 1;
+ state = 'ALIGN';
+ setStatus('ALIGNING TO FRUIT #' + f.userData.index);
+}
+
+function startDrop() {
+ if (!heldFruit) { setStatus('NOTHING TO DROP'); return; }
+ params.grip = 1;
+ state = 'RELEASE';
+ setStatus('RELEASING');
+}
+
+function converged() {
+ return Math.abs(cur.height - params.height) < 0.02 &&
+ Math.abs(cur.extension - params.extension) < 0.02 &&
+ Math.abs(cur.rotation - params.rotation) < 1.0 &&
+ Math.abs(cur.tilt - params.tilt) < 1.0;
+}
+
+function runSequencer() {
+ if (state === 'ALIGN' && converged()) {
+ params.grip = gripClose;
+ state = 'GRAB';
+ setStatus('GRASPING FRUIT #' + targetFruit.userData.index);
+ } else if (state === 'GRAB' && cur.grip < gripClose + 0.04) {
+ wrist.attach(targetFruit); // reparent, world transform preserved
+ heldFruit = targetFruit; targetFruit = null;
+ params.height = Math.max(params.height, 1.4); // lift clear of the ground
+ state = 'LIFT';
+ setStatus('LIFTING FRUIT #' + heldFruit.userData.index);
+ } else if (state === 'LIFT' && converged()) {
+ state = 'IDLE';
+ setStatus('HOLDING FRUIT #' + heldFruit.userData.index);
+ } else if (state === 'RELEASE' && cur.grip > 0.8) {
+ scene.attach(heldFruit); // back to world space
+ heldFruit.userData.falling = true;
+ heldFruit.userData.vy = 0;
+ setStatus('DROPPED FRUIT #' + heldFruit.userData.index);
+ heldFruit = null;
+ state = 'IDLE';
+ }
+}
+
+/* ------------------------ Simple physics ------------------------- */
+function updatePhysics(dt) {
+ const step = dt * 60; // frame-rate independent "per frame" step
+ for (const f of fruits) {
+ if (!f.userData.falling) continue;
+ f.userData.vy -= 0.1 * step * 0.06; // gravity: velocity.y -= 0.1 (scaled)
+ f.position.y += f.userData.vy * step;
+ if (f.position.y <= FRUIT_R) { // floor contact -> stop
+ f.position.y = FRUIT_R;
+ f.userData.falling = false;
+ f.userData.vy = 0;
+ }
+ }
+}
+
+/* ------------------- Mouse selection (raycast) ------------------- */
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+
+function initPicking() {
+ renderer.domElement.addEventListener('pointerdown', (e) => {
+ pointer.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+ raycaster.setFromCamera(pointer, camera);
+ const hit = raycaster.intersectObjects(fruits, false)[0];
+ if (!hit) return;
+ if (selectedFruit) selectedFruit.material.emissive.setHex(0x000000);
+ selectedFruit = hit.object;
+ selectedFruit.material.emissive.setHex(0x664400); // highlight
+ setStatus('SELECTED FRUIT #' + selectedFruit.userData.index + ' - PRESS PICK');
+ });
+}
+
+/* ---------------------------- Reset ------------------------------ */
+function resetAll() {
+ if (heldFruit) { scene.attach(heldFruit); heldFruit = null; }
+ targetFruit = null;
+ state = 'IDLE';
+ if (selectedFruit) { selectedFruit.material.emissive.setHex(0x000000); selectedFruit = null; }
+ for (const f of fruits) {
+ f.position.copy(f.userData.home);
+ f.userData.falling = false; f.userData.vy = 0;
+ }
+ Object.assign(params, { height: 1.3, extension: 0.25, tilt: 0, rotation: 0, grip: 1 });
+ setStatus('RESET - IDLE');
+}
+
+/* ----------------------------- GUI ------------------------------- */
+function initGUI() {
+ const gui = new GUI({ title: 'ACTUATOR CONTROL' });
+ gui.add(params, 'height', 0.12, 2.7, 0.01).name('Height (m)').listen();
+ gui.add(params, 'extension', 0, EXT_MAX, 0.01).name('Extension (m)').listen();
+ gui.add(params, 'tilt', -45, 45, 0.5).name('Tilt ( deg)').listen();
+ gui.add(params, 'rotation', -180, 180, 0.5).name('Rotation ( deg)').listen();
+ gui.add(params, 'grip', 0, 1, 0.01).name('Grip (open)').listen();
+ gui.add(params, 'speed', 0.2, 3, 0.05).name('Animation Speed');
+ gui.add(params, 'pick').name('&gt; Pick');
+ gui.add(params, 'drop').name('v Drop');
+ gui.add(params, 'reset').name(' Reset');
+}
+
+/* ------------------------- Main loop ----------------------------- */
+function animate() {
+ requestAnimationFrame(animate);
+ const dt = Math.min(clock.getDelta(), 0.05);
+ updateRobot(dt);
+ updatePhysics(dt * params.speed);
+ controls.update();
+ renderer.render(scene, camera);
+}
+
+initScene();
+createRobot();
+createFruits();
+initPicking();
+initGUI();
+clock = new THREE.Clock();
+animate();
+</script>
+</body>
+</html>

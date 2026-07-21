@@ -1,0 +1,26 @@
+<svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Track-width feasible interval: width must be at least the reach bound so the arm can cross the bed, and at most the maneuverability bound so the machine fits rows, turns, and transports; the feasible interval lies between them, with stability favoring the wider end given a low centre of gravity. An empty interval forces an architecture change." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/></marker></defs>
+<text x="20" y="28" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Track width as a bounded interval (closes SR-I-11)</text>
+<rect x="92" y="132" width="158" height="36" fill="var(--danger)" fill-opacity="0.10"/>
+<rect x="250" y="132" width="290" height="36" fill="var(--accent)" fill-opacity="0.13"/>
+<rect x="540" y="132" width="150" height="36" fill="var(--danger)" fill-opacity="0.10"/>
+<line x1="92" y1="150" x2="690" y2="150" stroke="var(--border-strong)" stroke-width="1.6"/>
+<path d="M690,146 L697,150 L690,154 z" fill="var(--border-strong)"/>
+<text x="690" y="180" text-anchor="end" font-size="8.5" fill="var(--text-muted)">track width w</text>
+<line x1="250" y1="124" x2="250" y2="176" stroke="var(--text-secondary)" stroke-width="1.4" stroke-dasharray="4 3"/>
+<text x="250" y="118" text-anchor="middle" font-size="9" fill="var(--text-primary)" font-weight="700">w_reach</text>
+<text x="250" y="190" text-anchor="middle" font-size="7.3" fill="var(--text-muted)">M8: reach across bed</text>
+<line x1="540" y1="124" x2="540" y2="176" stroke="var(--text-secondary)" stroke-width="1.4" stroke-dasharray="4 3"/>
+<text x="540" y="118" text-anchor="middle" font-size="9" fill="var(--text-primary)" font-weight="700">w_maneuver</text>
+<text x="540" y="190" text-anchor="middle" font-size="7.3" fill="var(--text-muted)">fit rows, turn, transport</text>
+<text x="171" y="154" text-anchor="middle" font-size="7.6" fill="var(--danger-text)">arm cannot reach</text>
+<text x="395" y="148" text-anchor="middle" font-size="9.5" fill="var(--accent)" font-weight="700">FEASIBLE</text>
+<text x="615" y="154" text-anchor="middle" font-size="7.6" fill="var(--danger-text)">cannot maneuver</text>
+<line x1="268" y1="208" x2="522" y2="208" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#s)"/>
+<text x="395" y="203" text-anchor="middle" font-size="7.6" fill="var(--accent)">stability improves (wider w, with low CoG)</text>
+<path d="M478,142 L484,150 L478,158 L472,150 z" fill="var(--accent)" stroke="var(--bg)" stroke-width="0.8"/>
+<text x="478" y="140" text-anchor="middle" font-size="7.6" fill="var(--accent)">chosen w (upper part)</text>
+<text x="20" y="252" font-size="8.6" fill="var(--text-secondary)" font-weight="700">Wide enough to reach, narrow enough to maneuver, low enough to stay upright.</text>
+<text x="20" y="268" font-size="8.2" fill="var(--text-muted)">If the interval is empty (w_reach &gt; w_maneuver), the architecture must change: longer arm stroke, an offset pick station, or a narrower bed target.</text>
+<text x="20" y="282" font-size="8.2" fill="var(--text-muted)">This closes SR-I-11 as a bounded design decision, not a warning.</text>
+</svg>

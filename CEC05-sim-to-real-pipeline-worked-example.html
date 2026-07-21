@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0e120d">
+<title>The Sim-to-Real Pipeline - Worked Example (CEC-05)</title>
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<style>
+  /* ================= THEME DEFINITION - the ONLY place raw color values live ================= */
+  :root{
+    color-scheme: dark;
+    --bg:#0e120d; --surface:#161c14; --surface-2:#0b0e0a; --surface-3:#12160f;
+    --border:#2b3527; --border-strong:#3a4633; --grid-line:#1c231a;
+    --text-primary:#eef2e6; --text-secondary:#c8cfbe; --text-muted:#adb4a2;
+    --text-lede:#c9d0bf; --text-cons:#d4dbc9; --text-on-accent:#0e120d;
+    --accent:#9bcf3b; --accent-dim:#86ba35; --accent-strong:#6f9a2c;
+    --danger:#f0556a; --danger-text:#f697a4; --danger-dim:#b93b4c;
+    --warn:#e0a03b; --info:#6fb0d9; --accent-2:#b98bd9; --marker:#ffffff;
+    /* chart band */
+    --tint-band:rgba(155,207,59,.10); --band-edge:rgba(155,207,59,.35);
+    /* tints */
+    --tint-accent:rgba(155,207,59,.07); --tint-accent-soft:rgba(155,207,59,.05); --tint-hero:rgba(155,207,59,.06);
+    --tint-danger:rgba(240,85,106,.08); --tint-warn:rgba(224,160,59,.08); --tint-info:rgba(111,176,217,.07);
+    --status-ok-text:#d0d7c6; --status-warn-text:#eed9b4; --status-danger-text:#f3ccd2; --status-info-text:#cfe0ec;
+    --font-sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --font-display:'Space Grotesk',var(--font-sans);
+  }
+  /* ========================================================================================== */
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{background:var(--bg); color:var(--text-primary); -webkit-text-size-adjust:100%; text-size-adjust:100%; scroll-behavior:smooth}
+  body{background:var(--bg); color:var(--text-primary); font-family:var(--font-sans);
+    line-height:1.7; -webkit-font-smoothing:antialiased; padding:0 0 6rem; letter-spacing:.002em}
+  .wrap{max-width:820px; margin:0 auto; padding:0 1.6rem; background:var(--bg); color:var(--text-primary)}
+  code,.mono,.num{font-family:var(--font-mono); font-variant-numeric:tabular-nums}
+  a{color:var(--accent)}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+  .katex{font-size:1.06em}
+  .katex-display{margin:0}
+  .eq{background:var(--surface-3); color:var(--text-primary); border:1px solid var(--border); border-radius:10px;
+    padding:1.15rem 1.3rem; margin:1.15rem 0; overflow-x:auto; overflow-y:hidden}
+  .eq .katex-display{margin:0}
+
+  header{background:var(--bg); color:var(--text-primary); border-bottom:1px solid var(--border); padding:3.6rem 0 2.6rem; margin-bottom:2.6rem}
+  .eyebrow{font-family:var(--font-mono); font-size:.73rem; font-weight:500; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--accent); margin-bottom:1.15rem; display:flex; gap:.85rem; flex-wrap:wrap}
+  .eyebrow span{color:var(--text-muted)}
+  h1{font-family:var(--font-display); font-weight:600; font-size:clamp(2rem,5vw,3rem);
+    line-height:1.05; letter-spacing:-.021em; margin-bottom:1.05rem; color:var(--text-primary)}
+  h1 em{font-style:normal; color:var(--accent)}
+  .lede{font-size:1.08rem; color:var(--text-lede); max-width:64ch}
+
+  .hero{position:relative; margin:2.4rem 0 .6rem; padding:2.2rem 1.6rem 1.9rem; isolation:isolate}
+  .hero-bg{position:absolute; inset:0; width:100%; height:100%; z-index:-1}
+  .hero-inner{position:relative; text-align:center}
+  .hero-tab{display:inline-block; font-family:var(--font-mono); font-size:.66rem; font-weight:500; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--accent); background:var(--bg); padding:.28rem .7rem;
+    border:1px solid var(--accent-strong); border-radius:5px; margin-bottom:1.2rem}
+  .hero-eq{margin:.4rem 0 1rem}
+  .hero-eq .katex{font-size:1.28em}
+  .hero-sub{font-size:.92rem; color:var(--text-muted); max-width:56ch; margin:0 auto}
+
+  section{margin-top:3.4rem}
+  .kicker{font-family:var(--font-mono); font-size:.71rem; font-weight:500; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--accent-dim); margin-bottom:.7rem}
+  h2{font-family:var(--font-display); font-weight:600; font-size:1.55rem; letter-spacing:-.012em; margin-bottom:1rem; color:var(--text-primary)}
+  p{margin-bottom:1.05rem; color:var(--text-secondary)} strong{color:var(--text-primary); font-weight:600}
+  .rind-t{color:var(--accent)} .flesh-t{color:var(--danger-text)} .amber-t{color:var(--warn)} .water-t{color:var(--info)}
+
+  .pipe{display:flex; flex-wrap:wrap; gap:.4rem; margin:1.2rem 0}
+  .pipe .node{flex:1; min-width:110px; background:var(--surface-2); color:var(--text-secondary); border:1px solid var(--border);
+    border-radius:9px; padding:.7rem .6rem; text-align:center}
+  .pipe .node .nm{font-family:var(--font-display); font-weight:600; font-size:.92rem; color:var(--text-primary)}
+  .pipe .node .sub{font-family:var(--font-mono); font-size:.6rem; color:var(--text-muted); margin-top:.15rem}
+  .pipe .node.gate{border-color:var(--accent-strong)} .pipe .node.gate .nm{color:var(--accent)}
+  .pipe .arrow{align-self:center; color:var(--text-muted); font-family:var(--font-mono)}
+
+  .dstep{margin:2rem 0; padding-left:1.5rem; border-left:2px solid var(--border); position:relative}
+  .dstep::before{content:attr(data-n); position:absolute; left:-.9rem; top:-.1rem;
+    font-family:var(--font-mono); font-size:.7rem; font-weight:600; color:var(--text-on-accent);
+    background:var(--accent-strong); width:1.6rem; height:1.6rem; border-radius:50%; display:grid; place-items:center}
+  .d-state{font-family:var(--font-display); font-weight:500; font-size:1.12rem; color:var(--text-primary); margin-bottom:.2rem; line-height:1.4}
+  .d-exp{color:var(--text-secondary); margin:.9rem 0}
+  .d-cons{display:flex; gap:.7rem; align-items:flex-start; margin-top:.9rem; padding:.75rem .95rem;
+    background:var(--tint-accent-soft); border:1px solid var(--accent-strong); border-radius:8px}
+  .d-cons .lab{font-family:var(--font-mono); font-size:.63rem; font-weight:500; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--accent); flex:none; margin-top:.18rem}
+  .d-cons p{margin:0; color:var(--text-cons); font-size:.94rem}
+
+  .instrument{background:var(--surface); color:var(--text-secondary); border:1px solid var(--border); border-radius:14px; padding:1.7rem; margin-top:1.3rem}
+  .inst-head{display:flex; justify-content:space-between; align-items:baseline; gap:1rem; flex-wrap:wrap; margin-bottom:1.3rem}
+  .inst-title{font-family:var(--font-display); font-weight:600; font-size:1.05rem; color:var(--text-primary)}
+  .reset{font-family:var(--font-mono); font-size:.75rem; font-weight:500; color:var(--accent); background:transparent;
+    border:1px solid var(--accent-strong); border-radius:6px; padding:.5rem .85rem; cursor:pointer; transition:.15s}
+  .reset:hover{background:var(--accent-strong); color:var(--text-on-accent)}
+  .noscript-note{background:var(--tint-warn); color:var(--status-warn-text); border:1px solid var(--warn); border-radius:8px;
+    padding:.8rem 1rem; font-size:.86rem; margin-bottom:1rem}
+  .illus{font-size:.82rem; color:var(--text-muted); margin-bottom:1rem}
+  .chartwrap{background:var(--surface-2); border:1px solid var(--border); border-radius:8px; padding:.8rem; margin-bottom:1rem}
+  #chart{width:100%; height:auto; display:block}
+
+  .controls{display:flex; gap:1.4rem; flex-wrap:wrap; margin-bottom:1rem}
+  .ctl-group{display:flex; flex-direction:column; gap:.4rem; min-width:210px; flex:1}
+  .ctl-group .lbl{font-family:var(--font-mono); font-size:.68rem; font-weight:500; letter-spacing:.04em; text-transform:uppercase; color:var(--text-muted)}
+  .ctl-group .lbl b{color:var(--text-primary)}
+  input[type=range]{-webkit-appearance:none; appearance:none; width:100%; height:5px; border-radius:3px; background:var(--border); outline-offset:4px; cursor:pointer}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:16px; height:16px; border-radius:50%; background:var(--accent); border:2px solid var(--bg); cursor:pointer}
+  input[type=range].water::-webkit-slider-thumb{background:var(--info)}
+  input[type=range]::-moz-range-thumb{width:16px; height:16px; border-radius:50%; background:var(--accent); border:2px solid var(--bg); cursor:pointer}
+  input[type=range].water::-moz-range-thumb{background:var(--info)}
+  .validate{display:flex; align-items:center; gap:.9rem; margin:.3rem 0 1.1rem; flex-wrap:wrap}
+  .vbtn{font-family:var(--font-mono); font-size:.82rem; font-weight:600; padding:.6rem 1rem; border-radius:7px; cursor:pointer;
+    border:1px solid var(--info); background:transparent; color:var(--info); transition:.15s}
+  .vbtn:hover{background:var(--info); color:var(--text-on-accent)}
+  .vbtn.done{background:var(--accent-strong); border-color:var(--accent-strong); color:var(--text-on-accent)}
+  .vnote{font-family:var(--font-mono); font-size:.72rem; color:var(--text-muted)}
+
+  .readbar{display:grid; grid-template-columns:repeat(3,1fr); gap:.7rem; margin:.3rem 0}
+  .ro{background:var(--surface-2); color:var(--text-secondary); border:1px solid var(--border); border-radius:8px; padding:.75rem .8rem}
+  .ro .lab{font-family:var(--font-mono); font-size:.6rem; font-weight:500; letter-spacing:.05em; text-transform:uppercase; color:var(--text-muted); margin-bottom:.3rem}
+  .ro .val{font-family:var(--font-mono); font-size:1.2rem; font-weight:600; color:var(--text-primary)}
+  .ro .val.bad{color:var(--danger-text)} .ro .val.ok{color:var(--accent)} .ro .val.q{color:var(--text-muted)}
+  .status{padding:.9rem 1rem; border-radius:8px; border:1px solid; font-family:var(--font-mono); font-size:.78rem; font-weight:500; line-height:1.55; margin-top:.9rem}
+  .status.ok{border-color:var(--accent-strong); background:var(--tint-accent); color:var(--status-ok-text)}
+  .status.warn{border-color:var(--warn); background:var(--tint-warn); color:var(--status-warn-text)}
+  .status.bad{border-color:var(--danger-dim); background:var(--tint-danger); color:var(--status-danger-text)}
+  .status.q{border-color:var(--info); background:var(--tint-info); color:var(--status-info-text)}
+  .status b{color:var(--text-primary)}
+
+  .insight{border:1px solid var(--accent-strong); border-radius:12px; padding:1.4rem 1.6rem; margin-top:1.6rem;
+    background:linear-gradient(180deg,var(--tint-hero),transparent)}
+  .insight .tag{font-family:var(--font-mono); font-size:.72rem; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin-bottom:.55rem}
+  .insight p{color:var(--text-cons); margin-bottom:0} .insight strong{color:var(--accent)}
+  .takeaway{border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:12px; padding:1.5rem 1.7rem; background:var(--surface)}
+  .tk-list{list-style:none}
+  .tk-list li{display:flex; gap:.85rem; align-items:flex-start; padding:.6rem 0; color:var(--text-secondary); border-bottom:1px solid var(--border)}
+  .tk-list li:last-child{border-bottom:none; padding-top:.95rem}
+  .tk-mark{font-family:var(--font-mono); color:var(--text-muted); flex:none; margin-top:.1rem}
+  .tk-mark.tk-hot{color:var(--accent)} .tk-list strong{color:var(--text-primary)}
+  footer{margin-top:4rem; padding-top:1.6rem; border-top:1px solid var(--border);
+    font-family:var(--font-mono); font-size:.74rem; color:var(--text-muted); line-height:1.85}
+
+  @media(max-width:640px){ .readbar{grid-template-columns:1fr} .pipe .node{min-width:90px} }
+  @media(prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <header>
+    <div class="eyebrow">Foundational Concept <span>/</span> CEC-05 <span>/</span> Module 7 <span>/</span> The Sim-to-Real Pipeline</div>
+    <h1>A policy that <em>overfits the simulator</em> looks perfect - right up until the field.</h1>
+    <p class="lede">Grasping cannot be learned on real fruit at scale - too slow, too destructive. So the policy is trained in the twin, which supplies massive, cheap, safe experience. The danger is that it learns the simulator's exact physics instead of the task, and fails on the first real melon. The pipeline that prevents this has one discipline: randomize the conditions the learner must survive, then validate on real data before trusting the transfer.</p>
+
+    <div class="hero">
+      <svg class="hero-bg" viewBox="0 0 800 230" preserveAspectRatio="none" role="presentation" aria-hidden="true" focusable="false">
+        <defs>
+          <pattern id="grid" width="26" height="26" patternUnits="userSpaceOnUse">
+            <path d="M26 0H0V26" fill="none" style="stroke:var(--grid-line)" stroke-width="1" vector-effect="non-scaling-stroke"/>
+          </pattern>
+        </defs>
+        <rect x="6" y="6" width="788" height="218" rx="12" style="fill:var(--surface-3)"/>
+        <rect x="6" y="6" width="788" height="218" rx="12" fill="url(#grid)" opacity="0.5"/>
+        <rect x="6" y="6" width="788" height="218" rx="12" fill="none" style="stroke:var(--border)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M20 6V22 M6 20H22" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M780 6V22 M778 20H794" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M20 224V208 M6 210H22" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M780 224V208 M778 210H794" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+      </svg>
+      <div class="hero-inner">
+        <div class="hero-tab">Governing relation</div>
+        <div class="hero-eq" role="math" aria-label="pi star equals argmax over pi of the expectation over xi drawn from p of xi, of the expected return G given xi"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msup><mi>π</mi><mo lspace="0em" rspace="0em">∗</mo></msup><mo>=</mo><mi>arg</mi><mo>⁡</mo><munder><mrow><mi>max</mi><mo>⁡</mo></mrow><mi>π</mi></munder><mtext> </mtext><msub><mi mathvariant="double-struck">E</mi><mrow><mi>ξ</mi><mo>∼</mo><mi>p</mi><mo stretchy="false">(</mo><mi>ξ</mi><mo stretchy="false">)</mo></mrow></msub><mtext> ⁣</mtext><mrow><mo fence="true">[</mo><mtext> </mtext><msub><mi mathvariant="double-struck">E</mi><mi>π</mi></msub><mtext> ⁣</mtext><mrow><mo fence="true">[</mo><mtext> </mtext><mi>G</mi><mo>∣</mo><mi>ξ</mi><mtext> </mtext><mo fence="true">]</mo></mrow><mo fence="true">]</mo></mrow></mrow><annotation encoding="application/x-tex">\pi^{\ast} = \arg\max_{\pi}\ \mathbb{E}_{\xi \sim p(\xi)}\!\left[\, \mathbb{E}_{\pi}\!\left[\, G \mid \xi \,\right] \right]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7387em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">π</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7387em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">∗</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.45em;vertical-align:-0.7em;"></span><span class="mop">ar<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.4306em;"><span style="top:-2.4em;margin-left:0em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">π</span></span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span><span class="mop">max</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7em;"><span></span></span></span></span></span><span class="mspace"> </span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathbb">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.5198em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.04601em;">ξ</span><span class="mrel mtight">∼</span><span class="mord mathnormal mtight">p</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight" style="margin-right:0.04601em;">ξ</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3552em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:-0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">[</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathbb">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">π</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:-0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">[</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">G</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∣</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord mathnormal" style="margin-right:0.04601em;">ξ</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mclose delimcenter" style="top:0em;">]</span></span><span class="mclose delimcenter" style="top:0em;">]</span></span></span></span></span></span></div>
+        <div class="hero-sub">Train for expected return across a randomized distribution <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false">(</mo><mi>ξ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">p(\xi)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">p</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.04601em;">ξ</span><span class="mclose">)</span></span></span></span> of simulator conditions - then validate on real data.</div>
+      </div>
+    </div>
+  </header>
+
+  <section id="pipeline" aria-labelledby="pipe-h">
+    <div class="kicker">The pipeline - train, randomize, transfer, validate</div>
+    <h2 id="pipe-h">Four stages, one gate</h2>
+    <p>The learned grasp controller is built entirely on the development side of the edge boundary (CEC-04); only a validated policy crosses to the field. The last stage is not a formality - it is the gate that makes the whole thing trustworthy.</p>
+    <div class="pipe">
+      <div class="node"><div class="nm">Train in sim</div><div class="sub">twin supplies episodes</div></div>
+      <div class="arrow" aria-hidden="true">-&gt;</div>
+      <div class="node"><div class="nm">Randomize</div><div class="sub">p(xi): contact, mass, noise, light</div></div>
+      <div class="arrow" aria-hidden="true">-&gt;</div>
+      <div class="node"><div class="nm">Transfer</div><div class="sub">deploy to real hardware</div></div>
+      <div class="arrow" aria-hidden="true">-&gt;</div>
+      <div class="node gate"><div class="nm">Validate</div><div class="sub">on real data - acceptance gate</div></div>
+    </div>
+  </section>
+
+  <section id="derivation" aria-labelledby="deriv-h">
+    <div class="kicker">Full derivation - why randomization transfers</div>
+    <h2 id="deriv-h">The reality gap, and how randomization closes it</h2>
+
+    <div class="dstep" data-n="1">
+      <div class="d-state">Domain randomization is robust optimization: train for expected return across a distribution of conditions.</div>
+      <div class="eq"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msup><mi>π</mi><mo lspace="0em" rspace="0em">∗</mo></msup><mo>=</mo><mi>arg</mi><mo>⁡</mo><munder><mrow><mi>max</mi><mo>⁡</mo></mrow><mi>π</mi></munder><mtext> </mtext><msub><mi mathvariant="double-struck">E</mi><mrow><mi>ξ</mi><mo>∼</mo><mi>p</mi><mo stretchy="false">(</mo><mi>ξ</mi><mo stretchy="false">)</mo></mrow></msub><mtext> ⁣</mtext><mrow><mo fence="true">[</mo><mtext> </mtext><msub><mi mathvariant="double-struck">E</mi><mi>π</mi></msub><mtext> ⁣</mtext><mrow><mo fence="true">[</mo><mtext> </mtext><mi>G</mi><mo>∣</mo><mi>ξ</mi><mtext> </mtext><mo fence="true">]</mo></mrow><mo fence="true">]</mo></mrow></mrow><annotation encoding="application/x-tex">\pi^{\ast} = \arg\max_{\pi}\ \mathbb{E}_{\xi \sim p(\xi)}\!\left[\, \mathbb{E}_{\pi}\!\left[\, G \mid \xi \,\right] \right]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7387em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">π</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7387em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">∗</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.45em;vertical-align:-0.7em;"></span><span class="mop">ar<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.4306em;"><span style="top:-2.4em;margin-left:0em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">π</span></span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span><span class="mop">max</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7em;"><span></span></span></span></span></span><span class="mspace"> </span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathbb">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.5198em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.04601em;">ξ</span><span class="mrel mtight">∼</span><span class="mord mathnormal mtight">p</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight" style="margin-right:0.04601em;">ξ</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3552em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:-0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">[</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathbb">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">π</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:-0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">[</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">G</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∣</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord mathnormal" style="margin-right:0.04601em;">ξ</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mclose delimcenter" style="top:0em;">]</span></span><span class="mclose delimcenter" style="top:0em;">]</span></span></span></span></span></span></div>
+      <p class="d-exp">Let the simulator's uncertain parameters <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ξ</mi></mrow><annotation encoding="application/x-tex">\xi</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.04601em;">ξ</span></span></span></span> - contact stiffness, friction, mass, sensor noise, lighting - be drawn from a randomization distribution <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false">(</mo><mi>ξ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">p(\xi)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">p</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.04601em;">ξ</span><span class="mclose">)</span></span></span></span>. Train the policy to maximize <em>expected</em> return across that whole distribution, not one fixed setting. A policy optimal in expectation across a broad <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false">(</mo><mi>ξ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">p(\xi)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">p</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.04601em;">ξ</span><span class="mclose">)</span></span></span></span> is robust to the specific real <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ξ</mi></mrow><annotation encoding="application/x-tex">\xi</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.04601em;">ξ</span></span></span></span> it later meets.</p>
+      <div class="d-cons"><span class="lab">Consequence</span><p>That is the mathematical statement of <strong>why randomization transfers</strong> - robustness by construction, not by luck.</p></div>
+    </div>
+
+    <div class="dstep" data-n="2">
+      <div class="d-state">The reality gap is a distribution shift between training and field.</div>
+      <p class="d-exp">The <strong>reality gap</strong> is the mismatch between the training distribution <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false">(</mo><mi>ξ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">p(\xi)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">p</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.04601em;">ξ</span><span class="mclose">)</span></span></span></span> and the field's true conditions. If the field lands <em>inside</em> what you trained on, the policy has seen its like and performs; if it lands <em>outside</em>, the policy is extrapolating - and a simulator-overfit policy falls off a cliff. The gap is <strong>measured</strong> by comparing real performance to sim performance, and <strong>closed</strong> by widening or retuning <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false">(</mo><mi>ξ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">p(\xi)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">p</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.04601em;">ξ</span><span class="mclose">)</span></span></span></span>.</p>
+      <div class="d-cons"><span class="lab">Consequence</span><p>The gap is a <strong>measurable quantity</strong>, not a vibe - and it is invisible until you compare against real data.</p></div>
+    </div>
+
+    <div class="dstep" data-n="3">
+      <div class="d-state">Robustness trades against optimality - so randomize just wide enough.</div>
+      <p class="d-exp">Widening <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false">(</mo><mi>ξ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">p(\xi)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">p</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.04601em;">ξ</span><span class="mclose">)</span></span></span></span> buys robustness but costs peak performance: a policy that must handle a huge range of conditions cannot be perfectly tuned to any one. Too narrow and it overfits the sim; too wide and it is mediocre everywhere. The craft is to randomize <em>just wide enough</em> to cover the field's plausible range.</p>
+      <div class="d-cons"><span class="lab">Consequence</span><p>Real-data <strong>validation confirms the choice</strong> - the acceptance gate that converts "it works in sim" into evidence.</p></div>
+    </div>
+  </section>
+
+  <section id="instrument" aria-labelledby="inst-h">
+    <div class="kicker">The gap, live - you cannot see it until you validate</div>
+    <h2 id="inst-h">Train, then find out what you really have</h2>
+    <p>The curve is grasp performance across the condition axis <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ξ</mi></mrow><annotation encoding="application/x-tex">\xi</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.04601em;">ξ</span></span></span></span> (say, contact stiffness). Set how wide you <span class="rind-t">randomize training</span>, then set where the <span class="water-t">real field</span> turns out to land. In-sim performance is visible immediately - but the field performance, and the reality gap, stay hidden until you run the validation gate.</p>
+
+    <div class="instrument">
+      <div class="inst-head">
+        <div class="inst-title">Domain randomization and the reality gap</div>
+        <button class="reset" id="resetBtn" type="button">Reset</button>
+      </div>
+
+      <noscript><p class="noscript-note">This interactive reality-gap explorer requires JavaScript. The full worked result is in the derivation above: a policy trained over a randomization distribution p(xi) is robust when the field lands inside the trained band and falls off a cliff when it lands outside; the reality gap is invisible until validated against real data, which is why validation is a required acceptance gate.</p></noscript>
+
+      <div class="illus">Illustrative model of the robustness-optimality tradeoff - shapes and numbers are pedagogical, not measured. By EI-06, real performance is measured on real fruit.</div>
+      <div class="chartwrap">
+        <svg id="chart" viewBox="0 0 640 300" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Grasp performance across the condition axis, with training band and field condition. Field performance and reality gap appear after running validation."></svg>
+      </div>
+
+      <div class="controls">
+        <div class="ctl-group">
+          <span class="lbl">domain-randomization breadth <b>w = <span id="wRead">0.10</span></b></span>
+          <input type="range" id="width" min="0.05" max="0.45" step="0.01" value="0.10" aria-label="domain-randomization breadth w">
+        </div>
+        <div class="ctl-group">
+          <span class="lbl">where the real field lands <b>xi = <span id="fRead">0.75</span></b></span>
+          <input type="range" class="water" id="field" min="0.05" max="0.95" step="0.01" value="0.75" aria-label="where the real field condition lands">
+        </div>
+      </div>
+
+      <div class="validate">
+        <button class="vbtn" id="valBtn" type="button">Run validation on real data</button>
+        <span class="vnote" id="valNote">field performance is unknown until you validate</span>
+      </div>
+
+      <div class="readbar">
+        <div class="ro"><div class="lab">in-sim performance</div><div class="val" id="roSim">0.95</div></div>
+        <div class="ro"><div class="lab">field performance</div><div class="val q" id="roField">?</div></div>
+        <div class="ro"><div class="lab">reality gap</div><div class="val q" id="roGap">?</div></div>
+      </div>
+
+      <div class="status q" id="status" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section id="cec05" aria-labelledby="cec-h">
+    <div class="kicker">The concept - transfer is earned, never assumed</div>
+    <h2 id="cec-h">What makes learned behavior deployable</h2>
+    <div class="insight">
+      <div class="tag">CEC-05 - The Sim-to-Real Pipeline</div>
+      <p><strong>Develop learned behaviors in simulation under deliberately randomized conditions, then transfer to the field, measuring and closing the reality gap with real-data validation as an acceptance gate.</strong> The twin gives massive, safe, cheap experience that real fruit never could - but a policy that overfits the simulator is worse than useless, because it looks excellent in the only place you have been looking. Domain randomization forces the learner to be robust rather than tuned; validation on real data is what converts "it works in sim" into evidence. This is the operational bridge across the development/runtime boundary (CEC-04): learning happens on the development side, but transfer must be earned and measured, never assumed.</p>
+    </div>
+  </section>
+
+  <section id="takeaway" aria-labelledby="tk-h">
+    <div class="kicker">Engineering takeaway - what to do next</div>
+    <h2 id="tk-h">How to run the pipeline</h2>
+    <div class="takeaway">
+      <ul class="tk-list">
+        <li><span class="tk-mark" aria-hidden="true">-&gt;</span> Never trust an in-sim performance number on its own. It is measured in the one place the policy might be overfit to - the <strong>reality gap is invisible until you validate on real data</strong>, so the validation gate is not optional.</li>
+        <li><span class="tk-mark tk-hot" aria-hidden="true">-&gt;</span> Randomize <strong class="rind-t">just wide enough</strong> to cover the field's plausible conditions. Too narrow overfits the simulator (a cliff when the field drifts); too wide throws away peak performance. Widen <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false">(</mo><mi>ξ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">p(\xi)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">p</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.04601em;">ξ</span><span class="mclose">)</span></span></span></span> to close a measured gap, not preemptively.</li>
+        <li><span class="tk-mark" aria-hidden="true">-&gt;</span> Identify which parameters the field actually varies - contact stiffness, fruit mass, lighting - and randomize <strong>those</strong>. Randomizing parameters the field holds fixed only costs peak performance for no robustness gain.</li>
+        <li><span class="tk-mark" aria-hidden="true">-&gt;</span> <strong>Decision:</strong> gate deployment on a <strong class="rind-t">real-data validation campaign</strong>, and treat the grasp claim as field-mandatory (CEC-06 rung R6). Report the measured sim-to-field gap as the acceptance evidence - not the sim score alone.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    SIM2FIELD / Autonomous Watermelon Harvesting Robotics<br>
+    Worked example for the Sim-to-Real Pipeline (CEC-05), Module 7 - train-in-sim, randomize, transfer, validate<br>
+    Method harvested from Module 7 Sec. 7.3 (domain randomization as robust transfer) - frozen Rev 1.0; performance model is illustrative<br>
+    Production Phase asset - configuration-controlled
+  </footer>
+</main>
+
+<script>
+/* Interactive enhancement only. All engineering content above is static and
+   readable with JavaScript disabled. Vanilla JS, no external dependencies.
+   Colors come from semantic tokens (var(--...)), never raw hex - SVG elements
+   set color via a style attribute so var() resolves. */
+(function(){
+  "use strict";
+  const MU=0.5, ALPHA=0.45, S=0.12;
+  const NS="http://www.w3.org/2000/svg";
+  const X0=54, X1=612, Y0=24, Y1=248;
+  const xpix = xi => X0 + xi*(X1-X0);
+  const ypix = p  => Y1 - p*(Y1-Y0);
+
+  let state={w:0.10, field:0.75, validated:false};
+
+  function peak(w){ return 1 - ALPHA*w; }
+  function perfAt(xi,w){
+    const P=peak(w), d=Math.abs(xi-MU);
+    return d<=w ? P : P*Math.exp(-Math.pow((d-w)/S,2));
+  }
+
+  const chart=document.getElementById('chart');
+  if(!chart) return;
+  function el(tag,attrs){ const e=document.createElementNS(NS,tag); for(const k in attrs) e.setAttribute(k,attrs[k]); return e; }
+
+  function drawChart(){
+    chart.innerHTML='';
+    chart.appendChild(el('line',{x1:X0,y1:Y1,x2:X1,y2:Y1,style:'stroke:var(--border)','stroke-width':1}));
+    chart.appendChild(el('line',{x1:X0,y1:Y0,x2:X0,y2:Y1,style:'stroke:var(--border)','stroke-width':1}));
+    [0,0.5,1].forEach(p=>{
+      const y=ypix(p);
+      chart.appendChild(el('line',{x1:X0-4,y1:y,x2:X0,y2:y,style:'stroke:var(--border)','stroke-width':1}));
+      const t=el('text',{x:X0-8,y:y+3,'text-anchor':'end',style:'fill:var(--text-muted)','font-size':10,'font-family':'IBM Plex Mono'}); t.textContent=p.toFixed(1); chart.appendChild(t);
+    });
+    let xl=el('text',{x:(X0+X1)/2,y:284,'text-anchor':'middle',style:'fill:var(--text-muted)','font-size':11,'font-family':'IBM Plex Mono'}); xl.textContent='condition xi  (e.g. contact stiffness)'; chart.appendChild(xl);
+    let yl=el('text',{x:16,y:(Y0+Y1)/2,'text-anchor':'middle',style:'fill:var(--text-muted)','font-size':11,'font-family':'IBM Plex Mono',transform:`rotate(-90 16 ${(Y0+Y1)/2})`}); yl.textContent='grasp performance'; chart.appendChild(yl);
+
+    const bx0=xpix(Math.max(0,MU-state.w)), bx1=xpix(Math.min(1,MU+state.w));
+    chart.appendChild(el('rect',{x:bx0,y:Y0,width:bx1-bx0,height:Y1-Y0,style:'fill:var(--tint-band);stroke:var(--band-edge)','stroke-width':1,'stroke-dasharray':'3 3'}));
+    const bl=el('text',{x:(bx0+bx1)/2,y:Y0+14,'text-anchor':'middle',style:'fill:var(--accent)','font-size':10,'font-family':'IBM Plex Mono'}); bl.textContent='trained here'; chart.appendChild(bl);
+
+    let dpath='';
+    for(let i=0;i<=120;i++){ const xi=i/120; const x=xpix(xi), y=ypix(perfAt(xi,state.w)); dpath+=(i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1)+' '; }
+    chart.appendChild(el('path',{d:dpath,fill:'none',style:'stroke:var(--accent)','stroke-width':2}));
+
+    const px=xpix(MU), py=ypix(peak(state.w));
+    chart.appendChild(el('circle',{cx:px,cy:py,r:4,style:'fill:var(--accent)'}));
+
+    const fx=xpix(state.field);
+    chart.appendChild(el('line',{x1:fx,y1:Y0,x2:fx,y2:Y1,style:'stroke:var(--info)','stroke-width':1.5,'stroke-dasharray':'4 3'}));
+    const fl=el('text',{x:fx,y:Y0-2,'text-anchor':'middle',style:'fill:var(--info)','font-size':10,'font-family':'IBM Plex Mono'}); fl.textContent='field';
+    fl.setAttribute('x', Math.min(X1-14, Math.max(X0+14, fx)));
+    chart.appendChild(fl);
+
+    if(state.validated){
+      const fpy=ypix(perfAt(state.field,state.w));
+      chart.appendChild(el('circle',{cx:fx,cy:fpy,r:5,style:'fill:var(--info);stroke:var(--bg)','stroke-width':1.5}));
+      const simY=ypix(peak(state.w));
+      if(Math.abs(simY-fpy)>3){
+        chart.appendChild(el('line',{x1:fx+10,y1:simY,x2:fx+10,y2:fpy,style:'stroke:var(--danger)','stroke-width':1.5}));
+        const gl=el('text',{x:fx+14,y:(simY+fpy)/2+3,style:'fill:var(--danger)','font-size':10,'font-family':'IBM Plex Mono'}); gl.textContent='gap';
+        gl.setAttribute('x', Math.min(X1-28, fx+14));
+        chart.appendChild(gl);
+      }
+    }
+  }
+
+  function render(){
+    drawChart();
+    const P=peak(state.w), fp=perfAt(state.field,state.w), gap=P-fp;
+    const d=Math.abs(state.field-MU), margin=state.w-d;
+    const $=id=>document.getElementById(id);
+    $('wRead').textContent=state.w.toFixed(2);
+    $('fRead').textContent=state.field.toFixed(2);
+    $('roSim').textContent=P.toFixed(2);
+
+    if(!state.validated){
+      $('roField').textContent='?'; $('roField').className='val q';
+      $('roGap').textContent='?'; $('roGap').className='val q';
+      $('status').className='status q';
+      $('status').innerHTML=`<b>Not yet validated.</b> In-sim performance is ${P.toFixed(2)} - but that number comes from the simulator the policy may be overfit to. The field performance and the reality gap are unknown until you run validation on real data.`;
+      return;
+    }
+
+    $('roField').textContent=fp.toFixed(2); $('roField').className='val '+(fp>=0.7?'ok':'bad');
+    $('roGap').textContent=gap.toFixed(2); $('roGap').className='val '+(gap>0.15?'bad':'ok');
+
+    const st=$('status');
+    if(d>state.w){
+      st.className='status bad';
+      st.innerHTML=`<b>Overfit - the reality gap bit.</b> The field landed outside the trained band, so the policy is extrapolating: sim ${P.toFixed(2)} but field ${fp.toFixed(2)}, a gap of ${gap.toFixed(2)}. It looked excellent in the one place it was overfit to. Widen p(xi) to cover the field, and re-validate.`;
+    } else if(margin<0.08){
+      st.className='status warn';
+      st.innerHTML=`<b>Covered, but fragile.</b> The field is inside the trained band - field ${fp.toFixed(2)}, gap ${gap.toFixed(2)} - but only barely. A small drift in real conditions would push it off the edge. You do not control where the field lands, so widen p(xi) for margin.`;
+    } else if(state.w>0.38){
+      st.className='status warn';
+      st.innerHTML=`<b>Robust, but over-randomized.</b> The field is well covered (field ${fp.toFixed(2)}, gap ${gap.toFixed(2)}), but the band is so wide that peak performance fell to ${P.toFixed(2)}. If the field's real range is narrower, you traded away performance you did not need to.`;
+    } else {
+      st.className='status ok';
+      st.innerHTML=`<b>Robust transfer.</b> The field is comfortably inside the trained band: sim ${P.toFixed(2)}, field ${fp.toFixed(2)}, gap ${gap.toFixed(2)}. Randomization was wide enough to cover reality without throwing away peak - and the gap is measured, not assumed.`;
+    }
+  }
+
+  document.getElementById('width').addEventListener('input',e=>{ state.w=+e.target.value; state.validated=false; resetValBtn(); render(); });
+  document.getElementById('field').addEventListener('input',e=>{ state.field=+e.target.value; state.validated=false; resetValBtn(); render(); });
+  document.getElementById('valBtn').addEventListener('click',()=>{
+    state.validated=true;
+    const b=document.getElementById('valBtn'); b.classList.add('done'); b.textContent='Validated on real data';
+    document.getElementById('valNote').textContent='reality gap now measured - change a slider to re-train';
+    render();
+  });
+  function resetValBtn(){
+    const b=document.getElementById('valBtn'); b.classList.remove('done'); b.textContent='Run validation on real data';
+    document.getElementById('valNote').textContent='field performance is unknown until you validate';
+  }
+  document.getElementById('resetBtn').addEventListener('click',()=>{
+    state={w:0.10,field:0.75,validated:false};
+    document.getElementById('width').value=0.10;
+    document.getElementById('field').value=0.75;
+    resetValBtn(); render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

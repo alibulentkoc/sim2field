@@ -1,0 +1,29 @@
+<svg viewBox="0 0 760 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The architecture separates a real-time control plane (grasp-force loop, drive and stability, motion, safety monitor) that must meet deadlines with bounded worst-case latency from a best-effort perception plane (detection, localization) that wants throughput but tolerates jitter, isolated so a neural network occasionally taking longer cannot delay the force loop." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Control plane vs perception plane</text>
+<rect x="30" y="60" width="340" height="150" rx="10" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.7"/>
+<text x="46" y="80" font-size="9.5" fill="var(--accent)" font-weight="700">CONTROL PLANE  (real-time)</text>
+<text x="46" y="93" font-size="6.8" fill="var(--text-muted)">deadlines, bounded worst-case latency, isolated</text>
+<rect x="46" y="104" width="308" height="19" rx="5" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.4"/>
+<text x="54" y="117" font-size="7.4" fill="var(--text-secondary)">grasp-force loop (M9)</text>
+<rect x="46" y="128" width="308" height="19" rx="5" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.4"/>
+<text x="54" y="141" font-size="7.4" fill="var(--text-secondary)">drive / stability (M10)</text>
+<rect x="46" y="152" width="308" height="19" rx="5" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.4"/>
+<text x="54" y="165" font-size="7.4" fill="var(--text-secondary)">motion (M8)</text>
+<rect x="46" y="176" width="308" height="19" rx="5" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.4"/>
+<text x="54" y="189" font-size="7.4" fill="var(--text-secondary)">safety monitor (M11/M15)</text>
+<text x="46" y="206" font-size="6.6" fill="var(--danger-text)">a rare late cycle is a real failure</text>
+<rect x="410" y="60" width="320" height="150" rx="10" fill="var(--surface)" stroke="var(--info)" stroke-width="1.7"/>
+<text x="426" y="80" font-size="9.5" fill="var(--info)" font-weight="700">PERCEPTION PLANE  (best-effort)</text>
+<text x="426" y="93" font-size="6.8" fill="var(--text-muted)">high throughput, tolerates jitter</text>
+<rect x="426" y="104" width="288" height="19" rx="5" fill="var(--surface-2)" stroke="var(--info)" stroke-opacity="0.4"/>
+<text x="434" y="117" font-size="7.4" fill="var(--text-secondary)">detection (M4)</text>
+<rect x="426" y="128" width="288" height="19" rx="5" fill="var(--surface-2)" stroke="var(--info)" stroke-opacity="0.4"/>
+<text x="434" y="141" font-size="7.4" fill="var(--text-secondary)">localization / fusion (M5)</text>
+<text x="426" y="170" font-size="6.8" fill="var(--text-muted)">a neural net occasionally taking longer</text>
+<text x="426" y="181" font-size="6.8" fill="var(--text-muted)">must not delay the force loop</text>
+<line x1="390" y1="66" x2="390" y2="204" stroke="var(--danger)" stroke-width="1.8" stroke-dasharray="5 3"/>
+<text x="390" y="222" font-size="7" fill="var(--danger-text)" font-weight="anc=middle">isolation: jitter must not cross</text>
+<text x="20" y="246" font-size="7.8" fill="var(--text-muted)">Required in M6 (DD-33); engineered here via executor/thread assignment, priorities, core affinity, and (where available) a real-time scheduler,</text>
+<text x="20" y="258" font-size="7.8" fill="var(--text-muted)">so the control plane's worst case is bounded independent of perception load. Section 6.3.</text>
+</svg>

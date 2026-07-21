@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Machine Vision &amp; Perception — SIM2FIELD</title>
+<meta name="description" content="A short university course on the engineering of an autonomous watermelon/pumpkin harvesting robot: perception, edge AI, manipulation, and field deployment.">
+<link rel="stylesheet" href="assets/style.css">
+
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a class="brand" href="index.html"><span class="dot"></span>SIM2FIELD</a>
+  <div class="nav-links"><a href="index.html">Home</a><a href="index.html#modules" class="active">Modules</a><a href="demo-page.html">Live Demo</a><a href="index.html#specs">Specs</a><a href="capstone.html">Capstone</a></div>
+</div></nav>
+<header class="article-head"><div class="inner"><p class="eyebrow">Module 2</p><h1>Machine Vision &amp; Perception</h1><div class="dur">◷ 5 hours</div></div></header><main class="page prose">
+
+<h2 id="learning-outcomes">Learning outcomes</h2>
+<p>By the end of this module, students can:</p>
+<ol>
+<li>Distinguish the tasks in a perception pipeline — detection, segmentation,
+   ripeness classification, and 3D localization — and explain what each
+   contributes.</li>
+<li>Explain how a stereo camera recovers depth and compute a 3D fruit position in
+   the robot frame from a pixel detection plus depth.</li>
+<li>Diagnose the dominant field failure modes — occlusion, same-color camouflage,
+   variable illumination — and match each to a mitigation.</li>
+<li>Define and apply an occlusion gate and explain why a harvester should decline
+   to pick a fruit it cannot see well enough.</li>
+<li>Evaluate a detector with the right metrics (precision/recall, mAP, IoU) and
+   argue which matters most for this application.</li>
+</ol>
+<h2 id="core-concepts">Core concepts</h2>
+<h3 id="the-perception-pipeline">The perception pipeline</h3>
+<p>Perception is not one model; it is a small pipeline, each stage feeding the next:</p>
+<ol>
+<li><strong>Detection</strong> — locate candidate fruit in the image (bounding boxes or
+   masks). Modern practice: a single-stage CNN detector (YOLO-family) or an
+   instance-segmentation model (Mask R-CNN, or a transformer-based segmenter)
+   when per-pixel masks help downstream grasping.</li>
+<li><strong>Ripeness / quality classification</strong> — decide whether a detected fruit
+   should be picked. For melons this fuses visual cues (ground-spot color, rind
+   pattern) and, in advanced builds, near-infrared reflectance that correlates
+   with maturity.</li>
+<li><strong>3D localization</strong> — convert the 2D detection into a 3D position in the
+   robot's coordinate frame, using stereo depth. This is what the arm actually
+   consumes.</li>
+<li><strong>Occlusion assessment</strong> — quantify how much of the fruit is hidden by canopy,
+   and gate the decision on it.</li>
+</ol>
+<h3 id="how-stereo-depth-works-the-one-piece-of-geometry-to-master">How stereo depth works (the one piece of geometry to master)</h3>
+<p>Two cameras a known baseline <code>b</code> apart see the same fruit at slightly different
+horizontal pixel positions. That difference is the <strong>disparity</strong> <code>d</code>. With focal
+length <code>f</code> (in pixels), depth is:</p>
+<pre><code>Z = f · b / d
+</code></pre>
+<p>Nearer objects have larger disparity; far objects have tiny disparity, which is
+why stereo depth degrades with distance and why a <em>close-range</em> head is the right
+choice for a machine that works within its own wheelbase. Once <code>Z</code> is known, the
+full 3D point in the camera frame is:</p>
+<pre><code>X = (u − cx) · Z / f
+Y = (v − cy) · Z / f
+Z = f · b / d
+</code></pre>
+<p>where <code>(u, v)</code> is the pixel and <code>(cx, cy)</code> the principal point. A fixed
+extrinsic transform (a rotation <code>R</code> and translation <code>t</code> from a one-time
+calibration) then maps that point into the robot frame the arm uses:</p>
+<pre><code>p_robot = R · p_camera + t
+</code></pre>
+<p>This chain — pixel → camera 3D → robot 3D — is the single most important
+computation in the course, because it is the handoff from "seeing" to "acting."</p>
+<h3 id="the-three-field-failure-modes-and-their-mitigations">The three field failure modes and their mitigations</h3>
+<table>
+<thead>
+<tr>
+<th>Failure mode</th>
+<th>Why it breaks naive vision</th>
+<th>Mitigation taught here</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Occlusion</strong></td>
+<td>Fruit is under sprawling vines; the detector sees a sliver</td>
+<td>Active canopy clearing (Module 4) <em>plus</em> an occlusion gate that defers uncertain picks</td>
+</tr>
+<tr>
+<td><strong>Same-color camouflage</strong></td>
+<td>Ripe rind ≈ leaf green; color thresholds fail</td>
+<td>Learned features over hand-tuned color; multi-modal fusion (add NIR / depth / texture)</td>
+</tr>
+<tr>
+<td><strong>Variable illumination</strong></td>
+<td>Full sun to hard shade within one frame</td>
+<td>Training-time domain randomization; HDR or auto-exposure; normalize, don't threshold raw RGB</td>
+</tr>
+</tbody>
+</table>
+<h3 id="the-occlusion-gate-a-design-idea-worth-dwelling-on">The occlusion gate — a design idea worth dwelling on</h3>
+<p>A harvester that grabs at a 70%-hidden melon will mis-grasp, bruise fruit, or
+crash the gripper into a vine. A better policy: compute an occlusion fraction for
+each candidate (e.g., visible mask area vs. expected full-fruit area, or count of
+overlapping leaf instances) and <strong>only commit to a pick when occlusion is below a
+threshold</strong> (in our case study, on the order of ≤ 34%). Fruit above the gate is
+either skipped for a later pass, or handed to the canopy-clearing routine and
+re-evaluated. This is a recurring theme: <em>a good robot knows when not to act.</em></p>
+<h3 id="choosing-metrics-that-match-the-mission">Choosing metrics that match the mission</h3>
+<p>Students routinely optimize the wrong number. For a harvester:</p>
+<ul>
+<li><strong>Recall</strong> (did we find the ripe fruit?) drives yield — missed fruit is lost
+  revenue.</li>
+<li><strong>Precision</strong> (were our detections real?) drives wasted cycles and mis-grasps.</li>
+<li><strong>Localization error</strong> (how far off is the 3D position?) drives grasp success
+  directly and is often the true bottleneck even when detection looks great.</li>
+</ul>
+<p>A detector with 0.95 mAP and 3 cm localization error may harvest <em>worse</em> than a
+weaker detector with 1 cm error. Measure the thing that predicts a grasped fruit.</p>
+<h2 id="grad-extension"><span class="tagpill tag-grad">Graduate</span>Grad extension</h2>
+<p><strong>Multi-modal fusion.</strong> Read on sensor fusion for agricultural perception, then
+write a half-page architecture proposal for fusing RGB, stereo depth, and NIR
+reflectance to detect a same-color melon. Address: where in the network features
+should fuse (early/mid/late), how to handle a missing modality at inference, and
+what a foundation-model image backbone would and would not buy you here.</p>
+<h2 id="demo-or-lab"><span class="tagpill tag-lab">Hands-on</span>Demo or lab</h2>
+<p><strong>Lab 2 — Perception on real-ish frames.</strong>
+See <a href="../../labs/lab-02-perception.md"><code>labs/lab-02-perception.md</code></a>. Students run a
+pretrained detector on a provided image set (melons in canopy under varied
+light), then:</p>
+<ol>
+<li>Compute precision/recall at several confidence thresholds and plot the curve.</li>
+<li>Take a detection + a depth value and hand-compute the 3D position in the
+   camera frame, then transform to the robot frame with a given <code>R, t</code>.</li>
+<li>Implement a simple occlusion metric and set a gate; report how many picks the
+   gate defers and argue whether the threshold is well chosen.</li>
+</ol>
+<p>No GPU cluster required — the lab runs on a laptop or the course's edge device to
+foreshadow Module 3.</p>
+<h2 id="knowledge-check"><span class="tagpill tag-quiz">Quiz</span>Knowledge check</h2><div class="quiz" data-quiz><div class="quiz-head"><span class="ic">◇</span>Module 2 — Knowledge Check<span class="score">0 / 2</span></div><div class="q" data-correct="1"><p class="qtext"><span class="qn">01</span>Stereo depth is Z = f·b/d. Doubling the distance to a fruit, all else equal, makes the disparity d:</p><button class="opt" data-q="0" data-o="0">roughly double<span class="mark"></span></button><button class="opt" data-q="0" data-o="1">roughly half<span class="mark"></span></button><button class="opt" data-q="0" data-o="2">unchanged<span class="mark"></span></button><button class="opt" data-q="0" data-o="3">zero<span class="mark"></span></button><div class="qexpl"><b>Why:</b> Disparity is inversely proportional to depth, so twice the distance gives roughly half the disparity — which is why stereo depth degrades with range.</div></div><div class="q" data-correct="1"><p class="qtext"><span class="qn">02</span>For a harvester, which metric most directly protects yield?</p><button class="opt" data-q="1" data-o="0">precision<span class="mark"></span></button><button class="opt" data-q="1" data-o="1">recall<span class="mark"></span></button><button class="opt" data-q="1" data-o="2">frame rate<span class="mark"></span></button><button class="opt" data-q="1" data-o="3">model size<span class="mark"></span></button><div class="qexpl"><b>Why:</b> Recall measures how much ripe fruit is found; missed fruit is lost revenue. Precision protects wasted cycles, but recall protects yield.</div></div><div class="quiz-foot"><button class="btn btn-dark" data-reset>Reset</button><span class="msg">Pick an answer to check it instantly.</span></div></div>
+<ol>
+<li>Write the stereo depth equation and explain, physically, why depth accuracy
+   falls off with distance.</li>
+<li>A fruit is detected at pixel <code>(u, v) = (410, 300)</code>; depth <code>Z = 0.85 m</code>;
+   <code>f = 700 px</code>, <code>(cx, cy) = (320, 240)</code>. Compute <code>X, Y, Z</code> in the camera frame.</li>
+<li>Your detector has excellent mAP but grasp success is poor. Name two perception
+   causes and how you'd test for each.</li>
+<li>Explain the occlusion gate. Why might raising the gate threshold <em>increase</em>
+   total harvested fruit yet <em>decrease</em> fruit quality?</li>
+<li>For this application, argue whether recall or precision should be weighted more
+   heavily, and describe a case where your answer flips.</li>
+</ol>
+<h2 id="take-home-assignment"><span class="tagpill tag-take">Assignment</span>Take-home assignment</h2>
+<p>Using the provided image set, produce a <strong>one-page perception report</strong>: your
+precision/recall curve, three representative failure cases (one per failure
+mode) with a sentence each on cause and fix, and a recommended operating
+confidence threshold with justification. Deliverable:
+<code>assignments/m2-perception-report.md</code> plus figures.</p><div class="pager"><a href="module-01.html"><span class="d">← Previous</span>Module 1: The Problem &amp; The System</a><a class="next" href="module-03.html"><span class="d">Next →</span>Module 3: Edge Computing, ML &amp; AI</a></div></main>
+<footer class="foot"><div class="inner">
+  <div>SIM2FIELD · Robotic Harvesting Systems — course materials</div>
+  <div><a href="index.html">Home</a> · <a href="demo-page.html">Live Demo</a> · <a href="capstone.html">Capstone</a></div>
+</div></footer>
+
+<script>
+document.querySelectorAll('[data-quiz]').forEach(function(quiz){
+  var total = quiz.querySelectorAll('.q').length;
+  var answered = {};
+  function refresh(){
+    var correct = Object.values(answered).filter(Boolean).length;
+    quiz.querySelector('.score').textContent = correct + ' / ' + total;
+    var msg = quiz.querySelector('.msg');
+    if (Object.keys(answered).length === total){
+      msg.textContent = correct === total ? 'Perfect — all correct.' :
+        'You got ' + correct + ' of ' + total + '. Review the explanations and try again.';
+    }
+  }
+  quiz.querySelectorAll('.opt').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var qEl = btn.closest('.q');
+      if (qEl.dataset.locked) return;
+      qEl.dataset.locked = '1';
+      var correct = parseInt(qEl.dataset.correct,10);
+      var chosen = parseInt(btn.dataset.o,10);
+      qEl.querySelectorAll('.opt').forEach(function(o){
+        o.classList.add('locked');
+        var oi = parseInt(o.dataset.o,10);
+        if (oi === correct) o.classList.add('correct');
+        else if (o === btn) o.classList.add('wrong');
+      });
+      qEl.querySelector('.qexpl').classList.add('show');
+      answered[qEl.dataset.q || btn.dataset.q] = (chosen === correct);
+      refresh();
+    });
+  });
+  quiz.querySelector('[data-reset]').addEventListener('click', function(){
+    answered = {};
+    quiz.querySelectorAll('.q').forEach(function(qEl){
+      delete qEl.dataset.locked;
+      qEl.querySelectorAll('.opt').forEach(function(o){ o.className='opt'; });
+      qEl.querySelector('.qexpl').classList.remove('show');
+    });
+    quiz.querySelector('.msg').textContent = 'Pick an answer to check it instantly.';
+    refresh();
+  });
+});
+</script>
+
+</body>
+</html>

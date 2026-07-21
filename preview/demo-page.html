@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Demo — SIM2FIELD</title>
+<meta name="description" content="A short university course on the engineering of an autonomous watermelon/pumpkin harvesting robot: perception, edge AI, manipulation, and field deployment.">
+<link rel="stylesheet" href="assets/style.css">
+
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a class="brand" href="index.html"><span class="dot"></span>SIM2FIELD</a>
+  <div class="nav-links"><a href="index.html">Home</a><a href="index.html#modules">Modules</a><a href="demo-page.html" class="active">Live Demo</a><a href="index.html#specs">Specs</a><a href="capstone.html">Capstone</a></div>
+</div></nav>
+
+<header class="article-head"><div class="inner">
+  <p class="eyebrow">Interactive</p>
+  <h1>Live Harvester Simulation</h1>
+  <div class="dur">◷ Drag to orbit · drag the red gripper node to jog the mechanism · use the panel to run a harvest</div>
+</div></header>
+<section class="demo-strip" style="padding-top:30px">
+  <div class="demo-frame" style="aspect-ratio:16/10">
+    <span class="demo-tag">● Live — Amiga parallel 2-cylinder harvester</span>
+    <iframe src="demo.html" title="Live harvester simulation"></iframe>
+  </div>
+</section>
+<main class="page prose" style="padding-top:10px">
+  <h2>What you're looking at</h2>
+  <p>This is the fully simulated drive-over harvester used as the course case study. The rover straddles the
+  crop bed; melons pass beneath the frame; a rail-mounted <strong>parallel two-cylinder mechanism</strong> picks
+  each fruit at a fixed station inside the wheelbase and places it into the side trailer. The telemetry panel
+  shows the live kinematics, singularity metric, and canopy-management state referenced throughout the modules.</p>
+  <h3>Try this</h3>
+  <ul>
+    <li><strong>Run a harvest.</strong> Open the control panel (top-right) → Mission → <em>Start Harvest</em>, and watch the full DRIVE → STAGE → ALIGN → GRAB → LIFT → SWING → LOWER → RELEASE cycle (Module 4).</li>
+    <li><strong>Jog the mechanism.</strong> Drag the red gripper node and watch the strut lengths and transmission angle γ update — the inverse kinematics from Module 4, live.</li>
+    <li><strong>Widen the stance.</strong> Chassis → Track Width. The reachable workspace grows and γ improves, because the strut bases ride the rails — the co-design lesson in Module 4 and 5.</li>
+    <li><strong>Aim the camera.</strong> Vision → Camera Pitch/Yaw/Height. The FOV cone and detection range follow the aim — the perception geometry in Module 2.</li>
+    <li><strong>Switch canopy modes.</strong> Canopy Mgmt → Clearing Mode (brush / air knife / lifter fingers) — the sweep-and-segment strategy in Module 2 and 4.</li>
+  </ul>
+  <div class="pager">
+    <a href="module-04.html"><span class="d">Related module</span>Module 4: Manipulation &amp; Control</a>
+    <a class="next" href="module-02.html"><span class="d">Related module</span>Module 2: Vision &amp; Perception</a>
+  </div>
+</main>
+
+<footer class="foot"><div class="inner">
+  <div>SIM2FIELD · Robotic Harvesting Systems — course materials</div>
+  <div><a href="index.html">Home</a> · <a href="demo-page.html">Live Demo</a> · <a href="capstone.html">Capstone</a></div>
+</div></footer>
+
+</body>
+</html>

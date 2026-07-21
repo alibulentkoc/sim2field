@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hardware &amp; Software Architecture — SIM2FIELD</title>
+<meta name="description" content="A short university course on the engineering of an autonomous watermelon/pumpkin harvesting robot: perception, edge AI, manipulation, and field deployment.">
+<link rel="stylesheet" href="assets/style.css">
+
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a class="brand" href="index.html"><span class="dot"></span>SIM2FIELD</a>
+  <div class="nav-links"><a href="index.html">Home</a><a href="index.html#modules">Modules</a><a href="demo-page.html">Live Demo</a><a href="index.html#specs" class="active">Specs</a><a href="capstone.html">Capstone</a></div>
+</div></nav>
+<header class="article-head"><div class="inner"><p class="eyebrow">Specification</p><h1>Hardware &amp; Software Architecture</h1></div></header><main class="page prose">
+<blockquote>
+<p><strong>Teaching artifact.</strong> A reference architecture for the case-study machine,
+written so students can copy the <em>structure</em> into their own capstone design and
+so instructors can point at concrete decisions. ASCII diagrams are used
+intentionally so the file renders anywhere and diffs cleanly in Git.</p>
+</blockquote>
+<h2 id="1-hardware-architecture">1. Hardware architecture</h2>
+<h3 id="11-reference-block-diagram">1.1 Reference block diagram</h3>
+<pre><code>                         ┌──────────────────────────────────────────────┐
+                         │                 POWER DOMAIN                  │
+                         │  Battery → DC distribution → per-domain fuses │
+                         └───────┬───────────────┬───────────────┬──────┘
+                                 │               │               │
+                    ┌────────────▼───┐   ┌───────▼────────┐  ┌───▼──────────┐
+   PERCEPTION PLANE │  Edge module   │   │ Platform Brain │  │  Actuation   │
+   (Ethernet/USB)   │  (Jetson-class)│   │  (real-time)   │  │  power stage │
+                    │  detection,    │   │  drive, CAN,   │  │  actuator    │
+                    │  localization, │   │  safety,       │  │  drives      │
+                    │  grasp policy  │   │  supervisor    │  │              │
+                    └───┬────────┬───┘   └───┬────────┬───┘  └──────┬───────┘
+                        │        │           │        │             │
+        ┌───────────────▼──┐  ┌──▼───────────▼─┐   ┌──▼─────────────▼──────────┐
+        │  Stereo head,    │  │  ── CAN bus ──  │   │  Telescopic struts (×2),  │
+        │  wrist cam, NIR  │  │  motors, encoders,│  │  gripper (load cells +    │
+        │  (front toolbar) │  │  safety I/O, RTK  │  │  tactile), canopy tool    │
+        └──────────────────┘  └─────────────────┘   └───────────────────────────┘
+                                       │
+                              ┌────────▼─────────┐
+                              │  Safety layer:   │
+                              │  e-stop, bumper  │
+                              │  lidar, geofence │
+                              └──────────────────┘
+</code></pre>
+<h3 id="12-the-one-decision-to-remember">1.2 The one decision to remember</h3>
+<p><strong>Two compute planes, deliberately separated.</strong></p>
+<ul>
+<li>A <strong>real-time control plane</strong> on the platform Brain: drive control, the CAN bus,
+  the safety monitor, and the mission supervisor. Deterministic, safety-critical.</li>
+<li>A <strong>best-effort perception plane</strong> on the edge module: detection, localization,
+  and the grasp policy. Compute-heavy, latency-tolerant relative to safety.</li>
+</ul>
+<p>They communicate through a defined interface (a ROS 2 bridge), but a slow
+inference frame can <strong>never</strong> stall a safety loop, because they do not share the
+real-time bus. This separation is the architectural spine of a dependable field
+robot and students should be able to defend it.</p>
+<h3 id="13-bus-assignments">1.3 Bus assignments</h3>
+<table>
+<thead>
+<tr>
+<th>Bus</th>
+<th>Carries</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CAN</strong></td>
+<td>motor commands, encoder feedback, safety I/O</td>
+<td>deterministic, robust, native to the platform</td>
+</tr>
+<tr>
+<td><strong>Ethernet / USB</strong></td>
+<td>camera streams, inference data, ROS 2 topics</td>
+<td>high bandwidth for pixels and model I/O</td>
+</tr>
+<tr>
+<td><strong>Discrete lines</strong></td>
+<td>e-stop, interlocks</td>
+<td>independent of software; fail-safe</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-software-architecture">2. Software architecture</h2>
+<h3 id="21-nodemessage-graph-ros-2-style">2.1 Node/message graph (ROS 2-style)</h3>
+<pre><code> [camera driver] ──img──▶ [detector] ──dets──▶ [localizer] ──3D target──▶ [SUPERVISOR]
+                                                                              │  ▲
+                                                                     commands │  │ state/telemetry
+                                                                              ▼  │
+     [grasp policy] ◀──tactile/load── [arm controller] ◀──arm cmd── [SUPERVISOR]
+                                                                              │
+                                             ┌────────────────┬───────────────┤
+                                             ▼                ▼               ▼
+                                     [drive controller] [arm controller] [SAFETY MONITOR]
+                                             │                │               │ (independent)
+                                             └──────── CAN ───┴───────────────┘
+</code></pre>
+<h3 id="22-the-supervisor-and-the-mission-state-machine">2.2 The supervisor and the mission state machine</h3>
+<p>The <strong>supervisor</strong> is the single place decisions are made. It owns the mission
+state machine:</p>
+<pre><code> DRIVE ─▶ STAGE ─▶ ALIGN ─▶ GRAB ─▶ LIFT ─▶ SWING ─▶ LOWER ─▶ RELEASE ─┐
+   ▲                                                                    │
+   └──────────────────────────  next fruit  ◀───────────────────────────┘
+</code></pre>
+<p>Each transition has a <strong>guard</strong> (a condition that must hold to advance) — e.g.,
+<code>GRAB → LIFT</code> waits on a tactile/force condition; <code>RELEASE</code> fires only over a
+valid bin slot. A stuck guard is a designed-for condition (timeout → recovery),
+not an afterthought.</p>
+<h3 id="23-the-safety-monitor-is-not-a-state">2.3 The safety monitor is not a state</h3>
+<p>Critically, the <strong>safety monitor runs in parallel</strong> to the mission state machine
+and can halt all motion regardless of what state the supervisor believes it is
+in. Drawing it <em>inside</em> the FSM would be a design error: safety must not depend on
+the correctness of the logic it is protecting against.</p>
+<h3 id="24-the-real-time-boundary">2.4 The real-time boundary</h3>
+<pre><code> ── best-effort (miss a deadline → degraded, not dangerous) ──
+   detector · localizer · logging · telemetry sync
+ ─────────────────────────── boundary ───────────────────────
+ ── real-time (miss a deadline → unsafe) ──
+   drive control · arm control · safety monitor
+</code></pre>
+<p>Design nodes on each side to their appropriate standard. Best-effort nodes must
+never be placed where a missed deadline becomes a safety event.</p>
+<h2 id="3-software-stack-recommendations">3. Software stack recommendations</h2>
+<p>A credible, modern, and largely open stack for the course and capstone:</p>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Recommendation</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Middleware</td>
+<td><strong>ROS 2</strong> (e.g., Humble/Jazzy LTS)</td>
+<td>node graph, messaging, tooling; the field standard</td>
+</tr>
+<tr>
+<td>Real-time / platform</td>
+<td>farm-ng Amiga SDK + <strong>CAN</strong></td>
+<td>native drive/safety integration</td>
+</tr>
+<tr>
+<td>Perception models</td>
+<td><strong>PyTorch</strong> for training; <strong>YOLO-family</strong> detector or instance segmenter</td>
+<td>mature, well-documented</td>
+</tr>
+<tr>
+<td>Edge runtime</td>
+<td><strong>TensorRT</strong> (compile), <strong>ONNX</strong> (interchange), <strong>CUDA/cuDNN</strong></td>
+<td>the optimization path from Module 3</td>
+</tr>
+<tr>
+<td>RL / grasp policy</td>
+<td>a standard RL framework + the digital twin for sim training</td>
+<td>domain randomization; rule-based fallback</td>
+</tr>
+<tr>
+<td>Simulation / twin</td>
+<td>the browser kinematic twin (course) + a physics engine (e.g., Isaac/Gazebo) for contact</td>
+<td>twin as design + regression tool</td>
+</tr>
+<tr>
+<td>Data / MLOps</td>
+<td>dataset versioning, experiment tracking, held-out field test sets</td>
+<td>reproducibility discipline</td>
+</tr>
+<tr>
+<td>Languages</td>
+<td><strong>Python</strong> (perception, ML, glue); <strong>C++</strong> (real-time nodes)</td>
+<td>right tool per plane</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Guidance for students:</strong> prefer boring, well-supported, open components. A field
+robot is not the place to adopt three bleeding-edge frameworks at once — every
+dependency is a maintenance and reliability liability in a machine that must run
+in the mud for a season.</p>
+<h2 id="4-architecture-exercises">4. Architecture exercises</h2>
+<ol>
+<li>Redraw the hardware diagram for a <strong>two-arm</strong> variant. What changes on each
+   bus and plane? Where is the new bottleneck?</li>
+<li>Move one node across the real-time boundary (either direction) and explain the
+   consequence.</li>
+<li>The grasp policy needs tactile data at high rate. Which plane does it live on,
+   and how does its data reach the real-time arm controller without violating the
+   separation?</li>
+</ol></main>
+<footer class="foot"><div class="inner">
+  <div>SIM2FIELD · Robotic Harvesting Systems — course materials</div>
+  <div><a href="index.html">Home</a> · <a href="demo-page.html">Live Demo</a> · <a href="capstone.html">Capstone</a></div>
+</div></footer>
+
+</body>
+</html>

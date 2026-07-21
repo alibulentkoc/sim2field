@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0e120d">
+<title>The Dominant-Term Through-Line - Worked Example (EI-05)</title>
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<style>
+  /* ================= THEME DEFINITION - the ONLY place raw color values live ================= */
+  :root{
+    color-scheme: dark;
+    --bg:#0e120d; --surface:#161c14; --surface-2:#0b0e0a; --surface-3:#12160f;
+    --border:#2b3527; --border-strong:#3a4633; --grid-line:#1c231a;
+    --text-primary:#eef2e6; --text-secondary:#c8cfbe; --text-muted:#adb4a2;
+    --text-lede:#c9d0bf; --text-cons:#d4dbc9; --text-on-accent:#0e120d;
+    --accent:#9bcf3b; --accent-dim:#86ba35; --accent-strong:#6f9a2c;
+    --danger:#f0556a; --danger-text:#f697a4; --danger-dim:#b93b4c;
+    --warn:#e0a03b; --info:#6fb0d9; --accent-2:#b98bd9; --marker:#ffffff;
+    /* categorical budget-part palette */
+    --cat-lime:#c9e06a; --cat-teal:#7fb0a0; --cat-rose:#d98b8b;
+    /* tints */
+    --tint-accent:rgba(155,207,59,.07); --tint-accent-soft:rgba(155,207,59,.05); --tint-hero:rgba(155,207,59,.06);
+    --tint-danger:rgba(240,85,106,.08); --tint-warn:rgba(224,160,59,.08); --status-warn-text:#eed9b4;
+    --font-sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --font-display:'Space Grotesk',var(--font-sans);
+  }
+  /* ========================================================================================== */
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{background:var(--bg); color:var(--text-primary); -webkit-text-size-adjust:100%; text-size-adjust:100%; scroll-behavior:smooth}
+  body{background:var(--bg); color:var(--text-primary); font-family:var(--font-sans);
+    line-height:1.7; -webkit-font-smoothing:antialiased; padding:0 0 6rem; letter-spacing:.002em}
+  .wrap{max-width:820px; margin:0 auto; padding:0 1.6rem; background:var(--bg); color:var(--text-primary)}
+  code,.mono,.num{font-family:var(--font-mono); font-variant-numeric:tabular-nums}
+  a{color:var(--accent)}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+  .katex{font-size:1.06em}
+  .katex-display{margin:0}
+  .eq{background:var(--surface-3); color:var(--text-primary); border:1px solid var(--border); border-radius:10px;
+    padding:1.15rem 1.3rem; margin:1.15rem 0; overflow-x:auto; overflow-y:hidden}
+  .eq .katex-display{margin:0}
+
+  header{background:var(--bg); color:var(--text-primary); border-bottom:1px solid var(--border); padding:3.6rem 0 2.6rem; margin-bottom:2.6rem}
+  .eyebrow{font-family:var(--font-mono); font-size:.73rem; font-weight:500; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--accent); margin-bottom:1.15rem; display:flex; gap:.85rem; flex-wrap:wrap}
+  .eyebrow span{color:var(--text-muted)}
+  h1{font-family:var(--font-display); font-weight:600; font-size:clamp(2rem,5vw,3rem);
+    line-height:1.05; letter-spacing:-.021em; margin-bottom:1.05rem; color:var(--text-primary)}
+  h1 em{font-style:normal; color:var(--accent)}
+  .lede{font-size:1.08rem; color:var(--text-lede); max-width:64ch}
+
+  .hero{position:relative; margin:2.4rem 0 .6rem; padding:2.2rem 1.6rem 1.9rem; isolation:isolate}
+  .hero-bg{position:absolute; inset:0; width:100%; height:100%; z-index:-1}
+  .hero-inner{position:relative; text-align:center}
+  .hero-tab{display:inline-block; font-family:var(--font-mono); font-size:.66rem; font-weight:500; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--accent); background:var(--bg); padding:.28rem .7rem;
+    border:1px solid var(--accent-strong); border-radius:5px; margin-bottom:1.2rem}
+  .hero-eq{margin:.4rem 0 1rem}
+  .hero-eq .katex{font-size:1.22em}
+  .hero-sub{font-size:.92rem; color:var(--text-muted); max-width:58ch; margin:0 auto}
+
+  section{margin-top:3.4rem}
+  .kicker{font-family:var(--font-mono); font-size:.71rem; font-weight:500; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--accent-dim); margin-bottom:.7rem}
+  h2{font-family:var(--font-display); font-weight:600; font-size:1.55rem; letter-spacing:-.012em; margin-bottom:1rem; color:var(--text-primary)}
+  p{margin-bottom:1.05rem; color:var(--text-secondary)} strong{color:var(--text-primary); font-weight:600}
+  .rind-t{color:var(--accent)} .flesh-t{color:var(--danger-text)} .amber-t{color:var(--warn)} .water-t{color:var(--info)}
+
+  .dstep{margin:2rem 0; padding-left:1.5rem; border-left:2px solid var(--border); position:relative}
+  .dstep::before{content:attr(data-n); position:absolute; left:-.9rem; top:-.1rem;
+    font-family:var(--font-mono); font-size:.7rem; font-weight:600; color:var(--text-on-accent);
+    background:var(--accent-strong); width:1.6rem; height:1.6rem; border-radius:50%; display:grid; place-items:center}
+  .d-state{font-family:var(--font-display); font-weight:500; font-size:1.12rem; color:var(--text-primary); margin-bottom:.2rem; line-height:1.4}
+  .d-exp{color:var(--text-secondary); margin:.9rem 0}
+  .d-cons{display:flex; gap:.7rem; align-items:flex-start; margin-top:.9rem; padding:.75rem .95rem;
+    background:var(--tint-accent-soft); border:1px solid var(--accent-strong); border-radius:8px}
+  .d-cons .lab{font-family:var(--font-mono); font-size:.63rem; font-weight:500; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--accent); flex:none; margin-top:.18rem}
+  .d-cons p{margin:0; color:var(--text-cons); font-size:.94rem}
+
+  .instrument{background:var(--surface); color:var(--text-secondary); border:1px solid var(--border); border-radius:14px; padding:1.7rem; margin-top:1.3rem}
+  .inst-head{display:flex; justify-content:space-between; align-items:baseline; gap:1rem; flex-wrap:wrap; margin-bottom:.5rem}
+  .inst-title{font-family:var(--font-display); font-weight:600; font-size:1.05rem; color:var(--text-primary)}
+  .inst-sub{font-size:.86rem; color:var(--text-muted); margin-bottom:1.2rem}
+  .reset{font-family:var(--font-mono); font-size:.75rem; font-weight:500; color:var(--accent); background:transparent;
+    border:1px solid var(--accent-strong); border-radius:6px; padding:.5rem .85rem; cursor:pointer; transition:.15s}
+  .reset:hover{background:var(--accent-strong); color:var(--text-on-accent)}
+  .noscript-note{background:var(--tint-warn); color:var(--status-warn-text); border:1px solid var(--warn); border-radius:8px;
+    padding:.8rem 1rem; font-size:.86rem; margin-bottom:1rem}
+
+  .moves{margin-bottom:1.2rem}
+  .seg{display:inline-flex; border:1px solid var(--border); border-radius:8px; overflow:hidden}
+  .seg button{font-family:var(--font-mono); font-size:.8rem; padding:.55rem .9rem; background:var(--surface-2); color:var(--text-secondary); border:none; cursor:pointer; transition:.15s}
+  .seg button+button{border-left:1px solid var(--border)}
+  .seg button.on{background:var(--accent-strong); color:var(--text-on-accent); font-weight:600}
+  .seg button:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:1rem}
+  .card{background:var(--surface-2); color:var(--text-secondary); border:1px solid var(--border); border-radius:11px; padding:1.2rem 1.3rem}
+  .card h3{font-family:var(--font-display); font-weight:600; font-size:1.02rem; color:var(--text-primary); margin-bottom:.15rem}
+  .card .q{font-family:var(--font-mono); font-size:.68rem; color:var(--text-muted); margin-bottom:.9rem; line-height:1.5}
+  .card .q b{color:var(--text-secondary)}
+  .bar{height:34px; border-radius:6px; overflow:hidden; display:flex; background:var(--surface-3); border:1px solid var(--border)}
+  .bseg{height:100%; transition:width .4s cubic-bezier(.4,0,.2,1); min-width:0; position:relative; border-right:1px solid var(--surface-3)}
+  .bseg.dom{outline:2px solid var(--marker); outline-offset:-2px; z-index:1}
+  .domlab{font-family:var(--font-mono); font-size:.72rem; color:var(--danger-text); margin-top:.5rem}
+  .metric{display:flex; justify-content:space-between; align-items:baseline; margin-top:.7rem}
+  .metric .ml{font-family:var(--font-mono); font-size:.68rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:.05em}
+  .metric .mv{font-family:var(--font-mono); font-size:1.25rem; font-weight:600; color:var(--text-primary)}
+  .metric .mv small{font-size:.6rem; color:var(--text-muted); font-weight:400}
+  .delta{font-family:var(--font-mono); font-size:.78rem; font-weight:500; margin-top:.35rem; min-height:1.1em}
+  .delta.big{color:var(--accent)} .delta.small{color:var(--text-muted)}
+
+  .insight{border:1px solid var(--accent-strong); border-radius:12px; padding:1.4rem 1.6rem; margin-top:1.6rem;
+    background:linear-gradient(180deg,var(--tint-hero),transparent)}
+  .insight .tag{font-family:var(--font-mono); font-size:.72rem; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin-bottom:.55rem}
+  .insight p{color:var(--text-cons); margin-bottom:0} .insight strong{color:var(--accent)}
+  .takeaway{border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:12px; padding:1.5rem 1.7rem; background:var(--surface)}
+  .tk-list{list-style:none}
+  .tk-list li{display:flex; gap:.85rem; align-items:flex-start; padding:.6rem 0; color:var(--text-secondary); border-bottom:1px solid var(--border)}
+  .tk-list li:last-child{border-bottom:none; padding-top:.95rem}
+  .tk-mark{font-family:var(--font-mono); color:var(--text-muted); flex:none; margin-top:.1rem}
+  .tk-mark.tk-hot{color:var(--accent)} .tk-list strong{color:var(--text-primary)}
+  footer{margin-top:4rem; padding-top:1.6rem; border-top:1px solid var(--border);
+    font-family:var(--font-mono); font-size:.74rem; color:var(--text-muted); line-height:1.85}
+
+  @media(max-width:680px){ .grid{grid-template-columns:1fr} }
+  @media(prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <header>
+    <div class="eyebrow">Cross-Cutting Result <span>/</span> EI-05 <span>/</span> Modules 5, 12, 14, 16</div>
+    <h1>One method. Four budgets. The <em>same move</em>.</h1>
+    <p class="lede">The course's signature result isn't a formula - it's a habit that keeps working. Accuracy, energy, reliability, and cost are four different quantities in four different units, but each is a budget built from parts, each has a dominant term, and each is improved the same way: find the biggest contributor and attack it first. Here are all four, side by side.</p>
+
+    <div class="hero">
+      <svg class="hero-bg" viewBox="0 0 800 230" preserveAspectRatio="none" role="presentation" aria-hidden="true" focusable="false">
+        <defs>
+          <pattern id="grid" width="26" height="26" patternUnits="userSpaceOnUse">
+            <path d="M26 0H0V26" fill="none" style="stroke:var(--grid-line)" stroke-width="1" vector-effect="non-scaling-stroke"/>
+          </pattern>
+        </defs>
+        <rect x="6" y="6" width="788" height="218" rx="12" style="fill:var(--surface-3)"/>
+        <rect x="6" y="6" width="788" height="218" rx="12" fill="url(#grid)" opacity="0.5"/>
+        <rect x="6" y="6" width="788" height="218" rx="12" fill="none" style="stroke:var(--border)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M20 6V22 M6 20H22" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M780 6V22 M778 20H794" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M20 224V208 M6 210H22" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M780 224V208 M778 210H794" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+      </svg>
+      <div class="hero-inner">
+        <div class="hero-tab">Governing relation</div>
+        <div class="hero-eq" role="math" aria-label="total equals combine of term 1, term 2, and so on; then attack the argmax over i of the partial derivative of total with respect to term i">\[ \text{total} = \mathrm{combine}(\text{term}_1, \text{term}_2, \dots) \;\Longrightarrow\; \text{attack } \arg\max_{i}\ \frac{\partial\,\text{total}}{\partial\,\text{term}_i} \]</div>
+        <div class="hero-sub">Whether parts add as variances, watts, failure rates, or dollars, the largest term sets the total - and effort spent anywhere else is nearly wasted.</div>
+      </div>
+    </div>
+  </header>
+
+  <section id="derivation" aria-labelledby="deriv-h">
+    <div class="kicker">Full derivation - why one move works on four budgets</div>
+    <h2 id="deriv-h">The shape every budget shares</h2>
+    <p>The four quantities look unrelated - millimetres, watts, failures, dollars - but each is an <strong>additive budget</strong>: a total assembled from independent parts. That shared structure is why one habit governs all four.</p>
+
+    <div class="dstep" data-n="1">
+      <div class="d-state">Each total is a combination of independent parts.</div>
+      <div class="eq">\[ \begin{aligned}
+        \text{accuracy:}\quad & 3\sigma = 3\sqrt{\textstyle\sum_i \sigma_i^{2}} \qquad(\text{parts add as variances}) \\
+        \text{energy:}\quad & P_{\mathrm{total}} = \textstyle\sum_i P_i \\
+        \text{reliability:}\quad & \lambda_{\mathrm{sys}} = \textstyle\sum_i \lambda_i \;\Longrightarrow\; \mathrm{MTBF} = 1/\lambda_{\mathrm{sys}} \\
+        \text{cost:}\quad & \mathrm{BOM} = \textstyle\sum_i c_i
+      \end{aligned} \]</div>
+      <p class="d-exp">Four quantities in four units, but one structure: a total assembled from independent parts, whether they add as variances, watts, failure rates, or dollars.</p>
+      <div class="d-cons"><span class="lab">Consequence</span><p>Because the shape is shared, <strong>one habit governs all four</strong> - the differences in units don't change the move.</p></div>
+    </div>
+
+    <div class="dstep" data-n="2">
+      <div class="d-state">The sensitivity is largest at the largest term.</div>
+      <div class="eq">\[ \frac{\partial\,\text{total}}{\partial\,\text{term}_i} \ \text{ is largest for the largest } \text{term}_i \]</div>
+      <p class="d-exp">Halving the dominant term produces a large drop in the total; halving a small term produces a negligible one. For the RSS (accuracy) budget the effect is even sharper: because the parts add <em>as squares</em>, a dominant term is squared before it is summed, so it dominates the total more strongly still.</p>
+      <div class="d-cons"><span class="lab">Consequence</span><p>Effort spent anywhere but the dominant term is <strong>nearly wasted</strong> - improvements elsewhere are invisible until the dominant term comes down.</p></div>
+    </div>
+
+    <div class="dstep" data-n="3">
+      <div class="d-state">Attack the dominant term, then re-rank - until no single term dominates.</div>
+      <p class="d-exp">Identify the dominant term, reduce it, then <strong>re-rank</strong> - because once the old dominant term comes down, a different term may now be largest. Repeat until no single term dominates.</p>
+      <div class="d-cons"><span class="lab">Consequence</span><p>That termination rule is what turns a one-shot fix into a <strong>discipline</strong> - and the discipline, not any one equation, is the through-line.</p></div>
+    </div>
+  </section>
+
+  <section id="instrument" aria-labelledby="inst-h">
+    <div class="kicker">The four budgets, live - apply the same move to all of them</div>
+    <h2 id="inst-h">Halve one term. Watch which one matters.</h2>
+    <p>Each panel is a real SIM2FIELD budget with its parts sized by contribution and its <span class="flesh-t">dominant term</span> outlined. Choose a move below and it applies to <strong>all four at once</strong> - halving the dominant term, or halving a typical small term. The point is not any single number; it is that the same move pays off everywhere, and by how much more when aimed at the dominant term.</p>
+
+    <div class="instrument">
+      <div class="inst-head">
+        <div class="inst-title">Four budgets, one move</div>
+        <button class="reset" id="resetBtn" type="button">Reset</button>
+      </div>
+      <div class="inst-sub">Parts are sized by their contribution to each total (variance share for accuracy; value share for the rest).</div>
+
+      <noscript><p class="noscript-note">This interactive four-budget comparison requires JavaScript. The full worked result is in the derivation above: accuracy, energy, reliability, and cost are each additive budgets with a dominant term, and halving the dominant term drops the total far more than halving a small term - the same move, worth 5x to 15x more when aimed at the dominant contributor.</p></noscript>
+
+      <div class="moves">
+        <div class="seg" id="moveSeg" role="group" aria-label="which term to halve, applied to all four budgets">
+          <button data-move="none" class="on" type="button" aria-pressed="true">baseline</button>
+          <button data-move="dom" type="button" aria-pressed="false">halve the dominant term</button>
+          <button data-move="small" type="button" aria-pressed="false">halve a small term</button>
+        </div>
+      </div>
+
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <section id="ei05" aria-labelledby="ei-h">
+    <div class="kicker">Engineering Insight EI-05 - the through-line of the course</div>
+    <h2 id="ei-h">The habit that generalizes</h2>
+    <div class="insight">
+      <div class="tag">EI-05 - Attack the Dominant Error Source</div>
+      <p><strong>In any additive budget, the largest term dominates the total - find it and reduce it first; effort spent shrinking small contributors is almost wasted.</strong> The math is unforgiving in a useful way: when one source dominates, the total is essentially that source, and improvements elsewhere are invisible until the dominant term comes down. It first appeared as the placement error budget (CEC-03), but it is not about accuracy - it is about budgets. The same move governs the power budget (which subsystem to make efficient), the reliability budget (which failure mode to harden), and the cost budget (which component to redesign for volume). Budget first, find the dominant term, spend effort there, then repeat until no single term dominates. That discipline - not any one equation - is what the course is really teaching.</p>
+    </div>
+  </section>
+
+  <section id="takeaway" aria-labelledby="tk-h">
+    <div class="kicker">Engineering takeaway - what to do next</div>
+    <h2 id="tk-h">How to use this on any budget</h2>
+    <div class="takeaway">
+      <ul class="tk-list">
+        <li><span class="tk-mark" aria-hidden="true">-&gt;</span> Before optimizing anything, <strong>write the budget down</strong> and rank the terms. The dominant term is usually not the one you understand best or can change most easily - measure, don't guess.</li>
+        <li><span class="tk-mark tk-hot" aria-hidden="true">-&gt;</span> Spend effort on the <strong class="rind-t">dominant term</strong> until it is no longer dominant, then re-rank. Improving a small term to the third decimal while the dominant term is untouched is the classic wasted-effort trap.</li>
+        <li><span class="tk-mark" aria-hidden="true">-&gt;</span> Watch for the <strong>fixed-but-largest</strong> case: in the cost budget the platform is the biggest line but is externally fixed, so the dominant <em>attackable</em> term is the manipulator. Attack the biggest term you can actually move.</li>
+        <li><span class="tk-mark" aria-hidden="true">-&gt;</span> <strong>Decision:</strong> treat accuracy, energy, reliability, and cost as <strong class="rind-t">the same problem</strong> - an additive budget with a dominant term - and one habit handles all four. The leverage is real: here, aiming at the dominant term beats a small term by 5x to 15x for comparable effort.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    SIM2FIELD - Autonomous Watermelon Harvesting Robotics<br>
+    Cross-cutting worked example for EI-05 - one method across Modules 5 (accuracy), 12 (energy), 14 (reliability), 16 (cost)<br>
+    Values ratified in Doc B Sec. 5.2/5.5 and Doc C Sec. 4 - method harvested from Module 5 Sec. 7.4 (frozen Rev 1.0)<br>
+    Production Phase asset - configuration-controlled
+  </footer>
+</main>
+
+<script>
+/* Interactive enhancement only. All engineering content above is static and
+   readable with JavaScript disabled. Vanilla JS, no external dependencies.
+   Colors come from semantic tokens (var(--...)), never raw hex - bar segments
+   set their fill via a token string in an inline style. */
+(function(){
+  "use strict";
+  const C_ACCURACY = {
+    key:'accuracy', title:'Accuracy', unit:'mm',
+    q:'placement budget (M5) - parts add as <b>variances</b> sigma_i^2 - metric 3*sqrt(sum)',
+    combine:'rss', metricLabel:'3*sigma_place',
+    parts:[
+      {name:'sigma_Z', val:8, color:'var(--danger)'},
+      {name:'sigma_cal', val:3, color:'var(--accent)'},
+      {name:'sigma_he', val:3, color:'var(--cat-lime)'},
+      {name:'sigma_sync',val:4, color:'var(--info)'},
+      {name:'sigma_est', val:4, color:'var(--accent-2)'},
+      {name:'sigma_mech',val:6, color:'var(--warn)'}
+    ],
+    dom:0, small:1, better:'lower'
+  };
+  const C_ENERGY = {
+    key:'energy', title:'Energy / Power', unit:'W',
+    q:'power budget (M12) - parts add as <b>watts</b> - metric total draw',
+    combine:'sum', metricLabel:'P_total',
+    parts:[
+      {name:'drive', val:150, color:'var(--danger)'},
+      {name:'pump', val:50, color:'var(--warn)'},
+      {name:'compute', val:40, color:'var(--accent)'},
+      {name:'aux', val:40, color:'var(--accent-2)'},
+      {name:'sensing', val:20, color:'var(--info)'}
+    ],
+    dom:0, small:4, better:'lower'
+  };
+  const C_RELIABILITY = {
+    key:'reliability', title:'Reliability', unit:'cyc',
+    q:'failure budget (M14) - parts add as <b>failure rates</b> lambda_i - metric MTBF = 1/lambda',
+    combine:'mtbf', metricLabel:'MTBF',
+    parts:[
+      {name:'manip', val:5, color:'var(--danger)'},
+      {name:'percept', val:1, color:'var(--accent)'},
+      {name:'fluid', val:1, color:'var(--cat-lime)'},
+      {name:'compute', val:0.5, color:'var(--info)'},
+      {name:'drive', val:0.5, color:'var(--accent-2)'}
+    ],
+    dom:0, small:3, better:'higher'
+  };
+  const C_COST = {
+    key:'cost', title:'Cost', unit:'k',
+    q:'unit-cost budget (M16) - parts add as <b>dollars</b> - metric BOM total (platform fixed)',
+    combine:'sum', metricLabel:'unit cost',
+    parts:[
+      {name:'platform', val:15, color:'var(--border-strong)', fixed:true},
+      {name:'manip', val:9, color:'var(--danger)'},
+      {name:'fluid', val:5, color:'var(--warn)'},
+      {name:'compute', val:4, color:'var(--accent)'},
+      {name:'localize', val:4, color:'var(--info)'},
+      {name:'power', val:4, color:'var(--cat-lime)'},
+      {name:'integ', val:3.5, color:'var(--accent-2)'},
+      {name:'percept', val:2.5, color:'var(--cat-teal)'},
+      {name:'safety', val:2.5, color:'var(--cat-rose)'}
+    ],
+    dom:1, small:8, better:'lower'
+  };
+  const BUDGETS=[C_ACCURACY,C_ENERGY,C_RELIABILITY,C_COST];
+
+  function metric(cfg, vals){
+    if(cfg.combine==='rss'){ return 3*Math.sqrt(vals.reduce((a,v)=>a+v*v,0)); }
+    if(cfg.combine==='sum'){ return vals.reduce((a,v)=>a+v,0); }
+    if(cfg.combine==='mtbf'){ const lam=vals.reduce((a,v)=>a+v,0); return 1000/lam; }
+  }
+  function weight(cfg, v){ return cfg.combine==='rss' ? v*v : v; }
+
+  let move='none';
+
+  function applied(cfg){
+    const vals=cfg.parts.map(p=>p.val);
+    if(move==='dom') vals[cfg.dom] = cfg.parts[cfg.dom].val/2;
+    if(move==='small') vals[cfg.small] = cfg.parts[cfg.small].val/2;
+    return vals;
+  }
+
+  function fmt(cfg,x){
+    if(cfg.key==='cost') return '$'+x.toFixed(1);
+    if(cfg.key==='reliability') return x.toFixed(0);
+    if(cfg.key==='accuracy') return x.toFixed(1);
+    return x.toFixed(0);
+  }
+
+  function render(){
+    const grid=document.getElementById('grid');
+    if(!grid) return;
+    grid.innerHTML='';
+    BUDGETS.forEach(cfg=>{
+      const baseVals=cfg.parts.map(p=>p.val);
+      const curVals=applied(cfg);
+      const mBase=metric(cfg,baseVals), mCur=metric(cfg,curVals);
+      const tot=curVals.reduce((a,v)=>a+weight(cfg,v),0);
+      let bar='';
+      cfg.parts.forEach((p,i)=>{
+        const w=weight(cfg,curVals[i])/tot*100;
+        const isDom = i===cfg.dom;
+        bar+=`<div class="bseg${isDom?' dom':''}" style="width:${w}%;background:${p.color}" title="${p.name}"></div>`;
+      });
+      let deltaTxt='&nbsp;', deltaCls='small';
+      if(move!=='none'){
+        const d=(mCur-mBase)/mBase*100;
+        const improved = cfg.better==='lower' ? d<0 : d>0;
+        deltaCls = (move==='dom') ? 'big' : 'small';
+        const sign = d>0?'+':'';
+        deltaTxt = `${cfg.metricLabel}: ${sign}${d.toFixed(1)}% ${improved?'(better)':''}`;
+      }
+      const domName=cfg.parts[cfg.dom].name;
+      const card=document.createElement('div');
+      card.className='card';
+      card.innerHTML=
+        `<h3>${cfg.title}</h3>`+
+        `<div class="q">${cfg.q}</div>`+
+        `<div class="bar" aria-hidden="true">${bar}</div>`+
+        `<div class="domlab">dominant: ${domName}${cfg.key==='cost'?' (largest attackable; platform is fixed)':''}</div>`+
+        `<div class="metric"><span class="ml">${cfg.metricLabel}</span>`+
+        `<span class="mv">${fmt(cfg,mCur)} <small>${cfg.unit}</small></span></div>`+
+        `<div class="delta ${deltaCls}">${deltaTxt}</div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  document.getElementById('moveSeg').addEventListener('click',e=>{
+    if(e.target.tagName!=='BUTTON') return;
+    move=e.target.dataset.move;
+    document.querySelectorAll('#moveSeg button').forEach(b=>{ const on=b===e.target; b.classList.toggle('on',on); b.setAttribute('aria-pressed',on); });
+    render();
+  });
+  document.getElementById('resetBtn').addEventListener('click',()=>{
+    move='none';
+    document.querySelectorAll('#moveSeg button').forEach(b=>{ const on=b.dataset.move==='none'; b.classList.toggle('on',on); b.setAttribute('aria-pressed',on); });
+    render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

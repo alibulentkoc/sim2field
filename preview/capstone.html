@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capstone: Design a Harvesting Subsystem — SIM2FIELD</title>
+<meta name="description" content="A short university course on the engineering of an autonomous watermelon/pumpkin harvesting robot: perception, edge AI, manipulation, and field deployment.">
+<link rel="stylesheet" href="assets/style.css">
+
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a class="brand" href="index.html"><span class="dot"></span>SIM2FIELD</a>
+  <div class="nav-links"><a href="index.html">Home</a><a href="index.html#modules">Modules</a><a href="demo-page.html">Live Demo</a><a href="index.html#specs">Specs</a><a href="capstone.html" class="active">Capstone</a></div>
+</div></nav>
+<header class="article-head"><div class="inner"><p class="eyebrow">Module 7</p><h1>Capstone: Design a Harvesting Subsystem</h1></div></header><main class="page prose">
+<p><strong>Duration:</strong> 3 hours scheduled (in-class kickoff + reviews) plus independent work
+across the back half of the course.</p>
+<h2 id="purpose">Purpose</h2>
+<p>The capstone is where the course's threads converge into original engineering. A
+student (or small team) designs a harvesting-robot <strong>subsystem</strong> — or a coherent
+whole-system concept — and defends the design decisions <strong>quantitatively</strong>. It is
+deliberately scoped so it can be completed with the digital twin, datasheets, and
+analysis rather than a physical build, which keeps it achievable in a short course
+while remaining genuinely demanding.</p>
+<p>The take-home assignments from Modules 1–6 are the scaffolding: a student who did
+them arrives at the capstone with a system brief, a perception report, an edge
+plan, a manipulation analysis, a design packet, and a field-readiness plan. The
+capstone assembles and deepens these into one defensible design.</p>
+<h2 id="choose-a-track">Choose a track</h2>
+<p>Pick the track that matches your interest and level. Undergraduates may take any
+track at "concept" depth; graduate students take a track at "research" depth (see
+grad requirements below).</p>
+<ul>
+<li><strong>Track A — Perception subsystem.</strong> Design the detection + localization +
+  ripeness pipeline for a stated crop and field condition. Deliver a model choice,
+  a data strategy (including synthetic data), a measured or estimated accuracy and
+  localization budget, and an occlusion-gate policy.</li>
+<li><strong>Track B — Manipulation subsystem.</strong> Design an arm + gripper for a stated
+  payload. Deliver the kinematics, workspace and singularity analysis, a DOF-
+  reduction argument, a grasp strategy, and a state machine — validated in the
+  twin.</li>
+<li><strong>Track C — Edge/compute subsystem.</strong> Design the on-robot compute and ML
+  deployment. Deliver a device choice, model-optimization plan, a reconciled
+  latency/throughput/power budget, and the no-cloud control-loop boundary.</li>
+<li><strong>Track D — Whole-system concept for a new crop.</strong> Adapt the full architecture
+  to a crop other than watermelon/pumpkin (e.g., cabbage, cantaloupe, pumpkin if
+  you studied watermelon). Deliver a scaled version of every artifact at concept
+  depth, with the <em>changes</em> from the case study justified.</li>
+</ul>
+<h2 id="required-deliverables">Required deliverables</h2>
+<p>Every capstone, regardless of track, produces:</p>
+<ol>
+<li><strong>Design brief (1–2 pp)</strong> — the problem, the chosen crop/condition, top-level
+   requirements, and the subsystem boundary.</li>
+<li><strong>Technical design (4–8 pp)</strong> — the core engineering: equations, diagrams,
+   model/hardware choices, and the analysis specific to the track.</li>
+<li><strong>Design specification (≥ 5 measurable requirements)</strong> — functional,
+   performance, and constraint, each verifiable.</li>
+<li><strong>BOM excerpt</strong> — the hardware in the student's subsystem, costed and sourced,
+   in the course BOM format.</li>
+<li><strong>Quantitative defense</strong> — at least three design decisions defended with
+   numbers (a budget, a trade study, a computed workspace, a measured accuracy).</li>
+<li><strong>Validation evidence</strong> — output from the digital twin, a benchmark, or a hand
+   analysis showing the design meets a stated requirement.</li>
+<li><strong>Risk &amp; ethics note (½ p)</strong> — the top failure mode, its mitigation, and one
+   deployment/ethics consideration.</li>
+</ol>
+<h2 id="graduate-research-requirements">Graduate ("research") requirements</h2>
+<p>Graduate capstones additionally require:</p>
+<ul>
+<li>A <strong>literature grounding</strong>: at least three peer-reviewed sources, with the
+  design positioned relative to prior work.</li>
+<li>A <strong>novel contribution</strong>: a design choice, analysis, or method that goes beyond
+  reproducing the case study, explicitly identified.</li>
+<li>A <strong>critical trade study</strong>: a quantified comparison of at least two alternatives
+  for one key decision, with a recommendation.</li>
+</ul>
+<h2 id="suggested-timeline">Suggested timeline</h2>
+<table>
+<thead>
+<tr>
+<th>When</th>
+<th>Milestone</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>After Module 3</td>
+<td>Track chosen; design brief drafted (reuses M1 brief)</td>
+</tr>
+<tr>
+<td>After Module 4</td>
+<td>Technical design core underway; twin validation begun</td>
+</tr>
+<tr>
+<td>After Module 5</td>
+<td>Design spec + BOM excerpt + architecture drafted</td>
+</tr>
+<tr>
+<td>After Module 6</td>
+<td>Risk/ethics note; full draft assembled</td>
+</tr>
+<tr>
+<td>Final session</td>
+<td>Design review presentation + submission</td>
+</tr>
+</tbody>
+</table>
+<h2 id="the-design-review">The design review</h2>
+<p>Each student/team presents a 10–12 minute design review to the class and
+instructor, followed by questions. The review format mirrors industry: state the
+requirement, show the design, defend it with data, own the risks. Peers submit
+one substantive question each — engaging critically with a colleague's design is
+itself assessed (see participation in the grading scheme).</p>
+<h2 id="grading">Grading</h2>
+<p>The capstone rubric is in
+<a href="../../assessments/rubrics.md"><code>assessments/rubrics.md</code></a>. In summary, the capstone
+rewards <strong>quantitative justification over description</strong>: a design that is
+plausible and defended with numbers outscores a more ambitious design defended
+with adjectives.</p></main>
+<footer class="foot"><div class="inner">
+  <div>SIM2FIELD · Robotic Harvesting Systems — course materials</div>
+  <div><a href="index.html">Home</a> · <a href="demo-page.html">Live Demo</a> · <a href="capstone.html">Capstone</a></div>
+</div></footer>
+
+</body>
+</html>

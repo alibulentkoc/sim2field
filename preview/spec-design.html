@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Specification — SIM2FIELD</title>
+<meta name="description" content="A short university course on the engineering of an autonomous watermelon/pumpkin harvesting robot: perception, edge AI, manipulation, and field deployment.">
+<link rel="stylesheet" href="assets/style.css">
+
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a class="brand" href="index.html"><span class="dot"></span>SIM2FIELD</a>
+  <div class="nav-links"><a href="index.html">Home</a><a href="index.html#modules">Modules</a><a href="demo-page.html">Live Demo</a><a href="index.html#specs" class="active">Specs</a><a href="capstone.html">Capstone</a></div>
+</div></nav>
+<header class="article-head"><div class="inner"><p class="eyebrow">Specification</p><h1>Design Specification</h1></div></header><main class="page prose">
+<blockquote>
+<p><strong>Teaching artifact.</strong> This is a worked, illustrative specification for the
+course's case-study machine. Numbers are representative engineering targets
+chosen to make the document concrete and to give students something specific to
+critique and emulate — they are not vendor commitments. In the capstone,
+students write their own specification in this format.</p>
+</blockquote>
+<h2 id="1-how-to-read-this-document">1. How to read this document</h2>
+<p>Each requirement is tagged by type and given an ID:</p>
+<ul>
+<li><strong>[F]</strong> Functional — <em>what the system does.</em></li>
+<li><strong>[P]</strong> Performance — <em>how well, measurably.</em></li>
+<li><strong>[C]</strong> Constraint — <em>a limit the design must respect.</em></li>
+</ul>
+<p>A requirement is well-formed only if it is <strong>verifiable</strong>: it names a quantity, a
+threshold, and (ideally) a method of verification. Students should be able to
+point at any requirement below and describe the test that would confirm it.</p>
+<h2 id="2-operating-context">2. Operating context</h2>
+<p>The system harvests heavy ground-grown fruit (watermelon, 5–10 kg typical) from
+single-row beds, in daylight, in Southeastern U.S. field conditions (heat, dust,
+mud, variable cloud). It operates autonomously at a walking pace with a human
+supervisor present.</p>
+<h2 id="3-system-level-requirements">3. System-level requirements</h2>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Type</th>
+<th>Requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SYS-1</td>
+<td>[F]</td>
+<td>The system shall autonomously detect, localize, grasp, lift, and place ripe fruit from a single crop bed into an on-board collection trailer.</td>
+</tr>
+<tr>
+<td>SYS-2</td>
+<td>[P]</td>
+<td>The system shall achieve a harvest success rate ≥ 85% of detectable ripe fruit in a controlled-field trial (≥ 100 fruit).</td>
+</tr>
+<tr>
+<td>SYS-3</td>
+<td>[P]</td>
+<td>The system shall place fruit with visible bruising in ≤ 5% of placed fruit, verified by instrumented firmness audit.</td>
+</tr>
+<tr>
+<td>SYS-4</td>
+<td>[P]</td>
+<td>The system shall sustain a pick-to-place cycle time ≤ 12 s per fruit at a rover advance speed ≥ 0.3 m/s (representative; students recompute for their design).</td>
+</tr>
+<tr>
+<td>SYS-5</td>
+<td>[C]</td>
+<td>The prototype hardware bill of materials shall not exceed a stated budget cap (course example: $50,000).</td>
+</tr>
+<tr>
+<td>SYS-6</td>
+<td>[C]</td>
+<td>The control loop shall have <strong>no</strong> cloud dependency; the system shall operate at full capability with zero network connectivity.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-perception-requirements">4. Perception requirements</h2>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Type</th>
+<th>Requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PER-1</td>
+<td>[F]</td>
+<td>The perception subsystem shall detect fruit and estimate a ripeness decision (pick / skip) per candidate.</td>
+</tr>
+<tr>
+<td>PER-2</td>
+<td>[P]</td>
+<td>The 3D localization error of a committed target shall be ≤ 2 cm RMS in the robot frame at the pick station.</td>
+</tr>
+<tr>
+<td>PER-3</td>
+<td>[F]</td>
+<td>The subsystem shall compute an occlusion fraction per candidate and shall <strong>not</strong> commit to a pick above the occlusion gate (example threshold ≤ 34%).</td>
+</tr>
+<tr>
+<td>PER-4</td>
+<td>[P]</td>
+<td>Detection recall on ripe fruit shall be ≥ 0.90 on a held-out field-representative test set at the chosen operating threshold.</td>
+</tr>
+<tr>
+<td>PER-5</td>
+<td>[C]</td>
+<td>Perception shall function across the field illumination range (full sun to hard shade) without manual re-tuning between runs.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-compute-edge-requirements">5. Compute / edge requirements</h2>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Type</th>
+<th>Requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CMP-1</td>
+<td>[P]</td>
+<td>The perception→decision loop latency shall be low enough to resolve a target before it reaches the pick station at the maximum rated rover speed (student computes the bound).</td>
+</tr>
+<tr>
+<td>CMP-2</td>
+<td>[C]</td>
+<td>All real-time inference shall run on-robot (edge). Cloud may be used only for offline training and opportunistic, non-real-time telemetry sync.</td>
+</tr>
+<tr>
+<td>CMP-3</td>
+<td>[C]</td>
+<td>The compute enclosure shall not thermally throttle under sustained midday operation; the power/thermal budget shall include peak simultaneous actuator + inference load.</td>
+</tr>
+<tr>
+<td>CMP-4</td>
+<td>[F]</td>
+<td>Safety-critical control shall run on a separate real-time controller from best-effort perception.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="6-manipulation-requirements">6. Manipulation requirements</h2>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Type</th>
+<th>Requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MAN-1</td>
+<td>[F]</td>
+<td>The manipulator shall position the gripper node to any commanded reachable target and grasp fruit at the bed centerline.</td>
+</tr>
+<tr>
+<td>MAN-2</td>
+<td>[P]</td>
+<td>The manipulator shall handle a payload up to 10 kg without exceeding actuator force limits at any pose in the workspace.</td>
+</tr>
+<tr>
+<td>MAN-3</td>
+<td>[C]</td>
+<td>The motion planner shall keep the mechanism's transmission angle γ bounded away from singularity (example: γ ≥ 15°) across all commanded motions.</td>
+</tr>
+<tr>
+<td>MAN-4</td>
+<td>[C]</td>
+<td>The planned payload envelope shall not enter defined keep-out volumes (frame, wheels, bin wall) during transfer.</td>
+</tr>
+<tr>
+<td>MAN-5</td>
+<td>[F]</td>
+<td>The grasp controller shall modulate grip force from tactile/load feedback and shall fall back to a verified rule-based controller on any out-of-envelope command.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="7-integration-power-and-safety-requirements">7. Integration, power, and safety requirements</h2>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Type</th>
+<th>Requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>INT-1</td>
+<td>[C]</td>
+<td>Real-time motor and safety traffic shall use a deterministic bus (CAN) isolated from best-effort perception data traffic.</td>
+</tr>
+<tr>
+<td>INT-2</td>
+<td>[F]</td>
+<td>An independent safety monitor shall be able to halt all motion regardless of the mission state machine's state.</td>
+</tr>
+<tr>
+<td>INT-3</td>
+<td>[F]</td>
+<td>The system shall provide physical e-stop(s), obstacle-detection halt (bumper lidar/contact), and a geofenced operating envelope.</td>
+</tr>
+<tr>
+<td>INT-4</td>
+<td>[C]</td>
+<td>Loss of power, signal, or envelope shall bring the system to a defined safe stop, never an undefined state.</td>
+</tr>
+<tr>
+<td>INT-5</td>
+<td>[C]</td>
+<td>Fruit-contact surfaces shall be cleanable and food-appropriate.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="8-verification-methods-summary">8. Verification methods (summary)</h2>
+<table>
+<thead>
+<tr>
+<th>Requirement class</th>
+<th>Verification method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Detection/localization (PER)</td>
+<td>Held-out labeled test set; measured error against ground truth</td>
+</tr>
+<tr>
+<td>Cycle time / success / damage (SYS)</td>
+<td>Controlled-field trial with instrumented audit</td>
+</tr>
+<tr>
+<td>Latency / power / thermal (CMP)</td>
+<td>Bench benchmark on target device under representative load</td>
+</tr>
+<tr>
+<td>Kinematics / singularity / collision (MAN)</td>
+<td>Digital-twin analysis + bench actuation test</td>
+</tr>
+<tr>
+<td>Safety interlocks (INT)</td>
+<td>Fault-injection test; each interlock triggered deliberately</td>
+</tr>
+</tbody>
+</table>
+<h2 id="9-student-exercise">9. Student exercise</h2>
+<p>Choose any three requirements above and, for each, (a) confirm it is verifiable
+and rewrite it if not, and (b) describe the exact test — sample size, apparatus,
+pass/fail threshold — that would verify it. This exercise is the bridge from
+Module 5 into the capstone specification deliverable.</p></main>
+<footer class="foot"><div class="inner">
+  <div>SIM2FIELD · Robotic Harvesting Systems — course materials</div>
+  <div><a href="index.html">Home</a> · <a href="demo-page.html">Live Demo</a> · <a href="capstone.html">Capstone</a></div>
+</div></footer>
+
+</body>
+</html>

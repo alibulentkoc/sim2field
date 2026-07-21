@@ -1,0 +1,45 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="color-scheme" content="dark"><title>F-M14-1 preview - V-model</title><style>:root{--bg:#0e120d;--surface:#161c14;--surface-2:#0b0e0a;--surface-3:#12160f;--border:#2b3527;--border-strong:#3a4633;--text-primary:#eef2e6;--text-secondary:#c8cfbe;--text-muted:#adb4a2;--accent:#9bcf3b;--info:#6fb0d9;--warn:#e0a03b;--warn-text:#eed9b4;--accent-2:#b98bd9}
+body{margin:0;background:var(--bg);color:var(--text-primary);font-family:'IBM Plex Mono',ui-monospace,monospace;padding:2rem}
+.figure{max-width:860px;margin:0 auto;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.figbody{padding:1rem 1.1rem;background:var(--surface-3);overflow-x:auto} .figbody svg{display:block;width:100%;height:auto;min-width:640px}
+figcaption{padding:.7rem 1rem;font-size:.82rem;color:var(--text-muted);border-top:1px solid var(--border)} .fid{font-size:.64rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-right:.5rem}</style></head>
+<body><figure class="figure"><div class="figbody"><svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Verification versus validation as a V-model: the left arm decomposes mission to implementation, the right arm integrates and tests back up; horizontal links are verification (did we build it right, meets spec), the top link is validation (did we build the right thing, in the field). A machine can pass verification yet fail validation." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<line x1="119.0" y1="70.0" x2="179.0" y2="148.0" stroke="var(--border)" stroke-width="1.2"/>
+<line x1="179.0" y1="148.0" x2="239.0" y2="226.0" stroke="var(--border)" stroke-width="1.2"/>
+<line x1="239.0" y1="226.0" x2="307.0" y2="306.0" stroke="var(--border)" stroke-width="1.2"/>
+<line x1="505.0" y1="306.0" x2="573.0" y2="226.0" stroke="var(--border)" stroke-width="1.2"/>
+<line x1="573.0" y1="226.0" x2="633.0" y2="148.0" stroke="var(--border)" stroke-width="1.2"/>
+<line x1="633.0" y1="148.0" x2="693.0" y2="70.0" stroke="var(--border)" stroke-width="1.2"/>
+<line x1="307.0" y1="306.0" x2="505.0" y2="306.0" stroke="var(--border-strong)" stroke-width="1.4" marker-end="url(#v)"/>
+<line x1="314.0" y1="226.0" x2="498.0" y2="226.0" stroke="var(--accent)" stroke-width="1.4" stroke-dasharray="6 4"/>
+<text x="406.0" y="220.0" text-anchor="middle" font-size="7.5" fill="var(--accent)">verify: subsystem: analysis / test</text>
+<line x1="254.0" y1="148.0" x2="558.0" y2="148.0" stroke="var(--accent)" stroke-width="1.4" stroke-dasharray="6 4"/>
+<text x="406.0" y="142.0" text-anchor="middle" font-size="7.5" fill="var(--accent)">verify: system: demonstration / review</text>
+<line x1="194.0" y1="70.0" x2="618.0" y2="70.0" stroke="var(--accent-2)" stroke-width="2"/>
+<text x="406.0" y="62.0" text-anchor="middle" font-size="9" fill="var(--accent-2)" font-weight="700">VALIDATION: did we build the RIGHT THING? (field, mission, grower need)</text>
+<rect x="44" y="50" width="150" height="40" rx="7" fill="var(--surface)" stroke="var(--accent-2)" stroke-width="1.4"/>
+<text x="119.0" y="74" text-anchor="middle" font-size="9" fill="var(--text-primary)" font-weight="700">Mission / grower need</text>
+<rect x="104" y="128" width="150" height="40" rx="7" fill="var(--surface)" stroke="var(--info)" stroke-width="1.4"/>
+<text x="179.0" y="152" text-anchor="middle" font-size="9" fill="var(--text-primary)" font-weight="700">System requirements (M1)</text>
+<rect x="164" y="206" width="150" height="40" rx="7" fill="var(--surface)" stroke="var(--info)" stroke-width="1.4"/>
+<text x="239.0" y="230" text-anchor="middle" font-size="9" fill="var(--text-primary)" font-weight="700">Subsystem design</text>
+<rect x="232" y="286" width="150" height="40" rx="7" fill="var(--surface)" stroke="var(--text-secondary)" stroke-width="1.4"/>
+<text x="307.0" y="310" text-anchor="middle" font-size="9" fill="var(--text-primary)" font-weight="700">Implementation / build</text>
+<rect x="430" y="286" width="150" height="40" rx="7" fill="var(--surface)" stroke="var(--text-secondary)" stroke-width="1.4"/>
+<text x="505.0" y="310" text-anchor="middle" font-size="9" fill="var(--text-primary)" font-weight="700">Unit / bench test</text>
+<rect x="498" y="206" width="150" height="40" rx="7" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="573.0" y="230" text-anchor="middle" font-size="9" fill="var(--text-primary)" font-weight="700">Subsystem verification</text>
+<rect x="558" y="128" width="150" height="40" rx="7" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="633.0" y="152" text-anchor="middle" font-size="9" fill="var(--text-primary)" font-weight="700">System verification</text>
+<rect x="618" y="50" width="150" height="40" rx="7" fill="var(--surface)" stroke="var(--accent-2)" stroke-width="1.4"/>
+<text x="693.0" y="74" text-anchor="middle" font-size="9" fill="var(--text-primary)" font-weight="700">Field validation</text>
+<text x="150" y="330" text-anchor="middle" font-size="8.5" fill="var(--text-muted)">specification / decomposition (top-down)</text>
+<text x="600" y="330" text-anchor="middle" font-size="8.5" fill="var(--text-muted)">integration / test (bottom-up)</text>
+<text x="378" y="150" text-anchor="middle" font-size="9" fill="var(--accent)" font-weight="700">VERIFICATION</text>
+<text x="378" y="163" text-anchor="middle" font-size="7.6" fill="var(--text-muted)">did we build it RIGHT? (meets spec)</text>
+<text x="378" y="176" text-anchor="middle" font-size="7.6" fill="var(--text-muted)">analysis / test / review / demonstration</text>
+<rect x="196" y="352" width="368" height="34" rx="8" fill="var(--surface-2)" stroke="var(--warn)" stroke-opacity="0.6"/>
+<text x="380" y="366" text-anchor="middle" font-size="8.2" fill="var(--warn-text)" font-weight="700">A machine can pass verification (meets spec)</text>
+<text x="380" y="378" text-anchor="middle" font-size="8" fill="var(--text-muted)">and still fail validation (the spec did not capture the field).</text>
+</svg></div><figcaption><span class="fid">F-M14-1</span>Verification vs validation (V-model). The left arm decomposes mission to implementation; the right arm integrates and tests back up. Horizontal links are verification (did we build it right, meets spec); the top link is validation (did we build the right thing, in the field). A machine can pass verification and still fail validation. Module 14, Section 6.1.</figcaption></figure></body></html>

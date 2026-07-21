@@ -1,0 +1,33 @@
+<svg viewBox="0 0 760 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three cost views: build cost (BOM plus assembly and test) is amortized over the machine's life and added to operating cost (energy, maintenance, supervision labor) to give total cost of ownership per season, which divided by acres covered yields the decisive cost-per-acre." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Cost structure: build, operate, own</text>
+<rect x="30" y="56" width="210" height="90" rx="9" fill="var(--surface)" stroke="var(--info)" stroke-width="1.5"/>
+<text x="46" y="76" font-size="9" fill="var(--info)" font-weight="700">BUILD COST</text>
+<text x="46" y="92" font-size="7" fill="var(--text-muted)">BOM + assembly / test</text>
+<text x="46" y="105" font-size="7" fill="var(--text-secondary)">~$50k prototype -></text>
+<text x="46" y="117" font-size="7" fill="var(--text-secondary)">producible unit price at volume</text>
+<text x="46" y="134" font-size="6.6" fill="var(--text-muted)">(one-time, per machine)</text>
+<rect x="30" y="158" width="210" height="96" rx="9" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.5"/>
+<text x="46" y="178" font-size="9" fill="var(--warn-text)" font-weight="700">OPERATING COST</text>
+<text x="46" y="194" font-size="7" fill="var(--text-secondary)">energy (M12)</text>
+<text x="46" y="207" font-size="7" fill="var(--text-secondary)">maintenance / parts (M14)</text>
+<text x="46" y="220" font-size="7" fill="var(--text-secondary)">supervision labor</text>
+<text x="46" y="237" font-size="6.6" fill="var(--text-muted)">(recurring, per season)</text>
+<rect x="300" y="96" width="200" height="120" rx="9" fill="var(--surface-2)" stroke="var(--accent)" stroke-width="1.8"/>
+<text x="400" y="120" font-size="10" fill="var(--accent)" font-weight="700" text-anchor="middle">TCO / season</text>
+<text x="400" y="140" font-size="7" fill="var(--text-secondary)" font-weight="anc=middle">amortize build over life</text>
+<text x="400" y="152" font-size="7" fill="var(--text-secondary)" font-weight="anc=middle">+ operating cost</text>
+<text x="400" y="172" font-size="7" fill="var(--text-muted)" font-weight="anc=middle">= true per-season cost</text>
+<text x="400" y="192" font-size="6.8" fill="var(--text-muted)" font-weight="anc=middle">the number unit economics</text>
+<text x="400" y="203" font-size="6.8" fill="var(--text-muted)" font-weight="anc=middle">divide by coverage</text>
+<line x1="240" y1="101" x2="298" y2="130" stroke="var(--border-strong)" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="250" y="116" font-size="6.4" fill="var(--text-muted)">amortized</text>
+<line x1="240" y1="200" x2="298" y2="175" stroke="var(--border-strong)" stroke-width="1.3" marker-end="url(#a)"/>
+<rect x="560" y="116" width="180" height="80" rx="9" fill="var(--surface)" stroke="var(--accent-strong)" stroke-width="1.6"/>
+<text x="650" y="140" font-size="9.5" fill="var(--accent)" font-weight="700" text-anchor="middle">cost / acre</text>
+<text x="650" y="160" font-size="6.8" fill="var(--text-secondary)" font-weight="anc=middle">= TCO per season</text>
+<text x="650" y="171" font-size="6.8" fill="var(--text-secondary)" font-weight="anc=middle">/ acres covered</text>
+<text x="650" y="187" font-size="6.6" fill="var(--text-muted)" font-weight="anc=middle">the decisive metric</text>
+<line x1="500" y1="156" x2="558" y2="156" stroke="var(--border-strong)" stroke-width="1.4" marker-end="url(#a)"/>
+<text x="20" y="272" font-size="7.8" fill="var(--text-muted)">Total cost of ownership amortizes build over the machine's life and adds operating cost, giving the true per-season cost that unit economics divide by coverage. Section 6.1.</text>
+</svg>

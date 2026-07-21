@@ -1,0 +1,36 @@
+<svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The no-cloud boundary partitions every capability into a runtime side that closes entirely on-robot with no network dependency (detection, localization, decision, grasp control, safety) and a development side done off-robot (training, synthetic data, calibration, analysis, compilation, updates) whose results are delivered as artifacts; no runtime path may depend on an off-robot resource." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">The no-cloud boundary: runtime vs development (CEC-04)</text>
+<rect x="30" y="46" width="330" height="196" rx="10" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.6"/>
+<text x="46" y="66" font-size="9.5" fill="var(--accent)" font-weight="700">RUNTIME  (on-robot, in the loop)</text>
+<text x="46" y="79" font-size="7" fill="var(--text-muted)">closes entirely on-robot, no network dependency</text>
+<rect x="46" y="98" width="298" height="20" rx="5" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.4"/>
+<text x="54" y="112" font-size="7.6" fill="var(--text-secondary)">detection (M4)</text>
+<rect x="46" y="124" width="298" height="20" rx="5" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.4"/>
+<text x="54" y="138" font-size="7.6" fill="var(--text-secondary)">localization + fusion (M5)</text>
+<rect x="46" y="150" width="298" height="20" rx="5" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.4"/>
+<text x="54" y="164" font-size="7.6" fill="var(--text-secondary)">decision / task FSM (M7)</text>
+<rect x="46" y="176" width="298" height="20" rx="5" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.4"/>
+<text x="54" y="190" font-size="7.6" fill="var(--text-secondary)">grasp control (M9)</text>
+<rect x="46" y="202" width="298" height="20" rx="5" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.4"/>
+<text x="54" y="216" font-size="7.6" fill="var(--text-secondary)">safety monitor (M11/M15)</text>
+<rect x="400" y="46" width="330" height="196" rx="10" fill="var(--surface)" stroke="var(--info)" stroke-width="1.6"/>
+<text x="416" y="66" font-size="9.5" fill="var(--info)" font-weight="700">DEVELOPMENT  (off-robot)</text>
+<text x="416" y="79" font-size="7" fill="var(--text-muted)">done at development time, delivered as artifacts</text>
+<rect x="416" y="98" width="298" height="20" rx="5" fill="var(--surface-2)" stroke="var(--info)" stroke-opacity="0.4"/>
+<text x="424" y="112" font-size="7.6" fill="var(--text-secondary)">training + synthetic data (M4/M7)</text>
+<rect x="416" y="124" width="298" height="20" rx="5" fill="var(--surface-2)" stroke="var(--info)" stroke-opacity="0.4"/>
+<text x="424" y="138" font-size="7.6" fill="var(--text-secondary)">calibration computation (M3)</text>
+<rect x="416" y="150" width="298" height="20" rx="5" fill="var(--surface-2)" stroke="var(--info)" stroke-opacity="0.4"/>
+<text x="424" y="164" font-size="7.6" fill="var(--text-secondary)">heavy analysis / evaluation</text>
+<rect x="416" y="176" width="298" height="20" rx="5" fill="var(--surface-2)" stroke="var(--info)" stroke-opacity="0.4"/>
+<text x="424" y="190" font-size="7.6" fill="var(--text-secondary)">model compilation</text>
+<rect x="416" y="202" width="298" height="20" rx="5" fill="var(--surface-2)" stroke="var(--info)" stroke-opacity="0.4"/>
+<text x="424" y="216" font-size="7.6" fill="var(--text-secondary)">over-the-air updates</text>
+<line x1="380" y1="52" x2="380" y2="236" stroke="var(--danger)" stroke-width="1.6" stroke-dasharray="5 3"/>
+<line x1="416" y1="230" x2="360" y2="230" stroke="var(--info)" stroke-width="1.6" marker-end="url(#a)"/>
+<text x="388" y="226" font-size="6.6" fill="var(--info)">artifacts (models, calib, updates) - one way</text>
+<rect x="30" y="252" width="700" height="34" rx="8" fill="var(--surface-2)" stroke="var(--danger)" stroke-opacity="0.55"/>
+<text x="44" y="266" font-size="8.4" fill="var(--danger-text)" font-weight="700">The rule: no runtime path may depend on an off-robot resource.</text>
+<text x="44" y="279" font-size="7.4" fill="var(--text-muted)">A design tool: classify each capability and audit the architecture for hidden cloud dependencies. Section 6.2.</text>
+</svg>

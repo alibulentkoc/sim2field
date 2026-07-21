@@ -1,0 +1,27 @@
+<svg viewBox="0 0 760 255" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pressure to force: grip force is gauge pressure times piston area, a straight line whose slope is the area; sizing the actuator area sets how the commandable pressure range maps onto the grip-force window between slip and bruise, so the actuator must be able to reach every force in the window and no more than necessary." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Pressure to force (F = P A) on the grip-force window</text>
+<rect x="110" y="102" width="450" height="60" fill="var(--accent)" fill-opacity="0.10"/>
+<line x1="110" y1="162" x2="560" y2="162" stroke="var(--info)" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="560" y="158.0" font-size="7" fill="var(--info)" font-weight="end" text-anchor="end">F_slip</text>
+<line x1="110" y1="102" x2="560" y2="102" stroke="var(--danger)" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="560" y="98.0" font-size="7" fill="var(--danger-text)" font-weight="end" text-anchor="end">F_bruise</text>
+<text x="120" y="135.0" font-size="7" fill="var(--accent)">grip-force window (M2)</text>
+<line x1="110" y1="210" x2="639" y2="60" stroke="var(--accent-2)" stroke-width="2.4"/>
+<text x="497.0" y="75.0" font-size="7.4" fill="var(--accent-2)" font-weight="700">F = P A</text>
+<line x1="279" y1="210" x2="279" y2="162" stroke="var(--text-muted)" stroke-width="0.8" stroke-dasharray="3 2"/>
+<line x1="491" y1="210" x2="491" y2="102" stroke="var(--text-muted)" stroke-width="0.8" stroke-dasharray="3 2"/>
+<rect x="279" y="212" width="212" height="6" fill="var(--accent)" fill-opacity="0.6"/>
+<text x="385.2941176470588" y="230" font-size="6.8" fill="var(--accent)" text-anchor="middle">commandable P range</text>
+<line x1="110" y1="56" x2="110" y2="210" stroke="var(--border-strong)" stroke-width="1.4"/>
+<line x1="110" y1="210" x2="560" y2="210" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="102" y="135.0" text-anchor="middle" font-size="8" fill="var(--text-muted)" transform="rotate(-90 102 135.0)">grip force F</text>
+<text x="335.0" y="244" font-size="8" fill="var(--text-muted)" text-anchor="middle">gauge pressure P  -></text>
+<rect x="584" y="60" width="158" height="90" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="596" y="80" font-size="7.8" fill="var(--accent-2)" font-weight="700">F = P A</text>
+<text x="596" y="96" font-size="6.6" fill="var(--text-muted)">A = piston area (slope)</text>
+<text x="596" y="110" font-size="6.6" fill="var(--text-secondary)">size A so P range covers</text>
+<text x="596" y="120" font-size="6.6" fill="var(--text-secondary)">[F_slip, F_bruise]</text>
+<text x="596" y="138" font-size="6.4" fill="var(--text-muted)">k_fluid = A^2 beta / V</text>
+<text x="20" y="238" font-size="7.8" fill="var(--text-muted)">Size the actuator area so the commandable pressure spans the window forces and no more. The fluid can only soften (springs in series): the structure carries the stiffness floor. Section 7.1.</text>
+</svg>

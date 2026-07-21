@@ -1,0 +1,47 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="color-scheme" content="dark"><title>F-M12-1 preview - Power budget</title><style>:root{--bg:#0e120d;--surface:#161c14;--surface-2:#0b0e0a;--surface-3:#12160f;--border:#2b3527;--border-strong:#3a4633;--text-primary:#eef2e6;--text-secondary:#c8cfbe;--text-muted:#adb4a2;--text-on-accent:#0e120d;--accent:#9bcf3b;--info:#6fb0d9;--warn:#e0a03b;--warn-text:#eed9b4;--danger:#f0556a;--accent-2:#b98bd9}
+body{margin:0;background:var(--bg);color:var(--text-primary);font-family:'IBM Plex Mono',ui-monospace,monospace;padding:2rem}
+.figure{max-width:840px;margin:0 auto;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.figbody{padding:1rem 1.1rem;background:var(--surface-3);overflow-x:auto} .figbody svg{display:block;width:100%;height:auto;min-width:660px}
+figcaption{padding:.7rem 1rem;font-size:.82rem;color:var(--text-muted);border-top:1px solid var(--border)} .fid{font-size:.64rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-right:.5rem}</style></head>
+<body><figure class="figure"><div class="figbody"><svg viewBox="0 0 760 336" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Machine power budget: per-subsystem average and peak draw, and the coincident peak formed when drive on a slope, a pump cycle, and an inference burst spike together; average sets battery energy and endurance, the coincident peak sets the bus and discharge rate, and both must stay under the delivery capacity." font-family="'IBM Plex Mono',monospace">
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Power budget: average vs coincident peak</text>
+<line x1="112" y1="60" x2="112" y2="286" stroke="var(--border-strong)" stroke-width="1.4"/>
+<line x1="112" y1="286" x2="710" y2="286" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="104" y="175.0" text-anchor="middle" font-size="8.3" fill="var(--text-muted)" transform="rotate(-90 104 175.0)">power (illustrative)</text>
+<rect x="130" y="245.3" width="46" height="40.7" rx="2" fill="none" stroke="var(--warn)" stroke-width="1.2" stroke-dasharray="3 2"/>
+<rect x="130" y="258.2" width="46" height="27.8" rx="2" fill="var(--accent)" fill-opacity="0.55" stroke="var(--accent)"/>
+<text x="153.0" y="298" text-anchor="middle" font-size="6.8" fill="var(--text-muted)">compute</text>
+<rect x="198" y="273.1" width="46" height="12.9" rx="2" fill="none" stroke="var(--warn)" stroke-width="1.2" stroke-dasharray="3 2"/>
+<rect x="198" y="276.8" width="46" height="9.2" rx="2" fill="var(--accent)" fill-opacity="0.55" stroke="var(--accent)"/>
+<text x="221.0" y="298" text-anchor="middle" font-size="6.8" fill="var(--text-muted)">sensors</text>
+<rect x="266" y="221.2" width="46" height="64.8" rx="2" fill="none" stroke="var(--warn)" stroke-width="1.2" stroke-dasharray="3 2"/>
+<rect x="266" y="263.8" width="46" height="22.2" rx="2" fill="var(--accent)" fill-opacity="0.55" stroke="var(--accent)"/>
+<text x="289.0" y="298" text-anchor="middle" font-size="6.8" fill="var(--text-muted)">drive</text>
+<rect x="334" y="230.5" width="46" height="55.5" rx="2" fill="none" stroke="var(--warn)" stroke-width="1.2" stroke-dasharray="3 2"/>
+<rect x="334" y="271.2" width="46" height="14.8" rx="2" fill="var(--accent)" fill-opacity="0.55" stroke="var(--accent)"/>
+<text x="357.0" y="298" text-anchor="middle" font-size="6.8" fill="var(--text-muted)">actuation</text>
+<rect x="402" y="267.5" width="46" height="18.5" rx="2" fill="none" stroke="var(--warn)" stroke-width="1.2" stroke-dasharray="3 2"/>
+<rect x="402" y="274.9" width="46" height="11.1" rx="2" fill="var(--accent)" fill-opacity="0.55" stroke="var(--accent)"/>
+<text x="425.0" y="298" text-anchor="middle" font-size="6.8" fill="var(--text-muted)">aux/thermal</text>
+<text x="130" y="241" font-size="6.4" fill="var(--warn-text)">peak</text>
+<text x="153.0" y="269" text-anchor="middle" font-size="6" fill="var(--text-on-accent)">avg</text>
+<text x="266" y="310" text-anchor="middle" font-size="7" fill="var(--text-muted)">per subsystem: average (draw x duty) and peak draw</text>
+<rect x="524" y="221.2" width="70" height="64.8" fill="var(--info)" fill-opacity="0.6" stroke="var(--bg)" stroke-width="0.6"/>
+<text x="559.0" y="256.6" text-anchor="middle" font-size="6.3" fill="var(--text-primary)">drive (slope)</text>
+<rect x="524" y="165.8" width="70" height="55.5" fill="var(--accent)" fill-opacity="0.6" stroke="var(--bg)" stroke-width="0.6"/>
+<text x="559.0" y="196.5" text-anchor="middle" font-size="6.3" fill="var(--text-primary)">pump cycle</text>
+<rect x="524" y="125.1" width="70" height="40.7" fill="var(--accent-2)" fill-opacity="0.6" stroke="var(--bg)" stroke-width="0.6"/>
+<text x="559.0" y="148.4" text-anchor="middle" font-size="6.3" fill="var(--text-primary)">inference burst</text>
+<rect x="524" y="104.7" width="70" height="20.3" fill="var(--text-muted)" fill-opacity="0.6" stroke="var(--bg)" stroke-width="0.6"/>
+<text x="559.0" y="117.9" text-anchor="middle" font-size="6.3" fill="var(--text-primary)">baseline</text>
+<text x="559.0" y="298" text-anchor="middle" font-size="7" fill="var(--warn-text)" font-weight="700">coincident peak</text>
+<text x="559.0" y="308" text-anchor="middle" font-size="6.2" fill="var(--text-muted)">loads that spike together</text>
+<line x1="112" y1="82.5" x2="705" y2="82.5" stroke="var(--danger)" stroke-width="1.3" stroke-dasharray="5 3"/>
+<text x="705" y="79.5" text-anchor="end" font-size="7.2" fill="var(--danger)">delivery capacity (bus + battery C-rate)</text>
+<line x1="112" y1="104.7" x2="705" y2="104.7" stroke="var(--warn)" stroke-width="1.3" stroke-dasharray="5 3"/>
+<text x="705" y="101.7" text-anchor="end" font-size="7.2" fill="var(--warn)">coincident peak -> bus / regulation / C-rate</text>
+<line x1="112" y1="200.9" x2="705" y2="200.9" stroke="var(--accent)" stroke-width="1.3" stroke-dasharray="5 3"/>
+<text x="705" y="211.9" text-anchor="end" font-size="7.2" fill="var(--accent)">average total -> battery energy / endurance</text>
+<text x="20" y="312" font-size="8.3" fill="var(--text-secondary)">Average sets energy per shift (battery size, endurance); the coincident peak sets the bus and discharge rate. This is the power analogue of the placement RSS:</text>
+<text x="20" y="326" font-size="8.3" fill="var(--text-muted)">sum honestly and know which term dominates. Using average where peak matters, or ignoring coincidence, undersizes the delivery and browns out. Values [VERIFY@PUB].</text>
+</svg></div><figcaption><span class="fid">F-M12-1</span>Machine power budget. Per-subsystem average and peak draw, and the coincident peak formed when drive-on-slope, a pump cycle, and an inference burst spike together. Average sets battery energy and endurance; the coincident peak sets the bus and discharge rate; both stay under the delivery capacity. Companion to the power-distribution diagram. Values illustrative. Module 12, Section 6.2.</figcaption></figure></body></html>

@@ -1,0 +1,39 @@
+<svg viewBox="0 0 760 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The operating envelope defines the ranges of slope, terrain roughness, crop density, light, and dust within which the machine is required to work; the disciplined practice is to design and validate at the edges, the steepest slope with payload, roughest terrain, worst light and dust, because the envelope is the real specification and the average condition is not." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">The operating envelope: design and validate at the edges</text>
+<text x="30" y="88" font-size="7.8" fill="var(--text-secondary)" font-weight="700">slope</text>
+<line x1="200" y1="84" x2="690" y2="84" stroke="var(--border-strong)" stroke-width="6" stroke-linecap="round" opacity="0.5"/>
+<rect x="198" y="79" width="10" height="10" rx="2" fill="var(--accent)"/>
+<text x="214" y="88" font-size="6.6" fill="var(--text-muted)">flat</text>
+<circle cx="690" cy="84" r="7" fill="var(--danger)"/>
+<text x="680" y="88" font-size="6.6" fill="var(--danger-text)" text-anchor="end">steepest + payload</text>
+<text x="30" y="118" font-size="7.8" fill="var(--text-secondary)" font-weight="700">terrain roughness</text>
+<line x1="200" y1="114" x2="690" y2="114" stroke="var(--border-strong)" stroke-width="6" stroke-linecap="round" opacity="0.5"/>
+<rect x="198" y="109" width="10" height="10" rx="2" fill="var(--accent)"/>
+<text x="214" y="118" font-size="6.6" fill="var(--text-muted)">smooth</text>
+<circle cx="690" cy="114" r="7" fill="var(--danger)"/>
+<text x="680" y="118" font-size="6.6" fill="var(--danger-text)" text-anchor="end">rutted / rough</text>
+<text x="30" y="148" font-size="7.8" fill="var(--text-secondary)" font-weight="700">crop density</text>
+<line x1="200" y1="144" x2="690" y2="144" stroke="var(--border-strong)" stroke-width="6" stroke-linecap="round" opacity="0.5"/>
+<rect x="198" y="139" width="10" height="10" rx="2" fill="var(--accent)"/>
+<text x="214" y="148" font-size="6.6" fill="var(--text-muted)">sparse</text>
+<circle cx="690" cy="144" r="7" fill="var(--danger)"/>
+<text x="680" y="148" font-size="6.6" fill="var(--danger-text)" text-anchor="end">dense canopy</text>
+<text x="30" y="178" font-size="7.8" fill="var(--text-secondary)" font-weight="700">light</text>
+<line x1="200" y1="174" x2="690" y2="174" stroke="var(--border-strong)" stroke-width="6" stroke-linecap="round" opacity="0.5"/>
+<rect x="198" y="169" width="10" height="10" rx="2" fill="var(--accent)"/>
+<text x="214" y="178" font-size="6.6" fill="var(--text-muted)">even shade</text>
+<circle cx="690" cy="174" r="7" fill="var(--danger)"/>
+<text x="680" y="178" font-size="6.6" fill="var(--danger-text)" text-anchor="end">full sun / deep shade</text>
+<text x="30" y="208" font-size="7.8" fill="var(--text-secondary)" font-weight="700">dust / weather</text>
+<line x1="200" y1="204" x2="690" y2="204" stroke="var(--border-strong)" stroke-width="6" stroke-linecap="round" opacity="0.5"/>
+<rect x="198" y="199" width="10" height="10" rx="2" fill="var(--accent)"/>
+<text x="214" y="208" font-size="6.6" fill="var(--text-muted)">clean, dry</text>
+<circle cx="690" cy="204" r="7" fill="var(--danger)"/>
+<text x="680" y="208" font-size="6.6" fill="var(--danger-text)" text-anchor="end">dusty, wet</text>
+<text x="200" y="68" font-size="7" fill="var(--accent)">nominal</text>
+<text x="690" y="68" font-size="7" fill="var(--danger-text)" font-weight="end" text-anchor="end">envelope edge (design + validate here)</text>
+<rect x="30" y="238" width="712" height="32" rx="8" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.5"/>
+<text x="44" y="252" font-size="8" fill="var(--text-secondary)" font-weight="700">The envelope is the real specification; the average condition is not (EI-10).</text>
+<text x="44" y="264" font-size="7.4" fill="var(--text-muted)">Design and validate at the edges: steepest slope with payload, roughest terrain, tightest headland, worst light. Section 6.6.</text>
+</svg>

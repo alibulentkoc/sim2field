@@ -1,0 +1,44 @@
+<svg viewBox="0 0 760 342" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Robustness in direct sunlight scored 1 to 5 for four depth modalities: passive stereo 5, LiDAR 4, time-of-flight 2, structured light 1. Sunlight robustness is the decisive criterion outdoors and eliminates structured light and ToF as primaries." font-family="'IBM Plex Mono',monospace">
+<text x="14" y="26" font-size="12" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Robustness in direct sunlight</text>
+<text x="14" y="42" font-size="9" fill="var(--text-muted)">the decisive TS-5 criterion outdoors (weight 0.30), scored 1 (poor) to 5 (robust)</text>
+<text x="564" y="42" font-size="8.5" fill="var(--text-muted)">weighted total</text>
+<line x1="281.2" y1="58" x2="281.2" y2="258" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="281.2" y="54" text-anchor="middle" font-size="8" fill="var(--text-muted)">1</text>
+<line x1="348.4" y1="58" x2="348.4" y2="258" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="348.4" y="54" text-anchor="middle" font-size="8" fill="var(--text-muted)">2</text>
+<line x1="415.6" y1="58" x2="415.6" y2="258" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="415.6" y="54" text-anchor="middle" font-size="8" fill="var(--text-muted)">3</text>
+<line x1="482.8" y1="58" x2="482.8" y2="258" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="482.8" y="54" text-anchor="middle" font-size="8" fill="var(--text-muted)">4</text>
+<line x1="550.0" y1="58" x2="550.0" y2="258" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="550.0" y="54" text-anchor="middle" font-size="8" fill="var(--text-muted)">5</text>
+<text x="186" y="82" text-anchor="end" font-size="11" fill="var(--text-primary)" font-weight="700">Passive stereo</text>
+<text x="186" y="95" text-anchor="end" font-size="8" fill="var(--accent)">SELECTED</text>
+<rect x="214" y="68" width="336" height="26" rx="5" fill="var(--surface-2)" stroke="var(--border)"/>
+<rect x="214" y="68" width="336.0" height="26" rx="5" fill="var(--accent)" fill-opacity="0.55" stroke="var(--accent)"/>
+<text x="542.0" y="86" text-anchor="end" font-size="13" fill="var(--text-primary)" font-weight="700">5</text>
+<rect x="558" y="68" width="74" height="26" rx="6" fill="var(--tint-accent)" stroke="var(--accent)" stroke-width="1.6"/>
+<text x="595" y="86" text-anchor="middle" font-size="12" fill="var(--accent)" font-weight="700">4.44</text>
+<text x="186" y="134" text-anchor="end" font-size="11" fill="var(--text-primary)" font-weight="700">LiDAR</text>
+<text x="186" y="147" text-anchor="end" font-size="8" fill="var(--text-muted)">optional complement</text>
+<rect x="214" y="120" width="336" height="26" rx="5" fill="var(--surface-2)" stroke="var(--border)"/>
+<rect x="214" y="120" width="268.8" height="26" rx="5" fill="var(--accent)" fill-opacity="0.55" stroke="var(--accent)"/>
+<text x="474.8" y="138" text-anchor="end" font-size="13" fill="var(--text-primary)" font-weight="700">4</text>
+<rect x="558" y="120" width="74" height="26" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1"/>
+<text x="595" y="138" text-anchor="middle" font-size="12" fill="var(--text-secondary)" font-weight="700">3.42</text>
+<text x="186" y="186" text-anchor="end" font-size="11" fill="var(--text-primary)" font-weight="700">Time-of-flight (ToF)</text>
+<rect x="214" y="172" width="336" height="26" rx="5" fill="var(--surface-2)" stroke="var(--border)"/>
+<rect x="214" y="172" width="134.4" height="26" rx="5" fill="var(--danger)" fill-opacity="0.55" stroke="var(--danger)"/>
+<text x="340.4" y="190" text-anchor="end" font-size="13" fill="var(--text-primary)" font-weight="700">2</text>
+<rect x="558" y="172" width="74" height="26" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1"/>
+<text x="595" y="190" text-anchor="middle" font-size="12" fill="var(--text-secondary)" font-weight="700">2.98</text>
+<text x="186" y="238" text-anchor="end" font-size="11" fill="var(--text-primary)" font-weight="700">Structured light</text>
+<rect x="214" y="224" width="336" height="26" rx="5" fill="var(--surface-2)" stroke="var(--border)"/>
+<rect x="214" y="224" width="67.2" height="26" rx="5" fill="var(--danger)" fill-opacity="0.55" stroke="var(--danger)"/>
+<text x="273.2" y="242" text-anchor="end" font-size="13" fill="var(--text-primary)" font-weight="700">1</text>
+<rect x="558" y="224" width="74" height="26" rx="6" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1"/>
+<text x="595" y="242" text-anchor="middle" font-size="12" fill="var(--text-secondary)" font-weight="700">2.86</text>
+<rect x="14" y="280" width="732" height="46" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="26" y="299" font-size="9.5" fill="var(--text-secondary)">Sunlight robustness is decisive outdoors: it eliminates structured light and ToF as primaries.</text>
+<text x="26" y="314" font-size="9" fill="var(--text-muted)">Passive stereo selected (also supplies the color detection and ripeness cues need); LiDAR retained as an optional longer-range complement.</text>
+</svg>

@@ -1,0 +1,38 @@
+<svg viewBox="0 0 760 285" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Responsible deployment weighs considerations engineering evidence cannot settle: labor displacement and who bears the cost, worker safety for people who share the field, environmental footprint, data ownership and accountability, dual-use and distributive effects between small and large growers, and the humility to bound where the machine should not operate." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Responsible-deployment considerations</text>
+<circle cx="380" cy="150" r="42" fill="var(--surface-2)" stroke="var(--accent)" stroke-width="1.6"/>
+<text x="380" y="146" font-size="8" fill="var(--accent)" font-weight="700" text-anchor="middle">responsible</text>
+<text x="380" y="158" font-size="8" fill="var(--accent)" font-weight="700" text-anchor="middle">deployment</text>
+<rect x="40" y="62" width="200" height="56" rx="8" fill="var(--surface)" stroke="var(--info)" stroke-width="1.4"/>
+<text x="52" y="80" font-size="8" fill="var(--info)" font-weight="700">Labor</text>
+<text x="52" y="96" font-size="6.4" fill="var(--text-muted)">displaces/concentrates work;</text>
+<text x="52" y="108" font-size="6.4" fill="var(--text-muted)">who benefits, who bears cost</text>
+<line x1="240" y1="90" x2="336" y2="132" stroke="var(--info)" stroke-width="1" stroke-dasharray="3 2" opacity="0.7"/>
+<rect x="40" y="150" width="200" height="56" rx="8" fill="var(--surface)" stroke="var(--danger)" stroke-width="1.4"/>
+<text x="52" y="168" font-size="8" fill="var(--danger)" font-weight="700">Worker safety</text>
+<text x="52" y="184" font-size="6.4" fill="var(--text-muted)">people share the field;</text>
+<text x="52" y="196" font-size="6.4" fill="var(--text-muted)">keep-clear, human detection</text>
+<line x1="240" y1="178" x2="336" y2="150" stroke="var(--danger)" stroke-width="1" stroke-dasharray="3 2" opacity="0.7"/>
+<rect x="40" y="238" width="200" height="56" rx="8" fill="var(--surface)" stroke="var(--accent-2)" stroke-width="1.4"/>
+<text x="52" y="256" font-size="8" fill="var(--accent-2)" font-weight="700">Environment</text>
+<text x="52" y="272" font-size="6.4" fill="var(--text-muted)">energy, materials, soil,</text>
+<text x="52" y="284" font-size="6.4" fill="var(--text-muted)">lifecycle footprint (->M16)</text>
+<line x1="240" y1="266" x2="336" y2="168" stroke="var(--accent-2)" stroke-width="1" stroke-dasharray="3 2" opacity="0.7"/>
+<rect x="540" y="62" width="200" height="56" rx="8" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.4"/>
+<text x="552" y="80" font-size="8" fill="var(--warn)" font-weight="700">Data + accountability</text>
+<text x="552" y="96" font-size="6.4" fill="var(--text-muted)">who owns yield/land data;</text>
+<text x="552" y="108" font-size="6.4" fill="var(--text-muted)">who is accountable on failure</text>
+<line x1="540" y1="90" x2="424" y2="132" stroke="var(--warn)" stroke-width="1" stroke-dasharray="3 2" opacity="0.7"/>
+<rect x="540" y="150" width="200" height="56" rx="8" fill="var(--surface)" stroke="var(--info)" stroke-width="1.4"/>
+<text x="552" y="168" font-size="8" fill="var(--info)" font-weight="700">Dual-use / equity</text>
+<text x="552" y="184" font-size="6.4" fill="var(--text-muted)">misuse; capability concentrated;</text>
+<text x="552" y="196" font-size="6.4" fill="var(--text-muted)">small vs large growers</text>
+<line x1="540" y1="178" x2="424" y2="150" stroke="var(--info)" stroke-width="1" stroke-dasharray="3 2" opacity="0.7"/>
+<rect x="540" y="238" width="200" height="56" rx="8" fill="var(--surface)" stroke="var(--danger)" stroke-width="1.4"/>
+<text x="552" y="256" font-size="8" fill="var(--danger)" font-weight="700">Where NOT to operate</text>
+<text x="552" y="272" font-size="6.4" fill="var(--text-muted)">bound proximity, conditions, uses;</text>
+<text x="552" y="284" font-size="6.4" fill="var(--text-muted)">bounding OUT is a design decision</text>
+<line x1="540" y1="266" x2="424" y2="168" stroke="var(--danger)" stroke-width="1" stroke-dasharray="3 2" opacity="0.7"/>
+<text x="20" y="272" font-size="7.8" fill="var(--text-muted)">Engineering evidence cannot settle whether the machine SHOULD deploy; that is a judgment. The safety case states residual risk honestly (EI-15), and the professional responsibility is to weigh these. Section 6.8.</text>
+</svg>

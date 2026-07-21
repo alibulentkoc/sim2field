@@ -1,0 +1,46 @@
+<svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The frame-transform chain: a pixel plus depth is back-projected to the camera frame, then moved by homogeneous transforms through the robot frame (hand-eye calibration) to the field frame (rover pose); one wrong or stale transform anywhere in the chain is the frame-chain failure mode." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">The frame-transform chain: pixel to field</text>
+<rect x="36" y="96" width="74" height="56" rx="4" fill="#1f3a1a" stroke="var(--border-strong)"/>
+<circle cx="73" cy="124" r="7" fill="var(--accent-2)" fill-opacity="0.6" stroke="var(--accent-2)"/>
+<line x1="60" y1="124" x2="86" y2="124" stroke="var(--info)" stroke-width="0.7"/><line x1="73" y1="111" x2="73" y2="137" stroke="var(--info)" stroke-width="0.7"/>
+<text x="73" y="166" text-anchor="middle" font-size="7.2" fill="var(--text-muted)">pixel (u,v) + depth Z</text>
+<text x="73" y="176" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">(M4 mask + M3 depth)</text>
+<line x1="232" y1="132" x2="254" y2="132" stroke="var(--danger)" stroke-width="1.6"/>
+<line x1="232" y1="132" x2="232" y2="110" stroke="var(--accent)" stroke-width="1.6"/>
+<line x1="232" y1="132" x2="217" y2="145" stroke="var(--info)" stroke-width="1.6"/>
+<circle cx="246" cy="116" r="4.5" fill="var(--accent-2)"/>
+<text x="252" y="118" font-size="7.4" fill="var(--accent-2)">P_c</text>
+<text x="232" y="166" text-anchor="middle" font-size="8.4" fill="var(--text-primary)" font-weight="700">camera</text>
+<line x1="432" y1="132" x2="454" y2="132" stroke="var(--danger)" stroke-width="1.6"/>
+<line x1="432" y1="132" x2="432" y2="110" stroke="var(--accent)" stroke-width="1.6"/>
+<line x1="432" y1="132" x2="417" y2="145" stroke="var(--info)" stroke-width="1.6"/>
+<circle cx="446" cy="116" r="4.5" fill="var(--accent-2)"/>
+<text x="452" y="118" font-size="7.4" fill="var(--accent-2)">P_robot</text>
+<text x="432" y="166" text-anchor="middle" font-size="8.4" fill="var(--text-primary)" font-weight="700">robot / base</text>
+<line x1="632" y1="132" x2="654" y2="132" stroke="var(--danger)" stroke-width="1.6"/>
+<line x1="632" y1="132" x2="632" y2="110" stroke="var(--accent)" stroke-width="1.6"/>
+<line x1="632" y1="132" x2="617" y2="145" stroke="var(--info)" stroke-width="1.6"/>
+<circle cx="646" cy="116" r="4.5" fill="var(--accent-2)"/>
+<text x="652" y="118" font-size="7.4" fill="var(--accent-2)">P_field</text>
+<text x="632" y="166" text-anchor="middle" font-size="8.4" fill="var(--text-primary)" font-weight="700">field</text>
+<line x1="112" y1="124" x2="204" y2="124" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#a)"/>
+<text x="158" y="116" text-anchor="middle" font-size="7" fill="var(--accent)">back-project</text>
+<text x="158" y="140" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">Z K^-1 [u,v,1]</text>
+<line x1="262" y1="120" x2="404" y2="120" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#a)"/>
+<text x="333" y="112" text-anchor="middle" font-size="7.2" fill="var(--accent)">T(robot &lt;- camera)</text>
+<text x="333" y="140" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">hand-eye calib. (M3)</text>
+<line x1="462" y1="120" x2="604" y2="120" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#a)"/>
+<text x="533" y="112" text-anchor="middle" font-size="7.2" fill="var(--accent)">T(field &lt;- robot)</text>
+<text x="533" y="140" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">rover pose: GNSS/IMU/odom</text>
+<rect x="36" y="196" width="430" height="66" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="48" y="214" font-size="8" fill="var(--text-secondary)">back-project:  P_c = Z K^-1 [u v 1]^T   (K intrinsics, M3)</text>
+<text x="48" y="230" font-size="8" fill="var(--text-secondary)">compose:  P_robot = T(robot &lt;- cam) P_c</text>
+<text x="48" y="244" font-size="8" fill="var(--text-secondary)">          P_field = T(field &lt;- robot) P_robot</text>
+<text x="48" y="258" font-size="7.2" fill="var(--text-muted)">each T = [R t; 0 1] in SE(3), R in SO(3) (rotation + translation, 4x4 homogeneous)</text>
+<rect x="480" y="196" width="268" height="66" rx="8" fill="var(--surface-2)" stroke="var(--danger)" stroke-opacity="0.6"/>
+<text x="492" y="214" font-size="8.2" fill="var(--danger-text)" font-weight="700">Frame-chain failure mode</text>
+<text x="492" y="230" font-size="7.6" fill="var(--text-muted)">A single wrong or stale transform anywhere</text>
+<text x="492" y="241" font-size="7.6" fill="var(--text-muted)">in the chain misplaces the fruit, even if</text>
+<text x="492" y="252" font-size="7.6" fill="var(--text-muted)">every measurement was correct.</text>
+</svg>

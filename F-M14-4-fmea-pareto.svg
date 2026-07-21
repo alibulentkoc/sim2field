@@ -1,0 +1,31 @@
+<svg viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="FMEA and the dominant failure mode: failure modes ranked by their contribution to the system failure rate, with the largest highlighted as the dominant mode to attack first; the system rate is the sum, MTBF its reciprocal, and reliability the exponential." font-family="'IBM Plex Mono',monospace">
+<line x1="92" y1="70" x2="92" y2="300" stroke="var(--border-strong)" stroke-width="1.5"/>
+<line x1="92" y1="300" x2="470" y2="300" stroke="var(--border-strong)" stroke-width="1.5"/>
+<text x="84" y="187.0" text-anchor="middle" font-size="8.3" fill="var(--text-muted)" transform="rotate(-90 84 187.0)">failure-rate contribution &#955;_i</text>
+<rect x="104.0" y="96.6" width="39.1" height="203.4" rx="2" fill="var(--danger)" fill-opacity="0.9" stroke="var(--danger)"/>
+<text x="123.5" y="311" text-anchor="middle" font-size="6.4" fill="var(--text-muted)">gripper-pad wear</text>
+<rect x="167.0" y="187.0" width="39.1" height="113.0" rx="2" fill="var(--accent-strong)" fill-opacity="0.55" stroke="var(--accent-strong)"/>
+<text x="186.5" y="311" text-anchor="middle" font-size="6.4" fill="var(--text-muted)">vision miss / occlusion</text>
+<rect x="230.0" y="220.9" width="39.1" height="79.1" rx="2" fill="var(--accent-strong)" fill-opacity="0.55" stroke="var(--accent-strong)"/>
+<text x="249.5" y="311" text-anchor="middle" font-size="6.4" fill="var(--text-muted)">mechanism jam</text>
+<rect x="293.0" y="250.3" width="39.1" height="49.7" rx="2" fill="var(--accent-strong)" fill-opacity="0.55" stroke="var(--accent-strong)"/>
+<text x="312.5" y="311" text-anchor="middle" font-size="6.4" fill="var(--text-muted)">sensor dropout</text>
+<rect x="356.0" y="270.6" width="39.1" height="29.4" rx="2" fill="var(--accent-strong)" fill-opacity="0.55" stroke="var(--accent-strong)"/>
+<text x="375.5" y="311" text-anchor="middle" font-size="6.4" fill="var(--text-muted)">thermal throttle</text>
+<rect x="419.0" y="284.2" width="39.1" height="15.8" rx="2" fill="var(--accent-strong)" fill-opacity="0.55" stroke="var(--accent-strong)"/>
+<text x="438.5" y="311" text-anchor="middle" font-size="6.4" fill="var(--text-muted)">connector / comms</text>
+<text x="124" y="89" text-anchor="middle" font-size="7.8" fill="var(--danger-text)" font-weight="700">dominant</text>
+<text x="124" y="79" text-anchor="middle" font-size="7" fill="var(--text-muted)">attack first (EI-05)</text>
+<text x="281" y="326" text-anchor="middle" font-size="7" fill="var(--text-muted)">failure modes, ranked (illustrative modes and rates; the method is the ranking, not asserted values)</text>
+<text x="492" y="66" font-size="9" fill="var(--text-primary)" font-weight="700">Reliability arithmetic</text>
+<text x="492" y="86" font-size="8" fill="var(--text-secondary)">FMEA: mode, effect, likelihood, detectability</text>
+<text x="492" y="106" font-size="8.6" fill="var(--text-secondary)">&#955;_sys = sum &#955;_i    (series)</text>
+<text x="492" y="123" font-size="8.6" fill="var(--text-secondary)">MTBF = 1 / &#955;_sys</text>
+<text x="492" y="140" font-size="8.6" fill="var(--text-secondary)">R(t) = e^(-&#955;_sys t)</text>
+<rect x="492" y="154" width="256" height="52" rx="8" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.5"/>
+<text x="502" y="172" font-size="7.8" fill="var(--accent)" font-weight="700">The largest &#955;_i dominates:</text>
+<text x="502" y="185" font-size="7.6" fill="var(--text-muted)">&#8706;&#955;_sys/&#8706;&#955;_i is largest there, so a fractional</text>
+<text x="502" y="197" font-size="7.6" fill="var(--text-muted)">cut of the dominant mode moves &#955;_sys most.</text>
+<text x="492" y="224" font-size="7.8" fill="var(--text-secondary)">Reliability growth: test -&gt; find dominant -&gt; fix -&gt; retest.</text>
+<text x="20" y="348" font-size="8.3" fill="var(--text-muted)">A given reliability effort moves overall failure rate most when aimed at the dominant mode: the dominant-term discipline (EI-05) in the reliability domain.</text>
+</svg>

@@ -1,0 +1,54 @@
+<svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Emergent coupling map: integration reveals cross-subsystem behaviour no module owns. Dynamic coupling links the arm, grasp, and base; resource contention links perception, decision, mobility, and compute; timing jitter and shared power couple the control loops. The twin makes these surprises cheap." font-family="'IBM Plex Mono',monospace">
+<path d="M560,84 Q317.0,66.0 110,84" fill="none" stroke="var(--info)" stroke-width="1.4" stroke-dasharray="5 4" opacity="0.9"/>
+<path d="M560,84 Q458.0,66.0 392,84" fill="none" stroke="var(--info)" stroke-width="1.4" stroke-dasharray="5 4" opacity="0.9"/>
+<path d="M560,84 Q533.0,129.0 542,210" fill="none" stroke="var(--info)" stroke-width="1.4" stroke-dasharray="5 4" opacity="0.9"/>
+<path d="M500,320 Q541.0,285.0 542,210" fill="none" stroke="var(--warn)" stroke-width="1.4" stroke-dasharray="2 4" opacity="0.9"/>
+<path d="M500,320 Q459.0,285.0 378,210" fill="none" stroke="var(--warn)" stroke-width="1.4" stroke-dasharray="2 4" opacity="0.9"/>
+<path d="M500,320 Q550.0,222.0 560,84" fill="none" stroke="var(--warn)" stroke-width="1.4" stroke-dasharray="2 4" opacity="0.9"/>
+<path d="M214,320 Q282.0,251.0 378,210" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="1 4" opacity="0.9"/>
+<path d="M214,320 Q364.0,251.0 542,210" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="1 4" opacity="0.9"/>
+<path d="M214,210 Q338.0,170.0 542,210" fill="none" stroke="var(--accent-2)" stroke-width="2.2" opacity="0.9"/>
+<text x="378" y="176" text-anchor="middle" font-size="7.3" fill="var(--accent-2)">arm swing  &lt;-&gt;  stability (on a slope)</text>
+<path d="M378,210 Q322.0,236.0 214,210" fill="none" stroke="var(--accent-2)" stroke-width="2.2" opacity="0.9"/>
+<text x="300" y="250" text-anchor="middle" font-size="7.3" fill="var(--accent-2)">fluid compliance &lt;-&gt; placement stiffness</text>
+<rect x="46" y="64" width="128" height="40" rx="8" fill="var(--surface)" stroke="var(--border-strong)" stroke-width="1.3"/>
+<text x="110" y="81" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">Perception</text>
+<text x="110" y="95" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">M4</text>
+<rect x="184" y="64" width="128" height="40" rx="8" fill="var(--surface)" stroke="var(--border-strong)" stroke-width="1.3"/>
+<text x="248" y="81" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">Localization</text>
+<text x="248" y="95" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">M5</text>
+<rect x="328" y="64" width="128" height="40" rx="8" fill="var(--surface)" stroke="var(--border-strong)" stroke-width="1.3"/>
+<text x="392" y="81" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">Decision</text>
+<text x="392" y="95" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">M7</text>
+<rect x="496" y="64" width="128" height="40" rx="8" fill="var(--surface)" stroke="var(--border-strong)" stroke-width="1.3"/>
+<text x="560" y="81" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">Edge compute</text>
+<text x="560" y="95" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">M6</text>
+<rect x="150" y="190" width="128" height="40" rx="8" fill="var(--surface)" stroke="var(--border-strong)" stroke-width="1.3"/>
+<text x="214" y="207" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">Arm / kinematics</text>
+<text x="214" y="221" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">M8</text>
+<rect x="314" y="190" width="128" height="40" rx="8" fill="var(--surface)" stroke="var(--border-strong)" stroke-width="1.3"/>
+<text x="378" y="207" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">Grasp / fluid</text>
+<text x="378" y="221" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">M9</text>
+<rect x="478" y="190" width="128" height="40" rx="8" fill="var(--surface)" stroke="var(--border-strong)" stroke-width="1.3"/>
+<text x="542" y="207" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">Base / mobility</text>
+<text x="542" y="221" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">M10</text>
+<rect x="150" y="300" width="128" height="40" rx="8" fill="var(--surface)" stroke="var(--border-strong)" stroke-width="1.3"/>
+<text x="214" y="317" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">Timing / software</text>
+<text x="214" y="331" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">M11</text>
+<rect x="436" y="300" width="128" height="40" rx="8" fill="var(--surface)" stroke="var(--border-strong)" stroke-width="1.3"/>
+<text x="500" y="317" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">Power / thermal</text>
+<text x="500" y="331" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">M12</text>
+<rect x="546" y="286" width="204" height="88" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="560" y="302" font-size="8.5" fill="var(--text-primary)" font-weight="700">Coupling channel</text>
+<line x1="560" y1="313" x2="586" y2="313" stroke="var(--accent-2)" stroke-width="2" stroke-dasharray="8 0"/>
+<text x="592" y="316" font-size="7.6" fill="var(--text-secondary)">dynamic (mechanical)</text>
+<line x1="560" y1="326" x2="586" y2="326" stroke="var(--info)" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="592" y="329" font-size="7.6" fill="var(--text-secondary)">resource contention</text>
+<line x1="560" y1="339" x2="586" y2="339" stroke="var(--warn)" stroke-width="2" stroke-dasharray="2 4"/>
+<text x="592" y="342" font-size="7.6" fill="var(--text-secondary)">shared power / thermal</text>
+<line x1="560" y1="352" x2="586" y2="352" stroke="var(--accent)" stroke-width="2" stroke-dasharray="1 4"/>
+<text x="592" y="355" font-size="7.6" fill="var(--text-secondary)">timing / jitter</text>
+<text x="20" y="28" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Emergent coupling: behavior no single module owns</text>
+<text x="20" y="44" font-size="8.3" fill="var(--text-muted)">Integration is a distinct engineering activity because composition creates these couplings; integrate early and continuously (EI-13),</text>
+<text x="20" y="56" font-size="8.3" fill="var(--text-muted)">using the twin to make the surprises cheap. Interface drift (Sec. 6.2) can appear along any shared edge.</text>
+</svg>

@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AGRI-HARVEST // AMIGA WATERMELON UNIT — PARALLEL 2-CYL GANTRY</title>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #0b0d10; }
+  #app { position: fixed; inset: 0; }
+  .hud {
+    position: fixed; top: 14px; left: 16px; z-index: 10; pointer-events: none;
+    font-family: "SF Mono", "Cascadia Code", Consolas, monospace; color: #cfd6df;
+  }
+  .hud h1 { font-size: 13px; letter-spacing: 0.22em; margin: 0 0 4px 0; color: #e8edf3; font-weight: 600; }
+  .hud h1 span { color: #00ff88; }
+  .hud #status  { font-size: 11px; color: #9fd8ff; letter-spacing: 0.06em; }
+  .hud #mission { font-size: 11px; color: #8fa0b3; letter-spacing: 0.06em; margin-top: 2px; }
+  .hud #hint { font-size: 10px; color: #55637a; margin-top: 4px; letter-spacing: 0.05em; }
+  #eqs {
+    position: fixed; left: 16px; bottom: 16px; z-index: 10; pointer-events: none;
+    font-family: Consolas, "SF Mono", monospace; font-size: 10.5px; line-height: 1.55;
+    color: #8fa0b3; background: rgba(11,13,16,0.82); border-left: 2px solid #00ff88;
+    padding: 10px 14px; white-space: pre; letter-spacing: 0.03em;
+  }
+  #eqs b { color: #00ff88; font-weight: 600; }
+  #eqs .sec { color: #e8edf3; letter-spacing: 0.18em; }
+  #eqsToggle {
+    pointer-events: auto; cursor: pointer; user-select: none;
+    color: #e8edf3; letter-spacing: 0.18em; font-size: 10.5px;
+  }
+  #eqsToggle:hover { color: #00ff88; }
+  #eqs.collapsed #eqsBody { display: none; }
+  #eqs.collapsed { padding: 6px 12px; }
+  #pipFrame {
+    position: fixed; right: 16px; bottom: 16px; width: 300px; height: 180px; z-index: 9;
+    border: 1px solid #2b3644; box-sizing: content-box; pointer-events: none;
+  }
+  #pipFrame .tag {
+    position: absolute; top: -18px; left: 0; font-family: Consolas, monospace;
+    font-size: 10px; color: #9fd8ff; letter-spacing: 0.15em;
+  }
+  #pipFrame .rec { position: absolute; top: 6px; right: 8px; width: 8px; height: 8px;
+    border-radius: 50%; background: #ff3b30; animation: blink 1.2s infinite; }
+  @keyframes blink { 50% { opacity: 0.15; } }
+  .lil-gui { font-family: Consolas, monospace !important; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="hud">
+  <h1>AGRI-HARVEST <span>//</span> AMIGA WATERMELON UNIT — PARALLEL 2-CYL GANTRY</h1>
+  <div id="status">STATE: IDLE</div>
+  <div id="mission">MISSION: STANDBY &mdash; HARVESTED 0/6</div>
+  <div id="hint">start harvest in the panel &bull; drag the red gripper node to jog the mechanism &bull; drag elsewhere to orbit</div>
+</div>
+<div id="eqs"><div id="eqsToggle">▾ EQUATIONS</div><div id="eqsBody"></div></div>
+<div id="pipFrame"><div class="tag">ONBOARD // OAK-D CLEARANCE VIEW</div><div class="rec"></div></div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import GUI from 'three/addons/libs/lil-gui.module.min.js';
+
+/* =================================================================
+   AGRI-HARVEST v4 — minimal-DOF drive-over harvester
+   -----------------------------------------------------------------
+   DOF-reduction argument (the whole point of this revision):
+     x axis        → supplied by the VEHICLE (drive controller)
+     z tolerance   → supplied by WIDE COMPLIANT PADDLES (±0.23 m)
+     cart transfer → supplied by a PASSIVE PADDED CHUTE
+   ⇒ the base yaw and telescopic axes are ELIMINATED. What remains
+     is a fixed-base planar two-link (2R) arm — one hydraulic
+     cylinder per joint — with closed-form IK:
+       θ₂ = −acos((u² + v² − L₁² − L₂²) / (2·L₁·L₂))   (elbow-up)
+       θ₁ = atan2(v, u) + atan2(L₂·sin|θ₂|, L₁ + L₂·cos|θ₂|)
+     A passive parallelogram linkage keeps the gripper level, so
+     wrist tilt is not actuated either. 2 positioning DOF + grip.
+   ================================================================= */
+
+/* ----------------------- Mechanism constants -------------------- */
+/* Overhead planar PARALLEL 2-cylinder mechanism (sandbox topology):
+   two frame-mounted telescopic cylinders on a rear gantry beam converge
+   on a single gripper node in the TRANSVERSE (z–y) plane. The actuator
+   lengths ARE the joint coordinates:  L_i = |P − B_i|.               */
+const GANTRY_Y = 1.75;                       // beam height (m) — raised so the min-stroke
+                                             //   disc of cyl-2 clears the carry corridor
+// Strut base clevises bolt DIRECTLY onto the raised side rails — one
+// cylinder per rail — so base spacing follows the track width:
+const baseZ1 = () => -params.trackWidth / 2;
+const baseZ2 = () =>  params.trackWidth / 2;
+const CYL1 = { minL: 0.55, maxL: 2.85, barrel: 0.95, s1: 0.80 };   // long (reaches trailer)
+const CYL2 = { minL: 0.50, maxL: 2.00, barrel: 0.68, s1: 0.62 };
+const NODE_Y_MIN = 0.45, NODE_Y_MAX = 1.30;  // ceiling = flat-singularity margin (0.45 m below beam)
+const KEEP_Y = 1.19;                         // carry height over rail/wheels/tow arms/bin wall
+const LIFT_Y = 1.22;                         // transit height (melon bottom clears rail by 0.03 m)
+const GAMMA_WARN = 15;                       // transmission-angle singularity warning (deg)
+const NODE_Z_MIN = -0.45, NODE_Z_MAX = 2.05;
+const FINGER_DROP = 0.30;                    // fingertip below the node
+
+/* ------------------------ Mission constants --------------------- */
+const ROW_Z     = 0;                         // the bed runs UNDER the rover
+// PICK station = directly beneath the gantry, INSIDE the wheelbase:
+const pickAdv = () => 0;                     // gantry now MID-FRAME: melon stops at rover x=0,
+                                             //   dead center of the wheelbase
+const PICK_NODE_Y = 0.45;                    // node height when fingers straddle the melon
+const SWEEP_LEAD = 1.00;                     // brush center ahead of rover origin
+const SWEEP_R    = 0.50;
+const OCC_GATE   = 0.34;
+const TRAIL_Z   = 1.7;                       // side trailer centerline — pulled inboard to
+                                             //   keep γ healthy at the drop pose
+const SLOT_X    = [-0.3, 0, 0.3];            // rest positions inside the bin
+const SLOT_Z    = [-0.2, 0.2];
+const BIN_Y     = 0.47;
+const DROP_NODE = { lateral: TRAIL_Z, height: 1.08 };  // fixed release pose (side-drop)
+const TRAVEL    = { lateral: 0.2, height: 1.1 };
+const MELON_RY  = 0.15;
+const DET_RANGE = 2.0;                       // = 1.70/sin58°: the cone base meets the
+                                             //   soil exactly — no floor piercing
+const DET_HALF  = THREE.MathUtils.degToRad(30);
+const KP_DRIVE  = 0.9;
+
+/* --------------------------- State ------------------------------ */
+const params = {
+  lateral: 0.2, height: 1.1, grip: 1.0,      // gripper-node targets (transverse plane)
+  speed: 1.0, driveSpeed: 0.8,
+  trackWidth: 1.7, wheelBase: 1.2,
+  showFOV: true, showLabels: true, pip: true, showZones: true,
+  camPitch: -58, camYaw: 20, camHeight: 1.70,
+  sweeperOn: true, sweeperRPM: 240, sweepMode: 'Rotary Brush',
+  start: () => startMission(), pause: () => pauseMission(),
+  pick: () => manualPick(), drop: () => manualDrop(), reset: () => resetAll(),
+};
+const cur = { lateral: params.lateral, height: params.height, grip: 1 };
+let cylLen = { l1: 0, l2: 0 };               // solved actuator lengths (for readout)
+let gammaDeg = 90;                           // strut transmission angle at the node
+let clampFlags = { stroke: false, keepout: false };
+
+let state = 'IDLE';   // IDLE|DRIVE|STAGE|ALIGN|GRAB|LIFT|SWING|LOWER|RELEASE|WAITLAND|COMPLETE
+let mission = false, missionPaused = false, manualMode = false;
+let melonIdx = 0, slotIdx = 0, harvested = 0;
+let targetMelon = null, heldMelon = null, selectedMelon = null;
+let detectedMelon = null, detDist = 0, detAng = 0;
+let xStop = null, vDrive = 0;
+let sweepJam = 0, sweepI = 0, sweepClearing = false;
+let detRange = DET_RANGE;
+let puffTimer = 0;
+const GRIP_CLOSE = 0.36;
+
+/* ------------------------ Scene setup --------------------------- */
+let scene, camera, renderer, controls, clock, obCam;
+const statusEl  = document.getElementById('status');
+const missionEl = document.getElementById('mission');
+const eqsEl     = document.getElementById('eqs');
+const eqsBody   = document.getElementById('eqsBody');
+const eqsToggle = document.getElementById('eqsToggle');
+eqsToggle.addEventListener('click', () => {
+  eqsEl.classList.toggle('collapsed');
+  eqsToggle.textContent = (eqsEl.classList.contains('collapsed') ? '▸' : '▾') + ' EQUATIONS';
+});
+const pipFrame  = document.getElementById('pipFrame');
+
+/* ---------------------- Foliage (sweepable) ---------------------- */
+const leaves = [];
+const leafMat = new THREE.MeshStandardMaterial({ color: 0x27502a, roughness: 0.9 });
+function addLeaf(x, z, melon, y = 0.03) {
+  const leaf = new THREE.Mesh(new THREE.SphereGeometry(0.1 + Math.random() * 0.07, 10, 8), leafMat);
+  leaf.scale.y = 0.35;
+  leaf.position.set(x, y, z);
+  leaf.castShadow = true;
+  leaf.userData = { home: leaf.position.clone(), melon, displaced: false, vel: new THREE.Vector3(), spin: 0 };
+  scene.add(leaf);
+  leaves.push(leaf);
+  if (melon) melon.userData.leaves.push(leaf);
+  return leaf;
+}
+
+function initScene() {
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0b0d10);
+  scene.fog = new THREE.Fog(0x0b0d10, 22, 55);
+
+  camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 120);
+  camera.position.set(-4.1, 2.9, 5.1);
+
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  document.getElementById('app').appendChild(renderer.domElement);
+
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.target.set(0.2, 0.9, 0.3);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.08;
+  controls.maxPolarAngle = Math.PI * 0.495;
+  controls.maxDistance = 30;
+
+  scene.add(new THREE.AmbientLight(0x9fb4cc, 0.35));
+  const dir = new THREE.DirectionalLight(0xffffff, 1.1);
+  dir.position.set(7, 10, 4);
+  dir.castShadow = true;
+  dir.shadow.mapSize.set(2048, 2048);
+  dir.shadow.camera.left = -10; dir.shadow.camera.right = 14;
+  dir.shadow.camera.top = 10;   dir.shadow.camera.bottom = -10;
+  dir.shadow.bias = -0.0004;
+  scene.add(dir);
+  const spot = new THREE.SpotLight(0xdfe9ff, 300, 50, 0.6, 0.45, 2);
+  spot.position.set(-6, 8, 4);
+  spot.castShadow = true;
+  spot.shadow.mapSize.set(1024, 1024);
+  spot.shadow.bias = -0.0004;
+  spot.target.position.set(3, 0.6, 0);
+  scene.add(spot, spot.target);
+
+  const floor = new THREE.Mesh(
+    new THREE.PlaneGeometry(120, 120),
+    new THREE.MeshStandardMaterial({ color: 0x111419, roughness: 0.95 }));
+  floor.rotation.x = -Math.PI / 2;
+  floor.receiveShadow = true;
+  scene.add(floor);
+  scene.add(new THREE.GridHelper(44, 88, 0x33404e, 0x1b2027));
+  scene.add(new THREE.AxesHelper(1.3));
+
+  const bed = new THREE.Mesh(new THREE.BoxGeometry(17, 0.02, 0.62),
+    new THREE.MeshStandardMaterial({ color: 0x241b12, roughness: 1 }));
+  bed.position.set(6.5, 0.011, ROW_Z);
+  bed.receiveShadow = true;
+  scene.add(bed);
+  for (let i = 0; i < 14; i++) addLeaf(1.5 + Math.random() * 12, ROW_Z + (Math.random() - 0.5) * 0.5, null);
+
+  addEventListener('resize', () => {
+    camera.aspect = innerWidth / innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+  });
+}
+
+/* --------------------------- Materials -------------------------- */
+const MAT = {
+  frame:  new THREE.MeshStandardMaterial({ color: 0x3a3f46, roughness: 0.6,  metalness: 0.7 }),
+  alu:    new THREE.MeshStandardMaterial({ color: 0x8d949c, roughness: 0.45, metalness: 0.85 }),
+  orange: new THREE.MeshStandardMaterial({ color: 0xf26722, roughness: 0.5,  metalness: 0.3 }),
+  link:   new THREE.MeshStandardMaterial({ color: 0x1f6fd0, roughness: 0.35, metalness: 0.6 }),
+  barrel: new THREE.MeshStandardMaterial({ color: 0xb9c2cc, roughness: 0.3,  metalness: 0.9 }),
+  piston: new THREE.MeshStandardMaterial({ color: 0xe8eef4, roughness: 0.12, metalness: 1.0 }),
+  joint:  new THREE.MeshStandardMaterial({ color: 0x00ff88, roughness: 0.3,  metalness: 0.2,
+                                           emissive: 0x00ff88, emissiveIntensity: 0.75 }),
+  tool:   new THREE.MeshStandardMaterial({ color: 0xff7a1a, roughness: 0.45, metalness: 0.4 }),
+  tire:   new THREE.MeshStandardMaterial({ color: 0x181b1f, roughness: 0.9 }),
+  box:    new THREE.MeshStandardMaterial({ color: 0x22262c, roughness: 0.55, metalness: 0.4 }),
+  screen: new THREE.MeshStandardMaterial({ color: 0x0c0f13, emissive: 0xf26722, emissiveIntensity: 0.55 }),
+  chute:  new THREE.MeshStandardMaterial({ color: 0x2c3a30, roughness: 0.8, metalness: 0.2 }),
+};
+function shadowed(m) { m.castShadow = true; m.receiveShadow = true; return m; }
+function jointSphere(r = 0.045) { return shadowed(new THREE.Mesh(new THREE.SphereGeometry(r, 20, 16), MAT.joint)); }
+
+const labels = [];
+function makeLabel(text, scale = 1) {
+  const c = document.createElement('canvas'); c.width = 512; c.height = 80;
+  const g = c.getContext('2d');
+  g.font = '600 40px Consolas, monospace';
+  g.fillStyle = '#9fd8ff'; g.textBaseline = 'middle';
+  g.fillText(text, 8, 36);
+  g.fillStyle = '#00ff88'; g.fillRect(8, 64, g.measureText(text).width, 3);
+  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false }));
+  s.scale.set(1.15 * scale, 0.18 * scale, 1);
+  labels.push(s);
+  return s;
+}
+
+/* ------------- Rover (Amiga drive-over, adjustable) -------------- */
+let robot, gantry, head, fingerA, fingerB;
+let tipAnchor, camMount, camMast, fovMesh, trailer;
+let sweep, brush, airJet, fingers, puffCone, boomFwd;
+let zonesGroup, zoneRail, elecTray, railMounts = [];
+const zoneArcs = [];
+const armCyls = [], wheels = [], cornerUnits = [], crossBars = [], railBars = [];
+
+function createRover() {
+  robot = new THREE.Group();
+  robot.position.x = -1.5;
+  scene.add(robot);
+
+  const wheelGeo = new THREE.CylinderGeometry(0.22, 0.22, 0.16, 26).rotateX(Math.PI / 2);
+  const hubGeo   = new THREE.CylinderGeometry(0.09, 0.09, 0.18, 16).rotateX(Math.PI / 2);
+  for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
+    const unit = new THREE.Group();
+    const w = shadowed(new THREE.Mesh(wheelGeo, MAT.tire));
+    w.position.y = 0.22; unit.add(w); wheels.push(w);
+    const hub = new THREE.Mesh(hubGeo, MAT.orange); hub.position.y = 0.22; unit.add(hub);
+    const leg = shadowed(new THREE.Mesh(new THREE.BoxGeometry(0.07, 1.56, 0.07), MAT.alu));
+    leg.position.y = 0.975; unit.add(leg);   // full-height corner posts up to the rails
+    unit.userData = { sx, sz };
+    robot.add(unit);
+    cornerUnits.push(unit);
+  }
+  for (const sx of [-1, 1]) {
+    const bar = shadowed(new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.08, 1), MAT.alu));
+    bar.position.y = 0.70; bar.userData = { sx };
+    robot.add(bar); crossBars.push(bar);
+  }
+  for (const sz of [-1, 1]) {
+    const rail = shadowed(new THREE.Mesh(new THREE.BoxGeometry(1, 0.08, 0.08), MAT.alu));
+    rail.position.y = GANTRY_Y; rail.userData = { sz };   // raised: rails ARE the strut mounts
+    robot.add(rail); railBars.push(rail);
+    const acc = new THREE.Mesh(new THREE.BoxGeometry(1, 0.02, 0.085), MAT.orange);
+    acc.position.y = GANTRY_Y + 0.052; acc.userData = { sz };
+    robot.add(acc); railBars.push(acc);
+  }
+  // NOTE: no center deck plate — the mid-frame gripper descends through the
+  // centerline, so the tool space stays fully open top to bottom.
+
+  /* -- Electronics dress-out: side-rail tray, clear of the pick corridor -- */
+  elecTray = new THREE.Group();               // z position follows the left rail (updateChassis)
+  robot.add(elecTray);
+  const tray = shadowed(new THREE.Mesh(new THREE.BoxGeometry(0.85, 0.04, 0.32), MAT.frame));
+  tray.position.y = 0.02; elecTray.add(tray);
+  const brain = shadowed(new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.16, 0.20), MAT.box));
+  brain.position.set(-0.22, 0.12, 0); elecTray.add(brain);
+  const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.2, 0.1), MAT.screen);
+  screen.position.set(-0.22, 0.205, 0); screen.rotation.x = -Math.PI / 2.6;
+  elecTray.add(screen);
+  const batt = shadowed(new THREE.Mesh(new THREE.BoxGeometry(0.30, 0.14, 0.24), MAT.box));
+  batt.position.set(0.12, 0.11, 0); elecTray.add(batt);
+  const battStripe = new THREE.Mesh(new THREE.BoxGeometry(0.30, 0.03, 0.245), MAT.orange);
+  battStripe.position.set(0.12, 0.15, 0); elecTray.add(battStripe);
+  const canNode = shadowed(new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.06, 0.08), MAT.box));
+  canNode.position.set(0.36, 0.07, 0); elecTray.add(canNode);
+  const led = new THREE.Mesh(new THREE.SphereGeometry(0.014, 8, 8),
+    new THREE.MeshStandardMaterial({ emissive: 0x00ff88, emissiveIntensity: 2, color: 0x003322 }));
+  led.position.set(0.36, 0.11, 0); elecTray.add(led);
+  const lTray = makeLabel('BRAIN / BATTERY / CAN'); lTray.position.set(-0.05, 0.42, 0); elecTray.add(lTray);
+
+  const cableMat = new THREE.MeshStandardMaterial({ color: 0x0d0f12, roughness: 0.8 });
+  const c1 = new THREE.CatmullRomCurve3([     // tray → left gantry post (drives + node sensors)
+    new THREE.Vector3(-0.22, 0.10, 0.05), new THREE.Vector3(-0.05, 0.06, 0.05),
+    new THREE.Vector3(0.1, 0.45, 0.02), new THREE.Vector3(0.1, 0.9, 0.02)]);
+  elecTray.add(new THREE.Mesh(new THREE.TubeGeometry(c1, 16, 0.012, 6), cableMat));
+  const c2 = new THREE.CatmullRomCurve3([     // tray → forward along the rail → camera mast
+    new THREE.Vector3(-0.22, 0.10, 0.06), new THREE.Vector3(0.4, 0.04, 0.1),
+    new THREE.Vector3(0.75, 0.1, 0.35), new THREE.Vector3(0.85, 0.6, 0.55)]);
+  elecTray.add(new THREE.Mesh(new THREE.TubeGeometry(c2, 20, 0.012, 6), cableMat));
+
+  /* -- FRONT: vision mast on the toolbar, looking down the corridor -- */
+  camMast = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.86, 12), MAT.alu));
+  camMast.position.set(0.67, 1.22, 0.34);
+  robot.add(camMast);
+  camMount = new THREE.Group();
+  camMount.position.set(0.67, 1.70, 0.34);
+  camMount.rotation.order = 'YXZ';
+  camMount.rotation.y = THREE.MathUtils.degToRad(20);    // corrected: corridor centered
+  camMount.rotation.x = THREE.MathUtils.degToRad(-58);   //   in the onboard view
+  robot.add(camMount);
+  const camBody = shadowed(new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.06, 0.22), MAT.box));
+  camMount.add(camBody);
+  for (const z of [-0.08, 0, 0.08]) {
+    const lens = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.016, 0.02, 12).rotateZ(Math.PI / 2),
+      new THREE.MeshStandardMaterial({ color: 0x101418, roughness: 0.1, metalness: 0.8 }));
+    lens.position.set(0.05, 0, z);
+    camMount.add(lens);
+  }
+  obCam = new THREE.PerspectiveCamera(60, 300 / 180, 0.1, 60);
+  obCam.rotation.y = -Math.PI / 2;
+  camMount.add(obCam);
+
+  const Lr = DET_RANGE, hv = Math.tan(DET_HALF) * Lr, hh = hv * (300 / 180);
+  const apex = [0, 0, 0], q = [[Lr, hv, -hh], [Lr, hv, hh], [Lr, -hv, hh], [Lr, -hv, -hh]];
+  const tri = [];
+  for (let i = 0; i < 4; i++) tri.push(...apex, ...q[i], ...q[(i + 1) % 4]);
+  const fovGeo = new THREE.BufferGeometry();
+  fovGeo.setAttribute('position', new THREE.Float32BufferAttribute(tri, 3));
+  fovMesh = new THREE.Mesh(fovGeo, new THREE.MeshBasicMaterial({
+    color: 0x35c4ff, transparent: true, opacity: 0.05, side: THREE.DoubleSide, depthWrite: false }));
+  const edges = [];
+  for (let i = 0; i < 4; i++) edges.push(...apex, ...q[i], ...q[i], ...q[(i + 1) % 4]);
+  const edgeGeo = new THREE.BufferGeometry();
+  edgeGeo.setAttribute('position', new THREE.Float32BufferAttribute(edges, 3));
+  fovMesh.add(new THREE.LineSegments(edgeGeo,
+    new THREE.LineBasicMaterial({ color: 0x35c4ff, transparent: true, opacity: 0.35 })));
+  camMount.add(fovMesh);
+
+  /* -- FRONT TOOLBAR: stage-1 canopy management -- */
+  boomFwd = shadowed(new THREE.Mesh(new THREE.BoxGeometry(1, 0.06, 0.06), MAT.alu));
+  boomFwd.position.y = 0.66;
+  robot.add(boomFwd);
+  const springLink = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.44, 10), MAT.orange);
+  springLink.position.set(SWEEP_LEAD, 0.42, 0); robot.add(springLink);
+  sweep = new THREE.Group();
+  sweep.position.set(SWEEP_LEAD, 0.14, 0);
+  robot.add(sweep);
+  const hub2 = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.2, 12), MAT.box));
+  hub2.position.y = 0.12; sweep.add(hub2);
+  brush = new THREE.Group(); sweep.add(brush);
+  const disc = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.07, 18),
+    new THREE.MeshStandardMaterial({ color: 0xc9a86a, roughness: 0.8 })));
+  brush.add(disc);
+  const bristleMat = new THREE.MeshStandardMaterial({ color: 0xd8c088, roughness: 0.95 });
+  for (let i = 0; i < 10; i++) {
+    const b = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.018, 0.05), bristleMat);
+    b.rotation.y = (i / 10) * Math.PI * 2;
+    brush.add(b);
+  }
+  airJet = new THREE.Mesh(new THREE.ConeGeometry(0.32, 0.5, 16, 1, true),
+    new THREE.MeshBasicMaterial({ color: 0x35c4ff, transparent: true, opacity: 0.15, side: THREE.DoubleSide, depthWrite: false }));
+  airJet.position.y = 0.26; airJet.visible = false;
+  for (let i = 0; i < 12; i++) {
+    const s = new THREE.Mesh(new THREE.BoxGeometry(0.014, 0.1, 0.014),
+      new THREE.MeshBasicMaterial({ color: 0x9fe4ff, transparent: true, opacity: 0.5, depthWrite: false }));
+    const a = Math.random() * Math.PI * 2, r = 0.05 + Math.random() * 0.14;
+    s.position.set(Math.cos(a) * r, -0.22 + Math.random() * 0.44, Math.sin(a) * r);
+    airJet.add(s);
+  }
+  sweep.add(airJet);
+  fingers = new THREE.Group();
+  for (const sgn of [-1, 1]) {
+    const f = shadowed(new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.04, 0.05), MAT.alu));
+    f.rotation.y = sgn * 0.6;
+    f.position.set(-0.05, 0.07, sgn * 0.16);
+    fingers.add(f);
+    const skid = new THREE.Mesh(new THREE.SphereGeometry(0.035, 10, 8), MAT.orange);
+    skid.position.set(-0.28, 0.03, sgn * 0.31);
+    fingers.add(skid);
+  }
+  fingers.visible = false;
+  sweep.add(fingers);
+
+  const l1b = makeLabel('OAK-D — CLEARANCE VIEW'); l1b.position.set(0.67, 1.88, 0.32); robot.add(l1b);
+  const lsw = makeLabel('CANOPY MGMT / STAGE 1'); lsw.position.set(SWEEP_LEAD, 0.95, 0); robot.add(lsw);
+
+  createGantryArm();
+  createTrailer();
+  updateChassis();
+}
+
+function updateChassis() {
+  const tw = params.trackWidth, wb = params.wheelBase;
+  for (const u of cornerUnits) u.position.set(u.userData.sx * wb / 2, 0, u.userData.sz * tw / 2);
+  for (const b of crossBars) { b.position.x = b.userData.sx * wb / 2; b.scale.z = tw + 0.12; }
+  for (const r of railBars) { r.position.z = r.userData.sz * tw / 2; r.scale.x = wb + 0.06; }
+  boomFwd.scale.x = SWEEP_LEAD - wb / 2 + 0.1;
+  boomFwd.position.x = (SWEEP_LEAD + wb / 2) / 2 - 0.05;
+  camMast.position.x = wb / 2 + 0.07;
+  camMount.position.x = wb / 2 + 0.07;
+  elecTray.position.set(-0.1, 0.72, -(tw / 2 - 0.21));   // rides the left rail, off-centerline
+  gantry.position.x = 0;                     // MID-FRAME: arm plane at the wheelbase center
+  for (const m of railMounts) m.position.set(0, GANTRY_Y - 0.06, m.userData.sz * tw / 2);
+}
+
+/* ------ Manipulator: overhead parallel 2-cylinder gantry --------- */
+function createGantryArm() {
+  // RAIL-MOUNTED: the side rails are raised to strut height, and each
+  // cylinder's base clevis bolts straight onto its own rail — one per side.
+  // No beam, no posts, no braces: the pick-to-trailer path is fully clear.
+  gantry = new THREE.Group();
+  robot.add(gantry);                          // x position set by updateChassis
+  railMounts = [];
+  [CYL1, CYL2].forEach((spec, i) => {
+    const mnt = new THREE.Group();
+    mnt.userData = { sz: i === 0 ? -1 : 1 };
+    const plate = shadowed(new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.10, 0.14), MAT.frame));
+    plate.position.y = 0.03; mnt.add(plate);  // rail clamp plate
+    mnt.add(jointSphere(0.05));
+    // stroke-limit annuli travel with their base as the track width changes
+    for (const [r, col, op] of [[spec.minL, 0x8899aa, 0.35], [spec.maxL, 0x35c4ff, 0.25]]) {
+      const pts = [];
+      for (let j = 0; j <= 64; j++) {
+        const a = (j / 64) * Math.PI * 2;
+        pts.push(new THREE.Vector3(0, r * Math.sin(a), r * Math.cos(a)));
+      }
+      const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),
+        new THREE.LineBasicMaterial({ color: col, transparent: true, opacity: op }));
+      mnt.add(line);
+      zoneArcs.push(line);
+    }
+    gantry.add(mnt);
+    railMounts.push(mnt);
+  });
+
+  /* -- Gripper head: the shared convergence node of both cylinders.
+        Hangs gravity-level (pendulum head), so tilt is not actuated. -- */
+  head = new THREE.Group();
+  gantry.add(head);
+  const node = shadowed(new THREE.Mesh(new THREE.SphereGeometry(0.055, 20, 16),
+    new THREE.MeshStandardMaterial({ color: 0xd32f2f, roughness: 0.35, metalness: 0.3,
+                                     emissive: 0xd32f2f, emissiveIntensity: 0.35 })));
+  head.add(node);                             // the draggable red node, as in the sandbox
+  const headBar = shadowed(new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.06, 0.46), MAT.tool));
+  headBar.position.y = -0.06; head.add(headBar);
+  const puffNozzle = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.026, 0.09, 10), MAT.box);
+  puffNozzle.position.set(0.12, -0.12, 0); head.add(puffNozzle);
+  puffCone = new THREE.Mesh(new THREE.ConeGeometry(0.16, 0.5, 14, 1, true),
+    new THREE.MeshBasicMaterial({ color: 0x9fe4ff, transparent: true, opacity: 0.22, side: THREE.DoubleSide, depthWrite: false }));
+  puffCone.rotation.x = Math.PI;              // burst points DOWN at the melon
+  puffCone.position.set(0.12, -0.42, 0);
+  puffCone.visible = false;
+  head.add(puffCone);
+  // Fingers descend from the head and close along z; pads are long in x,
+  // so along-track scatter is absorbed by paddle width.
+  const fGeo = new THREE.BoxGeometry(0.05, FINGER_DROP + 0.04, 0.045); fGeo.translate(0, -(FINGER_DROP + 0.04) / 2, 0);
+  fingerA = shadowed(new THREE.Mesh(fGeo, MAT.tool));
+  fingerB = shadowed(new THREE.Mesh(fGeo, MAT.tool));
+  fingerA.position.y = fingerB.position.y = -0.09;
+  const padGeo = new THREE.BoxGeometry(0.28, 0.12, 0.03);
+  const pA = shadowed(new THREE.Mesh(padGeo, MAT.tool)); pA.position.set(0, -FINGER_DROP + 0.02, -0.03); fingerA.add(pA);
+  const pB = shadowed(new THREE.Mesh(padGeo, MAT.tool)); pB.position.set(0, -FINGER_DROP + 0.02, 0.03);  fingerB.add(pB);
+  head.add(fingerA, fingerB);
+  tipAnchor = new THREE.Object3D(); tipAnchor.position.y = -FINGER_DROP; head.add(tipAnchor);
+
+  const lArm = makeLabel('PARALLEL 2-CYL — RAIL-MOUNTED / CLEAR PATH'); lArm.position.set(0, GANTRY_Y + 0.3, 0.3); gantry.add(lArm);
+
+  /* -- Workspace + collision visualization (toggle in Vision folder) -- */
+  zonesGroup = new THREE.Group();
+  gantry.add(zonesGroup);
+  zoneRail = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1, 1),
+    new THREE.MeshBasicMaterial({ color: 0xff3b30, transparent: true, opacity: 0.10, depthWrite: false }));
+  zoneRail.scale.set(1, KEEP_Y - 0.02, 0.37);  // only the bin wall remains an obstacle
+  zoneRail.position.set(0, (KEEP_Y - 0.02) / 2 + 0.01, TRAIL_Z - 0.365);
+  zonesGroup.add(zoneRail);
+  const singBand = new THREE.Mesh(new THREE.BoxGeometry(0.06, GANTRY_Y - 0.05 - NODE_Y_MAX, 2.7),
+    new THREE.MeshBasicMaterial({ color: 0xffb020, transparent: true, opacity: 0.08, depthWrite: false }));
+  singBand.position.set(0, (GANTRY_Y - 0.05 + NODE_Y_MAX) / 2, 0.6);
+  zonesGroup.add(singBand);                    // flat-singularity band under the beam
+
+  /* -- The two telescopic cylinders (two-stage, world-solved) -- */
+  const tint = [0x9fc4e8, 0xa8d8b0];          // blue / green nod to the sandbox
+  [CYL1, CYL2].forEach((spec, i) => {
+    const baseAnchor = railMounts[i];         // base clevis rides its own rail
+    const attachAnchor = new THREE.Object3D();
+    attachAnchor.position.set(0, 0.02, 0);
+    head.add(attachAnchor);
+    const group = new THREE.Group();
+    const barrelMat = MAT.barrel.clone(); barrelMat.color.setHex(tint[i]);
+    const barrel = shadowed(new THREE.Mesh(
+      new THREE.CylinderGeometry(0.045, 0.045, 1, 20).rotateX(Math.PI / 2), barrelMat));
+    const stage1 = shadowed(new THREE.Mesh(
+      new THREE.CylinderGeometry(0.032, 0.032, 1, 16).rotateX(Math.PI / 2), MAT.piston));
+    const stage2 = shadowed(new THREE.Mesh(
+      new THREE.CylinderGeometry(0.021, 0.021, 1, 12).rotateX(Math.PI / 2), MAT.piston));
+    const rodEnd = jointSphere(0.042), baseJ = jointSphere(0.048);
+    group.add(barrel, stage1, stage2, baseJ, rodEnd);
+    scene.add(group);
+    armCyls.push({ group, barrel, stage1, stage2, rodEnd, baseAnchor, attachAnchor, spec, len: 0 });
+  });
+}
+
+/* ---------- Side collection trailer (parallel tow, off-bed) ------- */
+function createTrailer() {
+  trailer = new THREE.Group();
+  trailer.position.set(0, 0, TRAIL_Z);        // gantry-local: same plane as the arm
+  gantry.add(trailer);
+  const towA = shadowed(new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.05, 0.85), MAT.alu));
+  towA.position.set(0.25, 0.52, -0.85); towA.rotation.y = 0.25; trailer.add(towA);
+  const towB = shadowed(new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.05, 0.85), MAT.alu));
+  towB.position.set(-0.25, 0.52, -0.85); towB.rotation.y = -0.25; trailer.add(towB);
+  const floor = shadowed(new THREE.Mesh(new THREE.BoxGeometry(1.05, 0.04, 0.75), MAT.frame));
+  floor.position.y = 0.45; trailer.add(floor);
+  for (const z of [0.375, -0.375]) {
+    const m = shadowed(new THREE.Mesh(new THREE.BoxGeometry(1.05, 0.27, 0.03), MAT.frame));
+    m.position.set(0, 0.585, z); trailer.add(m);
+  }
+  for (const x of [0.525, -0.525]) {
+    const m = shadowed(new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.27, 0.75), MAT.frame));
+    m.position.set(x, 0.585, 0); trailer.add(m);
+  }
+  const axle = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.9, 10).rotateX(Math.PI / 2), MAT.alu);
+  axle.position.y = 0.2; trailer.add(axle);
+  const cwGeo = new THREE.CylinderGeometry(0.2, 0.2, 0.1, 22).rotateX(Math.PI / 2);
+  for (const z of [-0.42, 0.42]) {
+    const w = shadowed(new THREE.Mesh(cwGeo, MAT.tire));
+    w.position.set(0, 0.2, z); trailer.add(w); wheels.push(w);
+  }
+  const lc = makeLabel('SIDE TRAILER — IN-PLANE DROP'); lc.position.set(0, 1.0, 0); trailer.add(lc);
+}
+
+/* -------------------------- Watermelons -------------------------- */
+const melons = [];
+function makeMelonTexture() {
+  const c = document.createElement('canvas'); c.width = 256; c.height = 128;
+  const g = c.getContext('2d');
+  g.fillStyle = '#7fb069'; g.fillRect(0, 0, 256, 128);
+  g.fillStyle = '#2d5a27';
+  for (let s = 0; s < 9; s++) {
+    const x0 = s * 28.4;
+    g.beginPath();
+    for (let y = 0; y <= 128; y += 6) {
+      const x = x0 + Math.sin(y * 0.11 + s) * 4;
+      y === 0 ? g.moveTo(x, y) : g.lineTo(x, y);
+    }
+    for (let y = 128; y >= 0; y -= 6) g.lineTo(x0 + 11 + Math.sin(y * 0.13 + s) * 4, y);
+    g.closePath(); g.fill();
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.wrapS = THREE.RepeatWrapping;
+  return t;
+}
+
+function createMelons() {
+  const tex = makeMelonTexture();
+  const geo = new THREE.SphereGeometry(1, 28, 20);
+  const xs = [2.5, 4.6, 6.4, 8.6, 10.3, 12.4];
+  xs.forEach((x, i) => {
+    const m = shadowed(new THREE.Mesh(geo,
+      new THREE.MeshStandardMaterial({ map: tex, roughness: 0.4, metalness: 0.05 })));
+    m.scale.set(0.20, MELON_RY, MELON_RY);
+    m.rotation.y = Math.random() * Math.PI;
+    m.position.set(x, MELON_RY, ROW_Z + (Math.random() - 0.5) * 0.16);
+    m.userData = { index: i + 1, home: m.position.clone(), vy: 0, falling: false, onCart: false, picked: false, leaves: [] };
+    scene.add(m);
+    melons.push(m);
+    for (let k = 0; k < 4; k++) {
+      const a = Math.random() * Math.PI * 2, r = 0.05 + Math.random() * 0.12;
+      addLeaf(m.position.x + Math.cos(a) * r, m.position.z + Math.sin(a) * r, m, 0.2 + Math.random() * 0.07);
+    }
+  });
+}
+
+/* ---------------- Adjustable onboard camera aim ------------------- */
+function applyCamera() {
+  camMount.rotation.y = THREE.MathUtils.degToRad(params.camYaw);
+  camMount.rotation.x = THREE.MathUtils.degToRad(params.camPitch);
+  camMount.position.y = params.camHeight;
+  camMast.scale.y = (params.camHeight - 0.74) / 0.96;          // mast reaches the mount
+  camMast.position.y = (params.camHeight + 0.74) / 2;
+  const s = Math.sin(THREE.MathUtils.degToRad(-params.camPitch));
+  const L = THREE.MathUtils.clamp(s > 0.08 ? params.camHeight / s : 3.6, 1.2, 3.6);
+  fovMesh.scale.setScalar(L / DET_RANGE);                      // cone base kisses the ground
+  detRange = L;                                                // detection gate matches the cone
+}
+
+/* ------------------------- Kinematics ---------------------------- */
+function planeWorldX() { return robot.position.x; }   // gantry plane is MID-FRAME (x = 0)
+
+/* Parallel mechanism: the gripper node (z, y) IS the task state.
+   Actuator lengths follow directly:  L_i = √((z−z_Bi)² + (y−y_Bi)²).
+   Workspace constraint = projecting the node back inside each
+   cylinder's stroke annulus (exactly the sandbox's constrainWorkspace). */
+function cylinderLengths(z, y) {
+  return {
+    l1: Math.hypot(z - baseZ1(), y - GANTRY_Y),
+    l2: Math.hypot(z - baseZ2(), y - GANTRY_Y),
+  };
+}
+function clampNode(z, y, track = true) {
+  if (track) { clampFlags.stroke = false; clampFlags.keepout = false; }
+  z = THREE.MathUtils.clamp(z, NODE_Z_MIN, NODE_Z_MAX);
+  y = THREE.MathUtils.clamp(y, NODE_Y_MIN, NODE_Y_MAX);   // ceiling = flat-singularity margin
+  const annuli = () => {
+    for (const [bz, spec] of [[baseZ1(), CYL1], [baseZ2(), CYL2]]) {
+      const dz = z - bz, dy = y - GANTRY_Y;
+      const d = Math.hypot(dz, dy);
+      if (d > spec.maxL) { z = bz + dz / d * spec.maxL; y = GANTRY_Y + dy / d * spec.maxL; if (track) clampFlags.stroke = true; }
+      else if (d < spec.minL && d > 1e-6) { z = bz + dz / d * spec.minL; y = GANTRY_Y + dy / d * spec.minL; if (track) clampFlags.stroke = true; }
+    }
+  };
+  annuli();
+  // COLLISION keep-out: with the rails raised to strut height, only the bin
+  // wall remains — the payload envelope (0.45 m below the node) must clear it.
+  const kz0 = TRAIL_Z - 0.55, kz1 = TRAIL_Z - 0.18;
+  if (z > kz0 && z < kz1 && y < KEEP_Y) { y = KEEP_Y; if (track) clampFlags.keepout = true; }
+  annuli();                                   // re-project: keep-out must not violate strokes
+  y = THREE.MathUtils.clamp(y, NODE_Y_MIN, NODE_Y_MAX);
+  return { z, y };
+}
+
+/* -------------------- Per-frame model update --------------------- */
+const _vA = new THREE.Vector3(), _vB = new THREE.Vector3(), _vC = new THREE.Vector3();
+
+function updateCylinders() {
+  for (const c of armCyls) {
+    c.baseAnchor.getWorldPosition(_vA);
+    c.attachAnchor.getWorldPosition(_vB);
+    c.group.position.copy(_vA);
+    c.group.lookAt(_vB);                       // +Z aimed at the rod pin
+    const d = _vA.distanceTo(_vB);             // L = sqrt(dx² + dy² + dz²)
+    c.len = d;
+    // Two-stage telescopic dress: barrel → stage-1 rod → stage-2 rod
+    const bl = c.spec.barrel;
+    c.barrel.scale.z = bl;
+    c.barrel.position.z = bl / 2;
+    const mid = Math.max(bl + 0.02, bl + (d - bl) * 0.55);
+    c.stage1.scale.z = Math.max(0.06, mid - bl + 0.14);
+    c.stage1.position.z = (mid + bl) / 2;
+    c.stage2.scale.z = Math.max(0.06, d - mid + 0.12);
+    c.stage2.position.z = (d + mid) / 2;
+    c.rodEnd.position.z = d;
+  }
+}
+
+function updateRobot(dt) {
+  let k = 6 * params.speed;
+  if (heldMelon) k *= 0.65;                    // payload inertia: slower slews
+  cur.lateral = THREE.MathUtils.damp(cur.lateral, params.lateral, k, dt);
+  cur.height  = THREE.MathUtils.damp(cur.height,  params.height,  k, dt);
+  cur.grip    = THREE.MathUtils.damp(cur.grip,    params.grip,    k * 1.4, dt);
+
+  const p = clampNode(cur.lateral, cur.height);   // stroke annuli + keep-outs + singularity ceiling
+  head.position.set(0, p.y, p.z);                 // node position IS the state
+  cylLen = cylinderLengths(p.z, p.y);
+  // Transmission angle between the two struts at the node (singularity metric):
+  const v1z = baseZ1() - p.z, v1y = GANTRY_Y - p.y, v2z = baseZ2() - p.z, v2y = GANTRY_Y - p.y;
+  gammaDeg = THREE.MathUtils.radToDeg(Math.acos(THREE.MathUtils.clamp(
+    (v1z * v2z + v1y * v2y) / (cylLen.l1 * cylLen.l2), -1, 1)));
+
+  const gap = 0.07 + cur.grip * 0.24;
+  fingerA.position.z = gap;
+  fingerB.position.z = -gap;
+
+  updateCylinders();
+}
+
+/* ------------------- Drive P-controller + FSM -------------------- */
+function setStatus(t) { statusEl.textContent = 'STATE: ' + t; }
+function setMission(t) {
+  missionEl.textContent = 'MISSION: ' + t + ' — HARVESTED ' + harvested + '/' + melons.length;
+}
+
+function updateDrive(dt) {
+  vDrive = 0;
+  if (mission && !missionPaused && (state === 'DRIVE' || state === 'STAGE')) {
+    const target = melons[melonIdx];
+    if (!target) { state = 'COMPLETE'; setMission('COMPLETE ✓'); setStatus('ROW COMPLETE'); }
+    else if (state === 'DRIVE') {
+      if (detectedMelon === target) {
+        xStop = target.position.x + pickAdv(); // drive-over: melon stops directly under the
+        state = 'STAGE';                       //   gantry — INSIDE the wheelbase
+        setStatus('TARGET LOCK MELON #' + target.userData.index + ' — DRIVING OVER TO MID-FRAME PICK STATION');
+      } else if (robot.position.x > target.position.x + 0.5) {
+        xStop = target.position.x + pickAdv();
+        state = 'STAGE';
+        setStatus('MELON #' + target.userData.index + ' OCCLUDED — GNSS-PRIOR PICK, WRIST PUFF ARMED');
+      } else {
+        vDrive = params.driveSpeed;
+        setStatus('SWEEPING — SEARCHING FOR MELON #' + target.userData.index);
+      }
+    }
+    if (state === 'STAGE') {
+      const err = xStop - robot.position.x;
+      vDrive = THREE.MathUtils.clamp(KP_DRIVE * err, -0.7 * params.driveSpeed, params.driveSpeed);
+      if (Math.abs(err) < 0.02) { vDrive = 0; xStop = null; beginAlign(target); }
+    }
+  }
+  robot.position.x += vDrive * dt;
+  for (const w of wheels) w.rotation.z -= (vDrive * dt) / 0.22;
+}
+
+function beginAlign(m) {
+  targetMelon = m;
+  params.lateral = THREE.MathUtils.clamp(m.position.z, NODE_Z_MIN, NODE_Z_MAX);  // in-plane z targeting
+  params.height  = PICK_NODE_Y;
+  params.grip = 1;
+  state = 'ALIGN';
+  setStatus('ALIGNING TO MELON #' + m.userData.index + ' (parallel node move)');
+}
+
+function converged() {
+  return Math.abs(cur.lateral - params.lateral) < 0.02 &&
+         Math.abs(cur.height - params.height) < 0.02;
+}
+
+function runSequencer() {
+  if (missionPaused) return;
+  if (state === 'ALIGN' && converged()) {
+    if (occlusion(targetMelon) > 0.05) {
+      if (puffTimer <= 0) firePuff(targetMelon);       // stage-2 fallback at the grasp site
+    } else if (puffTimer <= 0) {
+      params.grip = GRIP_CLOSE;
+      state = 'GRAB';
+      setStatus('GRASPING MELON #' + targetMelon.userData.index);
+    }
+  } else if (state === 'GRAB' && cur.grip < GRIP_CLOSE + 0.04) {
+    head.attach(targetMelon);                  // reparent; world transform preserved
+    heldMelon = targetMelon;
+    heldMelon.userData.picked = true;
+    targetMelon = null;
+    params.height = LIFT_Y;                    // transit height: payload clears rail + walls
+    state = 'LIFT';
+    setStatus('LIFTING MELON #' + heldMelon.userData.index);
+  } else if (state === 'LIFT' && converged()) {
+    if (manualMode) { state = 'IDLE'; setStatus('HOLDING MELON #' + heldMelon.userData.index); return; }
+    params.lateral = DROP_NODE.lateral;        // the MECHANISM does the lateral transfer —
+    params.height  = LIFT_Y;                   //   traverse HIGH along the keep-out corridor
+    state = 'SWING';
+    setStatus('SWINGING TO SIDE TRAILER (ELEVATED CORRIDOR)');
+  } else if (state === 'SWING' && converged()) {
+    params.height = DROP_NODE.height;          // clear of the bin wall: descend into the bin
+    state = 'LOWER';
+    setStatus('LOWERING INTO BIN');
+  } else if (state === 'LOWER' && converged()) {
+    params.grip = 1;
+    state = 'RELEASE';
+    setStatus('RELEASING INTO TRAILER SLOT ' + (slotIdx + 1));
+  } else if (state === 'RELEASE' && cur.grip > 0.8) {
+    scene.attach(heldMelon);
+    heldMelon.userData.falling = true;
+    heldMelon.userData.vy = 0;
+    state = 'WAITLAND';
+  } else if (state === 'WAITLAND' && heldMelon && !heldMelon.userData.falling) {
+    heldMelon = null;
+    harvested++; slotIdx++; melonIdx++;
+    setMission(melonIdx < melons.length ? 'ACTIVE' : 'COMPLETE ✓');
+    Object.assign(params, TRAVEL);
+    state = melonIdx < melons.length ? 'DRIVE' : 'COMPLETE';
+    if (state === 'COMPLETE') setStatus('ROW COMPLETE — ' + harvested + ' MELONS ON CART');
+  }
+}
+
+/* --------------- Sweep-and-segment canopy management ------------- */
+function updateSweeper(dt) {
+  const on = params.sweeperOn, mode = params.sweepMode;
+  brush.visible = on && mode === 'Rotary Brush';
+  airJet.visible = on && mode === 'Air Knife';
+  fingers.visible = on && mode === 'Lifter Fingers';
+  sweep.position.y = 0.14 + 0.02 * Math.sin(robot.position.x * 9);
+  if (sweepJam > 0) sweepJam -= dt;
+  if (puffTimer > 0) puffTimer -= dt;
+  puffCone.visible = puffTimer > 0;
+  const rpm = (on && mode === 'Rotary Brush') ? (sweepJam > 0 ? -1.6 * params.sweeperRPM : params.sweeperRPM) : 0;
+  brush.rotation.y += (rpm / 60) * Math.PI * 2 * dt;
+  if (airJet.visible) for (const s of airJet.children) {
+    s.position.y -= 3.2 * dt;
+    if (s.position.y < -0.22) s.position.y = 0.22;
+  }
+  const R = mode === 'Air Knife' ? 0.55 : mode === 'Lifter Fingers' ? 0.32 : SWEEP_R;
+  sweep.getWorldPosition(_vA);
+  sweepClearing = false;
+  for (const leaf of leaves) {
+    const u = leaf.userData;
+    if (!u.displaced) {
+      if (on && sweepJam <= 0) {
+        const dx = leaf.position.x - _vA.x, dz = leaf.position.z - _vA.z;
+        if (dx * dx + dz * dz < R * R) {
+          sweepClearing = true;
+          if (mode === 'Rotary Brush' && Math.random() < 0.006) { sweepJam = 0.9; continue; }
+          u.displaced = true;
+          const d = Math.max(Math.hypot(dx, dz), 0.05);
+          if (mode === 'Air Knife') {
+            u.vel.set(dx / d * 2.4 + 0.7, 0, dz / d * 2.4 + (Math.random() - 0.5) * 1.2);
+            u.spin = (Math.random() - 0.5) * 16;
+          } else if (mode === 'Lifter Fingers') {
+            u.vel.set(0.35, 0, (dz >= 0 ? 1 : -1) * 1.3 + dz / d * 0.4);
+            u.spin = (Math.random() - 0.5) * 6;
+          } else {
+            u.vel.set(dx / d * 1.6 + 0.5, 0, dz / d * 1.6 + (dz >= 0 ? 0.5 : -0.5));
+            u.spin = (Math.random() - 0.5) * 10;
+          }
+        }
+      }
+    } else if (u.vel.lengthSq() > 0.0004) {
+      leaf.position.addScaledVector(u.vel, dt);
+      leaf.position.y = Math.max(0.03, leaf.position.y - 0.5 * dt);
+      u.vel.multiplyScalar(Math.max(0, 1 - 3.5 * dt));
+      leaf.rotation.y += u.spin * dt;
+      u.spin *= Math.max(0, 1 - 3 * dt);
+    }
+  }
+  sweepI = !on ? 0
+    : mode === 'Lifter Fingers' ? 0
+    : mode === 'Air Knife' ? 2.3 + (sweepClearing ? 0.3 : 0)
+    : sweepJam > 0 ? 5.4 : 0.6 + (sweepClearing ? 1.7 : 0) + Math.abs(rpm) / 600;
+  if (sweepJam > 0) setStatus('⚠ VINE WRAP — SLIP CLUTCH REVERSING BRUSH');
+}
+function firePuff(m) {
+  puffTimer = 0.6;
+  tipAnchor.getWorldPosition(_vA);
+  for (const leaf of m.userData.leaves) {
+    const u = leaf.userData;
+    if (u.displaced) continue;
+    u.displaced = true;
+    const dx = leaf.position.x - _vA.x, dz = leaf.position.z - _vA.z;
+    const d = Math.max(Math.hypot(dx, dz), 0.05);
+    u.vel.set(dx / d * 2.4 + 0.6, 0, dz / d * 2.4 + (Math.random() - 0.5));
+    u.spin = (Math.random() - 0.5) * 14;
+  }
+  setStatus('WRIST AIR PUFF — CLEARING RESIDUAL CANOPY');
+}
+function occlusion(m) {
+  const ls = m.userData.leaves;
+  return ls && ls.length ? ls.filter(l => !l.userData.displaced).length / ls.length : 0;
+}
+
+/* ---------------------- Vision / detection ----------------------- */
+const detBox = new THREE.Box3();
+const detHelper = new THREE.Box3Helper(detBox, 0x00ff88);
+function updateVision() {
+  obCam.getWorldPosition(_vA);
+  obCam.getWorldDirection(_vB);
+  detectedMelon = null; detDist = 0; detAng = 0;
+  let best = Infinity;
+  for (const m of melons) {
+    if (m.userData.picked || m.userData.falling) continue;
+    if (occlusion(m) > OCC_GATE) continue;
+    _vC.copy(m.position).sub(_vA);
+    const d = _vC.length();
+    if (d > detRange) continue;
+    const ang = _vC.normalize().angleTo(_vB);
+    if (ang < DET_HALF && d < best) { best = d; detectedMelon = m; detDist = d; detAng = ang; }
+  }
+  if (detectedMelon) {
+    detBox.setFromObject(detectedMelon);
+    detBox.expandByScalar(0.03);
+    detHelper.visible = true;
+  } else detHelper.visible = false;
+  fovMesh.visible = params.showFOV;
+  zonesGroup.visible = params.showZones;
+  for (const a of zoneArcs) a.visible = params.showZones;
+  for (const l of labels) l.visible = params.showLabels;
+  pipFrame.style.display = params.pip ? 'block' : 'none';
+}
+
+/* ------------------------ Simple physics ------------------------- */
+function overTrailerBin(m) {
+  return Math.abs(m.position.x - planeWorldX()) < 0.55 &&
+         Math.abs(m.position.z - TRAIL_Z) < 0.4;
+}
+function updatePhysics(dt) {
+  const step = dt * 60;
+  for (const m of melons) {
+    if (!m.userData.falling) continue;
+    m.userData.vy -= 0.1 * step * 0.06;        // gravity per spec: v.y -= 0.1 (scaled)
+    m.position.y += m.userData.vy * step;
+    const floorY = overTrailerBin(m) ? BIN_Y + MELON_RY : MELON_RY;
+    if (m.position.y <= floorY) {
+      m.position.y = floorY;
+      m.userData.falling = false;
+      m.userData.vy = 0;
+      if (overTrailerBin(m)) {
+        // settle: roll to this cycle's rest slot inside the bin
+        const rx = SLOT_X[slotIdx % 3], rz = SLOT_Z[Math.floor(slotIdx / 3) % 2];
+        m.position.set(planeWorldX() + rx, floorY, TRAIL_Z + rz);
+        trailer.attach(m);
+        m.userData.onCart = true;
+      } else m.userData.picked = false;
+    }
+  }
+}
+
+/* --------------------- Mission / manual API ---------------------- */
+function startMission() {
+  if (state === 'COMPLETE') resetAll();
+  mission = true; missionPaused = false; manualMode = false;
+  if (state === 'IDLE') state = 'DRIVE';
+  setMission('ACTIVE');
+}
+function pauseMission() {
+  missionPaused = !missionPaused;
+  setMission(missionPaused ? 'PAUSED' : 'ACTIVE');
+}
+function manualPick() {
+  if (heldMelon) { setStatus('ALREADY HOLDING MELON #' + heldMelon.userData.index); return; }
+  mission = false; manualMode = true; setMission('MANUAL');
+  const pool = melons.filter(m => !m.userData.picked && !m.userData.falling && !m.userData.onCart);
+  let f = selectedMelon && pool.includes(selectedMelon) ? selectedMelon : null;
+  if (!f) {
+    tipAnchor.getWorldPosition(_vA);
+    let bd = Infinity;
+    for (const m of pool) { const d = _vA.distanceTo(m.position); if (d < bd) { bd = d; f = m; } }
+  }
+  if (!f) { setStatus('NO MELON AVAILABLE'); return; }
+  if (Math.abs(f.position.x - planeWorldX()) > 0.24) {
+    setStatus('MELON #' + f.userData.index + ' OUT OF ARM PLANE (paddle x-tolerance ±0.20 m) — DRIVE TO STATION');
+    return;
+  }
+  beginAlign(f);
+}
+function manualDrop() {
+  if (!heldMelon) { setStatus('NOTHING TO DROP'); return; }
+  manualMode = true; mission = false;
+  params.grip = 1; state = 'RELEASE';
+  setStatus('RELEASING');
+}
+function resetAll() {
+  if (heldMelon) { scene.attach(heldMelon); heldMelon = null; }
+  targetMelon = null; xStop = null;
+  mission = false; missionPaused = false; manualMode = false;
+  melonIdx = 0; slotIdx = 0; harvested = 0;
+  state = 'IDLE';
+  if (selectedMelon) { selectedMelon.material.emissive?.setHex?.(0x000000); selectedMelon = null; }
+  robot.position.x = -1.5;
+  for (const m of melons) {
+    scene.attach(m);
+    m.position.copy(m.userData.home);
+    Object.assign(m.userData, { vy: 0, falling: false, onCart: false, picked: false });
+  }
+  for (const leaf of leaves) {
+    leaf.position.copy(leaf.userData.home);
+    leaf.rotation.y = 0;
+    Object.assign(leaf.userData, { displaced: false, spin: 0 });
+    leaf.userData.vel.set(0, 0, 0);
+  }
+  sweepJam = 0; puffTimer = 0; puffCone.visible = false;
+  Object.assign(params, { lateral: 0.2, height: 1.1, grip: 1 });
+  cur.lateral = 0.2; cur.height = 1.1;
+  setStatus('RESET — IDLE'); setMission('STANDBY');
+}
+
+/* --------- Mouse: drag the gripper node / select melons ---------- */
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+const dragPlane = new THREE.Plane();
+const _hit = new THREE.Vector3();
+let draggingNode = false;
+function initPicking() {
+  const el = renderer.domElement;
+  el.addEventListener('pointerdown', (e) => {
+    pointer.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+    raycaster.setFromCamera(pointer, camera);
+    // Grab the red node? (sandbox-style manual jog — pauses the mission)
+    head.getWorldPosition(_vA);
+    if (raycaster.ray.distanceToPoint(_vA) < 0.28) {
+      draggingNode = true;
+      controls.enabled = false;
+      mission = false; manualMode = true; state = 'IDLE';
+      setMission('MANUAL');
+      setStatus('MANUAL JOG — DRAGGING GRIPPER NODE');
+      dragPlane.setFromNormalAndCoplanarPoint(new THREE.Vector3(1, 0, 0), _vA);
+      return;
+    }
+    const hit = raycaster.intersectObjects(melons, false)[0];
+    if (!hit) return;
+    if (selectedMelon) selectedMelon.material.emissive.setHex(0x000000);
+    selectedMelon = hit.object;
+    selectedMelon.material.emissive = new THREE.Color(0x224400);
+    selectedMelon.material.emissive.setHex(0x224400);
+    setStatus('SELECTED MELON #' + selectedMelon.userData.index + ' — PRESS PICK');
+  });
+  el.addEventListener('pointermove', (e) => {
+    if (!draggingNode) return;
+    pointer.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+    raycaster.setFromCamera(pointer, camera);
+    if (raycaster.ray.intersectPlane(dragPlane, _hit)) {
+      const p = clampNode(_hit.z, _hit.y);     // same projection as the sandbox
+      params.lateral = p.z;
+      params.height = p.y;
+    }
+  });
+  const endDrag = () => { if (draggingNode) { draggingNode = false; controls.enabled = true; } };
+  el.addEventListener('pointerup', endDrag);
+  el.addEventListener('pointerleave', endDrag);
+}
+
+/* --------------------- Live equation readout --------------------- */
+let eqTimer = 0;
+function updateEquations(dt) {
+  eqTimer -= dt;
+  if (eqTimer > 0) return;
+  eqTimer = 0.12;
+  if (eqsEl.classList.contains('collapsed')) return;   // minimized: skip render
+  const lcA = (armCyls[0]?.len ?? 0).toFixed(2);
+  const lcB = (armCyls[1]?.len ?? 0).toFixed(2);
+  const vd = vDrive.toFixed(2);
+  const vis = detectedMelon
+    ? `d = <b>${detDist.toFixed(2)} m</b>   α = <b>${THREE.MathUtils.radToDeg(detAng).toFixed(1)}°</b> &lt; 30° ✓  →  melon #${detectedMelon.userData.index}`
+    : `no target in the 60° cone`;
+  eqsBody.innerHTML =
+`<span class="sec">KINEMATICS — OVERHEAD PARALLEL 2-CYLINDER (TRANSVERSE PLANE)</span>
+ node (z, y) = (<b>${cur.lateral.toFixed(2)}</b>, <b>${cur.height.toFixed(2)}</b>) m — task state IS the node
+ L₁ = √((z−z_B1)²+(y−y_B1)²) = <b>${lcA} m</b>   L₂ = √((z−z_B2)²+(y−y_B2)²) = <b>${lcB} m</b>
+ strokes: L₁∈[${CYL1.minL}–${CYL1.maxL}] ${armCyls[0] && (armCyls[0].len > CYL1.maxL - 0.01 || armCyls[0].len < CYL1.minL + 0.01) ? '<b>AT LIMIT</b>' : '✓'}   L₂∈[${CYL2.minL}–${CYL2.maxL}] ${armCyls[1] && (armCyls[1].len > CYL2.maxL - 0.01 || armCyls[1].len < CYL2.minL + 0.01) ? '<b>AT LIMIT</b>' : '✓'}   (3-stage telescopic, frame-mounted)
+<span class="sec">SINGULARITIES &amp; COLLISIONS</span>
+ transmission angle γ = <b>${gammaDeg.toFixed(1)}°</b> ${gammaDeg < GAMMA_WARN || gammaDeg > 180 - GAMMA_WARN ? '<b>⚠ NEAR-SINGULAR</b>' : '✓'}   manipulability w = sinγ = <b>${Math.sin(THREE.MathUtils.degToRad(gammaDeg)).toFixed(2)}</b>
+ flat-singularity ceiling: node y ≤ ${NODE_Y_MAX.toFixed(2)} m (rails at ${GANTRY_Y.toFixed(2)} m) ${cur.height > NODE_Y_MAX - 0.02 ? '<b>AT CEILING</b>' : '✓'}
+ bin-wall keep-out (carry y ≥ ${KEEP_Y}): ${clampFlags.keepout ? '<b>⚠ CLAMPED — PATH LIFTED</b>' : '✓ clear'}   stroke clamp: ${clampFlags.stroke ? '<b>⚠ PROJECTED TO ANNULUS</b>' : '✓'}
+ eliminated: yaw→<b>fixed gantry</b>  x→<b>vehicle (pick mid-wheelbase)</b>  tilt→<b>gravity-level head</b>  transfer→<b>in-plane side-drop</b>
+<span class="sec">CANOPY MGMT — SWEEP-AND-SEGMENT (FRONT BAR)</span>
+ stage-1 <b>${!params.sweeperOn ? 'OFF' : sweepJam > 0 ? 'SLIP-CLUTCH REVERSE' : params.sweepMode.toUpperCase()}</b>   I = <b>${sweepI.toFixed(1)} A</b> (limit 4.0 A)   stage-2 wrist puff <b>${puffTimer > 0 ? 'FIRING' : 'ARMED'}</b>
+ next-target occlusion = <b>${melons[melonIdx] ? Math.round(occlusion(melons[melonIdx]) * 100) : 0}%</b> (detection gate ≤ ${Math.round(OCC_GATE * 100)}%)
+<span class="sec">DRIVE CONTROL — AMIGA STANCE</span>
+ v  = clamp(Kp(x*−x), −0.7v, v_max)  = <b>${vd} m/s</b>   Kp = ${KP_DRIVE}
+ track = <b>${params.trackWidth.toFixed(2)} m</b>   wheelbase = <b>${params.wheelBase.toFixed(2)} m</b>   (adjustable; bed passes through the tool space)
+<span class="sec">VISION (FRONT OAK-D, 60° FOV)</span>
+ ${vis}`;
+}
+
+/* ----------------------------- GUI ------------------------------- */
+function initGUI() {
+  const gui = new GUI({ title: 'AMIGA HARVEST CONTROL' });
+  const fm = gui.addFolder('Mission');
+  fm.add(params, 'start').name('▶ Start Harvest');
+  fm.add(params, 'pause').name('⏯ Pause / Resume');
+  fm.add(params, 'reset').name('↺ Reset');
+  fm.add(params, 'driveSpeed', 0.2, 1.5, 0.05).name('Drive Speed (m/s)');
+  const fch = gui.addFolder('Chassis');
+  fch.add(params, 'trackWidth', 1.3, 2.0, 0.05).name('Track Width (m)').onChange(updateChassis);
+  fch.add(params, 'wheelBase', 1.0, 1.5, 0.05).name('Wheelbase (m)').onChange(updateChassis);
+  const fc = gui.addFolder('Canopy Mgmt');
+  fc.add(params, 'sweeperOn').name('Sweeper Active');
+  fc.add(params, 'sweeperRPM', 60, 600, 10).name('Brush RPM');
+  fc.add(params, 'sweepMode', ['Rotary Brush', 'Air Knife', 'Lifter Fingers']).name('Clearing Mode');
+  const fa = gui.addFolder('Manual Arm (2 DOF)');
+  fa.add(params, 'lateral', NODE_Z_MIN, NODE_Z_MAX, 0.01).name('Lateral z (m)').listen();
+  fa.add(params, 'height', NODE_Y_MIN, NODE_Y_MAX, 0.01).name('Height (m)').listen();
+  fa.add(params, 'grip', 0, 1, 0.01).name('Grip (open)').listen();
+  fa.add(params, 'pick').name('▶ Pick');
+  fa.add(params, 'drop').name('▼ Drop');
+  fa.close();
+  const fv = gui.addFolder('Vision');
+  fv.add(params, 'camPitch', -90, 0, 1).name('Camera Pitch (°)').onChange(applyCamera);
+  fv.add(params, 'camYaw', -40, 40, 1).name('Camera Yaw (°)').onChange(applyCamera);
+  fv.add(params, 'camHeight', 1.3, 2.1, 0.02).name('Camera Height (m)').onChange(applyCamera);
+  fv.add(params, 'showFOV').name('Show FOV Cone');
+  fv.add(params, 'showZones').name('Keep-Out / Workspace');
+  fv.add(params, 'showLabels').name('Show Labels');
+  fv.add(params, 'pip').name('Onboard Camera');
+  gui.add(params, 'speed', 0.2, 3, 0.05).name('Animation Speed');
+}
+
+/* ------------------------- Main loop ----------------------------- */
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = Math.min(clock.getDelta(), 0.05) * params.speed;
+  updateDrive(dt);
+  updateRobot(dt);
+  runSequencer();
+  updateSweeper(dt);
+  updateVision();
+  updatePhysics(dt);
+  updateEquations(dt);
+  controls.update();
+
+  renderer.setScissorTest(false);
+  renderer.setViewport(0, 0, innerWidth, innerHeight);
+  renderer.render(scene, camera);
+  if (params.pip) {
+    renderer.setScissorTest(true);
+    renderer.setScissor(innerWidth - 316, 16, 300, 180);
+    renderer.setViewport(innerWidth - 316, 16, 300, 180);
+    renderer.render(scene, obCam);
+    renderer.setScissorTest(false);
+  }
+}
+
+initScene();
+createRover();
+createMelons();
+scene.add(detHelper);
+detHelper.visible = false;
+initPicking();
+initGUI();
+applyCamera();
+clock = new THREE.Clock();
+setMission('STANDBY');
+animate();
+</script>
+</body>
+</html>

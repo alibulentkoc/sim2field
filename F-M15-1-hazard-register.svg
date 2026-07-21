@@ -1,0 +1,66 @@
+<svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A risk-ranked hazard register plotted on a severity-by-likelihood matrix: each hazard to people, fruit, or property is placed by severity and likelihood, cells are shaded by risk (severity times likelihood), and mitigation is prioritized toward the highest-risk hazards in the upper-right." font-family="'IBM Plex Mono',monospace">
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Risk-ranked hazard register (R = S x L)</text>
+<rect x="112" y="210" width="68" height="38" fill="var(--accent)" fill-opacity="0.1" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="112" y="172" width="68" height="38" fill="var(--accent)" fill-opacity="0.1" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="112" y="134" width="68" height="38" fill="var(--accent)" fill-opacity="0.1" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="112" y="96" width="68" height="38" fill="var(--accent)" fill-opacity="0.1" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="112" y="58" width="68" height="38" fill="var(--warn)" fill-opacity="0.13" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="180" y="210" width="68" height="38" fill="var(--accent)" fill-opacity="0.1" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="180" y="172" width="68" height="38" fill="var(--accent)" fill-opacity="0.1" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="180" y="134" width="68" height="38" fill="var(--warn)" fill-opacity="0.13" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="180" y="96" width="68" height="38" fill="var(--warn)" fill-opacity="0.13" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="180" y="58" width="68" height="38" fill="var(--danger)" fill-opacity="0.15" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="248" y="210" width="68" height="38" fill="var(--accent)" fill-opacity="0.1" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="248" y="172" width="68" height="38" fill="var(--warn)" fill-opacity="0.13" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="248" y="134" width="68" height="38" fill="var(--danger)" fill-opacity="0.15" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="248" y="96" width="68" height="38" fill="var(--danger)" fill-opacity="0.15" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="248" y="58" width="68" height="38" fill="var(--danger)" fill-opacity="0.26" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="316" y="210" width="68" height="38" fill="var(--accent)" fill-opacity="0.1" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="316" y="172" width="68" height="38" fill="var(--warn)" fill-opacity="0.13" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="316" y="134" width="68" height="38" fill="var(--danger)" fill-opacity="0.15" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="316" y="96" width="68" height="38" fill="var(--danger)" fill-opacity="0.26" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="316" y="58" width="68" height="38" fill="var(--danger)" fill-opacity="0.26" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="384" y="210" width="68" height="38" fill="var(--warn)" fill-opacity="0.13" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="384" y="172" width="68" height="38" fill="var(--danger)" fill-opacity="0.15" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="384" y="134" width="68" height="38" fill="var(--danger)" fill-opacity="0.26" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="384" y="96" width="68" height="38" fill="var(--danger)" fill-opacity="0.26" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="384" y="58" width="68" height="38" fill="var(--danger)" fill-opacity="0.26" stroke="var(--border)" stroke-width="0.6"/>
+<text x="282.0" y="266" text-anchor="middle" font-size="8" fill="var(--text-muted)">likelihood L (per cycle / hour) -&gt;</text>
+<text x="146" y="257" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">1</text>
+<text x="214" y="257" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">2</text>
+<text x="282" y="257" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">3</text>
+<text x="350" y="257" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">4</text>
+<text x="418" y="257" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">5</text>
+<text x="82" y="153.0" text-anchor="middle" font-size="8" fill="var(--text-muted)" transform="rotate(-90 82 153.0)">severity S -&gt;</text>
+<text x="104" y="232" text-anchor="end" font-size="6.6" fill="var(--text-muted)">1</text>
+<text x="104" y="194" text-anchor="end" font-size="6.6" fill="var(--text-muted)">2</text>
+<text x="104" y="156" text-anchor="end" font-size="6.6" fill="var(--text-muted)">3</text>
+<text x="104" y="118" text-anchor="end" font-size="6.6" fill="var(--text-muted)">4</text>
+<text x="104" y="80" text-anchor="end" font-size="6.6" fill="var(--text-muted)">5</text>
+<text x="418" y="64" text-anchor="middle" font-size="6.6" fill="var(--danger-text)">highest risk</text>
+<circle cx="214" cy="70" r="4.5" fill="var(--danger)" stroke="var(--bg)" stroke-width="0.8"/>
+<circle cx="200" cy="113" r="4.5" fill="var(--danger)" stroke="var(--bg)" stroke-width="0.8"/>
+<circle cx="228" cy="123" r="4.5" fill="var(--warn)" stroke="var(--bg)" stroke-width="0.8"/>
+<circle cx="282" cy="153" r="4.5" fill="var(--danger)" stroke="var(--bg)" stroke-width="0.8"/>
+<circle cx="214" cy="153" r="4.5" fill="var(--warn)" stroke="var(--bg)" stroke-width="0.8"/>
+<circle cx="350" cy="191" r="4.5" fill="var(--accent-2)" stroke="var(--bg)" stroke-width="0.8"/>
+<circle cx="138" cy="71" r="4.5" fill="var(--danger)" stroke="var(--bg)" stroke-width="0.8"/>
+<circle cx="156" cy="86" r="4.5" fill="var(--danger)" stroke="var(--bg)" stroke-width="0.8"/>
+<rect x="486" y="58" width="258" height="86" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="498" y="76" font-size="8.2" fill="var(--text-primary)" font-weight="700">Harm categories</text>
+<circle cx="504" cy="91" r="4.5" fill="var(--danger)"/>
+<text x="516" y="94" font-size="7" fill="var(--text-secondary)">people (struck/crushed, energy, roll-over)</text>
+<circle cx="504" cy="106" r="4.5" fill="var(--accent-2)"/>
+<text x="516" y="109" font-size="7" fill="var(--text-secondary)">fruit (bruise/drop, economic)</text>
+<circle cx="504" cy="121" r="4.5" fill="var(--warn)"/>
+<text x="516" y="124" font-size="7" fill="var(--text-secondary)">property/self (tip-over, collision, fire)</text>
+<text x="486" y="164" font-size="8.4" fill="var(--text-primary)" font-weight="700">Ranked by R (mitigate top-down):</text>
+<text x="486" y="180" font-size="7.2" fill="var(--text-secondary)">1. arm/payload strike  <tspan fill="var(--text-muted)">(S5 x L2 = 10)</tspan></text>
+<text x="486" y="193" font-size="7.2" fill="var(--text-secondary)">2. pinch point  <tspan fill="var(--text-muted)">(S3 x L3 = 9)</tspan></text>
+<text x="486" y="206" font-size="7.2" fill="var(--text-secondary)">3. stored-energy release  <tspan fill="var(--text-muted)">(S4 x L2 = 8)</tspan></text>
+<text x="486" y="219" font-size="7.2" fill="var(--text-secondary)">4. tip-over  <tspan fill="var(--text-muted)">(S4 x L2 = 8)</tspan></text>
+<text x="486" y="232" font-size="7.2" fill="var(--text-secondary)">5. bruise / drop  <tspan fill="var(--text-muted)">(S2 x L4 = 8)</tspan></text>
+<text x="486" y="245" font-size="7.2" fill="var(--text-secondary)">6. collision  <tspan fill="var(--text-muted)">(S3 x L2 = 6)</tspan></text>
+<text x="20" y="300" font-size="7.8" fill="var(--text-muted)">Severity and likelihood from the M14 FMEA / reliability data. Prioritize mitigation by R, the dominant risk (an EI-05-style focus). Coverage must</text>
+<text x="20" y="311" font-size="7.8" fill="var(--text-muted)">include combined faults (both stored-energy domains, M9 + M12) and adversarial conditions. A hazard missed here is a hazard unmitigated.</text>
+</svg>

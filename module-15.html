@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark"><meta name="theme-color" content="#0e120d">
+<title>Module 15: Safety, Ethics &amp; Responsible Deployment (SIM2FIELD)</title>
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<style>:root{
+  color-scheme:dark;
+  --bg:#0e120d; --surface:#161c14; --surface-2:#0b0e0a; --surface-3:#12160f;
+  --border:#2b3527; --border-strong:#3a4633; --grid-line:#1c231a;
+  --text-primary:#eef2e6; --text-secondary:#c8cfbe; --text-muted:#adb4a2;
+  --text-lede:#c9d0bf; --text-cons:#d4dbc9; --text-on-accent:#0e120d;
+  --accent:#9bcf3b; --accent-dim:#86ba35; --accent-strong:#6f9a2c;
+  --danger:#f0556a; --danger-text:#f697a4; --danger-dim:#b93b4c;
+  --warn:#e0a03b; --warn-text:#eed9b4; --info:#6fb0d9; --info-text:#bfe0f2; --accent-2:#b98bd9; --marker:#ffffff;
+  --tint-accent:rgba(155,207,59,.07); --tint-accent-soft:rgba(155,207,59,.05); --tint-hero:rgba(155,207,59,.06);
+  --tint-danger:rgba(240,85,106,.07); --tint-warn:rgba(224,160,59,.08); --tint-info:rgba(111,176,217,.08); --tint-gov:rgba(185,139,217,.07);
+  --font-sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --font-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --font-display:'Space Grotesk',var(--font-sans);
+  --rail:300px; --topbar:54px; --measure:54rem;
+
+  /* mission-FSM stage palette (used by inlined worked-example fragments) */
+  --stage-drive:#7fb0a0; --stage-stage:#6fb0d9; --stage-align:#9bcf3b; --stage-grab:#c9e06a;
+  --stage-lift:#b98bd9; --stage-swing:#f0556a; --stage-lower:#e0a03b; --stage-release:#d98b8b;
+  --status-ok-text:#d0d7c6; --status-warn-text:#eed9b4; --status-danger-text:#f3ccd2;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);color:var(--text-primary);-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text-primary);font-family:var(--font-sans);line-height:1.72;-webkit-font-smoothing:antialiased;letter-spacing:.002em}
+a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+code,.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.skip{position:absolute;left:-999px;top:0;background:var(--accent);color:var(--text-on-accent);padding:.5rem .8rem;border-radius:6px;z-index:60}
+.skip:focus{left:.5rem;top:.5rem}
+.katex{font-size:1.04em}
+
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar);z-index:40;background:var(--surface-2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem;padding:0 1.1rem}
+.topbar .mk{font-family:var(--font-display);font-weight:600;font-size:1rem;letter-spacing:-.01em}
+.topbar .cx{flex:1;min-width:0;font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar .src{flex:none;font-family:var(--font-mono);font-size:.66rem;color:var(--accent);border:1px solid var(--accent-strong);border-radius:6px;padding:.3rem .6rem}
+body.ed-author .topbar{border-bottom-color:var(--accent-2)}
+body.ed-author .topbar .src{color:var(--accent-2);border-color:var(--accent-2)}
+
+.book{display:grid;grid-template-columns:var(--rail) 1fr;padding-top:var(--topbar)}
+.rail{position:sticky;top:var(--topbar);align-self:start;height:calc(100vh - var(--topbar));overflow-y:auto;background:var(--surface);border-right:1px solid var(--border);padding:1.3rem 1rem 3rem}
+.rail h2{font-family:var(--font-mono);font-size:.64rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-dim);margin:0 .4rem .7rem}
+.toc{list-style:none} .toc li{margin:.05rem 0}
+.toc a{display:flex;gap:.5rem;align-items:baseline;color:var(--text-secondary);font-size:.83rem;line-height:1.35;padding:.32rem .5rem;border-radius:7px;border-left:2px solid transparent}
+.toc a:hover{background:var(--surface-3);text-decoration:none;color:var(--text-primary)}
+.toc a.active{background:var(--tint-accent);border-left-color:var(--accent);color:var(--text-primary)}
+.toc .tn{font-family:var(--font-mono);font-size:.68rem;color:var(--text-muted);flex:none;min-width:1.3em}
+.toc a.active .tn{color:var(--accent)}
+.toc .tt{margin-left:auto;font-family:var(--font-mono);font-size:.54rem;letter-spacing:.05em;text-transform:uppercase;padding:.05rem .3rem;border-radius:4px;border:1px solid var(--border);color:var(--text-muted)}
+.toc .tt.instr{color:var(--accent-2);border-color:var(--accent-2)} .toc .tt.spec{color:var(--warn);border-color:var(--warn)}
+
+.main{min-width:0;background:var(--bg)}
+.inner{max-width:var(--measure);margin:0 auto;padding:2.4rem 2rem 7rem}
+
+/* ---------- MISSION OPENING ---------- */
+.mission{margin-bottom:.5rem}
+.mission-hero{padding:1.2rem 0 2.4rem;border-bottom:1px solid var(--border)}
+.mission-hero .eyebrow{font-family:var(--font-mono);font-size:.72rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:1.4rem}
+.mission-hero .hook{font-family:var(--font-display);font-weight:600;font-size:clamp(1.7rem,3.6vw,2.55rem);line-height:1.12;letter-spacing:-.018em;color:var(--text-primary);max-width:22em;margin-bottom:1.3rem}
+.mission-hero h1{font-family:var(--font-display);font-weight:500;font-size:1.12rem;color:var(--text-secondary);letter-spacing:-.008em;margin-bottom:.7rem}
+.mission-hero .slim{font-family:var(--font-mono);font-size:.74rem;color:var(--text-muted);letter-spacing:.02em}
+.movement{padding:2.1rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:190px 1fr;gap:1.6rem}
+.movement .mv-label{font-family:var(--font-mono);font-size:.7rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-dim);padding-top:.25rem}
+.movement .mv-label::before{content:"";display:block;width:30px;height:2px;background:var(--accent-strong);margin-bottom:.75rem}
+.movement .mv-body p{color:var(--text-secondary);font-size:1.02rem;margin:0 0 .9rem}
+.movement .mv-body p:last-child{margin-bottom:0}
+.movement .mv-body strong{color:var(--text-primary);font-weight:600}
+.movement .mv-body em{color:var(--text-cons)}
+.movement.objectives .mv-body ul{list-style:none;margin:0}
+.movement.objectives .mv-body li{position:relative;padding-left:1.5rem;margin:.5rem 0;color:var(--text-secondary)}
+.movement.objectives .mv-body li::before{content:"\2192";position:absolute;left:0;color:var(--accent);font-family:var(--font-mono)}
+.movement.objectives .mv-body strong{color:var(--text-primary)}
+.chapter-start{display:flex;align-items:center;gap:1rem;margin:2.8rem 0 .3rem}
+.chapter-start::before,.chapter-start::after{content:"";height:1px;background:var(--border);flex:1}
+.chapter-start span{font-family:var(--font-mono);font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;color:var(--accent-dim)}
+
+/* ---------- PROSE ---------- */
+.section{margin-top:3.2rem}
+.section h2{font-family:var(--font-display);font-weight:600;font-size:1.6rem;letter-spacing:-.012em;line-height:1.15;margin-bottom:1rem;scroll-margin-top:calc(var(--topbar) + 1rem);display:flex;gap:.7rem;align-items:baseline;border-top:1px solid var(--border);padding-top:1.7rem}
+.section h2.unnum{display:block}
+.section h2 .secnum{font-family:var(--font-mono);font-size:.9rem;font-weight:600;color:var(--accent);flex:none}
+.section h3{font-family:var(--font-display);font-weight:600;font-size:1.14rem;color:var(--text-primary);margin:1.6rem 0 .5rem}
+.section p{margin:0 0 1rem;color:var(--text-secondary)}
+.section strong{color:var(--text-primary);font-weight:600}
+.section em{color:var(--text-cons)}
+.section ul,.section ol{margin:0 0 1.1rem 1.3rem;color:var(--text-secondary)}
+.section li{margin:.35rem 0} .section li::marker{color:var(--accent-dim)}
+.section code{background:var(--surface-3);border:1px solid var(--border);border-radius:4px;padding:.05rem .35rem;font-size:.88em;color:var(--text-cons)}
+.section pre{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem;overflow-x:auto;margin:0 0 1.1rem}
+.section pre code{background:none;border:none;padding:0;color:var(--text-secondary);font-size:.82rem;line-height:1.6}
+hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
+
+.eqwrap{background:var(--surface-3);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem;margin:0 0 1.15rem;overflow-x:auto}
+.eqwrap .katex-display{margin:0}
+
+.twrap{overflow-x:auto;margin:0 0 1.2rem;border:1px solid var(--border);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:.86rem}
+th,td{text-align:left;padding:.6rem .8rem;border-bottom:1px solid var(--border);vertical-align:top}
+thead th{font-family:var(--font-mono);font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);font-weight:500;background:var(--surface-3)}
+tbody tr:last-child td{border-bottom:none} td strong{color:var(--accent)}
+
+.callout{border-radius:12px;padding:1.1rem 1.35rem;margin:0 0 1.3rem;border:1px solid var(--border);background:var(--surface)}
+.callout p{margin:0 0 .6rem;color:var(--text-cons)} .callout p:last-child{margin-bottom:0}
+.callout.cec{border-color:var(--accent-strong);background:linear-gradient(180deg,var(--tint-hero),transparent)}
+.callout.cec h3{color:var(--accent);margin:.1rem 0 .5rem;font-size:1.05rem} .callout.cec strong{color:var(--accent)}
+.callout.industry{border-color:var(--info);background:var(--tint-info)}
+.callout.industry h3{color:var(--info-text);font-size:1rem;margin:.1rem 0 .6rem} .callout.industry strong{color:var(--info-text)}
+.callout.hook{border-color:var(--accent-strong);background:var(--tint-accent-soft)}
+.callout.note{border-left:3px solid var(--border-strong);background:var(--surface-3)}
+.callout.gov{border-color:var(--accent-2);background:var(--tint-gov)}
+.section.failure ul{list-style:none;margin-left:0}
+.section.failure ul li{padding:.55rem 0;border-bottom:1px solid var(--border)}
+.section.failure li::before{content:"\2020";color:var(--danger-text);font-family:var(--font-mono);margin-right:.6rem}
+
+.figure{margin:0 0 1.4rem;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.figure.diagram .ascii{margin:0;border:none;border-radius:0;background:var(--surface-3)}
+.figure.diagram .ascii code{color:var(--accent-dim);font-size:.8rem}
+.figure .figbody{padding:1rem 1.1rem;background:var(--surface-3);overflow-x:auto}
+.figure .figbody svg{display:block;width:100%;height:auto;min-width:520px}
+.figure figcaption{padding:.7rem 1rem;font-size:.82rem;color:var(--text-muted);border-top:1px solid var(--border)}
+.figure .fid{font-family:var(--font-mono);font-size:.64rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-right:.5rem}
+.figure.slot{border-style:dashed;border-color:var(--border-strong)}
+.figure.slot .slotbox{display:flex;flex-direction:column;gap:.3rem;padding:1.6rem 1.4rem;background:repeating-linear-gradient(135deg,var(--surface-3),var(--surface-3) 10px,transparent 10px,transparent 20px);border:none}
+.figure.slot .slit{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--warn-text)}
+.figure.slot b{color:var(--text-primary);font-size:.95rem} .figure.slot .desc{color:var(--text-muted);font-size:.84rem}
+
+.widget-embed{margin:1.6rem 0;border:0;background:transparent;overflow:visible}
+.we-head{display:flex;align-items:baseline;gap:.7rem;flex-wrap:wrap;padding:0 .2rem .6rem;background:transparent}
+.we-head .wid{font-family:var(--font-mono);font-size:.62rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-on-accent);background:var(--accent-strong);padding:.15rem .5rem;border-radius:5px}
+.we-head .wid.live{background:var(--accent)}
+.we-head b{font-family:var(--font-display);font-weight:600;color:var(--text-primary);font-size:1rem}
+.we-open{margin-left:auto;font-family:var(--font-mono);font-size:.72rem;color:var(--accent)}
+.we-cap{margin:.65rem 0 0;padding:0 .2rem;font-size:.8rem;color:var(--text-muted)}
+
+.answers,.instructor-wrap{border:1px solid var(--border-strong);border-radius:10px;background:var(--surface-3);margin:1.2rem 0}
+.answers summary,.instructor-wrap summary{cursor:pointer;padding:.8rem 1.1rem;font-family:var(--font-mono);font-size:.78rem;color:var(--accent-2);list-style:none}
+.answers summary::-webkit-details-marker,.instructor-wrap summary::-webkit-details-marker{display:none}
+.answers summary::before,.instructor-wrap summary::before{content:"\25B8 ";color:var(--accent-2)}
+.answers[open] summary::before,.instructor-wrap[open] summary::before{content:"\25BE "}
+.answers .keylist{margin:.2rem 1.4rem 1rem;color:var(--text-secondary);font-size:.88rem}
+.answers .keylist .qn{font-family:var(--font-mono);color:var(--accent);margin-right:.3rem}
+.instructor-wrap{margin-top:2.4rem}
+.instructor-wrap > :not(summary){padding:0 1.2rem} .instructor-wrap > :last-child{padding-bottom:1rem}
+.instructor-wrap p,.instructor-wrap li{color:var(--text-muted)}
+.cover-meta{font-family:var(--font-mono);font-size:.8rem;color:var(--text-muted);line-height:1.9}
+.cover-meta strong{color:var(--text-secondary);font-weight:600} .cover-meta p{margin:.1rem 0}
+.section.instructor{margin-top:2.6rem}
+
+footer{max-width:var(--measure);margin:0 auto;padding:2.5rem 2rem;border-top:1px solid var(--border);font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);line-height:1.85}
+
+@media(max-width:900px){:root{--rail:0px}.book{grid-template-columns:1fr}.rail{display:none}.inner{padding:1.6rem 1.2rem 5rem}}
+@media(max-width:720px){.movement{grid-template-columns:1fr;gap:.5rem}.movement .mv-label::before{margin-bottom:.4rem}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style></head>
+<body class="ed-student">
+<a class="skip" href="#main">Skip to chapter</a>
+<div class="topbar"><span class="mk">SIM2FIELD</span>
+  <span class="cx">Digital textbook / Student edition</span>
+  <span class="src">source: MODULE-15.md</span></div>
+<div class="book">
+  <nav class="rail" aria-label="Chapter contents"><h2>Chapter contents</h2><ul class="toc"><li><a href="#sec-2-learning-objectives"><span class="tn">2</span>Learning Objectives</a></li><li><a href="#sec-3-student-outcomes"><span class="tn">3</span>Student Outcomes</a></li><li><a href="#sec-4-engineering-motivation"><span class="tn">4</span>Engineering Motivation</a></li><li><a href="#sec-engineering-failure-cases-safety-and-eth">Engineering Failure Cases (safety-and-ethics-specific)</a></li><li><a href="#sec-5-background-knowledge"><span class="tn">5</span>Background Knowledge</a></li><li><a href="#sec-6-theory"><span class="tn">6</span>Theory</a></li><li><a href="#sec-7-mathematics"><span class="tn">7</span>Mathematics</a></li><li><a href="#sec-8-engineering-principles"><span class="tn">8</span>Engineering Principles</a></li><li><a href="#sec-9-system-requirements"><span class="tn">9</span>System Requirements</a></li><li><a href="#sec-10-design-decisions"><span class="tn">10</span>Design Decisions</a></li><li><a href="#sec-11-trade-studies"><span class="tn">11</span>Trade Studies</a></li><li><a href="#sec-12-simulation-activities"><span class="tn">12</span>Simulation Activities</a></li><li><a href="#sec-13-digital-twin-activities"><span class="tn">13</span>Digital Twin Activities</a></li><li><a href="#sec-14-hardware-activities"><span class="tn">14</span>Hardware Activities</a></li><li><a href="#sec-15-software-activities"><span class="tn">15</span>Software Activities</a></li><li><a href="#sec-16-ros-2-integration"><span class="tn">16</span>ROS 2 Integration</a></li><li><a href="#sec-17-ai-integration"><span class="tn">17</span>AI Integration</a></li><li><a href="#sec-18-edge-computing-integration"><span class="tn">18</span>Edge Computing Integration</a></li><li><a href="#sec-19-fluid-power-integration"><span class="tn">19</span>Fluid Power Integration</a></li><li><a href="#sec-24-laboratory-case-study-session"><span class="tn">24</span>Laboratory / Case-Study Session</a></li><li><a href="#sec-25-homework"><span class="tn">25</span>Homework</a></li><li><a href="#sec-26-quiz"><span class="tn">26</span>Quiz</a></li><li><a href="#sec-27-challenge-problems"><span class="tn">27</span>Challenge Problems</a></li><li><a href="#sec-engineering-design-review">Engineering Design Review</a></li><li><a href="#sec-29-research-frontiers"><span class="tn">29</span>Research Frontiers</a></li><li><a href="#sec-30-references"><span class="tn">30</span>References</a></li></ul></nav>
+  <main class="main" id="main"><div class="inner">
+    <header class="mission">
+    <div class="mission-hero">
+      <div class="eyebrow">Module 15 / Mission briefing</div>
+      
+      <h1>Safety, Ethics &amp; Responsible Deployment</h1>
+      <div class="slim">Part VI, Prove  /  5 to 6 contact hours + a 2 to 3 hour laboratory/case-study session + homework</div>
+    </div>
+    <section class="movement"><div class="mv-label">Mission</div><div class="mv-body"><p>This module is where the machine's scattered safety features become a single, defensible safety case: a structured argument that the machine's residual risk is acceptable, backed by the verification and reliability evidence M14 produced. And it is where a harder question than &quot;does it work?&quot; gets its due: should it work this way, near these people, with these consequences? Safety and ethics are the disciplines that decide whether an autonomous machine belongs in a field at all.</p>
+</div></section><section class="movement"><div class="mv-label">Previous milestone</div><div class="mv-body"><p>Everything the course built to be safe must now be proven safe, and proven safe to someone, a grower, a worker, a regulator, the public.</p>
+</div></section><section class="movement"><div class="mv-label">Engineering problem</div><div class="mv-body"><p>The safety material is already designed; this module certifies it. The course built defense in depth deliberately: physical bounds that cannot be commanded past (the mechanical relief and passive compliance, M9/EI-09), an independent safety monitor that can always stop the machine (M11/EI-11), a bounded learner whose worst case is contained (M7/EI-07), and envelope limits the machine respects (M10/EI-10). It also created two stored-energy hazard domains, pressurized fluid (M9) and the battery (M12), that a fault could touch together. This module performs the hazard analysis that names every way the machine could harm a person, fruit, or itself; the risk assessment that estimates each hazard's severity and likelihood; and the safety case that argues, hazard by hazard, that the mitigations reduce residual risk to an acceptable level, certifying, in particular, the independent monitor's independence (the claim EI-11 rests on).</p>
+</div></section><section class="movement"><div class="mv-label">Design tension</div><div class="mv-body"><p>Then the module turns to ethics and responsible deployment, which no amount of engineering evidence settles. An autonomous harvester changes agricultural labor, concentrates capability, operates near workers, collects data about land and people, and can fail in ways that harm livelihoods as well as bodies. Responsible deployment means facing these honestly: the labor impact, the safety of the people who share the field, the environmental footprint, the data and accountability questions, and the humility to bound where the machine should not operate.</p>
+</div></section><section class="movement"><div class="mv-label">What this module resolves</div><div class="mv-body"><p>The module's Engineering Insight is the one that separates a safety feature from a safety culture: safety is a property you argue for, not a box you check, it is an explicit, evidence-backed, falsifiable claim about residual risk that a skeptical reviewer could attack, and the engineer's job is to make that argument honestly, including where it is weakest.</p>
+</div></section>
+    
+    
+    <div class="chapter-start"><span>The chapter</span></div>
+  </header>
+    <section class="section"><h2 id="sec-2-learning-objectives"><span class="secnum">2</span><span class="sectitle">Learning Objectives</span></h2><ul>
+<li><strong>LO-M15.1</strong> Perform a hazard analysis for the machine (to people, fruit, and itself), including the two stored-energy domains (M9/M12)., <em>Bloom: Analyze (with Create)</em></li>
+<li><strong>LO-M15.2</strong> Assess risk (severity × likelihood) per hazard and set acceptance criteria., <em>Bloom: Evaluate</em></li>
+<li><strong>LO-M15.3</strong> Construct a safety case: claim -&gt; argument -&gt; evidence, certifying the defense-in-depth mitigations on M14's evidence., <em>Bloom: Create</em></li>
+<li><strong>LO-M15.4</strong> Certify the independent safety monitor's independence and reaction time (M11/EI-11) against fault-injection evidence., <em>Bloom: Evaluate</em></li>
+<li><strong>LO-M15.5</strong> Analyze the residual risk after all mitigations and argue its acceptability honestly (EI-15)., <em>Bloom: Evaluate (with Analyze)</em></li>
+<li><strong>LO-M15.6</strong> Analyze the ethics of deployment: labor, worker safety, environment, data, accountability, and where not to operate., <em>Bloom: Evaluate</em></li>
+<li><strong>LO-M15.7</strong> Specify safe deployment: operating limits, human interaction, maintenance-safety, and incident response., <em>Bloom: Create</em></li>
+</ul>
+<p>Maps to course objectives <strong>LO7</strong> (primary), <strong>LO1/all</strong> (integrative), and ABET <strong>SO4 (ethics/professional responsibility)</strong> primarily, <strong>SO1/SO2</strong>. [-&gt;Doc I]</p>
+</section>
+<section class="section"><h2 id="sec-3-student-outcomes"><span class="secnum">3</span><span class="sectitle">Student Outcomes</span></h2><p>A student who has mastered this module can, without prompting:</p>
+<ol>
+<li>Enumerate the machine's hazards, including combined stored-energy faults., <em>Bloom: Analyze</em></li>
+<li>Assess and rank risk and set acceptance criteria., <em>Bloom: Evaluate</em></li>
+<li>Build a claim-argument-evidence safety case on V&amp;V evidence., <em>Bloom: Create</em></li>
+<li>Certify the safety monitor's independence against fault-injection evidence., <em>Bloom: Evaluate</em></li>
+<li>Argue residual-risk acceptability honestly, including weaknesses., <em>Bloom: Evaluate</em></li>
+<li>Reason through the deployment ethics and bound where not to operate., <em>Bloom: Evaluate</em></li>
+</ol>
+</section>
+<section class="section"><h2 id="sec-4-engineering-motivation"><span class="secnum">4</span><span class="sectitle">Engineering Motivation</span></h2><p>Module 1 placed a machine that exerts force and moves a heavy payload into a field where, eventually, people work. From that moment, safety stopped being optional and ethics stopped being abstract. This module exists because <strong>a capable machine is not a deployable one until its risk is understood, bounded, argued, and owned</strong>, and because engineers, not markets or regulators alone, carry the professional responsibility to refuse or reshape a deployment that harms people or livelihoods.</p>
+<p>The safety motivation is concrete and cumulative. The machine can bruise fruit (an economic harm), but it can also injure: a heavy arm swinging a 5 to 10 kg payload, a mobile platform on a slope, pressurized fluid and a charged battery each storing energy that a fault could release, and opaque learned components making decisions in a shared space. Each module built a mitigation, but a pile of mitigations is not safety. Safety is the <em>argument</em> that, taken together and given the evidence, the residual risk is acceptable, and that argument must be explicit enough to be <em>attacked</em>, because a safety claim no reviewer can challenge is a claim no one has actually checked. The motivation for the formal safety case is that &quot;we added guards&quot; is not an answer to &quot;is it safe?&quot;; &quot;here is the hazard, the mitigation, the evidence, and the residual risk, and here is why that residual is acceptable&quot; is.</p>
+<p>The independence claim deserves special motivation. The whole defense-in-depth rests on EI-11, that the safety monitor can stop the machine <em>regardless</em> of what fails elsewhere. But independence is easy to claim and easy to violate quietly (a shared clock, a shared power rail, a shared assumption). This module <em>certifies</em> independence against M14's fault-injection evidence, because the safety architecture is only worth what its independence is actually verified to be.</p>
+<p>And the ethics motivation is the one engineering evidence cannot discharge. An autonomous harvester reshapes farm labor, displacing some work, changing other work, concentrating capability in those who can afford the machine. It shares space with workers whose safety depends on the machine's design. It collects data about land, yield, and people. It can fail in ways that cost a grower a season. None of these is settled by a passing test; they are questions of responsibility that a professional engineer must face rather than externalize. The motivation for this module's ethics content is that <em>responsible</em> deployment, not merely <em>possible</em> deployment, is part of the engineering, and the humility to bound where the machine should not go is a design decision like any other.</p>
+</section>
+<section class="section failure"><h2 id="sec-engineering-failure-cases-safety-and-eth" class="unnum">Engineering Failure Cases (safety-and-ethics-specific)</h2><p>Sharpening the highest-stakes failures:</p>
+<ul>
+<li><strong>Human injury.</strong> The arm/payload or platform strikes or crushes a person in the shared field. <em>Motivates</em> hazard analysis, the independent monitor, keep-clear zones, and safe interaction (Section 6.2 to 6.4, EI-11).</li>
+<li><strong>Stored-energy release.</strong> A fault releases pressurized fluid (M9) or battery energy (M12), separately or together. <em>Motivates</em> the two-domain stored-energy hazard analysis and mitigations (Section 6.3).</li>
+<li><strong>Safety-independence violation.</strong> The monitor shares a hidden dependency (clock/power/assumption) with what it guards and fails with it. <em>Motivates</em> the independence certification (Section 6.5, EI-11).</li>
+<li><strong>Unbounded-learner harm.</strong> A learned component acts outside its bounds and the containment fails. <em>Motivates</em> certifying the bounded-learner defense (Section 6.4, EI-07/EI-09).</li>
+<li><strong>Ethical failure.</strong> Deployment harms workers' safety or livelihoods, misuses data, or operates where it should not. <em>Motivates</em> the ethics/responsible-deployment analysis (Section 6.7 to 6.8).</li>
+<li><strong>Overclaimed safety.</strong> The safety case asserts more than the evidence supports; the machine is deployed on an unfalsifiable claim. <em>Motivates</em> the argue-don't-assert discipline (Section 6.6, EI-15).</li>
+</ul>
+<p>Each is prevented by an honest safety or ethics discipline.</p>
+</section>
+<section class="section"><h2 id="sec-5-background-knowledge"><span class="secnum">5</span><span class="sectitle">Background Knowledge</span></h2><p><strong>Assumed (from prerequisites):</strong> probability and risk (severity × likelihood); the M7 bounded learner (EI-07); the M9 fluid stored energy, mechanical relief, and passive compliance (EI-09); the M10 operating envelope (EI-10); the M11 independent safety monitor, guard composition, and fault injection (EI-11); the M12 electrical/battery stored energy (EI-12); the M13 integrated machine and validated twin evidence (CEC-06); the M14 V&amp;V and reliability evidence and adversarial validation (EI-14).</p>
+<p><strong>Introduced here, used later:</strong> the vocabulary of safety and ethics, <em>hazard analysis, risk assessment (severity/likelihood), ALARP/acceptable risk, safety case (claim-argument-evidence / goal-structuring), functional safety, independence/common-cause failure, safe state, keep-clear/human-interaction safety, lockout/maintenance safety, incident response; and deployment ethics, labor impact, worker safety, environmental footprint, data governance, accountability, dual-use, distributive effects</em>. Developed at applied (L2) depth; formal functional-safety standards and ethics frameworks are referenced [-&gt;Doc H].</p>
+<p><strong>Where this sits in the dependency graph.</strong> M15 depends on the safety-relevant design of M7/M9/M10/M11/M12 and the evidence of M13/M14. It <strong>masters</strong> the safety-case and ethics/responsible-deployment threads; it <strong>applies</strong> EI-07/EI-09/EI-10/EI-11/EI-12 (certifying their mitigations), EI-14 (adversarial safety testing), and CEC-06 (evidence fidelity for safety claims). It hands forward: the safety case and deployment limits to M16 (cost/deployment) and M17 (the capstone must satisfy them); and the residual-risk register to operations.</p>
+</section>
+<section class="section"><h2 id="sec-6-theory"><span class="secnum">6</span><span class="sectitle">Theory</span></h2><h3>6.1 Safety is a system property, argued</h3>
+<p>No single feature makes the machine safe; safety is the <em>composition</em> of mitigations plus the <em>argument</em> that the composition reduces residual risk to acceptable. The course built the composition (defense in depth); this module builds the argument (the safety case). The argument must be explicit, evidence-backed, and falsifiable, a claim a skeptical reviewer could attack (EI-15).</p>
+<h3>6.2 Hazard analysis</h3>
+<p>Enumerate every way the machine could cause harm, to <strong>people</strong> (struck/crushed by arm, payload, or platform; stored-energy release; pinch points; slope roll-over near a person), to <strong>fruit</strong> (bruise/drop, economic), and to <strong>itself/property</strong> (tip-over, collision, fire). Systematic methods (hazard identification, HAZOP-style what-ifs, the FMEA from M14) ensure coverage, including <em>combined</em> faults (both stored-energy domains, M9+M12) and <em>adversarial</em> conditions (EI-14). A hazard missed here is a hazard unmitigated.</p>
+<h3>6.3 Stored energy: two domains</h3>
+<p>The machine stores energy in <strong>pressurized fluid</strong> (M9) and in the <strong>battery</strong> (M12). Each is a hazard (burst, sudden release, arc/fire), and a fault could involve both (e.g., an electrical fault energizing a valve, or a collision breaching both). Mitigations: relief/bleed-down and burst-rated components (fluid); fusing, isolation, thermal management, and safe-shutdown (electrical); guarding and lockout for both. The safety case treats them together, not as two separate problems (a common-cause-failure concern).</p>
+<h3>6.4 Certifying the defense in depth</h3>
+<p>The machine's safety layers, now certified:</p>
+<ul>
+<li><strong>Physical bounds (EI-09).</strong> The mechanical relief caps grip force at <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mtext>bruise</mtext></msub></mrow><annotation encoding="application/x-tex">F_\text{bruise}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">bruise</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> at physics speed; passive compliance yields rather than crushing. Certified: the relief holds after wear (M14 durability), and compliance bounds contact force.</li>
+<li><strong>Independent monitor (EI-11).</strong> Can stop/safe the machine regardless of mission logic; a minimal hardware controller provides a software-independent last resort. Certified: independence (Section 6.5) and reaction time <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mtext>detect</mtext></msub><mo>+</mo><msub><mi>L</mi><mtext>react</mtext></msub><mo>≤</mo><msub><mi>T</mi><mtext>harm</mtext></msub></mrow><annotation encoding="application/x-tex">L_\text{detect}+L_\text{react}\le T_\text{harm}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">detect</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">react</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">harm</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> (M11/M14 fault injection).</li>
+<li><strong>Bounded learner (EI-07).</strong> Learned outputs are clipped to verified bounds with a deterministic fallback. Certified: the bounds hold under adversarial and fault conditions (M14).</li>
+<li><strong>Envelope limits (EI-10/EI-12).</strong> The machine refuses/degrades outside its safe envelope (slope, thermal). Certified: envelope-edge validation (M14).</li>
+</ul>
+<p>Defense in depth means no <em>single</em> failure defeats safety; the safety case must show this for each hazard.</p>
+<h3>6.5 Independence and common-cause failure (certifying EI-11)</h3>
+<p>The monitor's value rests entirely on <strong>independence</strong>: it must not share a failure mode with what it guards. This module certifies independence by tracing the monitor's dependencies, inputs, clock, power, compute, and <em>assumptions</em>, and showing none is common-cause with the mission logic or the hazard source (or, where a dependency is shared, that it is itself protected). The minimal hardware safety controller exists precisely to break the last software dependency. A <strong>common-cause failure</strong> (one fault disabling both the function and its guard) is the safety case's most important thing to rule out.</p>
+<h3>6.6 The safety case: claim, argument, evidence</h3>
+<p>A <strong>safety case</strong> is a structured argument that the machine is acceptably safe. Its form: a top <strong>claim</strong> (&quot;residual risk is acceptable for the defined operation&quot;), decomposed into sub-claims per hazard, each supported by an <strong>argument</strong> (the mitigation strategy) and <strong>evidence</strong> (from M14, tests, analysis, fault injection, reliability), with the <em>fidelity</em> of that evidence stated (CEC-06). Crucially, it also states <strong>residual risk</strong> and <strong>assumptions/limits</strong> honestly. This is the goal-structured argument a reviewer or regulator evaluates, and its integrity depends on being falsifiable (EI-15).</p>
+<h3>6.7 Residual risk and acceptability</h3>
+<p>No machine is zero-risk; the question is whether residual risk is <strong>acceptable</strong>, reduced as low as reasonably practicable and below a threshold appropriate to the operation and those exposed. Acceptability is a <em>judgment</em>, informed by likelihood × severity, by who bears the risk (a worker did not consent the way an operator did), and by comparison to the status quo (manual harvest has its own risks). The safety case names the residual risk explicitly rather than implying zero, because an honest small residual is trustworthy where a claimed zero is not (EI-15).</p>
+<h3>6.8 Ethics and responsible deployment</h3>
+<p>Engineering evidence cannot settle whether the machine <em>should</em> deploy. Responsible deployment weighs:</p>
+<ul>
+<li><strong>Labor.</strong> The machine displaces, changes, and concentrates agricultural work; who benefits and who bears the cost is an engineering-adjacent responsibility, not an externality.</li>
+<li><strong>Worker safety.</strong> People share the field; their safety depends on design choices (keep-clear, detection of humans, safe interaction) they did not make and often cannot see.</li>
+<li><strong>Environment.</strong> Energy source, materials, soil impact, and lifecycle footprint (-&gt;M16).</li>
+<li><strong>Data &amp; accountability.</strong> The machine collects data about land, yield, and possibly people; who owns it, who is accountable when it fails, and how failures are investigated.</li>
+<li><strong>Dual-use / misuse and distributive effects.</strong> Capability concentrated in those who can afford it; potential for misuse; effects on small vs. large growers.</li>
+<li><strong>Where not to operate.</strong> The humility to bound the machine's deployment, conditions, proximity to people, uses, it should refuse. Bounding <em>out</em> is a design decision.</li>
+</ul>
+<p>The engineer's professional responsibility (ABET SO4) is to face these, not externalize them.</p>
+<h3>6.9 Safe deployment and operations</h3>
+<p>Certification is not the end; safe <em>operation</em> requires defined operating limits (the envelope, M10), human-interaction rules (keep-clear zones, human detection, predictable behavior), maintenance safety (lockout/tagout, stored-energy bleed-down before service), operator training, and an <strong>incident-response</strong> plan (how a harm is detected, stopped, reported, investigated, and fixed, reliability/safety growth). The safety case is a living document, updated as the field reveals what the analysis missed.</p>
+<figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A risk-ranked hazard register plotted on a severity-by-likelihood matrix: each hazard to people, fruit, or property is placed by severity and likelihood, cells are shaded by risk (severity times likelihood), and mitigation is prioritized toward the highest-risk hazards in the upper-right." font-family="'IBM Plex Mono',monospace">
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Risk-ranked hazard register (R = S x L)</text>
+<rect x="112" y="210" width="68" height="38" fill="var(--accent)" fill-opacity="0.1" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="112" y="172" width="68" height="38" fill="var(--accent)" fill-opacity="0.1" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="112" y="134" width="68" height="38" fill="var(--accent)" fill-opacity="0.1" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="112" y="96" width="68" height="38" fill="var(--accent)" fill-opacity="0.1" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="112" y="58" width="68" height="38" fill="var(--warn)" fill-opacity="0.13" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="180" y="210" width="68" height="38" fill="var(--accent)" fill-opacity="0.1" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="180" y="172" width="68" height="38" fill="var(--accent)" fill-opacity="0.1" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="180" y="134" width="68" height="38" fill="var(--warn)" fill-opacity="0.13" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="180" y="96" width="68" height="38" fill="var(--warn)" fill-opacity="0.13" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="180" y="58" width="68" height="38" fill="var(--danger)" fill-opacity="0.15" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="248" y="210" width="68" height="38" fill="var(--accent)" fill-opacity="0.1" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="248" y="172" width="68" height="38" fill="var(--warn)" fill-opacity="0.13" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="248" y="134" width="68" height="38" fill="var(--danger)" fill-opacity="0.15" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="248" y="96" width="68" height="38" fill="var(--danger)" fill-opacity="0.15" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="248" y="58" width="68" height="38" fill="var(--danger)" fill-opacity="0.26" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="316" y="210" width="68" height="38" fill="var(--accent)" fill-opacity="0.1" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="316" y="172" width="68" height="38" fill="var(--warn)" fill-opacity="0.13" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="316" y="134" width="68" height="38" fill="var(--danger)" fill-opacity="0.15" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="316" y="96" width="68" height="38" fill="var(--danger)" fill-opacity="0.26" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="316" y="58" width="68" height="38" fill="var(--danger)" fill-opacity="0.26" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="384" y="210" width="68" height="38" fill="var(--warn)" fill-opacity="0.13" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="384" y="172" width="68" height="38" fill="var(--danger)" fill-opacity="0.15" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="384" y="134" width="68" height="38" fill="var(--danger)" fill-opacity="0.26" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="384" y="96" width="68" height="38" fill="var(--danger)" fill-opacity="0.26" stroke="var(--border)" stroke-width="0.6"/>
+<rect x="384" y="58" width="68" height="38" fill="var(--danger)" fill-opacity="0.26" stroke="var(--border)" stroke-width="0.6"/>
+<text x="282.0" y="266" text-anchor="middle" font-size="8" fill="var(--text-muted)">likelihood L (per cycle / hour) -&gt;</text>
+<text x="146" y="257" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">1</text>
+<text x="214" y="257" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">2</text>
+<text x="282" y="257" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">3</text>
+<text x="350" y="257" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">4</text>
+<text x="418" y="257" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">5</text>
+<text x="82" y="153.0" text-anchor="middle" font-size="8" fill="var(--text-muted)" transform="rotate(-90 82 153.0)">severity S -&gt;</text>
+<text x="104" y="232" text-anchor="end" font-size="6.6" fill="var(--text-muted)">1</text>
+<text x="104" y="194" text-anchor="end" font-size="6.6" fill="var(--text-muted)">2</text>
+<text x="104" y="156" text-anchor="end" font-size="6.6" fill="var(--text-muted)">3</text>
+<text x="104" y="118" text-anchor="end" font-size="6.6" fill="var(--text-muted)">4</text>
+<text x="104" y="80" text-anchor="end" font-size="6.6" fill="var(--text-muted)">5</text>
+<text x="418" y="64" text-anchor="middle" font-size="6.6" fill="var(--danger-text)">highest risk</text>
+<circle cx="214" cy="70" r="4.5" fill="var(--danger)" stroke="var(--bg)" stroke-width="0.8"/>
+<circle cx="200" cy="113" r="4.5" fill="var(--danger)" stroke="var(--bg)" stroke-width="0.8"/>
+<circle cx="228" cy="123" r="4.5" fill="var(--warn)" stroke="var(--bg)" stroke-width="0.8"/>
+<circle cx="282" cy="153" r="4.5" fill="var(--danger)" stroke="var(--bg)" stroke-width="0.8"/>
+<circle cx="214" cy="153" r="4.5" fill="var(--warn)" stroke="var(--bg)" stroke-width="0.8"/>
+<circle cx="350" cy="191" r="4.5" fill="var(--accent-2)" stroke="var(--bg)" stroke-width="0.8"/>
+<circle cx="138" cy="71" r="4.5" fill="var(--danger)" stroke="var(--bg)" stroke-width="0.8"/>
+<circle cx="156" cy="86" r="4.5" fill="var(--danger)" stroke="var(--bg)" stroke-width="0.8"/>
+<rect x="486" y="58" width="258" height="86" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="498" y="76" font-size="8.2" fill="var(--text-primary)" font-weight="700">Harm categories</text>
+<circle cx="504" cy="91" r="4.5" fill="var(--danger)"/>
+<text x="516" y="94" font-size="7" fill="var(--text-secondary)">people (struck/crushed, energy, roll-over)</text>
+<circle cx="504" cy="106" r="4.5" fill="var(--accent-2)"/>
+<text x="516" y="109" font-size="7" fill="var(--text-secondary)">fruit (bruise/drop, economic)</text>
+<circle cx="504" cy="121" r="4.5" fill="var(--warn)"/>
+<text x="516" y="124" font-size="7" fill="var(--text-secondary)">property/self (tip-over, collision, fire)</text>
+<text x="486" y="164" font-size="8.4" fill="var(--text-primary)" font-weight="700">Ranked by R (mitigate top-down):</text>
+<text x="486" y="180" font-size="7.2" fill="var(--text-secondary)">1. arm/payload strike  <tspan fill="var(--text-muted)">(S5 x L2 = 10)</tspan></text>
+<text x="486" y="193" font-size="7.2" fill="var(--text-secondary)">2. pinch point  <tspan fill="var(--text-muted)">(S3 x L3 = 9)</tspan></text>
+<text x="486" y="206" font-size="7.2" fill="var(--text-secondary)">3. stored-energy release  <tspan fill="var(--text-muted)">(S4 x L2 = 8)</tspan></text>
+<text x="486" y="219" font-size="7.2" fill="var(--text-secondary)">4. tip-over  <tspan fill="var(--text-muted)">(S4 x L2 = 8)</tspan></text>
+<text x="486" y="232" font-size="7.2" fill="var(--text-secondary)">5. bruise / drop  <tspan fill="var(--text-muted)">(S2 x L4 = 8)</tspan></text>
+<text x="486" y="245" font-size="7.2" fill="var(--text-secondary)">6. collision  <tspan fill="var(--text-muted)">(S3 x L2 = 6)</tspan></text>
+<text x="20" y="300" font-size="7.8" fill="var(--text-muted)">Severity and likelihood from the M14 FMEA / reliability data. Prioritize mitigation by R, the dominant risk (an EI-05-style focus). Coverage must</text>
+<text x="20" y="311" font-size="7.8" fill="var(--text-muted)">include combined faults (both stored-energy domains, M9 + M12) and adversarial conditions. A hazard missed here is a hazard unmitigated.</text>
+</svg></div><figcaption><span class="fid">F-M15-1</span>Risk-ranked hazard register (severity x likelihood). Each hazard (to people: struck/crushed, stored-energy release, pinch, slope roll-over; to fruit: bruise/drop; to property: tip-over, collision, fire) is placed on a severity-by-likelihood matrix, cells shaded by risk R = S x L. Severity and likelihood come from the M14 FMEA/reliability data; mitigation is prioritized by R (the dominant risk, EI-05-style). Coverage must include combined faults (M9+M12 stored energy) and adversarial conditions. Sections 6.2 and 7.1.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Defense in depth: four independent safety layers each block a hazard except through their residual gap, and because the gaps are misaligned no single failure reaches harm; a common-cause fault, however, can open a gap in every layer at once, which is what the safety case must rule out." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/></marker><marker id="r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--danger)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Defense in depth: no single failure defeats safety</text>
+<rect x="14" y="150" width="104" height="56" rx="8" fill="var(--surface)" stroke="var(--danger)" stroke-width="1.4"/>
+<text x="66" y="172" text-anchor="middle" font-size="8.5" fill="var(--danger-text)" font-weight="700">HAZARD</text>
+<text x="66" y="186" text-anchor="middle" font-size="7" fill="var(--text-muted)">over-force /</text>
+<text x="66" y="196" text-anchor="middle" font-size="7" fill="var(--text-muted)">unsafe motion</text>
+<rect x="180" y="70" width="64" height="256" rx="9" fill="var(--info)" fill-opacity="0.08" stroke="var(--info)" stroke-width="1.3"/>
+<circle cx="212" cy="132" r="13" fill="var(--surface-3)" stroke="var(--info)" stroke-width="1" stroke-dasharray="2 2"/>
+<text x="212" y="64" text-anchor="middle" font-size="8.5" fill="var(--info)" font-weight="700">Envelope limits</text>
+<text x="212" y="340" text-anchor="middle" font-size="7.3" fill="var(--text-secondary)">EI-10/12</text>
+<text x="212" y="351" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">refuse/degrade outside safe envelope</text>
+<rect x="312" y="70" width="64" height="256" rx="9" fill="var(--info)" fill-opacity="0.08" stroke="var(--info)" stroke-width="1.3"/>
+<circle cx="344" cy="250" r="13" fill="var(--surface-3)" stroke="var(--info)" stroke-width="1" stroke-dasharray="2 2"/>
+<text x="344" y="64" text-anchor="middle" font-size="8.5" fill="var(--info)" font-weight="700">Bounded learner</text>
+<text x="344" y="340" text-anchor="middle" font-size="7.3" fill="var(--text-secondary)">EI-07</text>
+<text x="344" y="351" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">clip to verified bounds + fallback</text>
+<rect x="444" y="70" width="64" height="256" rx="9" fill="var(--info)" fill-opacity="0.08" stroke="var(--info)" stroke-width="1.3"/>
+<circle cx="476" cy="166" r="13" fill="var(--surface-3)" stroke="var(--info)" stroke-width="1" stroke-dasharray="2 2"/>
+<text x="476" y="64" text-anchor="middle" font-size="8.5" fill="var(--info)" font-weight="700">Independent monitor</text>
+<text x="476" y="340" text-anchor="middle" font-size="7.3" fill="var(--text-secondary)">EI-11</text>
+<text x="476" y="351" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">stop/safe, software-independent</text>
+<rect x="576" y="70" width="64" height="256" rx="9" fill="var(--info)" fill-opacity="0.08" stroke="var(--info)" stroke-width="1.3"/>
+<circle cx="608" cy="288" r="13" fill="var(--surface-3)" stroke="var(--info)" stroke-width="1" stroke-dasharray="2 2"/>
+<text x="608" y="64" text-anchor="middle" font-size="8.5" fill="var(--info)" font-weight="700">Physical bounds</text>
+<text x="608" y="340" text-anchor="middle" font-size="7.3" fill="var(--text-secondary)">EI-09</text>
+<text x="608" y="351" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">relief + compliance, physics-speed</text>
+<line x1="118" y1="206" x2="182" y2="206" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#g)"/>
+<text x="150" y="222" text-anchor="middle" font-size="7.5" fill="var(--accent)">blocked</text>
+<text x="150" y="232" text-anchor="middle" font-size="7" fill="var(--text-muted)">(hits solid layer)</text>
+<text x="150" y="250" text-anchor="middle" font-size="9" fill="var(--accent)" font-weight="700">-&gt; SAFE</text>
+<line x1="118" y1="100" x2="712" y2="100" stroke="var(--danger)" stroke-width="2" stroke-dasharray="7 3" marker-end="url(#r)"/>
+<circle cx="212" cy="100" r="9" fill="var(--surface-3)" stroke="var(--danger)" stroke-width="1.6"/>
+<circle cx="344" cy="100" r="9" fill="var(--surface-3)" stroke="var(--danger)" stroke-width="1.6"/>
+<circle cx="476" cy="100" r="9" fill="var(--surface-3)" stroke="var(--danger)" stroke-width="1.6"/>
+<circle cx="608" cy="100" r="9" fill="var(--surface-3)" stroke="var(--danger)" stroke-width="1.6"/>
+<rect x="676" y="78" width="72" height="44" rx="8" fill="var(--danger)" fill-opacity="0.12" stroke="var(--danger)" stroke-width="1.4"/>
+<text x="712" y="98" text-anchor="middle" font-size="9" fill="var(--danger-text)" font-weight="700">HARM</text>
+<text x="712" y="111" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">reached</text>
+<text x="126" y="92" font-size="8" fill="var(--danger-text)" font-weight="700">common-cause fault: one root cause opens a gap in every layer at once</text>
+<text x="20" y="366" font-size="8.3" fill="var(--text-secondary)">Layers are independent, so misaligned residual gaps mean no single failure reaches harm. Independence is certified by tracing each layer's</text>
+<text x="20" y="378" font-size="8.3" fill="var(--text-muted)">inputs, clock, power, compute, and assumptions (Sec. 6.5); the minimal hardware controller breaks the last software dependency.</text>
+<text x="20" y="391" font-size="8.3" fill="var(--danger-text)">Common-cause failure (one fault disabling a function AND its guard) is the safety case's most important thing to rule out.</text>
+</svg></div><figcaption><span class="fid">F-M15-3</span>Defense-in-depth layers and the common-cause concern. Four independent safety layers (envelope limits EI-10/12, bounded learner EI-07, independent monitor EI-11, physical bounds EI-09) each block the hazard except through a residual gap; because the gaps are misaligned, no single failure reaches harm. A common-cause fault can open a gap in every layer at once, which is what the safety case must rule out. Independence is certified by tracing each layer's inputs, clock, power, compute, and assumptions. Sections 6.4 and 6.5.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The safety case as a goal-structured argument: a top claim that residual risk is acceptable is decomposed per hazard into sub-claims, each supported by a mitigation strategy and by evidence with its fidelity stated, and the case states residual risk and assumptions honestly and must be falsifiable." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<rect x="268" y="40" width="224" height="46" rx="5" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="275" y="52" font-size="6.5" fill="var(--accent)" font-weight="700">CLAIM (top goal)</text>
+<text x="380.0" y="70.0" text-anchor="middle" font-size="8" fill="var(--text-primary)" font-weight="700">residual risk is acceptable</text>
+<text x="380.0" y="81.0" text-anchor="middle" font-size="6.8" fill="var(--text-muted)">for the defined operation</text>
+<ellipse cx="620" cy="63" rx="108" ry="24" fill="var(--surface-2)" stroke="var(--accent-2)" stroke-width="1.2"/>
+<text x="620" y="58" text-anchor="middle" font-size="6.5" fill="var(--accent-2)" font-weight="700">CONTEXT</text>
+<text x="620" y="70" text-anchor="middle" font-size="6.8" fill="var(--text-muted)">defined envelope (slope, thermal, cultivar)</text>
+<line x1="492" y1="63" x2="512" y2="63" stroke="var(--border-strong)" stroke-width="1.1"/>
+<polygon points="274.0,104 510.0,104 486.0,144 250.0,144" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.3"/>
+<text x="380" y="117" text-anchor="middle" font-size="6.5" fill="var(--warn-text)" font-weight="700">STRATEGY</text>
+<text x="380" y="128" text-anchor="middle" font-size="7.2" fill="var(--text-secondary)">argue over each identified hazard</text>
+<text x="380" y="138" text-anchor="middle" font-size="6.5" fill="var(--text-muted)">(M15 hazard register, one sub-claim per hazard)</text>
+<line x1="380" y1="86" x2="380" y2="104" stroke="var(--border-strong)" stroke-width="1.3" marker-end="url(#a)"/>
+<rect x="96" y="162" width="220" height="44" rx="5" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="103" y="174" font-size="6.5" fill="var(--accent)" font-weight="700">SUB-CLAIM</text>
+<text x="206.0" y="191.0" text-anchor="middle" font-size="8" fill="var(--text-primary)" font-weight="700">no bruise (hazard A)</text>
+<rect x="444" y="162" width="220" height="44" rx="5" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="451" y="174" font-size="6.5" fill="var(--accent)" font-weight="700">SUB-CLAIM</text>
+<text x="554.0" y="191.0" text-anchor="middle" font-size="8" fill="var(--text-primary)" font-weight="700">no tip-over (hazard B)</text>
+<line x1="320" y1="144" x2="206" y2="162" stroke="var(--border-strong)" stroke-width="1.3" marker-end="url(#a)"/>
+<line x1="440" y1="144" x2="554" y2="162" stroke="var(--border-strong)" stroke-width="1.3" marker-end="url(#a)"/>
+<polygon points="120.0,220 316.0,220 292.0,258 96.0,258" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.3"/>
+<text x="206" y="233" text-anchor="middle" font-size="6.5" fill="var(--warn-text)" font-weight="700">STRATEGY</text>
+<text x="206" y="244" text-anchor="middle" font-size="7.2" fill="var(--text-secondary)">grip-force window + relief</text>
+<text x="206" y="254" text-anchor="middle" font-size="6.5" fill="var(--text-muted)">(EI-09 physical bound)</text>
+<polygon points="468.0,220 664.0,220 640.0,258 444.0,258" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.3"/>
+<text x="554" y="233" text-anchor="middle" font-size="6.5" fill="var(--warn-text)" font-weight="700">STRATEGY</text>
+<text x="554" y="244" text-anchor="middle" font-size="7.2" fill="var(--text-secondary)">track width + low CoG + slope limit</text>
+<text x="554" y="254" text-anchor="middle" font-size="6.5" fill="var(--text-muted)">(M10 stability)</text>
+<line x1="206" y1="206" x2="206" y2="220" stroke="var(--border-strong)" stroke-width="1.3" marker-end="url(#a)"/>
+<line x1="554" y1="206" x2="554" y2="220" stroke="var(--border-strong)" stroke-width="1.3" marker-end="url(#a)"/>
+<rect x="103.0" y="278" width="206" height="40" rx="20.0" fill="var(--info)" fill-opacity="0.12" stroke="var(--info)" stroke-width="1.3"/>
+<text x="206" y="291" text-anchor="middle" font-size="6.5" fill="var(--info)" font-weight="700">EVIDENCE</text>
+<text x="206" y="302" text-anchor="middle" font-size="7" fill="var(--text-secondary)">M14 tests, fault injection</text>
+<text x="206" y="312" text-anchor="middle" font-size="6.5" fill="var(--accent)">fidelity: validated contact rung + field</text>
+<rect x="451.0" y="278" width="206" height="40" rx="20.0" fill="var(--info)" fill-opacity="0.12" stroke="var(--info)" stroke-width="1.3"/>
+<text x="554" y="291" text-anchor="middle" font-size="6.5" fill="var(--info)" font-weight="700">EVIDENCE</text>
+<text x="554" y="302" text-anchor="middle" font-size="7" fill="var(--text-secondary)">dynamic twin + field trials</text>
+<text x="554" y="312" text-anchor="middle" font-size="6.5" fill="var(--accent)">fidelity: validated (CR-03)</text>
+<line x1="206" y1="258" x2="206" y2="278" stroke="var(--border-strong)" stroke-width="1.3" marker-end="url(#a)"/>
+<line x1="554" y1="258" x2="554" y2="278" stroke="var(--border-strong)" stroke-width="1.3" marker-end="url(#a)"/>
+<rect x="40" y="332" width="680" height="34" rx="8" fill="var(--surface-2)" stroke="var(--danger)" stroke-opacity="0.6"/>
+<text x="52" y="348" font-size="8.2" fill="var(--danger-text)" font-weight="700">RESIDUAL RISK + ASSUMPTIONS / LIMITS, stated honestly.</text>
+<text x="52" y="360" font-size="7.8" fill="var(--text-muted)">The case is what a reviewer or regulator evaluates; its integrity depends on being falsifiable (EI-15). Evidence is only as strong as its fidelity rung (CEC-06).</text>
+</svg></div><figcaption><span class="fid">F-M15-4</span>The safety case: claim, argument, evidence, residual risk. A goal-structured argument: a top claim (residual risk acceptable for the defined operation) decomposed per hazard into sub-claims, each supported by a mitigation strategy and by evidence with its fidelity stated (CEC-06/M14). The case states residual risk and assumptions honestly and must be falsifiable (EI-15). Section 6.6.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 265" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The machine stores energy in two domains, pressurized fluid and the battery, each a hazard on its own (burst or sudden release; arc or fire) and capable of a combined fault where one energizes or breaches the other; the safety case treats them together as a common-cause concern rather than as two separate problems." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Two stored-energy domains</text>
+<rect x="30" y="60" width="330" height="120" rx="10" fill="var(--surface)" stroke="var(--info)" stroke-width="1.6"/>
+<text x="46" y="80" font-size="9.5" fill="var(--info)" font-weight="700">PRESSURIZED FLUID (M9)</text>
+<text x="46" y="98" font-size="7.2" fill="var(--danger-text)">hazard: burst, sudden release</text>
+<text x="46" y="118" font-size="7.4" fill="var(--text-secondary)" font-weight="700">mitigation:</text>
+<text x="46" y="132" font-size="7" fill="var(--text-muted)">- relief / bleed-down</text>
+<text x="46" y="145" font-size="7" fill="var(--text-muted)">- burst-rated components</text>
+<text x="46" y="158" font-size="7" fill="var(--text-muted)">- guarding + lockout</text>
+<rect x="400" y="60" width="330" height="120" rx="10" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.6"/>
+<text x="416" y="80" font-size="9.5" fill="var(--warn-text)" font-weight="700">BATTERY / ELECTRICAL (M12)</text>
+<text x="416" y="98" font-size="7.2" fill="var(--danger-text)">hazard: arc, fire, thermal runaway</text>
+<text x="416" y="118" font-size="7.4" fill="var(--text-secondary)" font-weight="700">mitigation:</text>
+<text x="416" y="132" font-size="7" fill="var(--text-muted)">- fusing, isolation</text>
+<text x="416" y="145" font-size="7" fill="var(--text-muted)">- thermal management, safe-shutdown</text>
+<text x="416" y="158" font-size="7" fill="var(--text-muted)">- guarding + lockout</text>
+<line x1="360" y1="120" x2="400" y2="120" stroke="var(--danger)" stroke-width="1.8" stroke-dasharray="4 2"/>
+<rect x="300" y="192" width="160" height="30" rx="7" fill="var(--danger)" fill-opacity="0.10" stroke="var(--danger)"/>
+<text x="380" y="206" font-size="7.4" fill="var(--danger-text)" font-weight="700" text-anchor="middle">COMBINED FAULT</text>
+<text x="380" y="217" font-size="6.2" fill="var(--text-muted)" text-anchor="middle">electrical energizes a valve; collision breaches both</text>
+<line x1="195" y1="180" x2="330" y2="192" stroke="var(--danger)" stroke-width="1" stroke-dasharray="2 2"/>
+<line x1="565" y1="180" x2="430" y2="192" stroke="var(--danger)" stroke-width="1" stroke-dasharray="2 2"/>
+<text x="20" y="248" font-size="7.8" fill="var(--text-muted)">The safety case treats the two domains together, not as separate problems: a fault could involve both, so their interaction is a common-cause-failure</text>
+<text x="20" y="260" font-size="7.8" fill="var(--text-muted)">concern that a naive independent-layer product would miss (M15 residual-risk analysis). Section 6.3.</text>
+</svg></div><figcaption><span class="fid">F-M15-2</span>Two stored-energy domains. The machine stores energy in pressurized fluid (M9) and the battery (M12), each a hazard (burst/release; arc/fire) and capable of a combined fault (electrical energizing a valve, a collision breaching both). Mitigations: relief/bleed-down and burst-rated components (fluid); fusing, isolation, thermal management, safe-shutdown (electrical); guarding and lockout for both. The safety case treats them together, a common-cause concern. Section 6.3.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 285" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Responsible deployment weighs considerations engineering evidence cannot settle: labor displacement and who bears the cost, worker safety for people who share the field, environmental footprint, data ownership and accountability, dual-use and distributive effects between small and large growers, and the humility to bound where the machine should not operate." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Responsible-deployment considerations</text>
+<circle cx="380" cy="150" r="42" fill="var(--surface-2)" stroke="var(--accent)" stroke-width="1.6"/>
+<text x="380" y="146" font-size="8" fill="var(--accent)" font-weight="700" text-anchor="middle">responsible</text>
+<text x="380" y="158" font-size="8" fill="var(--accent)" font-weight="700" text-anchor="middle">deployment</text>
+<rect x="40" y="62" width="200" height="56" rx="8" fill="var(--surface)" stroke="var(--info)" stroke-width="1.4"/>
+<text x="52" y="80" font-size="8" fill="var(--info)" font-weight="700">Labor</text>
+<text x="52" y="96" font-size="6.4" fill="var(--text-muted)">displaces/concentrates work;</text>
+<text x="52" y="108" font-size="6.4" fill="var(--text-muted)">who benefits, who bears cost</text>
+<line x1="240" y1="90" x2="336" y2="132" stroke="var(--info)" stroke-width="1" stroke-dasharray="3 2" opacity="0.7"/>
+<rect x="40" y="150" width="200" height="56" rx="8" fill="var(--surface)" stroke="var(--danger)" stroke-width="1.4"/>
+<text x="52" y="168" font-size="8" fill="var(--danger)" font-weight="700">Worker safety</text>
+<text x="52" y="184" font-size="6.4" fill="var(--text-muted)">people share the field;</text>
+<text x="52" y="196" font-size="6.4" fill="var(--text-muted)">keep-clear, human detection</text>
+<line x1="240" y1="178" x2="336" y2="150" stroke="var(--danger)" stroke-width="1" stroke-dasharray="3 2" opacity="0.7"/>
+<rect x="40" y="238" width="200" height="56" rx="8" fill="var(--surface)" stroke="var(--accent-2)" stroke-width="1.4"/>
+<text x="52" y="256" font-size="8" fill="var(--accent-2)" font-weight="700">Environment</text>
+<text x="52" y="272" font-size="6.4" fill="var(--text-muted)">energy, materials, soil,</text>
+<text x="52" y="284" font-size="6.4" fill="var(--text-muted)">lifecycle footprint (->M16)</text>
+<line x1="240" y1="266" x2="336" y2="168" stroke="var(--accent-2)" stroke-width="1" stroke-dasharray="3 2" opacity="0.7"/>
+<rect x="540" y="62" width="200" height="56" rx="8" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.4"/>
+<text x="552" y="80" font-size="8" fill="var(--warn)" font-weight="700">Data + accountability</text>
+<text x="552" y="96" font-size="6.4" fill="var(--text-muted)">who owns yield/land data;</text>
+<text x="552" y="108" font-size="6.4" fill="var(--text-muted)">who is accountable on failure</text>
+<line x1="540" y1="90" x2="424" y2="132" stroke="var(--warn)" stroke-width="1" stroke-dasharray="3 2" opacity="0.7"/>
+<rect x="540" y="150" width="200" height="56" rx="8" fill="var(--surface)" stroke="var(--info)" stroke-width="1.4"/>
+<text x="552" y="168" font-size="8" fill="var(--info)" font-weight="700">Dual-use / equity</text>
+<text x="552" y="184" font-size="6.4" fill="var(--text-muted)">misuse; capability concentrated;</text>
+<text x="552" y="196" font-size="6.4" fill="var(--text-muted)">small vs large growers</text>
+<line x1="540" y1="178" x2="424" y2="150" stroke="var(--info)" stroke-width="1" stroke-dasharray="3 2" opacity="0.7"/>
+<rect x="540" y="238" width="200" height="56" rx="8" fill="var(--surface)" stroke="var(--danger)" stroke-width="1.4"/>
+<text x="552" y="256" font-size="8" fill="var(--danger)" font-weight="700">Where NOT to operate</text>
+<text x="552" y="272" font-size="6.4" fill="var(--text-muted)">bound proximity, conditions, uses;</text>
+<text x="552" y="284" font-size="6.4" fill="var(--text-muted)">bounding OUT is a design decision</text>
+<line x1="540" y1="266" x2="424" y2="168" stroke="var(--danger)" stroke-width="1" stroke-dasharray="3 2" opacity="0.7"/>
+<text x="20" y="272" font-size="7.8" fill="var(--text-muted)">Engineering evidence cannot settle whether the machine SHOULD deploy; that is a judgment. The safety case states residual risk honestly (EI-15), and the professional responsibility is to weigh these. Section 6.8.</text>
+</svg></div><figcaption><span class="fid">F-M15-6</span>Responsible-deployment considerations. Responsible deployment weighs considerations engineering evidence cannot settle: labor displacement and who bears the cost, worker safety for people who share the field, environmental footprint (->M16), data ownership and accountability, dual-use and distributive effects between small and large growers, and the humility to bound where the machine should not operate (bounding out is a design decision). The safety case states residual risk honestly (EI-15). Section 6.8.</figcaption></figure></section>
+<section class="section"><h2 id="sec-7-mathematics"><span class="secnum">7</span><span class="sectitle">Mathematics</span></h2><p>Rigor tier for M15: <strong>L2</strong>. Central results: risk quantification and the reaction-time safety margin (recapped from M11 in the safety frame).</p>
+<h3>7.1 Risk = severity × likelihood</h3>
+<p>Rank each hazard by severity <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span></span></span></span> and likelihood <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi></mrow><annotation encoding="application/x-tex">L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">L</span></span></span></span> (per cycle/hour, from the M14 FMEA/reliability data) into a risk <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo>=</mo><mi>S</mi><mo>×</mo><mi>L</mi></mrow><annotation encoding="application/x-tex">R=S\times L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">L</span></span></span></span>; prioritize mitigation by <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span></span></span></span> (the dominant <em>risk</em>, an EI-05-style focus). <em>Use:</em> a risk-ranked hazard register; direct safety effort where risk is highest.</p>
+<h3>7.2 Reaction-time safety margin (EI-11, safety frame)</h3>
+<p>For a hazard, require detection + reaction faster than harm: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mtext>detect</mtext></msub><mo>+</mo><msub><mi>L</mi><mtext>react</mtext></msub><mo>≤</mo><msub><mi>T</mi><mtext>harm</mtext></msub></mrow><annotation encoding="application/x-tex">L_\text{detect}+L_\text{react}\le T_\text{harm}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">detect</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">react</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">harm</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>, with margin. Physical bounds (relief, compliance, EI-09) act at physics speed, effectively <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mtext>react</mtext></msub><mo>≈</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">L_\text{react}\approx 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">react</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span> for the force hazard, providing margin the software monitor lacks. <em>Use:</em> certify each time-critical hazard is caught in time, and show where physics (not software) provides the guarantee.</p>
+<h3>7.3 Residual risk and defense-in-depth composition</h3>
+<p>With independent layers of failure probabilities <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">p_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>, the probability all fail (a hazard reaching harm) is <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mo>∏</mo><mi>i</mi></msub><msub><mi>p</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\prod_i p_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0497em;vertical-align:-0.2997em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∏</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.162em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> <strong>only if</strong> the layers are independent, which is exactly why independence (Section 6.5) is certified. Common-cause failure breaks the product (the layers fail together), so the residual is dominated by common-cause terms. <em>Use:</em> show residual risk is acceptably low <em>and</em> that the low number does not secretly rest on a common-cause assumption. <strong>Grad (L3):</strong> model common-cause with a beta-factor and show its dominance of the residual.</p>
+<figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The safety reaction-time margin: after a hazard begins, the software path must detect and react before the time-to-harm deadline, while the physical bounds (relief and compliance) act almost immediately at physics speed, buying margin that software alone cannot guarantee." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Reaction-time margin: physics speed vs software speed</text>
+<line x1="150" y1="180" x2="700" y2="180" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="425.0" y="204" font-size="8" fill="var(--text-muted)" text-anchor="middle">time after hazard onset -></text>
+<line x1="150" y1="60" x2="150" y2="186" stroke="var(--text-muted)" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="150" y="52" font-size="7.6" fill="var(--warn-text)" text-anchor="middle">hazard onset</text>
+<line x1="623" y1="52" x2="623" y2="186" stroke="var(--danger)" stroke-width="1.6" stroke-dasharray="5 3"/>
+<text x="623.0" y="46" font-size="8" fill="var(--danger-text)" font-weight="700" text-anchor="middle">T_harm (bruise / tip)</text>
+<rect x="150" y="86" width="187" height="20" fill="var(--info)" fill-opacity="0.55" stroke="var(--info)"/>
+<text x="243.5" y="100" font-size="7" fill="var(--text-on-accent)" text-anchor="middle">L_detect</text>
+<rect x="337" y="86" width="154" height="20" fill="var(--warn)" fill-opacity="0.55" stroke="var(--warn)"/>
+<text x="414.0" y="100" font-size="7" fill="var(--text-on-accent)" text-anchor="middle">L_react</text>
+<text x="144" y="100" font-size="7.6" fill="var(--info)" font-weight="end">software</text>
+<line x1="491" y1="96" x2="623" y2="96" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 2"/>
+<text x="557.0" y="82" font-size="6.8" fill="var(--accent)" text-anchor="middle">margin</text>
+<rect x="150" y="126" width="33" height="20" fill="var(--accent)" fill-opacity="0.7" stroke="var(--accent)"/>
+<text x="144" y="140" font-size="7.6" fill="var(--accent)" font-weight="end" text-anchor="end">physics</text>
+<text x="199.5" y="140" font-size="7" fill="var(--accent)">relief / compliance act (near-instant)</text>
+<line x1="183" y1="136" x2="623" y2="136" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 2"/>
+<text x="403.0" y="122" font-size="6.8" fill="var(--accent)" text-anchor="middle">large margin</text>
+<text x="20" y="228" font-size="8" fill="var(--text-muted)">Require L_detect + L_react &lt;= T_harm. Physical bounds (mechanical relief M9, passive compliance EI-09) act at physics speed, not</text>
+<text x="20" y="242" font-size="8" fill="var(--text-muted)">software speed, so they buy margin the software path cannot guarantee alone. M11 Section 7.4; M15 Section 6.4.</text>
+</svg></div><figcaption><span class="fid">F-M15-5</span>Reaction-time margin: physics vs software speed. After a hazard begins, the software path must detect and react before the time-to-harm deadline (L_detect + L_react <= T_harm), while the physical bounds (mechanical relief M9, passive compliance EI-09) act at physics speed, near-instantly, buying margin the software path cannot guarantee alone. M11 Section 7.4; M15 Section 6.4.</figcaption></figure></section>
+<section class="section"><h2 id="sec-8-engineering-principles"><span class="secnum">8</span><span class="sectitle">Engineering Principles</span></h2><ol>
+<li><strong>Safety is composed and argued</strong>, defense in depth plus a falsifiable safety case (EI-15).</li>
+<li><strong>Enumerate every hazard</strong>, including combined stored-energy faults (M9+M12).</li>
+<li><strong>Certify independence</strong> (EI-11): rule out common-cause failure, or the layers aren't independent.</li>
+<li><strong>Let physics provide the fastest guarantee</strong> (EI-09): relief/compliance act before software can.</li>
+<li><strong>State residual risk honestly</strong>, an honest small residual beats a claimed zero.</li>
+<li><strong>Face the ethics</strong>, labor, worker safety, environment, data, accountability, and where not to operate.</li>
+<li><strong>Safety is operational and living</strong>, limits, human-interaction rules, maintenance safety, incident response.</li>
+</ol>
+</section>
+<section class="section"><h2 id="sec-9-system-requirements"><span class="secnum">9</span><span class="sectitle">System Requirements</span></h2><p>Derived from the safety/ethics mission; certify prior mitigations. IDs continue; [-&gt;Doc B] formalizes. Targets [VERIFY@PUB].</p>
+<div class="twrap"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Type</th>
+<th>Requirement (abbreviated)</th>
+<th>Verification method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SR-S-03</td>
+<td>Safety</td>
+<td>A hazard analysis shall enumerate hazards to people/fruit/property, incl. combined stored-energy faults, with a risk-ranked register.</td>
+<td>Hazard analysis review</td>
+</tr>
+<tr>
+<td>SR-S-04</td>
+<td>Safety</td>
+<td>The independent safety monitor's independence (no common-cause with mission/hazard) and reaction time shall be certified (EI-11).</td>
+<td>Independence analysis + fault injection (M14)</td>
+</tr>
+<tr>
+<td>SR-S-05</td>
+<td>Safety</td>
+<td>The defense-in-depth mitigations (physical bounds EI-09, bounded learner EI-07, envelope EI-10/12) shall each be certified on M14 evidence.</td>
+<td>Safety-case review</td>
+</tr>
+<tr>
+<td>SR-S-06</td>
+<td>Safety</td>
+<td>Residual risk shall be assessed and argued acceptable for the defined operation, stated explicitly.</td>
+<td>Safety-case review</td>
+</tr>
+<tr>
+<td>SR-S-07</td>
+<td>Safety</td>
+<td>Human-interaction safety (keep-clear/human detection, predictable behavior) and maintenance safety (lockout, bleed-down) shall be specified.</td>
+<td>Review + test</td>
+</tr>
+<tr>
+<td>SR-E-01</td>
+<td>Ethics</td>
+<td>A responsible-deployment analysis (labor, worker safety, environment, data, accountability, where-not-to-operate) shall be documented.</td>
+<td>Review</td>
+</tr>
+<tr>
+<td>SR-E-02</td>
+<td>Ethics</td>
+<td>Operating limits shall bound the machine out of conditions/proximities it should not operate in.</td>
+<td>Review + runtime enforcement</td>
+</tr>
+</tbody>
+</table></div>
+<p>Traceability: SR-S-03 -&gt; M14 FMEA; <strong>SR-S-04/05 -&gt; EI-07/09/11, M14 fault injection</strong>; SR-S-06 -&gt; Section 6.7, EI-15; SR-S-07 -&gt; operations; SR-E-01/02 -&gt; ethics (SO4), M16.</p>
+</section>
+<section class="section"><h2 id="sec-10-design-decisions"><span class="secnum">10</span><span class="sectitle">Design Decisions</span></h2><ul>
+<li><strong>DD-90 Risk-ranked hazard register incl. combined stored-energy faults.</strong> <em>Rationale:</em> Section 6.2 to 6.3; coverage and prioritization. <em>Serves:</em> SR-S-03.</li>
+<li><strong>DD-91 Independence certification of the safety monitor</strong> (rule out common-cause; HW last resort). <em>Rationale:</em> Section 6.5, EI-11. <em>Serves:</em> SR-S-04.</li>
+<li><strong>DD-92 Defense-in-depth safety case (claim-argument-evidence, fidelity-tagged).</strong> <em>Rationale:</em> Section 6.4/Section 6.6, CEC-06. <em>Serves:</em> SR-S-05.</li>
+<li><strong>DD-93 Explicit residual-risk statement + acceptability argument.</strong> <em>Rationale:</em> Section 6.7, EI-15; honesty over a claimed zero. <em>Serves:</em> SR-S-06.</li>
+<li><strong>DD-94 Human-interaction &amp; maintenance-safety design</strong> (keep-clear, human detection, lockout, bleed-down). <em>Rationale:</em> Section 6.9. <em>Serves:</em> SR-S-07.</li>
+<li><strong>DD-95 Responsible-deployment analysis + operating-limit bounding.</strong> <em>Rationale:</em> Section 6.8, SO4. <em>Serves:</em> SR-E-01/02.</li>
+<li><strong>DD-96 Living safety case + incident-response plan.</strong> <em>Rationale:</em> Section 6.9; safety grows with field experience. <em>Serves:</em> SR-S-06.</li>
+</ul>
+</section>
+<section class="section"><h2 id="sec-11-trade-studies"><span class="secnum">11</span><span class="sectitle">Trade Studies</span></h2><h3>11.1 TS-29: Human-presence safety strategy</h3>
+<p><strong>Alternatives:</strong> (A) <strong>exclusion only</strong> (no people in the field during operation); (B) <strong>human detection + safe-stop</strong> (perception detects people, monitor stops); (C) <strong>collaborative</strong> (designed for close human proximity); (D) <strong>defense in depth: exclusion zone + detection + physical safe behavior</strong>. Scored 1 to 5 (weights illustrative; ratified in -&gt;Doc B/Doc E).</p>
+<div class="twrap"><table>
+<thead>
+<tr>
+<th>Criterion (weight)</th>
+<th style="text-align:center">A: Exclusion</th>
+<th style="text-align:center">B: Detect+stop</th>
+<th style="text-align:center">C: Collaborative</th>
+<th style="text-align:center">D: Defense-in-depth</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Risk reduction to people (0.32)</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">5</td>
+</tr>
+<tr>
+<td>Operational practicality in a working field (0.22)</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">4</td>
+</tr>
+<tr>
+<td>Verifiability of the safety claim (0.20)</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">4</td>
+</tr>
+<tr>
+<td>Dependence on perception (opaque) (0.14)</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">4</td>
+</tr>
+<tr>
+<td>Cost / complexity (0.12)</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">3</td>
+</tr>
+<tr>
+<td><strong>Weighted total</strong></td>
+<td style="text-align:center"><strong>3.86</strong></td>
+<td style="text-align:center"><strong>3.14</strong></td>
+<td style="text-align:center"><strong>2.52</strong></td>
+<td style="text-align:center"><strong>4.30</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Selected: D (defense in depth, exclusion zone + human detection + physically safe behavior).</strong> Combine an administrative exclusion zone during autonomous operation, human detection as a monitored layer, and physically safe behavior (compliance, bounded speed/force, predictable motion, the independent monitor) so that no <em>single</em> layer failing, including the opaque human-detector, permits harm. Pure collaborative operation is rejected at this stage: certifying safety for close human proximity with opaque perception exceeds what the evidence can support (a candid limit, EI-15). Recorded weakness: exclusion reduces some operational flexibility and relies on administrative controls that must be enforced, carried into deployment (SR-S-07/E-02).</p>
+<h3>11.2 TS-30: Safety-case rigor (summary)</h3>
+<p><strong>Alternatives:</strong> informal checklist, standards-aligned functional-safety case, goal-structured safety case with explicit residual risk. <strong>Criteria:</strong> rigor, reviewability, honesty about residual, effort. <strong>Outcome:</strong> <strong>goal-structured, standards-informed safety case with explicit residual-risk statements</strong>, a falsifiable claim-argument-evidence structure a reviewer can attack (EI-15), aligned with functional-safety practice [VERIFY@PUB standard], not a checklist that hides the residual.</p>
+<h3>11.3 Explicit Core Engineering Concept evaluation <em>(standing requirement)</em></h3>
+<p>The <strong>CEC set is complete</strong> (six anchors); the default outcome is &quot;existing anchor applied,&quot; and a new CEC requires an extraordinary case.</p>
+<ul>
+<li><strong>Safety-case methodology / hazard analysis / risk assessment.</strong> <em>Verdict: no new CEC.</em> Mastered <em>techniques</em>, captured in the safety thread, not a new analytical anchor.</li>
+<li><strong>The defense-in-depth safety architecture.</strong> <em>Verdict: no new CEC, this certifies the composition already anchored by EI-07/EI-09/EI-11</em>; M11 explicitly evaluated and declined a safety CEC, holding it as judgment + thread. That decision stands; M15 <em>certifies</em> the thread, it does not re-mint it. <em>No extraordinary case: safety is the composition of existing anchors, argued.</em></li>
+<li><strong>Evidence fidelity for safety claims.</strong> <em>Verdict: CEC-06 applied</em> (safety evidence carries its validated rung, exactly as in M14).</li>
+<li><strong>EI-15 (Safety Is a Property You Argue For)</strong> is added as this module's Engineering Insight, reinforcing EI-11/EI-14 and the whole defense-in-depth. <em>(No new CEC; one EI added, within discipline and the set-complete direction.)</em></li>
+</ul>
+<blockquote class="callout note">
+<p><strong>Cross-module synthesis note (lightweight).</strong> The safety case is where the course's judgment insights stop being separate lessons and become one argument: <strong>EI-09</strong> (physics bounds the worst case), <strong>EI-07</strong> (the learner is bounded), <strong>EI-11</strong> (the guard is independent), <strong>EI-10/EI-12</strong> (the envelope is respected), all verified <strong>EI-14</strong> (adversarially) on <strong>CEC-06</strong> (fidelity-appropriate) evidence, and <strong>EI-15</strong> is the meta-insight that binds them: none of it is safety until it is <em>argued</em>, honestly and falsifiably, as an explicit claim about residual risk.</p>
+</blockquote>
+<blockquote class="callout hook">
+<p><strong>Simulation-first hook.</strong> Safety evidence obeys CEC-06 with the highest bar: fidelity-sensitive and adversarial safety claims (human-interaction, stored-energy, monitor reaction) are field/HIL-validated (EI-14), and the twin supports only the claims its validated rungs admit, an unvalidated twin result is inadmissible in a safety case.</p>
+</blockquote>
+</section>
+<section class="section"><h2 id="sec-12-simulation-activities"><span class="secnum">12</span><span class="sectitle">Simulation Activities</span></h2><p>M15 runs at <strong>Prototype -&gt; Field -&gt; Deployment</strong> for certification; the twin/HIL supports only claims its validated rungs admit (CEC-06), and the highest-stakes claims are field/HIL-validated.</p>
+<p><strong>SA-1, Hazard analysis &amp; risk register.</strong> Build the risk-ranked hazard register (people/fruit/property, combined stored-energy faults) from the design and the M14 FMEA (Section 6.2 to 6.3, SR-S-03). <em>Outcome:</em> the coverage-complete hazard basis of the safety case.</p>
+<p><strong>SA-2, Fault-injection for safety certification.</strong> Reuse the M11/M14 fault-injection suite to certify the monitor's reaction time and the defense-in-depth layers under injected faults and adversarial conditions (Section 6.4 to 6.5, EI-11/EI-14, SR-S-04/05). <em>Outcome:</em> evidence the layers hold.</p>
+<p><strong>SA-3, Common-cause / independence analysis.</strong> Trace the monitor's dependencies (inputs, clock, power, compute, assumptions) and test whether any single fault disables both a function and its guard (Section 6.5, SR-S-04). <em>Outcome:</em> independence certified or a common-cause found and fixed.</p>
+<p><strong>SA-4, Residual-risk composition.</strong> Compose the defense-in-depth layer probabilities (Section 7.3), identify the common-cause-dominated residual, and assess acceptability (Section 6.7, SR-S-06). <em>Outcome:</em> an honest residual-risk number.</p>
+</section>
+<section class="section"><h2 id="sec-13-digital-twin-activities"><span class="secnum">13</span><span class="sectitle">Digital Twin Activities</span></h2><p><strong>DTA-1, Safety-evidence admissibility (CEC-06).</strong> Specify, per safety claim, the evidence and its fidelity rung, flagging which safety claims are field/HIL-mandatory (human-interaction, stored-energy, reaction time). <em>Outcome:</em> SR-S-05; a safety case that never rests on inadmissible twin evidence.</p>
+<p><strong>DTA-2, Adversarial safety scenarios (EI-14).</strong> Specify the adversarial/edge scenarios the safety case must survive (human in the path, slope + payload, combined stored-energy fault, monitor-node hang) and the pass criteria. <em>Outcome:</em> safety validated by attack, not demo.</p>
+<p><strong>DTA-3, Living safety-case &amp; incident-response linkage.</strong> Specify how field incidents update the hazard register and safety case (safety growth). <em>Outcome:</em> a living safety case (SR-S-06/DD-96).</p>
+</section>
+<section class="section"><h2 id="sec-14-hardware-activities"><span class="secnum">14</span><span class="sectitle">Hardware Activities</span></h2><p><em>(Tiered: certification and field protocols at specification level, safety's highest-stakes evidence is hardware/field.)</em></p>
+<p><strong>HA-1, Stored-energy safety verification.</strong> Specify tests of relief/bleed-down (fluid, M9), electrical isolation/shutdown (M12), and combined-fault behavior; verify lockout for maintenance (Section 6.3, SR-S-03/07). <em>Deliverable:</em> stored-energy certification evidence.</p>
+<p><strong>HA-2, Monitor independence &amp; reaction-time verification.</strong> Specify hardware fault-injection confirming the monitor (and HW safety controller) stops the machine within <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>T</mi><mtext>harm</mtext></msub></mrow><annotation encoding="application/x-tex">T_\text{harm}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">harm</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> independent of software (SR-S-04). <em>Deliverable:</em> independence &amp; reaction-time certification.</p>
+<p><strong>HA-3, Human-interaction safety verification.</strong> Specify verification of keep-clear enforcement, human detection performance (with its false-negative rate honestly bounded), and predictable safe behavior (SR-S-07). <em>Deliverable:</em> human-safety evidence (with residual stated).</p>
+</section>
+<section class="section"><h2 id="sec-15-software-activities"><span class="secnum">15</span><span class="sectitle">Software Activities</span></h2><p><strong>SWA-1, Safety-case toolchain &amp; traceability.</strong> Specify the goal-structured safety-case artifact linking claims -&gt; arguments -&gt; evidence (M14) -&gt; residual risk, with fidelity tags and version control (living document). <em>Outcome:</em> a reviewable, maintainable safety case.</p>
+<p><strong>SWA-2, Runtime safety-limit enforcement.</strong> Specify runtime enforcement of operating limits and where-not-to-operate bounds (envelope, proximity), integrated with the safety monitor (M11) and power/thermal management (M12). <em>Outcome:</em> the ethics/where-not-to-operate decision made enforceable (SR-E-02).</p>
+</section>
+<section class="section"><h2 id="sec-16-ros-2-integration"><span class="secnum">16</span><span class="sectitle">ROS 2 Integration</span></h2><p>M15 certifies, rather than changes, the M11 safety architecture. It consumes the safety monitor's logged activations, guard arbitration, and fault-injection results as <em>evidence</em>, and it specifies the runtime enforcement of operating limits and keep-clear/human-detection behavior within the existing node graph. The safety monitor and its hardware controller are the subject of the independence certification (Section 6.5). On-robot (CEC-04). The safety case cites the integrated system's behavior (M13) under adversarial and fault conditions (M14) as its evidence base.</p>
+</section>
+<section class="section"><h2 id="sec-17-ai-integration"><span class="secnum">17</span><span class="sectitle">AI Integration</span></h2><p>The machine's opaque learned components are a central safety and ethics concern, and this module certifies their containment rather than trusting them:</p>
+<ul>
+<li><strong>Bounded-learner certification (EI-07).</strong> The safety case shows learned outputs are contained by verified bounds and a deterministic fallback, tested adversarially (M14), the <em>system</em> is certified safe though the policy is not verifiable.</li>
+<li><strong>Human detection is a monitored layer, not a sole safeguard.</strong> Because a learned human-detector has a nonzero false-negative rate, the safety strategy (TS-29 D) never relies on it alone, defense in depth with exclusion and physically safe behavior. Its false-negative rate is <em>stated</em>, not hidden (EI-15).</li>
+<li><strong>Ethics of opaque decisions.</strong> Accountability for a learned component's failure, the data it was trained on, and its behavior on populations/conditions unseen in training are ethics questions (Section 6.8), not just engineering ones.</li>
+</ul>
+<p>The certified claim is about the <em>bounded system's</em> safety, with learned components' limits made explicit.</p>
+</section>
+<section class="section"><h2 id="sec-18-edge-computing-integration"><span class="secnum">18</span><span class="sectitle">Edge Computing Integration</span></h2><p>Safety-critical functions run on-robot (CEC-04), the no-cloud boundary is itself a safety property (no network dependency in the safety loop). This module certifies that the safety monitor's compute and power are available and independent (Section 6.5, tying to M12's safety-first power sequencing) and that safety functions meet their timing on the real edge under load (M14). A safety function that depends on the cloud, or that can be starved by perception load, is not independent, certified here.</p>
+</section>
+<section class="section"><h2 id="sec-19-fluid-power-integration"><span class="secnum">19</span><span class="sectitle">Fluid Power Integration</span></h2><p>The fluid grasp (M9) is central to the safety case in two opposite ways. As a <strong>hazard</strong>: pressurized fluid stores energy (burst, sudden release), and this is one of the two stored-energy domains the analysis treats together with the battery (Section 6.3, SR-S-03). As a <strong>mitigation</strong>: the mechanical relief and passive compliance (EI-09) are the machine's fastest, most trustworthy safety layer, acting at physics speed, bounding grip force below the bruise/injury threshold regardless of software (Section 6.4/Section 7.2). The safety case certifies both: that the stored-energy hazard is mitigated (relief, bleed-down, burst rating, guarding), and that the passive-safety physics still holds after a season of wear (M14 durability). Fluid power is simultaneously a risk to bound and the source of the strongest safety guarantee, a duality the safety case must state clearly.</p>
+</section>
+<section class="section lab"><h2 id="sec-24-laboratory-case-study-session"><span class="secnum">24</span><span class="sectitle">Laboratory / Case-Study Session</span></h2><p><strong>Lab M15, Building the Safety Case and Facing the Ethics</strong></p>
+<ul>
+<li><strong>Objectives.</strong> (1) Build a risk-ranked hazard register incl. combined stored-energy faults; (2) certify the safety monitor's independence and reaction time against fault-injection evidence; (3) construct a goal-structured safety case on M14 evidence with explicit residual risk; (4) analyze the deployment ethics and bound where-not-to-operate; (5) practice attacking the safety case (adversarial review).</li>
+<li><strong>Equipment.</strong> The M14 V&amp;V/reliability evidence and fault-injection results; the design (M7/M9/M10/M11/M12); a safety-case template; an ethics-framework reference [VERIFY@PUB]; notebook. <strong>Safety:</strong> any hardware follows lockout/bleed-down and the safety architecture.</li>
+<li><strong>Procedure.</strong>
+<ol>
+<li>Enumerate hazards (people/fruit/property, combined stored-energy) and rank by risk (Section 6.2 to 6.3, Section 7.1, SR-S-03).</li>
+<li>Trace the monitor's dependencies; test for common-cause; certify independence and reaction time on fault-injection evidence (Section 6.5, EI-11, SR-S-04).</li>
+<li>Build the safety case: for each top hazard, claim -&gt; mitigation argument -&gt; M14 evidence (with fidelity, CEC-06) -&gt; residual risk; state acceptability (Section 6.6 to 6.7, SR-S-05/06).</li>
+<li>Analyze deployment ethics (labor, worker safety, environment, data, accountability); specify where-not-to-operate bounds (Section 6.8, SR-E-01/02).</li>
+<li>Adversarial review: a peer team attacks the safety case; strengthen or honestly concede each challenged claim (EI-15).</li>
+</ol>
+</li>
+<li><strong>Data collection.</strong> Hazard/risk register; independence analysis; safety case with residual risk; ethics analysis and operating bounds; adversarial-review findings.</li>
+<li><strong>Analysis.</strong> What is the dominant risk? Is the monitor truly independent (any common-cause)? Which claims survive adversarial review, and which reveal a weak residual? What deployment bounds does responsibility require?</li>
+<li><strong>Discussion.</strong> Why is safety an argument, not a checklist (EI-15)? Why certify independence specifically (EI-11)? Why does physics give the fastest guarantee (EI-09)? Which ethics questions can engineering <em>not</em> settle?</li>
+<li><strong>Deliverables.</strong> A safety case (claim-argument-evidence with residual risk) + a responsible-deployment analysis with operating bounds, 6 to 8 pages.</li>
+<li><strong>Rubric (100 pts).</strong> Hazard/risk register (16); independence certification (18, EI-11); safety case with residual risk (26, EI-15/CEC-06); ethics &amp; where-not-to-operate (24, SO4); adversarial-review response (6); communication (10). <em>Graduate band adds:</em> common-cause (beta-factor) residual modeling (Section 7.3 grad) and a cited source.</li>
+<li><strong>Expected results.</strong> A risk register with a clear dominant hazard; an independence analysis that finds at least one subtle shared dependency to fix; a safety case whose honesty is <em>strengthened</em> by stating a nonzero residual; an ethics analysis that yields real operating bounds (not platitudes); and an adversarial review that exposes at least one over-claim, the case for EI-15.</li>
+</ul>
+</section>
+<section class="section hw"><h2 id="sec-25-homework"><span class="secnum">25</span><span class="sectitle">Homework</span></h2><p>Tiered: all do 1 to 4; graduate add 5 to 6.</p>
+<ol>
+<li><strong>Hazard/risk.</strong> Enumerate five machine hazards (incl. one combined stored-energy fault); rank by severity × likelihood; identify the dominant risk.</li>
+<li><strong>Independence.</strong> For the safety monitor, list its dependencies and identify one plausible common-cause failure; propose how to break it (EI-11).</li>
+<li><strong>Safety case.</strong> For one hazard, write the claim -&gt; argument -&gt; evidence (from M14) -&gt; residual risk, tagging evidence fidelity (CEC-06); state whether the residual is acceptable and why.</li>
+<li><strong>Ethics.</strong> Analyze one deployment-ethics dimension (labor, worker safety, data, or environment) for the machine; propose a responsible design/operating choice and a where-not-to-operate bound.</li>
+<li><strong>(Grad) Common-cause residual.</strong> Model residual risk for a two-layer defense with a common-cause (beta) factor; show how common-cause dominates the residual and what independence buys.</li>
+<li><strong>(Grad) Contested ethics.</strong> Take a genuinely contested deployment question (e.g., labor displacement) and lay out the strongest cases on multiple sides; state what an engineer's professional responsibility requires regardless of which side one favors.</li>
+</ol>
+</section>
+<section class="section quiz"><h2 id="sec-26-quiz"><span class="secnum">26</span><span class="sectitle">Quiz</span></h2><ol>
+<li><strong>(MC)</strong> A safety case is: (a) a checklist of features; (b) a falsifiable claim-argument-evidence argument that residual risk is acceptable; (c) a datasheet; (d) a demo.</li>
+<li><strong>(MC)</strong> Defense in depth reduces risk only if the layers are: (a) identical; (b) independent (no common-cause failure); (c) software; (d) fast.</li>
+<li><strong>(MC)</strong> The fastest, most trustworthy safety guarantee for grip force comes from: (a) the AI policy; (b) the mechanical relief/compliance acting at physics speed (EI-09); (c) the cloud; (d) the operator.</li>
+<li><strong>(MC)</strong> An honest safety case states residual risk as: (a) zero; (b) an explicit nonzero value argued acceptable; (c) unknown; (d) not applicable.</li>
+<li><strong>(Short)</strong> State EI-15 and why it matters.</li>
+<li><strong>(Short)</strong> Name the two stored-energy domains and why they're treated together.</li>
+<li><strong>(Design)</strong> Why is human detection never the sole safeguard for people in the field?</li>
+<li><strong>(Design)</strong> How does certifying independence (EI-11) change the residual-risk math?</li>
+<li><strong>(Critical thinking)</strong> Why can engineering evidence not settle whether the machine <em>should</em> deploy?</li>
+<li><strong>(Critical thinking)</strong> Why is a validation/safety report that found <em>no</em> failures suspicious?</li>
+</ol>
+</section>
+<section class="section challenge"><h2 id="sec-27-challenge-problems"><span class="secnum">27</span><span class="sectitle">Challenge Problems</span></h2><ul>
+<li><strong>CP-M15-A, The full safety case.</strong> Construct the machine's top-level safety case: the top claim, sub-claims per dominant hazard, mitigation arguments, M14 evidence (with fidelity), the certified independence, and the explicit residual risk, and identify the single weakest link a regulator would attack first. (The capstone acceptance rests on this.)</li>
+<li><strong>CP-M15-B, Common-cause hunt.</strong> Systematically search the defense-in-depth layers for common-cause failures (shared power, clock, compute, assumptions, sensing); for each found, propose a fix that restores independence; quantify the residual before/after (EI-11). (Feeds deployment.)</li>
+<li><strong>CP-M15-C, Responsible-deployment brief.</strong> Write a responsible-deployment brief for a real grower context: labor impact and mitigation, worker-safety design, environmental footprint (-&gt;M16), data governance, accountability for failures, and explicit where-not-to-operate bounds. Defend a recommendation to deploy, deploy-with-limits, or not-yet. (Directly informs M16/M17.)</li>
+</ul>
+</section>
+<section class="section"><h2 id="sec-engineering-design-review" class="unnum">Engineering Design Review</h2><p><em>Not graded. The questions a review board would ask; argue with evidence, and expect the board to attack.</em></p>
+<ol>
+<li><strong>Assumptions.</strong> Your safety case assumes the defense-in-depth layers are independent. Trace each layer's dependencies (power, clock, compute, sensing, assumptions) and show there is no common-cause failure, or admit where one exists and how the residual accounts for it (EI-11).</li>
+<li><strong>Tradeoffs.</strong> You chose exclusion + detection + physically-safe behavior over collaborative operation. Defend that to a reviewer who wants people working alongside the machine for productivity. What can you <em>not</em> yet certify, and is deferring collaboration honest or overcautious (EI-15)?</li>
+<li><strong>Risk.</strong> State your residual risk explicitly. Is it truly as-low-as-reasonably-practicable, and does the number secretly rest on a common-cause assumption or an inadmissible (over-fidelity) piece of evidence (CEC-06)?</li>
+<li><strong>Verification.</strong> Which safety claims rest on twin evidence, and are those claims fidelity-appropriate (CEC-06)? Which are field/HIL-mandatory, and have you gathered that evidence or only specified it (EI-14)?</li>
+<li><strong>Subsystem interaction.</strong> The mechanical relief (M9) is both a hazard component (stored energy) and a safety mitigation (physics-speed bound). If it drifts with wear (M14), does it fail toward hazard or toward safety, and who owns that failure mode across reliability and safety?</li>
+<li><strong>Ethics.</strong> Who bears the risk of this machine (the operator? nearby workers? the grower's season?), and did they consent to it the way the operator did? What is your where-not-to-operate bound, and is it enforced at runtime (SR-E-02) or merely documented?</li>
+</ol>
+</section>
+<section class="section"><h2 id="sec-29-research-frontiers"><span class="secnum">29</span><span class="sectitle">Research Frontiers</span></h2><ul>
+<li><strong>Landmark grounding.</strong> Functional-safety and safety-case references (hazard analysis, risk assessment, goal-structured argumentation); robotics/autonomy safety references; engineering-ethics and responsible-innovation references. <em>(Consult current editions; entries in the reference set, not reproduced here.)</em></li>
+<li><strong>Recent advances (survey current literature [VERIFY@PUB]).</strong> Safety cases and assurance arguments for learning-enabled autonomous systems; runtime assurance and independent monitors with certified independence; human-detection and safe human-robot interaction for field/agricultural robots; ethics and labor-impact frameworks for agricultural automation; data governance and accountability for autonomous machines.</li>
+<li><strong>Open problems.</strong> Certifiable safety for autonomy with opaque learned components; verifying independence/absence of common-cause in complex systems; safe close human-robot collaboration in unstructured fields; equitable deployment of agricultural automation; accountability frameworks for autonomous-machine failures.</li>
+<li><strong>Suggested thesis directions.</strong> (1) A certified-independent runtime safety monitor with a machine-checkable common-cause analysis. (2) A defense-in-depth human-safety architecture for field robots that does not rely on any single opaque detector. (3) A responsible-deployment framework for agricultural automation addressing labor, worker safety, and equity with the grower and worker as stakeholders.</li>
+</ul>
+</section>
+<section class="section"><h2 id="sec-30-references"><span class="secnum">30</span><span class="sectitle">References</span></h2><p><em>Cited by role; consult current editions. No copyrighted text is reproduced. Full entries in <code>references/bibliography.md</code> [-&gt;Doc H].</em></p>
+<ul>
+<li>Functional-safety / safety-case references, hazard analysis, risk, goal-structured argument, residual risk (Section 6.2 to 6.7).</li>
+<li>Robotics/autonomy safety references, independent monitors, human-interaction safety, common-cause (Section 6.4 to 6.5; EI-11).</li>
+<li>Engineering-ethics / responsible-innovation references, labor, worker safety, data, accountability (Section 6.8; SO4).</li>
+<li>Learning-enabled-system assurance literature, certifying bounded opaque components (Section 6.4; EI-07).</li>
+<li>SIM2FIELD governing documents, <code>PHASE-0-FOUNDATION.md</code>, <code>PHASE-1-CURRICULUM-ARCHITECTURE.md</code>, <code>curriculum/_core-concepts.md</code>, <strong>Modules 1 to 14</strong>, and (forthcoming) Doc B, Doc E, Doc G.</li>
+</ul>
+</section>
+    <footer>Rendered from <b>MODULE-15.md</b> by Module Rendering Pipeline v1.3. Student edition. The module is the single source of truth.<br>
+    Finished media only; production specifications and author notes live in the author edition.<br>
+    SIM2FIELD / Autonomous Watermelon Harvesting Robotics</footer>
+  </div></main>
+</div>
+<script>
+(function(){var links=[].slice.call(document.querySelectorAll('.toc a'));var map={};
+ links.forEach(function(a){map[a.getAttribute('href').slice(1)]=a;});
+ if(!('IntersectionObserver' in window))return;
+ var io=new IntersectionObserver(function(es){es.forEach(function(e){var id=e.target.id;
+   if(e.isIntersecting&&map[id]){links.forEach(function(l){l.classList.remove('active');});map[id].classList.add('active');map[id].scrollIntoView({block:'nearest'});}});},
+   {rootMargin:'-12% 0px -78% 0px'});
+ document.querySelectorAll('.section h2[id]').forEach(function(h){io.observe(h);});})();
+</script>
+</body></html>

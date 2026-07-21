@@ -1,0 +1,36 @@
+<svg viewBox="0 0 760 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The accuracy-latency frontier: model-optimization techniques trade accuracy for speed and energy, tracing a Pareto frontier of variants; the feasible operating region is bounded on the right by the latency budget and below by the recall threshold that protects yield, and the operating point is chosen from consequence within that box." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Accuracy-latency-energy frontier</text>
+<rect x="110" y="70" width="279" height="76" fill="var(--accent)" fill-opacity="0.06"/>
+<line x1="389" y1="70" x2="389" y2="240" stroke="var(--danger)" stroke-width="1.4" stroke-dasharray="5 3"/>
+<text x="393.0" y="80" font-size="7" fill="var(--danger-text)">latency budget (CEC-01)</text>
+<line x1="110" y1="146" x2="560" y2="146" stroke="var(--warn)" stroke-width="1.4" stroke-dasharray="5 3"/>
+<text x="560" y="142.5" font-size="7" fill="var(--warn-text)" font-weight="end" text-anchor="end">recall / yield threshold (M4)</text>
+<polyline points="200.0,134.6 263.0,107.4 335.0,93.8 407.0,85.3 479.0,80.2 537.5,77.7" fill="none" stroke="var(--info)" stroke-width="2.2"/>
+<circle cx="200.0" cy="134.6" r="3" fill="var(--info)"/>
+<circle cx="263.0" cy="107.4" r="3" fill="var(--info)"/>
+<circle cx="335.0" cy="93.8" r="3" fill="var(--info)"/>
+<circle cx="407.0" cy="85.3" r="3" fill="var(--info)"/>
+<circle cx="479.0" cy="80.2" r="3" fill="var(--info)"/>
+<circle cx="537.5" cy="77.7" r="3" fill="var(--info)"/>
+<circle cx="335.0" cy="93.8" r="6" fill="var(--accent)"/>
+<text x="343.0" y="95.80000000000001" font-size="7.6" fill="var(--accent)" font-weight="700">operating point</text>
+<line x1="110" y1="66" x2="110" y2="240" stroke="var(--border-strong)" stroke-width="1.4"/>
+<line x1="110" y1="240" x2="560" y2="240" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="102" y="155.0" text-anchor="middle" font-size="8" fill="var(--text-muted)" transform="rotate(-90 102 155.0)">accuracy / recall</text>
+<text x="335.0" y="268" font-size="8" fill="var(--text-muted)" text-anchor="middle">faster / lower energy   &lt;-   speed (latency, energy)   ->   slower / more accurate</text>
+<rect x="580" y="70" width="162" height="170" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="592" y="88" font-size="7.6" fill="var(--text-primary)" font-weight="700">Levers:</text>
+<text x="592" y="104" font-size="6.8" fill="var(--info)" font-weight="700">quantization</text>
+<text x="592" y="113" font-size="6.2" fill="var(--text-muted)">INT8: big speed win</text>
+<text x="592" y="130" font-size="6.8" fill="var(--info)" font-weight="700">pruning</text>
+<text x="592" y="139" font-size="6.2" fill="var(--text-muted)">drop weak weights</text>
+<text x="592" y="156" font-size="6.8" fill="var(--info)" font-weight="700">distillation</text>
+<text x="592" y="165" font-size="6.2" fill="var(--text-muted)">small mimics large</text>
+<text x="592" y="182" font-size="6.8" fill="var(--info)" font-weight="700">fusion / compile</text>
+<text x="592" y="191" font-size="6.2" fill="var(--text-muted)">free (no accuracy loss)</text>
+<text x="592" y="208" font-size="6.8" fill="var(--info)" font-weight="700">accelerator map</text>
+<text x="592" y="217" font-size="6.2" fill="var(--text-muted)">GPU/DLA/NPU</text>
+<text x="20" y="266" font-size="7.8" fill="var(--text-muted)">Every technique except pure compilation trades accuracy for speed/energy. Accuracy that overruns latency is worthless; accuracy below the yield</text>
+<text x="20" y="278" font-size="7.8" fill="var(--text-muted)">threshold is also worthless. The operating point is chosen from consequence (EI-04): the optimum lives between. Sections 6.5 and 7.4.</text>
+</svg>

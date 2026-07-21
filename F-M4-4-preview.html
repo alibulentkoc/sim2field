@@ -1,0 +1,44 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="color-scheme" content="dark"><title>F-M4-4 preview - PR operating point</title><style>:root{--bg:#0e120d;--surface:#161c14;--surface-2:#0b0e0a;--surface-3:#12160f;--border:#2b3527;--border-strong:#3a4633;--text-primary:#eef2e6;--text-secondary:#c8cfbe;--text-muted:#adb4a2;--accent:#9bcf3b;--info:#6fb0d9;--warn:#e0a03b;--warn-text:#eed9b4}
+body{margin:0;background:var(--bg);color:var(--text-primary);font-family:'IBM Plex Mono',ui-monospace,monospace;padding:2rem}
+.figure{max-width:860px;margin:0 auto;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.figbody{padding:1rem 1.1rem;background:var(--surface-3);overflow-x:auto} .figbody svg{display:block;width:100%;height:auto;min-width:700px}
+figcaption{padding:.7rem 1rem;font-size:.82rem;color:var(--text-muted);border-top:1px solid var(--border)} .fid{font-size:.64rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-right:.5rem}</style></head>
+<body><figure class="figure"><div class="figbody"><svg viewBox="0 0 760 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Precision-recall curve traced by sweeping the confidence threshold: lowering the threshold raises recall and lowers precision. The F1-optimum is the statistical best point, but the operating point actually chosen is the mission-value point at higher recall, because on this machine the objective is economic, not statistical." font-family="'IBM Plex Mono',monospace">
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">PR curve and the mission-value operating point</text>
+<line x1="92" y1="60" x2="92" y2="272" stroke="var(--border-strong)" stroke-width="1.4"/>
+<line x1="92" y1="272" x2="452" y2="272" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="84" y="166.0" text-anchor="middle" font-size="8.4" fill="var(--text-muted)" transform="rotate(-90 84 166.0)">precision P(&#964;)</text>
+<text x="272.0" y="302" text-anchor="middle" font-size="8.4" fill="var(--text-muted)">recall R(&#964;)</text>
+<text x="92" y="286" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">0</text>
+<text x="86" y="275" text-anchor="end" font-size="6.6" fill="var(--text-muted)">0</text>
+<text x="272" y="286" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">0.5</text>
+<text x="86" y="169" text-anchor="end" font-size="6.6" fill="var(--text-muted)">0.5</text>
+<text x="452" y="286" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">1</text>
+<text x="86" y="63" text-anchor="end" font-size="6.6" fill="var(--text-muted)">1</text>
+<polygon points="128.0,272 128.0,62.1 200.0,65.3 272.0,71.7 326.0,81.2 362.0,91.8 390.8,106.6 416.0,127.8 434.0,161.8 446.6,197.8 446.6,272" fill="var(--info)" fill-opacity="0.07"/>
+<polyline points="128.0,62.1 200.0,65.3 272.0,71.7 326.0,81.2 362.0,91.8 390.8,106.6 416.0,127.8 434.0,161.8 446.6,197.8" fill="none" stroke="var(--info)" stroke-width="2.4"/>
+<text x="254" y="183" font-size="7.4" fill="var(--info)">area = mAP</text>
+<circle cx="200.0" cy="65.3" r="3.5" fill="var(--text-secondary)"/>
+<text x="206.0" y="68.3" font-size="6.8" fill="var(--text-muted)">high &#964; (few, sure)</text>
+<text x="315.2" y="61.1" font-size="7" fill="var(--text-muted)">lower &#964; -&gt; more recall, less precision</text>
+<path d="M 200.0,69.5 Q 315.2,81.2 408.8,119.4" fill="none" stroke="var(--text-muted)" stroke-width="0.8" stroke-dasharray="3 2" marker-end="url(#ar)"/>
+<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--text-muted)"/></marker></defs>
+<circle cx="390.8" cy="106.6" r="5" fill="none" stroke="var(--warn)" stroke-width="2"/>
+<text x="384.8" y="98.6" text-anchor="end" font-size="7" fill="var(--warn-text)">F1-max (statistical)</text>
+<circle cx="416.0" cy="127.8" r="6" fill="var(--accent)"/>
+<text x="416.0" y="147.8" text-anchor="middle" font-size="8" fill="var(--accent)" font-weight="700">&#964;* (mission value)</text>
+<rect x="474" y="60" width="272" height="212" rx="9" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="488" y="80" font-size="8.6" fill="var(--text-primary)" font-weight="700">There is no best &#964; in the abstract,</text>
+<text x="488" y="92" font-size="8.6" fill="var(--text-primary)" font-weight="700">only a best &#964; for a stated objective.</text>
+<text x="488" y="112" font-size="7.6" fill="var(--text-secondary)">P = TP/(TP+FP),  R = TP/(TP+FN)</text>
+<text x="488" y="124" font-size="7.6" fill="var(--text-secondary)">F1 = 2PR/(P+R);  mAP = area under PR.</text>
+<text x="488" y="146" font-size="7.8" fill="var(--accent)" font-weight="700">The objective here is economic:</text>
+<text x="488" y="160" font-size="7.4" fill="var(--text-muted)">- a false negative (missed fruit) is lost</text>
+<text x="488" y="170" font-size="7.4" fill="var(--text-muted)">  revenue -> push recall up.</text>
+<text x="488" y="182" font-size="7.4" fill="var(--text-muted)">- a false positive (bad pick) wastes a</text>
+<text x="488" y="192" font-size="7.4" fill="var(--text-muted)">  cycle; the compliant gripper limits harm.</text>
+<text x="488" y="212" font-size="7.6" fill="var(--warn-text)">&#964;* sits at higher recall than the F1</text>
+<text x="488" y="222" font-size="7.6" fill="var(--warn-text)">optimum: cost, not symmetry, sets it.</text>
+<text x="488" y="244" font-size="7" fill="var(--text-muted)">Real curve shape and &#964;* are set by the</text>
+<text x="488" y="254" font-size="7" fill="var(--text-muted)">trained model and the cost model [VERIFY@PUB].</text>
+</svg></div><figcaption><span class="fid">F-M4-4</span>PR curve and the mission-value operating point. Sweeping the threshold trades recall against precision; there is no best threshold in the abstract, only a best one for a stated objective. Because the objective here is economic, the operating point sits at higher recall than the F1 optimum. Pairs with the detection-metrics figure. Illustrative curve. Module 4, Sections 7.2 and 7.3.</figcaption></figure></body></html>

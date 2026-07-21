@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0e120d">
+<title>The Detection Operating Point - Worked Example (M4 / EI-04)</title>
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<style>
+  /* ================= THEME DEFINITION - the ONLY place raw color values live ================= */
+  :root{
+    color-scheme: dark;
+    --bg:#0e120d; --surface:#161c14; --surface-2:#0b0e0a; --surface-3:#12160f;
+    --border:#2b3527; --border-strong:#3a4633; --grid-line:#1c231a;
+    --text-primary:#eef2e6; --text-secondary:#c8cfbe; --text-muted:#adb4a2;
+    --text-lede:#c9d0bf; --text-cons:#d4dbc9; --text-on-accent:#0e120d;
+    --accent:#9bcf3b; --accent-dim:#86ba35; --accent-strong:#6f9a2c;
+    --danger:#f0556a; --danger-text:#f697a4; --danger-dim:#b93b4c;
+    --warn:#e0a03b; --info:#6fb0d9; --accent-2:#b98bd9;
+    --tint-accent:rgba(155,207,59,.07); --tint-accent-soft:rgba(155,207,59,.05); --tint-hero:rgba(155,207,59,.06);
+    --tint-danger:rgba(240,85,106,.08); --tint-warn:rgba(224,160,59,.08);
+    --status-ok-text:#d0d7c6; --status-warn-text:#eed9b4; --status-danger-text:#f3ccd2;
+    --font-sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --font-display:'Space Grotesk',var(--font-sans);
+  }
+  /* ========================================================================================== */
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{background:var(--bg); color:var(--text-primary); -webkit-text-size-adjust:100%; text-size-adjust:100%; scroll-behavior:smooth}
+  body{background:var(--bg); color:var(--text-primary); font-family:var(--font-sans);
+    line-height:1.7; -webkit-font-smoothing:antialiased; padding:0 0 6rem; letter-spacing:.002em}
+  .wrap{max-width:820px; margin:0 auto; padding:0 1.6rem; background:var(--bg); color:var(--text-primary)}
+  code,.mono,.num{font-family:var(--font-mono); font-variant-numeric:tabular-nums}
+  a{color:var(--accent)}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+  .katex{font-size:1.06em}
+  .katex-display{margin:0}
+  .eq{background:var(--surface-3); color:var(--text-primary); border:1px solid var(--border); border-radius:10px;
+    padding:1.15rem 1.3rem; margin:1.15rem 0; overflow-x:auto; overflow-y:hidden}
+  .eq .katex-display{margin:0}
+
+  header{background:var(--bg); color:var(--text-primary); border-bottom:1px solid var(--border); padding:3.6rem 0 2.6rem; margin-bottom:2.6rem}
+  .eyebrow{font-family:var(--font-mono); font-size:.73rem; font-weight:500; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--accent); margin-bottom:1.15rem; display:flex; gap:.85rem; flex-wrap:wrap}
+  .eyebrow span{color:var(--text-muted)}
+  h1{font-family:var(--font-display); font-weight:600; font-size:clamp(2rem,5vw,3rem);
+    line-height:1.05; letter-spacing:-.021em; margin-bottom:1.05rem; color:var(--text-primary)}
+  h1 em{font-style:normal; color:var(--accent)}
+  .lede{font-size:1.08rem; color:var(--text-lede); max-width:64ch}
+
+  .hero{position:relative; margin:2.4rem 0 .6rem; padding:2.2rem 1.6rem 1.9rem; isolation:isolate}
+  .hero-bg{position:absolute; inset:0; width:100%; height:100%; z-index:-1}
+  .hero-inner{position:relative; text-align:center}
+  .hero-tab{display:inline-block; font-family:var(--font-mono); font-size:.66rem; font-weight:500; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--accent); background:var(--bg); padding:.28rem .7rem;
+    border:1px solid var(--accent-strong); border-radius:5px; margin-bottom:1.2rem}
+  .hero-eq{margin:.4rem 0 1rem}
+  .hero-eq .katex{font-size:1.35em}
+  .hero-sub{font-size:.92rem; color:var(--text-muted); max-width:54ch; margin:0 auto}
+
+  section{margin-top:3.4rem}
+  .kicker{font-family:var(--font-mono); font-size:.71rem; font-weight:500; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--accent-dim); margin-bottom:.7rem}
+  h2{font-family:var(--font-display); font-weight:600; font-size:1.55rem; letter-spacing:-.012em; margin-bottom:1rem; color:var(--text-primary)}
+  p{margin-bottom:1.05rem; color:var(--text-secondary)} strong{color:var(--text-primary); font-weight:600}
+  .rind-t{color:var(--accent)} .flesh-t{color:var(--danger-text)} .amber-t{color:var(--warn)} .water-t{color:var(--info)}
+
+  .dstep{margin:2rem 0; padding-left:1.5rem; border-left:2px solid var(--border); position:relative}
+  .dstep::before{content:attr(data-n); position:absolute; left:-.9rem; top:-.1rem;
+    font-family:var(--font-mono); font-size:.7rem; font-weight:600; color:var(--text-on-accent);
+    background:var(--accent-strong); width:1.6rem; height:1.6rem; border-radius:50%; display:grid; place-items:center}
+  .d-state{font-family:var(--font-display); font-weight:500; font-size:1.12rem; color:var(--text-primary); margin-bottom:.2rem; line-height:1.4}
+  .d-exp{color:var(--text-secondary); margin:.9rem 0}
+  .d-cons{display:flex; gap:.7rem; align-items:flex-start; margin-top:.9rem; padding:.75rem .95rem;
+    background:var(--tint-accent-soft); border:1px solid var(--accent-strong); border-radius:8px}
+  .d-cons .lab{font-family:var(--font-mono); font-size:.63rem; font-weight:500; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--accent); flex:none; margin-top:.18rem}
+  .d-cons p{margin:0; color:var(--text-cons); font-size:.94rem}
+
+  .instrument{background:var(--surface); color:var(--text-secondary); border:1px solid var(--border); border-radius:14px; padding:1.7rem; margin-top:1.3rem}
+  .inst-head{display:flex; justify-content:space-between; align-items:baseline; gap:1rem; flex-wrap:wrap; margin-bottom:1.3rem}
+  .inst-title{font-family:var(--font-display); font-weight:600; font-size:1.05rem; color:var(--text-primary)}
+  .reset{font-family:var(--font-mono); font-size:.75rem; font-weight:500; color:var(--accent); background:transparent;
+    border:1px solid var(--accent-strong); border-radius:6px; padding:.5rem .85rem; cursor:pointer; transition:.15s}
+  .reset:hover{background:var(--accent-strong); color:var(--text-on-accent)}
+  .noscript-note{background:var(--tint-warn); color:var(--status-warn-text); border:1px solid var(--warn); border-radius:8px;
+    padding:.8rem 1rem; font-size:.86rem; margin-bottom:1rem}
+
+  .plot-row{display:grid; grid-template-columns:1fr 250px; gap:1.4rem; align-items:start}
+  #plot{width:100%; height:auto; background:var(--surface-2); border:1px solid var(--border); border-radius:9px; display:block}
+  .side{display:flex; flex-direction:column; gap:.7rem}
+  .ro{background:var(--surface-2); color:var(--text-secondary); border:1px solid var(--border); border-radius:8px; padding:.7rem .85rem;
+    display:flex; justify-content:space-between; align-items:baseline}
+  .ro .lab{font-family:var(--font-mono); font-size:.66rem; font-weight:500; letter-spacing:.05em; color:var(--text-muted)}
+  .ro .lab .katex{font-size:.96em}
+  .ro .val{font-family:var(--font-mono); font-size:1.05rem; font-weight:600; color:var(--text-primary)}
+  .ro .val small{font-size:.62rem; color:var(--text-muted); font-weight:400}
+  .ro.hi .val{color:var(--accent)}
+  .thr label{display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:.7rem; font-weight:500; color:var(--text-muted); margin-bottom:.45rem}
+  .thr label b{color:var(--text-primary)} .thr label .katex{font-size:.94em}
+  input[type=range]{-webkit-appearance:none; appearance:none; width:100%; height:5px; border-radius:3px;
+    background:var(--border); outline-offset:4px; cursor:pointer}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:16px; height:16px; border-radius:50%;
+    background:var(--accent); border:2px solid var(--bg); cursor:pointer}
+  input[type=range]::-moz-range-thumb{width:16px; height:16px; border-radius:50%;
+    background:var(--accent); border:2px solid var(--bg); cursor:pointer}
+  .btn{font-family:var(--font-mono); font-size:.74rem; font-weight:600; cursor:pointer;
+    color:var(--accent); background:transparent; border:1px solid var(--accent-strong); border-radius:6px; padding:.55rem .7rem; transition:.15s}
+  .btn:hover{background:var(--accent-strong); color:var(--text-on-accent)}
+  .status{padding:.85rem .95rem; border-radius:8px; border:1px solid; font-family:var(--font-mono); font-size:.72rem; font-weight:500; line-height:1.5}
+  .status.ok{border-color:var(--accent-strong); background:var(--tint-accent); color:var(--status-ok-text)}
+  .status.warn{border-color:var(--warn); background:var(--tint-warn); color:var(--status-warn-text)}
+  .status.bad{border-color:var(--danger-dim); background:var(--tint-danger); color:var(--status-danger-text)}
+  .status b{color:var(--text-primary)}
+  .legend{display:flex; gap:1.2rem; flex-wrap:wrap; font-family:var(--font-mono); font-size:.7rem; font-weight:500; color:var(--text-muted); margin-top:1rem}
+  .legend i{width:16px; height:3px; display:inline-block; vertical-align:middle; margin-right:.35rem}
+
+  .insight{border:1px solid var(--accent-strong); border-radius:12px; padding:1.4rem 1.6rem; margin-top:1.6rem;
+    background:linear-gradient(180deg,var(--tint-hero),transparent)}
+  .insight .tag{font-family:var(--font-mono); font-size:.72rem; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin-bottom:.55rem}
+  .insight p{color:var(--text-cons); margin-bottom:0} .insight strong{color:var(--accent)}
+  .takeaway{border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:12px; padding:1.5rem 1.7rem; background:var(--surface)}
+  .tk-list{list-style:none}
+  .tk-list li{display:flex; gap:.85rem; align-items:flex-start; padding:.6rem 0; color:var(--text-secondary); border-bottom:1px solid var(--border)}
+  .tk-list li:last-child{border-bottom:none; padding-top:.95rem}
+  .tk-mark{font-family:var(--font-mono); color:var(--text-muted); flex:none; margin-top:.1rem}
+  .tk-mark.tk-hot{color:var(--accent)} .tk-list strong{color:var(--text-primary)}
+  footer{margin-top:4rem; padding-top:1.6rem; border-top:1px solid var(--border);
+    font-family:var(--font-mono); font-size:.74rem; color:var(--text-muted); line-height:1.85}
+
+  @media(max-width:660px){ .plot-row{grid-template-columns:1fr} }
+  @media(prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <header>
+    <div class="eyebrow">Worked Example <span>/</span> Module 4 <span>/</span> EI-04 <span>/</span> The Detection Operating Point</div>
+    <h1>The best threshold isn't statistical - it's <em>economic</em>.</h1>
+    <p class="lede">A ripe-melon detector doesn't have one right confidence threshold. It has a family of them, and picking one is an engineering decision. The right choice falls out of what each mistake costs the harvest: a missed ripe melon is lost revenue; a false alarm is only a wasted pick cycle. Here is that decision, derived and made draggable.</p>
+
+    <div class="hero">
+      <svg class="hero-bg" viewBox="0 0 800 230" preserveAspectRatio="none" role="presentation" aria-hidden="true" focusable="false">
+        <defs>
+          <pattern id="grid" width="26" height="26" patternUnits="userSpaceOnUse">
+            <path d="M26 0H0V26" fill="none" style="stroke:var(--grid-line)" stroke-width="1" vector-effect="non-scaling-stroke"/>
+          </pattern>
+        </defs>
+        <rect x="6" y="6" width="788" height="218" rx="12" style="fill:var(--surface-3)"/>
+        <rect x="6" y="6" width="788" height="218" rx="12" fill="url(#grid)" opacity="0.5"/>
+        <rect x="6" y="6" width="788" height="218" rx="12" fill="none" style="stroke:var(--border)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M20 6V22 M6 20H22" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M780 6V22 M778 20H794" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M20 224V208 M6 210H22" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M780 224V208 M778 210H794" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+      </svg>
+      <div class="hero-inner">
+        <div class="hero-tab">Governing relation</div>
+        <div class="hero-eq" role="math" aria-label="U of tau equals v H times recall minus c F times false positives; tau star is the argmax of U">\[ U(\tau) = v_H\,R(\tau) - c_F\,\mathrm{FP}(\tau) \quad\Longrightarrow\quad \tau^{\ast} = \arg\max_{\tau} U(\tau) \]</div>
+        <div class="hero-sub">The operating point is the threshold that maximizes mission value - not a statistical score.</div>
+      </div>
+    </div>
+  </header>
+
+  <section id="derivation" aria-labelledby="deriv-h">
+    <div class="kicker">Full derivation - from PR curve to the mission optimum</div>
+    <h2 id="deriv-h">How the operating point is chosen</h2>
+    <p>The model gives every candidate a confidence score. A threshold \(\tau\) decides which become picks. We follow Module 4 Sec. 7 exactly: define the metrics, expose the trade, then let the mission choose the point.</p>
+
+    <div class="dstep" data-n="1">
+      <div class="d-state">Precision and recall count the two ways the detector can be right or wrong.</div>
+      <div class="eq">\[ \text{Precision} = \frac{TP}{TP + FP} \qquad \text{Recall} = \frac{TP}{TP + FN} \]</div>
+      <p class="d-exp">After matching detections to ground truth, count true positives \(TP\), false positives \(FP\), and false negatives \(FN\). Precision asks how many picks were real fruit; recall asks how many real fruit we found. Sweeping the threshold \(\tau\) traces the precision-recall (PR) curve.</p>
+      <div class="d-cons"><span class="lab">Consequence</span><p>One model presents a <strong>whole family of behaviors</strong> - the PR curve - not a single fixed performance.</p></div>
+    </div>
+
+    <div class="dstep" data-n="2">
+      <div class="d-state">The two metrics trade against each other - so there is no best threshold in the abstract.</div>
+      <p class="d-exp">Lowering \(\tau\) admits more detections: recall rises, precision falls. There is <strong>no single best \(\tau\) in the abstract</strong> - only a best \(\tau\) for a stated objective. And the objective on this machine is economic, not statistical.</p>
+      <div class="d-cons"><span class="lab">Consequence</span><p>Choosing \(\tau\) is an <strong>engineering decision</strong>, and it needs an objective drawn from the mission - not from a convention.</p></div>
+    </div>
+
+    <div class="dstep" data-n="3">
+      <div class="d-state">Price each outcome by its mission consequence, then maximize expected value.</div>
+      <div class="eq">\[ U(\tau) = v_H\,R(\tau) - c_F\,\mathrm{FP}(\tau) \qquad\Longrightarrow\qquad \tau^{\ast} = \arg\max_{\tau} U(\tau) \]</div>
+      <p class="d-exp">A true positive earns the harvested-fruit value \(v_H\); a false negative forfeits it (lost yield); a false positive costs a wasted pick cycle \(c_F\), spent against the cycle-time budget (CEC-01). Because a missed ripe melon (\(v_H\)) is worth far more than a wasted cycle (\(c_F\)) - and wasted cycles are bounded by the cycle-time margin, not catastrophic - <strong class="rind-t">the optimum biases toward high recall</strong>.</p>
+      <div class="d-cons"><span class="lab">Consequence</span><p>This is the quantitative reason a harvester is tuned for recall, and the ratified target follows: <strong>recall &gt;= 90%</strong> at the operating point (Doc B Sec. 5.4).</p></div>
+    </div>
+  </section>
+
+  <section id="instrument" aria-labelledby="inst-h">
+    <div class="kicker">The operating point, live - drag the threshold</div>
+    <h2 id="inst-h">Watch the mission choose the point</h2>
+    <p>Drag the confidence threshold \(\tau\) along the PR curve. Recall and precision trade against each other - but the deciding number is <span class="rind-t">mission value \(U(\tau)\)</span>. Change the cost ratio \(v_H/c_F\) and watch the optimum move: when a missed melon costs far more than a wasted cycle, the best point slides toward recall.</p>
+
+    <div class="instrument">
+      <div class="inst-head">
+        <div class="inst-title">Detector operating point - PR curve and mission value</div>
+        <button class="reset" id="resetBtn" type="button">Reset</button>
+      </div>
+
+      <noscript><p class="noscript-note">This interactive PR-curve explorer requires JavaScript. The full worked result is in the derivation above: the operating point is the threshold that maximizes mission value U = v_H * recall - c_F * false-positives; because a missed ripe melon costs far more than a wasted pick cycle, the optimum biases toward recall, and the ratified target is recall &gt;= 90%.</p></noscript>
+
+      <div class="plot-row">
+        <svg id="plot" viewBox="0 0 480 360" role="img" aria-label="Precision-recall curve. The current operating point and the mission-optimum threshold tau-star are marked; a shaded band marks the recall target of 0.90 or higher. Controlled by the threshold and cost-ratio sliders below."></svg>
+        <div class="side">
+          <div class="ro"><span class="lab">threshold \(\tau\)</span><span class="val"><span id="roTau">0.50</span></span></div>
+          <div class="ro"><span class="lab">recall</span><span class="val"><span id="roRecall">0.90</span></span></div>
+          <div class="ro"><span class="lab">precision</span><span class="val"><span id="roPrec">0.74</span></span></div>
+          <div class="ro hi"><span class="lab">mission value \(U\)</span><span class="val"><span id="roU">0.00</span></span></div>
+          <div class="thr">
+            <label>threshold \(\tau\) <b><span id="tauRead">0.50</span></b></label>
+            <input type="range" id="tau" min="0.05" max="0.95" step="0.01" value="0.50" aria-label="confidence threshold tau">
+          </div>
+          <div class="thr">
+            <label>cost ratio \(v_H/c_F\) <b><span id="ratioRead">8</span>x</b></label>
+            <input type="range" id="ratio" min="1" max="20" step="1" value="8" aria-label="cost ratio v H over c F">
+          </div>
+          <button class="btn" id="optBtn" type="button">Jump to mission optimum tau*</button>
+          <div class="status ok" id="status" aria-live="polite"></div>
+        </div>
+      </div>
+      <div class="legend">
+        <span><i style="background:var(--info)"></i>PR curve</span>
+        <span><i style="background:var(--accent)"></i>current operating point</span>
+        <span><i style="background:var(--warn)"></i>mission optimum tau*</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="ei04" aria-labelledby="ei-h">
+    <div class="kicker">Engineering Insight EI-04 - the metric that maps to the mission</div>
+    <h2 id="ei-h">Optimize the number that actually matters</h2>
+    <div class="insight">
+      <div class="tag">EI-04 - Optimize the Metric That Maps to the Mission</div>
+      <p><strong>Choose and tune your performance metric from the real-world consequence of each error - not from what is conventional, symmetric, or easy to report.</strong> The two errors here are not equal: a missed ripe melon is lost revenue, a false alarm is only a wasted cycle. Tuning to a symmetric score like accuracy or F1 silently optimizes the wrong objective. Write down what each error costs the mission, pick the operating point that maximizes mission value, and only then reach for a bigger model if that point still isn't good enough. The trap this avoids is leaderboard engineering - improving a number that is easy to measure while the thing that matters gets worse.</p>
+    </div>
+  </section>
+
+  <section id="takeaway" aria-labelledby="tk-h">
+    <div class="kicker">Engineering takeaway - what to do next</div>
+    <h2 id="tk-h">Where the next effort belongs</h2>
+    <div class="takeaway">
+      <ul class="tk-list">
+        <li><span class="tk-mark" aria-hidden="true">-&gt;</span> Do not report accuracy or F1 to decide this threshold. They weight a missed melon and a false alarm equally, which is the wrong objective. Report <strong>mission value \(U(\tau)\)</strong> and the recall at \(\tau^{\ast}\).</li>
+        <li><span class="tk-mark tk-hot" aria-hidden="true">-&gt;</span> The optimum depends on the cost ratio \(v_H/c_F\). The highest-leverage input is not a bigger model - it is a <strong class="rind-t">good estimate of that ratio</strong> from the M16 economics. Guessing it wrong moves \(\tau^{\ast}\) more than most model changes.</li>
+        <li><span class="tk-mark" aria-hidden="true">-&gt;</span> Extra false positives are only free while their pick cycles fit the cycle-time budget (CEC-01). Confirm the false-positive rate at \(\tau^{\ast}\) still leaves throughput inside \(T_{\mathrm{cycle}} \le 6\ \mathrm{s}\) before locking it in.</li>
+        <li><span class="tk-mark" aria-hidden="true">-&gt;</span> <strong>Decision:</strong> set the threshold from <strong class="rind-t">mission consequence</strong>, not a leaderboard - bias to recall &gt;= 90%, then re-check the cost ratio with real field prices and the cycle budget. If \(\tau^{\ast}\) still misses ripe fruit, that is when a better detector earns its cost.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    SIM2FIELD / Autonomous Watermelon Harvesting Robotics<br>
+    Worked example for Module 4 (Vision, Deep Learning, Detection and Ripeness) - realizes EI-04 and the mission-derived operating point<br>
+    Values ratified in Doc B Sec. 5.4 (recall &gt;= 90%) - method harvested from Module 4 Sec. 7 (frozen Rev 1.0)<br>
+    Production Phase asset - configuration-controlled
+  </footer>
+</main>
+
+<script>
+/* Interactive enhancement only. All engineering content above is static and
+   readable with JavaScript disabled. Vanilla JS, no external dependencies.
+   Colors come from semantic tokens (var(--...)), never raw hex. */
+(function(){
+  "use strict";
+  const SVG=document.getElementById('plot');
+  if(!SVG) return;
+  const W=480,H=360, mL=52,mR=20,mT=24,mB=44;
+  const x0=mL, x1=W-mR, y0=H-mB, y1=mT;
+
+  function precAtRecall(R){
+    const p = 1 - 0.28*Math.pow(R,2.2) - 0.55*Math.pow(Math.max(0,R-0.82)/0.18,3);
+    return Math.max(0.05, Math.min(0.995, p));
+  }
+  function recallAtTau(tau){ return Math.max(0.02, Math.min(0.995, 1 - Math.pow(tau,1.4))); }
+  function fpRate(R){ const P=precAtRecall(R); return R*(1-P)/Math.max(P,0.05); }
+  function utility(R, ratio){ return ratio*R - fpRate(R); }
+
+  function px(R){ return x0 + R*(x1-x0); }
+  function py(P){ return y0 + P*(y1-y0); }
+
+  function findOpt(ratio){
+    let best=-1e9, bt=0.5;
+    for(let t=0.05;t<=0.95;t+=0.005){ const R=recallAtTau(t); const u=utility(R,ratio);
+      if(u>best){best=u; bt=t;} }
+    return bt;
+  }
+
+  let state={tau:0.50, ratio:8};
+
+  function draw(){
+    const R=recallAtTau(state.tau), P=precAtRecall(R), U=utility(R,state.ratio);
+    const topt=findOpt(state.ratio), Ropt=recallAtTau(topt), Popt=precAtRecall(Ropt);
+
+    let d='';
+    for(let i=0;i<=100;i++){ const R_=i/100; const P_=precAtRecall(R_);
+      d+=(i===0?'M':'L')+' '+px(R_).toFixed(1)+' '+py(P_).toFixed(1)+' '; }
+
+    let ticks='';
+    for(let g=0;g<=1.0001;g+=0.25){
+      ticks+=`<line x1="${px(g)}" y1="${y0}" x2="${px(g)}" y2="${y0+5}" style="stroke:var(--border-strong)"/>`+
+        `<text x="${px(g)}" y="${y0+18}" text-anchor="middle" style="fill:var(--text-muted)" font-family="IBM Plex Mono" font-size="10">${g.toFixed(2)}</text>`+
+        `<line x1="${x0-5}" y1="${py(g)}" x2="${x0}" y2="${py(g)}" style="stroke:var(--border-strong)"/>`+
+        `<text x="${x0-9}" y="${py(g)+3}" text-anchor="end" style="fill:var(--text-muted)" font-family="IBM Plex Mono" font-size="10">${g.toFixed(2)}</text>`;
+    }
+    const bandX=px(0.90);
+
+    SVG.innerHTML =
+      `<rect x="${x0}" y="${y1}" width="${x1-x0}" height="${y0-y1}" fill="none" style="stroke:var(--border)"/>`+
+      ticks+
+      `<text x="${(x0+x1)/2}" y="${H-8}" text-anchor="middle" style="fill:var(--text-secondary)" font-family="IBM Plex Mono" font-size="11">recall R(tau)</text>`+
+      `<text x="14" y="${(y0+y1)/2}" text-anchor="middle" style="fill:var(--text-secondary)" font-family="IBM Plex Mono" font-size="11" transform="rotate(-90 14 ${(y0+y1)/2})">precision P</text>`+
+      `<rect x="${bandX}" y="${y1}" width="${x1-bandX}" height="${y0-y1}" style="fill:var(--tint-hero)"/>`+
+      `<line x1="${bandX}" y1="${y1}" x2="${bandX}" y2="${y0}" style="stroke:var(--accent-strong)" stroke-dasharray="3 4" stroke-width="1"/>`+
+      `<text x="${bandX+4}" y="${y1+12}" style="fill:var(--accent-dim)" font-family="IBM Plex Mono" font-size="9">recall target &gt;= 0.90</text>`+
+      `<path d="${d}" fill="none" style="stroke:var(--info)" stroke-width="2.5"/>`+
+      `<circle cx="${px(Ropt)}" cy="${py(Popt)}" r="7" fill="none" style="stroke:var(--warn)" stroke-width="2"/>`+
+      `<line x1="${px(Ropt)}" y1="${y0}" x2="${px(Ropt)}" y2="${py(Popt)}" style="stroke:var(--warn)" stroke-width="1" stroke-dasharray="2 3" opacity="0.7"/>`+
+      `<text x="${px(Ropt)}" y="${py(Popt)-12}" text-anchor="middle" style="fill:var(--warn)" font-family="IBM Plex Mono" font-size="9">tau*</text>`+
+      `<circle cx="${px(R)}" cy="${py(P)}" r="8" style="fill:var(--accent);stroke:var(--bg)" stroke-width="2"/>`;
+
+    document.getElementById('roTau').textContent=state.tau.toFixed(2);
+    document.getElementById('roRecall').textContent=R.toFixed(2);
+    document.getElementById('roPrec').textContent=P.toFixed(2);
+    document.getElementById('roU').textContent=U.toFixed(2);
+    document.getElementById('tauRead').textContent=state.tau.toFixed(2);
+    document.getElementById('ratioRead').textContent=state.ratio;
+
+    const st=document.getElementById('status');
+    const nearOpt=Math.abs(state.tau-topt)<0.04;
+    if(nearOpt){ st.className='status ok';
+      st.innerHTML=`<b>At the mission optimum.</b> tau ~ tau* = ${topt.toFixed(2)}, recall ${R.toFixed(2)}. Given vH/cF = ${state.ratio}x, this point maximizes mission value.`; }
+    else if(R<0.90){ st.className='status bad';
+      st.innerHTML=`<b>Recall too low (${R.toFixed(2)}).</b> The threshold is strict - ripe melons are being missed (lost yield). The mission optimum tau* = ${topt.toFixed(2)} sits at higher recall. Lower tau.`; }
+    else { st.className='status warn';
+      st.innerHTML=`<b>Workable, but not optimal.</b> Recall ${R.toFixed(2)} is above target, yet mission value peaks at tau* = ${topt.toFixed(2)}. ${state.tau>topt?'Lower':'Raise'} tau toward the optimum.`; }
+  }
+
+  document.getElementById('tau').addEventListener('input',e=>{ state.tau=+e.target.value; draw(); });
+  document.getElementById('ratio').addEventListener('input',e=>{ state.ratio=+e.target.value; draw(); });
+  document.getElementById('optBtn').addEventListener('click',()=>{
+    state.tau=findOpt(state.ratio); document.getElementById('tau').value=state.tau; draw();
+  });
+  document.getElementById('resetBtn').addEventListener('click',()=>{
+    state={tau:0.50,ratio:8}; document.getElementById('tau').value=0.50; document.getElementById('ratio').value=8; draw();
+  });
+
+  draw();
+})();
+</script>
+</body>
+</html>

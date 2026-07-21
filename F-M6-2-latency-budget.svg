@@ -1,0 +1,31 @@
+<svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="End-to-end compute latency budget: detect plus localize plus decide plus control must fit within the cycle-time compute share; the dominant stage (detection) is attacked first, and on a moving rover the leftover latency becomes the sync term in the placement budget." font-family="'IBM Plex Mono',monospace">
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Compute latency budget within the cycle time</text>
+<text x="20" y="44" font-size="8.2" fill="var(--text-muted)">T_compute = t_detect + t_localize + t_decide + t_control  &lt;=  cycle-time compute share (CEC-01). Populate with MEASURED per-stage latency (EI-06).</text>
+<rect x="124.0" y="86" width="201.4" height="40" fill="var(--danger)" fill-opacity="0.85" stroke="var(--bg)" stroke-width="0.8"/>
+<text x="224.7" y="109.0" text-anchor="middle" font-size="7.4" fill="var(--text-on-accent)" font-weight="700">detect</text>
+<rect x="325.4" y="86" width="54.9" height="40" fill="var(--accent)" fill-opacity="0.55" stroke="var(--bg)" stroke-width="0.8"/>
+<text x="352.8" y="109.0" text-anchor="middle" font-size="7.4" fill="var(--text-on-accent)" font-weight="400">localize</text>
+<rect x="380.3" y="86" width="36.6" height="40" fill="var(--accent-strong)" fill-opacity="0.55" stroke="var(--bg)" stroke-width="0.8"/>
+<text x="398.6" y="109.0" text-anchor="middle" font-size="7.4" fill="var(--text-on-accent)" font-weight="400">decide</text>
+<rect x="416.9" y="86" width="27.5" height="40" fill="var(--info)" fill-opacity="0.55" stroke="var(--bg)" stroke-width="0.8"/>
+<text x="430.7" y="109.0" text-anchor="middle" font-size="7.4" fill="var(--text-on-accent)" font-weight="400">control</text>
+<line x1="535.9" y1="76" x2="535.9" y2="136" stroke="var(--danger)" stroke-width="1.6" stroke-dasharray="5 3"/>
+<text x="535.9" y="72" text-anchor="middle" font-size="8" fill="var(--danger-text)" font-weight="700">compute-share (CEC-01)</text>
+<line x1="444.4" y1="126" x2="444.4" y2="140" stroke="var(--text-secondary)" stroke-width="1"/>
+<text x="444.4" y="151" text-anchor="middle" font-size="7.4" fill="var(--text-secondary)">T_compute</text>
+<text x="490.2" y="151" text-anchor="middle" font-size="7" fill="var(--text-muted)">margin</text>
+<text x="224.7" y="80" text-anchor="middle" font-size="7.4" fill="var(--danger-text)" font-weight="700">dominant stage -> attack first (EI-05)</text>
+<text x="20" y="176" font-size="9" fill="var(--text-primary)" font-weight="700">If it will not close, the levers:</text>
+<text x="30" y="194" font-size="7.8" fill="var(--text-muted)">- optimize the dominant stage (Sec. 6.5)</text>
+<text x="30" y="208" font-size="7.8" fill="var(--text-muted)">- move work to a faster accelerator</text>
+<text x="30" y="222" font-size="7.8" fill="var(--text-muted)">- reduce input resolution / rate (trades accuracy, EI-04)</text>
+<text x="30" y="236" font-size="7.8" fill="var(--text-muted)">- increase the cycle-time budget (stage / slow, CEC-01)</text>
+<rect x="404" y="164" width="336" height="92" rx="8" fill="var(--surface-2)" stroke="var(--warn)" stroke-opacity="0.55"/>
+<text x="418" y="182" font-size="8.4" fill="var(--warn-text)" font-weight="700">Latency feeds accuracy</text>
+<text x="418" y="198" font-size="7.8" fill="var(--text-muted)">On the moving rover, compute latency becomes the</text>
+<text x="418" y="210" font-size="7.8" fill="var(--text-muted)">&#963;_sync term in the placement budget (CEC-03):</text>
+<text x="418" y="222" font-size="7.8" fill="var(--text-secondary)" font-weight="700">slow compute literally displaces the target.</text>
+<text x="418" y="240" font-size="7.4" fill="var(--text-muted)">Also need throughput &gt;= fruit arrival rate (latency</text>
+<text x="418" y="250" font-size="7.4" fill="var(--text-muted)">and throughput are distinct, Sec. 6.3).</text>
+<text x="20" y="284" font-size="7.8" fill="var(--text-muted)">Illustrative per-stage latencies; measured on the target device at publication [VERIFY@PUB]. Attack the dominant stage, then re-measure.</text>
+</svg>

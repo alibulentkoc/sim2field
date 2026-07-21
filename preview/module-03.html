@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edge Computing, ML &amp; AI — SIM2FIELD</title>
+<meta name="description" content="A short university course on the engineering of an autonomous watermelon/pumpkin harvesting robot: perception, edge AI, manipulation, and field deployment.">
+<link rel="stylesheet" href="assets/style.css">
+
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a class="brand" href="index.html"><span class="dot"></span>SIM2FIELD</a>
+  <div class="nav-links"><a href="index.html">Home</a><a href="index.html#modules" class="active">Modules</a><a href="demo-page.html">Live Demo</a><a href="index.html#specs">Specs</a><a href="capstone.html">Capstone</a></div>
+</div></nav>
+<header class="article-head"><div class="inner"><p class="eyebrow">Module 3</p><h1>Edge Computing, ML &amp; AI</h1><div class="dur">◷ 5 hours</div></div></header><main class="page prose">
+
+<h2 id="learning-outcomes">Learning outcomes</h2>
+<p>By the end of this module, students can:</p>
+<ol>
+<li>Justify why a field harvester runs inference <strong>on the robot</strong> and articulate
+   the no-cloud constraint in terms of latency, connectivity, and reliability.</li>
+<li>Build a latency, throughput, and power budget for an on-robot perception +
+   decision loop and check it against a cycle-time requirement.</li>
+<li>Explain model optimization for the edge — quantization, pruning, and
+   compilation (e.g., TensorRT) — and the accuracy/latency trade each makes.</li>
+<li>Describe how a learned grasp policy is trained in simulation and transferred
+   to hardware, and why a rule-based fallback is retained.</li>
+<li>Explain the role of synthetic data and a digital twin in building a field ML
+   system before hardware exists.</li>
+</ol>
+<h2 id="core-concepts">Core concepts</h2>
+<h3 id="why-edge-not-cloud">Why edge, not cloud</h3>
+<p>A harvester works in rural fields where connectivity is intermittent at best. If
+the control loop depended on a remote server, a dropped signal would stall the
+machine mid-grasp. Three arguments, in order of decisiveness:</p>
+<ol>
+<li><strong>Connectivity</strong> — you cannot assume a network in a field; the machine must
+   harvest at full capability with <strong>zero</strong> connectivity.</li>
+<li><strong>Latency</strong> — a perception→decision loop that must keep pace with a moving
+   rover cannot afford a network round trip; the budget is tens of milliseconds,
+   not hundreds.</li>
+<li><strong>Reliability &amp; data gravity</strong> — camera streams are large and continuous;
+   moving pixels off-robot is wasteful when the decision must be made locally
+   anyway.</li>
+</ol>
+<p>The design rule for the course: <strong>no cloud dependency in the control loop.</strong>
+Cloud is allowed for offline model training and opportunistic telemetry sync when
+a network happens to be available — never for a real-time decision.</p>
+<h3 id="budgeting-the-loop-the-quantitative-heart-of-the-module">Budgeting the loop (the quantitative heart of the module)</h3>
+<p>Students build three budgets and reconcile them against a target cycle time.</p>
+<ul>
+<li><strong>Latency budget.</strong> Sum the per-stage times: image acquisition → detection →
+  localization → decision → motion-plan handoff. If the rover advances at a
+  walking pace and fruit must be picked at a fixed station, the perception loop
+  must resolve a target well before it reaches the station. Worked example in the
+  lab: given a detector at <em>X</em> ms/frame on the edge device and a rover speed, is
+  the loop fast enough? If not, what do you cut?</li>
+<li><strong>Throughput budget.</strong> Frames per second the pipeline sustains vs. frames per
+  second needed for smooth tracking. Batching, resolution, and model size are the
+  knobs.</li>
+<li><strong>Power/thermal budget.</strong> The edge device draws watts that become heat under a
+  sealed, sun-exposed enclosure. A model that is 10% more accurate but doubles
+  power may be the wrong choice if it thermally throttles at midday — a failure
+  that never appears in a lab benchmark.</li>
+</ul>
+<p>The lesson students carry out: <strong>accuracy is not the only axis.</strong> A field ML
+system is chosen on the joint surface of accuracy, latency, power, and thermal
+headroom.</p>
+<h3 id="making-models-fit-the-edge">Making models fit the edge</h3>
+<p>Off-the-shelf models rarely meet an edge budget as trained. The standard toolkit:</p>
+<ul>
+<li><strong>Quantization</strong> — represent weights/activations in INT8 (or FP16) instead of
+  FP32. Large latency and memory wins, usually small accuracy cost; must be
+  validated on <em>your</em> data.</li>
+<li><strong>Pruning / distillation</strong> — remove redundant weights or train a small "student"
+  model to mimic a large "teacher." Trades capacity for speed.</li>
+<li><strong>Compilation</strong> — a runtime such as TensorRT fuses layers and picks
+  hardware-optimal kernels for the specific device (e.g., a Jetson Orin-class
+  module). Often the single biggest practical speedup, with no accuracy change.</li>
+</ul>
+<p>The workflow: train large and accurate offline, then quantize + compile for the
+target, then <strong>re-measure accuracy on held-out field data</strong> before trusting it.</p>
+<h3 id="learned-grasping-with-a-safety-net">Learned grasping, with a safety net</h3>
+<p>Grasping a heavy, slick, variably shaped fruit without bruising it is hard to
+hand-code. Modern approach: a <strong>deep-reinforcement-learning grasp policy</strong> that
+modulates grip force and lift trajectory in real time from tactile and load-cell
+feedback — tightening on incipient slip, easing before the bruising threshold.</p>
+<p>Two ideas make this credible rather than buzzword:</p>
+<ul>
+<li><strong>Sim-to-real with domain randomization.</strong> The policy is trained in a
+  contact-augmented digital twin over randomized fruit mass, rind stiffness, and
+  surface friction, so it learns a robust behavior rather than overfitting one
+  melon. The reward is grounded in <em>post-harvest quality</em> (from instrumented
+  firmness audits), not a proxy.</li>
+<li><strong>A verified fallback.</strong> A conservative rule-based force controller is retained
+  and can take over if the learned policy produces an out-of-envelope command.
+  In a machine handling food near people, a learned component should degrade to a
+  trusted one, never to undefined behavior.</li>
+</ul>
+<h3 id="synthetic-data-and-the-digital-twin">Synthetic data and the digital twin</h3>
+<p>You cannot photograph ten thousand partially buried, mud-obscured melons before
+building the robot — so you generate them. A browser/engine digital twin renders
+labeled scenes; diffusion-based augmentation adds photorealistic texture, soil
+splatter, and lighting/weather shifts; neural-field reconstructions (NeRF /
+Gaussian splatting) of real rows add geometric realism. The twin doubles as a
+<strong>regression test bed</strong>: every field anomaly is reproduced in simulation, added
+to the training corpus, and closed out before a hardware fix is attempted. This
+is how a small team builds a field-robust model without a season of hand-labeling.</p>
+<h2 id="grad-extension"><span class="tagpill tag-grad">Graduate</span>Grad extension</h2>
+<p><strong>Quantify a real trade.</strong> Take a provided model in FP32; quantize to INT8 and
+compile for the course edge device. Report the latency, throughput, power, and
+accuracy at each stage on held-out data, and write a short recommendation:
+which configuration ships, and what field condition would change your answer?
+Graduate students additionally critique the reward design for the grasp policy —
+what does "grounded in post-harvest quality" require of the data collection?</p>
+<h2 id="demo-or-lab"><span class="tagpill tag-lab">Hands-on</span>Demo or lab</h2>
+<p><strong>Lab 3 — Edge budget and optimization.</strong>
+See <a href="../../labs/lab-03-edge.md"><code>labs/lab-03-edge.md</code></a>. On the course edge device
+(Jetson-class, or a CPU fallback with scaled numbers):</p>
+<ol>
+<li>Benchmark the Module 2 detector: latency, FPS, and power draw.</li>
+<li>Apply FP16/INT8 and re-measure; plot the accuracy-vs-latency trade.</li>
+<li>Build the latency budget for a given rover speed and pick station distance;
+   determine the maximum sustainable harvest speed and identify the bottleneck
+   stage.</li>
+</ol>
+<h2 id="knowledge-check"><span class="tagpill tag-quiz">Quiz</span>Knowledge check</h2><div class="quiz" data-quiz><div class="quiz-head"><span class="ic">◇</span>Module 3 — Knowledge Check<span class="score">0 / 2</span></div><div class="q" data-correct="1"><p class="qtext"><span class="qn">01</span>The strongest single reason for on-robot (edge) inference here:</p><button class="opt" data-q="0" data-o="0">it&#x27;s cheaper than a server<span class="mark"></span></button><button class="opt" data-q="0" data-o="1">fields lack reliable connectivity, so the control loop cannot depend on a network<span class="mark"></span></button><button class="opt" data-q="0" data-o="2">edge devices are more accurate<span class="mark"></span></button><button class="opt" data-q="0" data-o="3">it avoids writing training code<span class="mark"></span></button><div class="qexpl"><b>Why:</b> Connectivity is the hard blocker: a field has no guaranteed network, so a control loop that needs the cloud would stall. Latency and data-gravity are secondary.</div></div><div class="q" data-correct="0"><p class="qtext"><span class="qn">02</span>Quantizing a model to INT8 most directly trades:</p><button class="opt" data-q="1" data-o="0">a small accuracy loss for large latency/memory gains<span class="mark"></span></button><button class="opt" data-q="1" data-o="1">accuracy for higher resolution<span class="mark"></span></button><button class="opt" data-q="1" data-o="2">power for cloud bandwidth<span class="mark"></span></button><button class="opt" data-q="1" data-o="3">recall for precision, always<span class="mark"></span></button><div class="qexpl"><b>Why:</b> INT8 quantization cuts latency and memory substantially, usually at a small, must-be-validated accuracy cost.</div></div><div class="quiz-foot"><button class="btn btn-dark" data-reset>Reset</button><span class="msg">Pick an answer to check it instantly.</span></div></div>
+<ol>
+<li>Give the three arguments for edge over cloud inference here, ranked, and
+   defend your ranking.</li>
+<li>Detection takes 40 ms, localization 8 ms, decision 5 ms on the edge device.
+   The rover moves at 0.8 m/s and must resolve a target 1.2 m before the pick
+   station. Is the loop fast enough? Show the reasoning.</li>
+<li>Quantizing to INT8 cut latency 3× and accuracy 1.5%. Under what field
+   condition is that a good trade, and under what condition is it not?</li>
+<li>Why is a rule-based grasp controller retained alongside a superior learned
+   policy? Frame the answer in terms of failure modes, not performance.</li>
+<li>Explain how a digital twin reduces the amount of hand-labeled field data
+   needed, and name one risk of relying on synthetic data.</li>
+</ol>
+<h2 id="take-home-assignment"><span class="tagpill tag-take">Assignment</span>Take-home assignment</h2>
+<p>Produce a <strong>one-page edge deployment plan</strong> for the perception + grasp stack:
+chosen device, model configuration (precision, compilation), your measured or
+estimated latency/power budget, and the no-cloud control-loop boundary drawn
+explicitly (what runs on-robot vs. what may sync opportunistically). Deliverable:
+<code>assignments/m3-edge-plan.md</code>.</p><div class="pager"><a href="module-02.html"><span class="d">← Previous</span>Module 2: Machine Vision &amp; Perception</a><a class="next" href="module-04.html"><span class="d">Next →</span>Module 4: Manipulation &amp; Control</a></div></main>
+<footer class="foot"><div class="inner">
+  <div>SIM2FIELD · Robotic Harvesting Systems — course materials</div>
+  <div><a href="index.html">Home</a> · <a href="demo-page.html">Live Demo</a> · <a href="capstone.html">Capstone</a></div>
+</div></footer>
+
+<script>
+document.querySelectorAll('[data-quiz]').forEach(function(quiz){
+  var total = quiz.querySelectorAll('.q').length;
+  var answered = {};
+  function refresh(){
+    var correct = Object.values(answered).filter(Boolean).length;
+    quiz.querySelector('.score').textContent = correct + ' / ' + total;
+    var msg = quiz.querySelector('.msg');
+    if (Object.keys(answered).length === total){
+      msg.textContent = correct === total ? 'Perfect — all correct.' :
+        'You got ' + correct + ' of ' + total + '. Review the explanations and try again.';
+    }
+  }
+  quiz.querySelectorAll('.opt').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var qEl = btn.closest('.q');
+      if (qEl.dataset.locked) return;
+      qEl.dataset.locked = '1';
+      var correct = parseInt(qEl.dataset.correct,10);
+      var chosen = parseInt(btn.dataset.o,10);
+      qEl.querySelectorAll('.opt').forEach(function(o){
+        o.classList.add('locked');
+        var oi = parseInt(o.dataset.o,10);
+        if (oi === correct) o.classList.add('correct');
+        else if (o === btn) o.classList.add('wrong');
+      });
+      qEl.querySelector('.qexpl').classList.add('show');
+      answered[qEl.dataset.q || btn.dataset.q] = (chosen === correct);
+      refresh();
+    });
+  });
+  quiz.querySelector('[data-reset]').addEventListener('click', function(){
+    answered = {};
+    quiz.querySelectorAll('.q').forEach(function(qEl){
+      delete qEl.dataset.locked;
+      qEl.querySelectorAll('.opt').forEach(function(o){ o.className='opt'; });
+      qEl.querySelector('.qexpl').classList.remove('show');
+    });
+    quiz.querySelector('.msg').textContent = 'Pick an answer to check it instantly.';
+    refresh();
+  });
+});
+</script>
+
+</body>
+</html>

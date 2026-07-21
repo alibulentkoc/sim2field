@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading List &amp; Resources — SIM2FIELD</title>
+<meta name="description" content="A short university course on the engineering of an autonomous watermelon/pumpkin harvesting robot: perception, edge AI, manipulation, and field deployment.">
+<link rel="stylesheet" href="assets/style.css">
+
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a class="brand" href="index.html"><span class="dot"></span>SIM2FIELD</a>
+  <div class="nav-links"><a href="index.html">Home</a><a href="index.html#modules">Modules</a><a href="demo-page.html">Live Demo</a><a href="index.html#specs">Specs</a><a href="capstone.html">Capstone</a></div>
+</div></nav>
+<header class="article-head"><div class="inner"><p class="eyebrow">Resources</p><h1>Reading List &amp; Resources</h1></div></header><main class="page prose">
+<blockquote>
+<p>Curated by topic rather than exhaustively. Prefer primary sources (peer-reviewed
+papers, official docs) over blogs. Because the field moves quickly, treat any
+specific model or tool as a <em>representative</em> of its category and check for the
+current best-in-class when you teach the course. Graduate students should pull
+recent (past ~3–5 years) papers for the capstone literature grounding.</p>
+</blockquote>
+<h2 id="foundations-robotics-manipulation">Foundations — robotics &amp; manipulation</h2>
+<ul>
+<li>A standard robotics textbook covering coordinate frames, forward/inverse
+  kinematics, and manipulator Jacobians (e.g., a widely used <em>Introduction to
+  Robotics</em> / <em>Modern Robotics</em> text). Read the kinematics and workspace chapters
+  before Module 4.</li>
+<li>Reference material on <strong>parallel mechanisms</strong> and their singularities — the
+  transmission-angle concept central to Module 4.</li>
+</ul>
+<h2 id="machine-vision-perception">Machine vision &amp; perception</h2>
+<ul>
+<li>A computer-vision text or course covering detection, segmentation, and the
+  precision/recall/mAP metric family.</li>
+<li>Documentation for a current single-stage detector family (YOLO-lineage) and an
+  instance-segmentation model, for the Module 2 lab.</li>
+<li>Stereo vision fundamentals: disparity, the <code>Z = f·b/d</code> relationship, and
+  calibration/extrinsics.</li>
+<li>Survey literature on <strong>agricultural perception</strong> and fruit detection under
+  occlusion and variable illumination (for the grad extension and capstone).</li>
+</ul>
+<h2 id="edge-computing-ml-ai">Edge computing, ML &amp; AI</h2>
+<ul>
+<li>Official documentation for the target edge platform (NVIDIA Jetson family) and
+  its inference stack (TensorRT, CUDA/cuDNN), plus the ONNX interchange format.</li>
+<li>Material on <strong>model optimization</strong>: quantization (INT8/FP16), pruning, and
+  knowledge distillation, with attention to accuracy validation after
+  optimization.</li>
+<li>Introductory <strong>deep reinforcement learning</strong> material, and reading on
+  <strong>sim-to-real transfer</strong> and <strong>domain randomization</strong> for robotic grasping.</li>
+<li>Background on <strong>synthetic data</strong> generation, including diffusion-based
+  augmentation and neural-field scene reconstruction (NeRF / Gaussian splatting)
+  as used for training-data expansion.</li>
+</ul>
+<h2 id="systems-ros-and-integration">Systems, ROS, and integration</h2>
+<ul>
+<li><strong>ROS 2</strong> official tutorials and concept docs (nodes, topics, executors,
+  real-time considerations).</li>
+<li>The <strong>farm-ng Amiga</strong> developer documentation and SDK for the platform,
+  CAN integration, and the Brain controller.</li>
+<li>Reference reading on <strong>CAN bus</strong> fundamentals for the real-time control plane.</li>
+</ul>
+<h2 id="safety-testing-and-deployment">Safety, testing, and deployment</h2>
+<ul>
+<li>An introduction to <strong>FMEA</strong> (failure mode and effects analysis) for the Module 6
+  hazard-analysis workshop.</li>
+<li>Material on <strong>machine safety</strong> for mobile/autonomous equipment (e-stops,
+  interlocks, functional-safety mindset) at an introductory level.</li>
+<li>Extension/industry reporting on <strong>agricultural labor</strong> economics and the
+  automation debate, chosen to represent multiple perspectives fairly for the
+  ethics discussion.</li>
+</ul>
+<h2 id="course-internal-artifacts">Course-internal artifacts</h2>
+<ul>
+<li>The browser <strong>digital twin</strong> — the primary interactive resource, used in Labs
+  1, 4, and the capstone.</li>
+<li><a href="../specs/design-specification.md"><code>specs/design-specification.md</code></a> — worked
+  specification to read and emulate.</li>
+<li><a href="../specs/bill-of-materials.md"><code>specs/bill-of-materials.md</code></a> — worked BOM.</li>
+<li><a href="../specs/architecture.md"><code>specs/architecture.md</code></a> — reference hardware/software
+  architecture.</li>
+<li><a href="glossary.md"><code>resources/glossary.md</code></a> — terms used across the course.</li>
+</ul>
+<h2 id="a-note-on-citing-sources-in-student-work">A note on citing sources in student work</h2>
+<p>Because this repository is private and course-specific, fill in the exact
+editions, URLs, and DOIs your program prefers when you instantiate the course.
+The categories above are deliberately tool-agnostic so the reading list ages
+gracefully; the instructor localizes them to current best sources at teaching
+time.</p></main>
+<footer class="foot"><div class="inner">
+  <div>SIM2FIELD · Robotic Harvesting Systems — course materials</div>
+  <div><a href="index.html">Home</a> · <a href="demo-page.html">Live Demo</a> · <a href="capstone.html">Capstone</a></div>
+</div></footer>
+
+</body>
+</html>

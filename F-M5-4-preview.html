@@ -1,0 +1,51 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="color-scheme" content="dark"><title>F-M5-4 preview - Kalman cycle</title><style>:root{--bg:#0e120d;--surface:#161c14;--surface-2:#0b0e0a;--surface-3:#12160f;--border:#2b3527;--border-strong:#3a4633;--text-primary:#eef2e6;--text-secondary:#c8cfbe;--text-muted:#adb4a2;--accent:#9bcf3b;--info:#6fb0d9}
+body{margin:0;background:var(--bg);color:var(--text-primary);font-family:'IBM Plex Mono',ui-monospace,monospace;padding:2rem}
+.figure{max-width:840px;margin:0 auto;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.figbody{padding:1rem 1.1rem;background:var(--surface-3);overflow-x:auto} .figbody svg{display:block;width:100%;height:auto;min-width:620px}
+figcaption{padding:.7rem 1rem;font-size:.82rem;color:var(--text-muted);border-top:1px solid var(--border)} .fid{font-size:.64rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-right:.5rem}</style></head>
+<body><figure class="figure"><div class="figbody"><svg viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The Kalman filter cycle: predict advances the state and inflates the covariance, update corrects with a measurement and shrinks the covariance; the recursive loop keeps the pose uncertainty small enough to clear the occlusion gate and land in the capture tolerance." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="k1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<rect x="64" y="60" width="300" height="120" rx="11" fill="var(--surface)" stroke="var(--info)" stroke-width="1.5"/>
+<text x="80" y="84" font-size="14" fill="var(--info)" font-weight="700" font-family="'Space Grotesk',sans-serif">PREDICT</text>
+<text x="80" y="101" font-size="8.5" fill="var(--text-muted)">advance state, inflate covariance (motion model + process noise)</text>
+<text x="80" y="124" font-size="10.5" fill="var(--text-secondary)">x_pred = F x</text>
+<text x="80" y="142" font-size="10.5" fill="var(--text-secondary)">P_pred = F P F^T + Q</text>
+<text x="80" y="164" font-size="8" fill="var(--info)">covariance grows -&gt;</text>
+<rect x="396" y="60" width="300" height="120" rx="11" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.5"/>
+<text x="412" y="84" font-size="14" fill="var(--accent)" font-weight="700" font-family="'Space Grotesk',sans-serif">UPDATE</text>
+<text x="412" y="101" font-size="8.5" fill="var(--text-muted)">correct with measurement z, weighted by the Kalman gain K</text>
+<text x="412" y="122" font-size="9" fill="var(--text-secondary)">K = P_pred H^T (H P_pred H^T + R)^-1</text>
+<text x="412" y="139" font-size="9" fill="var(--text-secondary)">x = x_pred + K (z - H x_pred)</text>
+<text x="412" y="156" font-size="9" fill="var(--text-secondary)">P = (I - K H) P_pred</text>
+<text x="680" y="174" text-anchor="end" font-size="8" fill="var(--accent)">&lt;- covariance shrinks</text>
+<line x1="364" y1="102" x2="393" y2="102" stroke="var(--border-strong)" stroke-width="1.6" marker-end="url(#k1)"/>
+<text x="380.0" y="96" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">prior</text>
+<line x1="546.0" y1="26" x2="546.0" y2="57" stroke="var(--border-strong)" stroke-width="1.4" marker-end="url(#k1)"/>
+<text x="552.0" y="22" font-size="8.5" fill="var(--text-muted)">measurement z (GNSS / IMU / odometry / stereo)</text>
+<path d="M546.0,180 L546.0,220 L214.0,220 L214.0,180" fill="none" stroke="var(--border-strong)" stroke-width="1.6" marker-end="url(#k1)"/>
+<text x="380.0" y="214" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">recurse: next time step</text>
+<text x="64" y="266" font-size="9.5" fill="var(--text-primary)" font-weight="700">Pose uncertainty over the cycle</text>
+<line x1="64" y1="300" x2="700" y2="300" stroke="var(--border-strong)" stroke-width="1.2"/>
+<ellipse cx="94" cy="274" rx="18" ry="10" fill="var(--accent)" fill-opacity="0.16" stroke="var(--accent)"/>
+<line x1="94" y1="300" x2="94" y2="304" stroke="var(--border-strong)"/>
+<ellipse cx="184" cy="274" rx="28" ry="20" fill="var(--info)" fill-opacity="0.16" stroke="var(--info)"/>
+<line x1="184" y1="300" x2="184" y2="304" stroke="var(--border-strong)"/>
+<text x="139.0" y="316" text-anchor="middle" font-size="7.5" fill="var(--info)">predict</text>
+<ellipse cx="274" cy="274" rx="17" ry="9" fill="var(--accent)" fill-opacity="0.16" stroke="var(--accent)"/>
+<line x1="274" y1="300" x2="274" y2="304" stroke="var(--border-strong)"/>
+<text x="229.0" y="316" text-anchor="middle" font-size="7.5" fill="var(--accent)">update</text>
+<ellipse cx="364" cy="274" rx="27" ry="19" fill="var(--info)" fill-opacity="0.16" stroke="var(--info)"/>
+<line x1="364" y1="300" x2="364" y2="304" stroke="var(--border-strong)"/>
+<text x="319.0" y="316" text-anchor="middle" font-size="7.5" fill="var(--info)">predict</text>
+<ellipse cx="454" cy="274" rx="16" ry="8" fill="var(--accent)" fill-opacity="0.16" stroke="var(--accent)"/>
+<line x1="454" y1="300" x2="454" y2="304" stroke="var(--border-strong)"/>
+<text x="409.0" y="316" text-anchor="middle" font-size="7.5" fill="var(--accent)">update</text>
+<ellipse cx="544" cy="274" rx="26" ry="18" fill="var(--info)" fill-opacity="0.16" stroke="var(--info)"/>
+<line x1="544" y1="300" x2="544" y2="304" stroke="var(--border-strong)"/>
+<text x="499.0" y="316" text-anchor="middle" font-size="7.5" fill="var(--info)">predict</text>
+<ellipse cx="634" cy="274" rx="15" ry="7" fill="var(--accent)" fill-opacity="0.16" stroke="var(--accent)"/>
+<line x1="634" y1="300" x2="634" y2="304" stroke="var(--border-strong)"/>
+<text x="589.0" y="316" text-anchor="middle" font-size="7.5" fill="var(--accent)">update</text>
+<text x="64" y="340" font-size="8.8" fill="var(--text-secondary)">Each update shrinks the covariance. That shrinking (not a better mean) lets the fruit clear the occlusion gate (Sec. 6.6)</text>
+<text x="64" y="353" font-size="8.8" fill="var(--text-secondary)">and land inside the capture tolerance the Grip-Force Window sets (Sec. 6.7). The gain K trusts each sensor inversely to its noise.</text>
+</svg></div><figcaption><span class="fid">F-M5-4</span>The Kalman predict/update cycle. Predict advances the state and inflates the covariance; update corrects with a measurement and shrinks it. The sawtooth shows uncertainty growing on predict and shrinking on update; that shrinking is what lets a fruit clear the occlusion gate and land in the capture tolerance. Module 5, Section 6.5.</figcaption></figure></body></html>

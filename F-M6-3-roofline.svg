@@ -1,0 +1,25 @@
+<svg viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The roofline model: attainable performance is the lower of the memory-bandwidth slope and the peak-compute ceiling, meeting at the ridge point; kernels left of the ridge are memory-bound, right of it compute-bound, and the two need different fixes." font-family="'IBM Plex Mono',monospace">
+<line x1="70" y1="48" x2="70" y2="322" stroke="var(--border-strong)" stroke-width="1.5"/>
+<line x1="70" y1="322" x2="706" y2="322" stroke="var(--border-strong)" stroke-width="1.5"/>
+<path d="M66,52 L70,45 L74,52 z" fill="var(--border-strong)"/>
+<path d="M706,318 L713,322 L706,326 z" fill="var(--border-strong)"/>
+<text x="62" y="187.0" text-anchor="middle" font-size="9.5" fill="var(--text-muted)" transform="rotate(-90 62 187.0)">attainable performance (FLOP/s)</text>
+<text x="388.0" y="352" text-anchor="middle" font-size="9.5" fill="var(--text-muted)">arithmetic intensity (FLOP / byte)</text>
+<rect x="70" y="52" width="282" height="270" fill="var(--warn)" fill-opacity="0.05"/>
+<rect x="352" y="52" width="354" height="270" fill="var(--accent)" fill-opacity="0.05"/>
+<line x1="70" y1="322" x2="352" y2="112" stroke="var(--warn)" stroke-width="2.6"/>
+<line x1="352" y1="112" x2="706" y2="112" stroke="var(--accent)" stroke-width="2.6"/>
+<circle cx="352" cy="112" r="4" fill="var(--text-primary)"/>
+<line x1="352" y1="112" x2="352" y2="322" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="352" y="104" text-anchor="middle" font-size="8.5" fill="var(--text-primary)" font-weight="700">ridge point</text>
+<text x="700" y="104" text-anchor="end" font-size="9" fill="var(--accent)" font-weight="700">peak compute (ceiling)</text>
+<text x="140" y="252" font-size="9" fill="var(--warn)" font-weight="700" transform="rotate(-38 140 252)">memory bandwidth (slope)</text>
+<text x="211.0" y="74" text-anchor="middle" font-size="10.5" fill="var(--warn-text)" font-weight="700">MEMORY-BOUND</text>
+<text x="211.0" y="89" text-anchor="middle" font-size="8" fill="var(--text-muted)">limited by data movement</text>
+<text x="529.0" y="74" text-anchor="middle" font-size="10.5" fill="var(--accent)" font-weight="700">COMPUTE-BOUND</text>
+<text x="529.0" y="89" text-anchor="middle" font-size="8" fill="var(--text-muted)">limited by FLOPs</text>
+<circle cx="180" cy="240.1" r="4.5" fill="var(--danger)"/>
+<text x="188" y="236.1" font-size="8.5" fill="var(--danger-text)" font-weight="700">a perception kernel</text>
+<text x="188" y="248.1" font-size="8" fill="var(--text-muted)">memory-bound: a faster core does nothing</text>
+<text x="78" y="310" font-size="8.5" fill="var(--text-secondary)">fix by region: memory-bound -> cut data movement / raise arithmetic intensity;  compute-bound -> faster compute / fewer FLOPs</text>
+</svg>

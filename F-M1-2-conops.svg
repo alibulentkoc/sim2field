@@ -1,0 +1,44 @@
+<svg viewBox="0 0 760 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The concept of operations as a narrative: a drive-over rover straddles a bed, detects mature fruit ahead, brings each to a fixed pick station, grasps it with a compliant fluid-powered end-effector, and transfers it to a trailer, all on-robot with a human supervising; every later requirement traces to a sentence, and the narrative decomposes into the signal-to-action spine." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Concept of operations (ConOps): the root of traceability</text>
+<rect x="30" y="52" width="138" height="52" rx="8" fill="var(--surface)" stroke="var(--info)" stroke-width="1.3"/>
+<text x="99.0" y="72" font-size="8.4" fill="var(--info)" font-weight="700" text-anchor="middle">straddle</text>
+<text x="99.0" y="88" font-size="6.2" fill="var(--text-muted)" text-anchor="middle">the bed, travel at walking</text>
+<text x="99.0" y="97" font-size="6.2" fill="var(--text-muted)" text-anchor="middle"> pace</text>
+<line x1="168" y1="78" x2="176" y2="78" stroke="var(--border-strong)" stroke-width="1.2" marker-end="url(#a)"/>
+<rect x="176" y="52" width="138" height="52" rx="8" fill="var(--surface)" stroke="var(--info)" stroke-width="1.3"/>
+<text x="245.0" y="72" font-size="8.4" fill="var(--info)" font-weight="700" text-anchor="middle">detect</text>
+<text x="245.0" y="88" font-size="6.2" fill="var(--text-muted)" text-anchor="middle">mature fruit ahead</text>
+<line x1="314" y1="78" x2="322" y2="78" stroke="var(--border-strong)" stroke-width="1.2" marker-end="url(#a)"/>
+<rect x="322" y="52" width="138" height="52" rx="8" fill="var(--surface)" stroke="var(--info)" stroke-width="1.3"/>
+<text x="391.0" y="72" font-size="8.4" fill="var(--info)" font-weight="700" text-anchor="middle">stage</text>
+<text x="391.0" y="88" font-size="6.2" fill="var(--text-muted)" text-anchor="middle">bring each to the fixed pi</text>
+<text x="391.0" y="97" font-size="6.2" fill="var(--text-muted)" text-anchor="middle">ck station</text>
+<line x1="460" y1="78" x2="468" y2="78" stroke="var(--border-strong)" stroke-width="1.2" marker-end="url(#a)"/>
+<rect x="468" y="52" width="138" height="52" rx="8" fill="var(--surface)" stroke="var(--info)" stroke-width="1.3"/>
+<text x="537.0" y="72" font-size="8.4" fill="var(--info)" font-weight="700" text-anchor="middle">grasp</text>
+<text x="537.0" y="88" font-size="6.2" fill="var(--text-muted)" text-anchor="middle">compliant fluid-powered en</text>
+<text x="537.0" y="97" font-size="6.2" fill="var(--text-muted)" text-anchor="middle">d-effector</text>
+<line x1="606" y1="78" x2="614" y2="78" stroke="var(--border-strong)" stroke-width="1.2" marker-end="url(#a)"/>
+<rect x="614" y="52" width="138" height="52" rx="8" fill="var(--surface)" stroke="var(--info)" stroke-width="1.3"/>
+<text x="683.0" y="72" font-size="8.4" fill="var(--info)" font-weight="700" text-anchor="middle">transfer</text>
+<text x="683.0" y="88" font-size="6.2" fill="var(--text-muted)" text-anchor="middle">to the side-towed trailer</text>
+<text x="20" y="128" font-size="7.4" fill="var(--text-muted)">all perception and control run on-robot (no network in the loop); a human supervises, does not tele-operate.</text>
+<rect x="30" y="150" width="138" height="30" rx="6" fill="var(--accent)" fill-opacity="0.14" stroke="var(--accent)" stroke-width="1.2"/>
+<text x="99.0" y="169" font-size="8" fill="var(--accent)" font-weight="700" text-anchor="middle">PERCEIVE</text>
+<line x1="168" y1="165" x2="176" y2="165" stroke="var(--border-strong)" stroke-width="1.2" marker-end="url(#a)"/>
+<rect x="176" y="150" width="138" height="30" rx="6" fill="var(--accent)" fill-opacity="0.14" stroke="var(--accent)" stroke-width="1.2"/>
+<text x="245.0" y="169" font-size="8" fill="var(--accent)" font-weight="700" text-anchor="middle">DECIDE</text>
+<line x1="314" y1="165" x2="322" y2="165" stroke="var(--border-strong)" stroke-width="1.2" marker-end="url(#a)"/>
+<rect x="322" y="150" width="138" height="30" rx="6" fill="var(--accent)" fill-opacity="0.14" stroke="var(--accent)" stroke-width="1.2"/>
+<text x="391.0" y="169" font-size="8" fill="var(--accent)" font-weight="700" text-anchor="middle">ACT</text>
+<line x1="460" y1="165" x2="468" y2="165" stroke="var(--border-strong)" stroke-width="1.2" marker-end="url(#a)"/>
+<rect x="468" y="150" width="138" height="30" rx="6" fill="var(--warn)" fill-opacity="0.14" stroke="var(--warn)" stroke-width="1.2"/>
+<text x="537.0" y="169" font-size="8" fill="var(--warn)" font-weight="700" text-anchor="middle">INTEGRATE</text>
+<line x1="606" y1="165" x2="614" y2="165" stroke="var(--border-strong)" stroke-width="1.2" marker-end="url(#a)"/>
+<rect x="614" y="150" width="138" height="30" rx="6" fill="var(--warn)" fill-opacity="0.14" stroke="var(--warn)" stroke-width="1.2"/>
+<text x="683.0" y="169" font-size="8" fill="var(--warn)" font-weight="700" text-anchor="middle">DEPLOY</text>
+<text x="20" y="144" font-size="7" fill="var(--accent)">decomposing the ConOps by function yields the signal-to-action spine (CEC-01):</text>
+<text x="20" y="206" font-size="7.8" fill="var(--text-secondary)" font-weight="700">Every later requirement, budget, and subsystem is traceable to a sentence in the narrative.</text>
+<text x="20" y="220" font-size="7.8" fill="var(--text-muted)">That is the point of a ConOps: it is the root of the traceability tree, and the spine follows the flow of information through the machine. Sections 6.3 and 6.4.</text>
+</svg>

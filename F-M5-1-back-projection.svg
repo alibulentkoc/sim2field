@@ -1,0 +1,23 @@
+<svg viewBox="0 0 760 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Back-projection: with a calibrated camera and a known depth, a pixel is mapped to a 3-D point in the camera frame by scaling the inverse-intrinsics ray by the depth; the mask centroid from detection plus the stereo depth gives the fruit's camera-frame position, the start of the frame chain." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">From pixel to 3-D: back-projection</text>
+<rect x="90" y="86" width="120" height="120" rx="4" fill="#1f3a1a" stroke="var(--border-strong)"/>
+<text x="150" y="78" font-size="7.4" fill="var(--info)" text-anchor="middle">image (u,v)</text>
+<circle cx="168" cy="120" r="6" fill="var(--accent-2)" fill-opacity="0.6" stroke="var(--accent-2)"/>
+<line x1="150" y1="120" x2="186" y2="120" stroke="var(--info)" stroke-width="0.6"/><line x1="168" y1="102" x2="168" y2="138" stroke="var(--info)" stroke-width="0.6"/>
+<text x="168" y="150" font-size="6.4" fill="var(--text-muted)" text-anchor="middle">mask centroid (M4)</text>
+<circle cx="260" cy="146" r="4" fill="var(--surface)" stroke="var(--text-secondary)" stroke-width="1.4"/>
+<text x="260" y="162" font-size="6.6" fill="var(--text-muted)" text-anchor="middle">camera</text>
+<line x1="168" y1="120" x2="560" y2="96" stroke="var(--info)" stroke-width="1.6" marker-end="url(#a)"/>
+<circle cx="560" cy="96" r="7" fill="var(--accent-2)"/>
+<text x="570" y="98" font-size="8.5" fill="var(--accent-2)" font-weight="700">P_c (fruit, camera frame)</text>
+<line x1="260" y1="222" x2="560" y2="222" stroke="var(--text-secondary)" stroke-width="0.8"/>
+<line x1="260" y1="218" x2="260" y2="226" stroke="var(--text-secondary)"/><line x1="560" y1="218" x2="560" y2="226" stroke="var(--text-secondary)"/>
+<text x="410.0" y="234" font-size="7.4" fill="var(--accent)" text-anchor="middle">depth Z (stereo, M3)</text>
+<rect x="470" y="126" width="272" height="74" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="484" y="146" font-size="8.6" fill="var(--accent)" font-weight="700">P_c = Z K^-1 [u v 1]^T</text>
+<text x="484" y="164" font-size="7" fill="var(--text-muted)">K = intrinsics (from M3 calibration)</text>
+<text x="484" y="178" font-size="7" fill="var(--text-muted)">known depth Z inverts the projection</text>
+<text x="484" y="192" font-size="7" fill="var(--text-secondary)">mask centroid + stereo depth -> P_c</text>
+<text x="20" y="252" font-size="7.8" fill="var(--text-muted)">Everything downstream (the frame chain) is moving this camera-frame point into the frame where the robot acts. Section 6.2.</text>
+</svg>

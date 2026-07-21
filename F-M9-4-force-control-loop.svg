@@ -1,0 +1,34 @@
+<svg viewBox="0 0 760 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Closed-loop grasp-force control: a controller compares measured force to the target from the policy and drives a proportional valve to hold it; direct control regulates force to a setpoint while impedance control regulates the force-displacement relationship so the gripper behaves like a controllable spring-damper, and the loop bandwidth is kept conservative because delay plus fluid compliance invites oscillation." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Closed-loop grasp-force control</text>
+<rect x="30" y="70" width="120" height="40" rx="7" fill="var(--surface)" stroke="var(--accent-2)" stroke-width="1.4"/>
+<text x="90.0" y="88.0" font-size="8" fill="var(--accent-2)" font-weight="700" text-anchor="middle">F_target</text>
+<text x="90.0" y="100.0" font-size="6.4" fill="var(--text-muted)" text-anchor="middle">from policy (M7)</text>
+<rect x="196" y="70" width="120" height="40" rx="7" fill="var(--surface)" stroke="var(--info)" stroke-width="1.4"/>
+<text x="256.0" y="88.0" font-size="8" fill="var(--info)" font-weight="700" text-anchor="middle">controller</text>
+<text x="256.0" y="100.0" font-size="6.4" fill="var(--text-muted)" text-anchor="middle">proportional valve</text>
+<rect x="362" y="70" width="120" height="40" rx="7" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="422.0" y="88.0" font-size="8" fill="var(--accent)" font-weight="700" text-anchor="middle">actuator</text>
+<text x="422.0" y="100.0" font-size="6.4" fill="var(--text-muted)" text-anchor="middle">gripper + fluid</text>
+<rect x="528" y="70" width="120" height="40" rx="7" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.4"/>
+<text x="588.0" y="88.0" font-size="8" fill="var(--warn)" font-weight="700" text-anchor="middle">fruit contact</text>
+<text x="588.0" y="100.0" font-size="6.4" fill="var(--text-muted)" text-anchor="middle">force F</text>
+<line x1="150" y1="90" x2="194" y2="90" stroke="var(--border-strong)" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="316" y1="90" x2="360" y2="90" stroke="var(--border-strong)" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="482" y1="90" x2="526" y2="90" stroke="var(--border-strong)" stroke-width="1.4" marker-end="url(#a)"/>
+<path d="M 588,110 L 588,150 L 256,150 L 256,112" fill="none" stroke="var(--border-strong)" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="420" y="146" font-size="7" fill="var(--text-muted)">measured pressure / force (M3)</text>
+<text x="196" y="128" font-size="6.6" fill="var(--danger-text)">- error</text>
+<rect x="30" y="172" width="350" height="70" rx="8" fill="var(--surface-2)" stroke="var(--info)" stroke-opacity="0.6"/>
+<text x="44" y="190" font-size="8" fill="var(--info)" font-weight="700">Direct force control</text>
+<text x="44" y="204" font-size="7" fill="var(--text-muted)">regulate F to a setpoint (PID on pressure);</text>
+<text x="44" y="215" font-size="7" fill="var(--text-muted)">simple, but stiff response to disturbances.</text>
+<text x="44" y="232" font-size="7" fill="var(--text-secondary)">cmd &#8733; K_p (F_target - F_meas) + ...</text>
+<rect x="392" y="172" width="350" height="70" rx="8" fill="var(--surface-2)" stroke="var(--accent-2)" stroke-opacity="0.6"/>
+<text x="406" y="190" font-size="8" fill="var(--accent-2)" font-weight="700">Impedance / compliance control</text>
+<text x="406" y="204" font-size="7" fill="var(--text-muted)">render a spring-damper against the fruit:</text>
+<text x="406" y="220" font-size="7.4" fill="var(--text-secondary)">F = K_d(x_d - x) + B_d(x_d' - x')</text>
+<text x="406" y="234" font-size="6.6" fill="var(--text-muted)">control HOW it interacts, not just how hard.</text>
+<text x="20" y="268" font-size="7.6" fill="var(--text-muted)">Delay (edge control latency, CEC-04/M6) plus fluid compliance is a recipe for oscillation, so bandwidth is chosen conservatively:</text>
+<text x="20" y="280" font-size="7.6" fill="var(--text-muted)">keep crossover &#969;_c &lt;~ 1/(k &#964;_d). The same compliance that limits bandwidth makes imperfect control gentle (EI-09). Sections 6.4 and 7.3.</text>
+</svg>

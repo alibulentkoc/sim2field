@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="color-scheme" content="dark"><title>F-M16-2 preview - Break-even</title><style>:root{--bg:#0e120d;--surface:#161c14;--surface-2:#0b0e0a;--surface-3:#12160f;--border:#2b3527;--border-strong:#3a4633;--text-primary:#eef2e6;--text-secondary:#c8cfbe;--text-muted:#adb4a2;--accent:#9bcf3b;--info:#6fb0d9;--warn-text:#eed9b4;--danger:#f0556a;--danger-text:#f697a4}
+body{margin:0;background:var(--bg);color:var(--text-primary);font-family:'IBM Plex Mono',ui-monospace,monospace;padding:2rem}
+.figure{max-width:840px;margin:0 auto;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.figbody{padding:1rem 1.1rem;background:var(--surface-3);overflow-x:auto} .figbody svg{display:block;width:100%;height:auto;min-width:620px}
+figcaption{padding:.7rem 1rem;font-size:.82rem;color:var(--text-muted);border-top:1px solid var(--border)} .fid{font-size:.64rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-right:.5rem}</style></head>
+<body><figure class="figure"><div class="figbody"><svg viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cost per acre versus acres covered per season: the machine cost per acre falls toward an operating-cost floor as acres rise, crossing the flat manual-harvest labor cost at a break-even acreage; below break-even manual is cheaper (not-yet), above it the machine is cheaper (deploy)." font-family="'IBM Plex Mono',monospace">
+<rect x="82" y="60" width="203" height="262" fill="var(--info)" fill-opacity="0.05"/>
+<rect x="285" y="60" width="405" height="262" fill="var(--accent)" fill-opacity="0.06"/>
+<line x1="82" y1="56" x2="82" y2="322" stroke="var(--border-strong)" stroke-width="1.5"/>
+<line x1="82" y1="322" x2="690" y2="322" stroke="var(--border-strong)" stroke-width="1.5"/>
+<path d="M78,60 L82,53 L86,60 z" fill="var(--border-strong)"/>
+<path d="M690,318 L697,322 L690,326 z" fill="var(--border-strong)"/>
+<text x="74" y="191.0" text-anchor="middle" font-size="9.5" fill="var(--text-muted)" transform="rotate(-90 74 191.0)">cost per acre</text>
+<text x="386.0" y="352" text-anchor="middle" font-size="9.5" fill="var(--text-muted)">acres covered per season  (throughput x uptime x season length)</text>
+<line x1="82" y1="287.1" x2="690" y2="287.1" stroke="var(--text-muted)" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="684" y="282.1" text-anchor="end" font-size="7.8" fill="var(--text-muted)">operating-cost floor</text>
+<polyline points="82.0,77.5 98.9,119.4 115.8,147.3 132.7,167.3 149.6,182.3 166.4,193.9 183.3,203.2 200.2,210.8 217.1,217.2 234.0,222.6 250.9,227.2 267.8,231.2 284.7,234.7 301.6,237.7 318.4,240.5 335.3,242.9 352.2,245.1 369.1,247.1 386.0,249.0 402.9,250.6 419.8,252.1 436.7,253.5 453.6,254.8 470.4,256.0 487.3,257.1 504.2,258.2 521.1,259.1 538.0,260.0 554.9,260.9 571.8,261.7 588.7,262.4 605.6,263.1 622.4,263.8 639.3,264.4 656.2,265.0 673.1,265.6 690.0,266.1" fill="none" stroke="var(--accent)" stroke-width="2.6"/>
+<text x="143" y="171" font-size="8.5" fill="var(--accent)" font-weight="700">machine: TCO / acres</text>
+<text x="143" y="183" font-size="7.5" fill="var(--text-muted)">= fixed/acres + operating</text>
+<line x1="82" y1="234.7" x2="690" y2="234.7" stroke="var(--danger)" stroke-width="2.4"/>
+<text x="568" y="229" text-anchor="middle" font-size="8.5" fill="var(--danger-text)" font-weight="700">manual harvest (labor / acre)</text>
+<line x1="284.7" y1="234.7" x2="284.7" y2="322" stroke="var(--text-secondary)" stroke-width="1" stroke-dasharray="4 3"/>
+<circle cx="284.7" cy="234.7" r="4.5" fill="var(--text-primary)"/>
+<text x="284.7" y="225" text-anchor="middle" font-size="8.5" fill="var(--text-primary)" font-weight="700">break-even</text>
+<text x="183" y="78" text-anchor="middle" font-size="9" fill="var(--info)" font-weight="700">manual cheaper</text>
+<text x="183" y="91" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">(not-yet)</text>
+<text x="487" y="78" text-anchor="middle" font-size="9" fill="var(--accent)" font-weight="700">machine cheaper</text>
+<text x="487" y="91" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">(deploy)</text>
+<text x="244" y="368" text-anchor="middle" font-size="7.5" fill="var(--warn-text)">deploy-with-limits (near break-even)</text>
+<text x="20" y="368" font-size="8.3" fill="var(--text-secondary)">Uptime and bruise rate move the curves: a machine down 20% covers 20% fewer acres, shifting break-even right; bruises cut marketable yield. Axes qualitative; values [VERIFY@PUB].</text>
+</svg></div><figcaption><span class="fid">F-M16-2</span>Cost-per-acre break-even against manual harvest. The machine cost per acre falls toward its operating-cost floor as acres rise, crossing the flat manual labor cost at a break-even acreage: below it manual is cheaper (not-yet), above it the machine is cheaper (deploy). Uptime and bruise rate move the curves. Axes qualitative. Module 16, Sections 6.2, 6.3, 7.1.</figcaption></figure></body></html>

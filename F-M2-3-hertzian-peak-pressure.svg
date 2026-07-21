@@ -1,0 +1,28 @@
+<svg viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Peak contact pressure versus grip force for a stiff pad and a compliant pad; both rise as force to the one-third, but the compliant pad sits lower and reaches the bruise-pressure threshold only at a much larger force, widening the safe-force window." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="d3" viewBox="0 0 10 10" refX="5" refY="9" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L5,10 L10,0 z" fill="var(--accent)"/></marker></defs>
+<rect x="70" y="52" width="636" height="98.0" fill="var(--danger)" fill-opacity="0.08"/>
+<line x1="70" y1="48" x2="70" y2="322" stroke="var(--border-strong)" stroke-width="1.5"/>
+<line x1="70" y1="322" x2="706" y2="322" stroke="var(--border-strong)" stroke-width="1.5"/>
+<path d="M66,52 L70,45 L74,52 z" fill="var(--border-strong)"/>
+<path d="M706,318 L713,322 L706,326 z" fill="var(--border-strong)"/>
+<text x="62" y="187.0" text-anchor="middle" font-size="10" fill="var(--text-muted)" transform="rotate(-90 62 187.0)">peak pressure  p<tspan dy="3" font-size="70%">max</tspan></text>
+<text x="388.0" y="352" text-anchor="middle" font-size="10" fill="var(--text-muted)">grip force  F</text>
+<line x1="70" y1="150.0" x2="706" y2="150.0" stroke="var(--danger)" stroke-width="1.6" stroke-dasharray="6 3"/>
+<text x="700" y="144.0" text-anchor="end" font-size="9.5" fill="var(--danger-text)" font-weight="700">p<tspan dy="3" font-size="70%">br</tspan> bruise pressure</text>
+<text x="190" y="72" font-size="10" fill="var(--danger-text)" font-weight="700">BRUISE region</text>
+<polyline points="70.0,322.0 82.7,248.7 95.4,229.7 108.2,216.3 120.9,205.7 133.6,196.7 146.3,188.8 159.0,181.8 171.8,175.4 184.5,169.6 197.2,164.1 209.9,159.0 222.6,154.2 235.4,149.7 248.1,145.4 260.8,141.3 273.5,137.3 286.2,133.6 299.0,129.9 311.7,126.4 324.4,123.1 337.1,119.8 349.8,116.6 362.6,113.6 375.3,110.6 388.0,107.7 400.7,104.9 413.4,102.1 426.2,99.5 438.9,96.8 451.6,94.3 464.3,91.8 477.0,89.3 489.8,86.9 502.5,84.6 515.2,82.3 527.9,80.0 540.6,77.8 553.4,75.6 566.1,73.5 578.8,71.4 591.5,69.3 604.2,67.2 617.0,65.2 629.7,63.3 642.4,61.3 655.1,59.4 667.8,57.5 680.6,55.6 693.3,53.8 706.0,52.0" fill="none" stroke="var(--warn)" stroke-width="2.4"/>
+<polyline points="70.0,322.0 82.7,269.2 95.4,255.5 108.2,245.9 120.9,238.2 133.6,231.8 146.3,226.1 159.0,221.1 171.8,216.5 184.5,212.2 197.2,208.3 209.9,204.6 222.6,201.2 235.4,197.9 248.1,194.8 260.8,191.9 273.5,189.0 286.2,186.3 299.0,183.7 311.7,181.2 324.4,178.8 337.1,176.4 349.8,174.1 362.6,171.9 375.3,169.8 388.0,167.7 400.7,165.7 413.4,163.7 426.2,161.8 438.9,159.9 451.6,158.0 464.3,156.2 477.0,154.5 489.8,152.7 502.5,151.1 515.2,149.4 527.9,147.8 540.6,146.2 553.4,144.6 566.1,143.1 578.8,141.5 591.5,140.0 604.2,138.6 617.0,137.1 629.7,135.7 642.4,134.3 655.1,132.9 667.8,131.6 680.6,130.2 693.3,128.9 706.0,127.6" fill="none" stroke="var(--accent)" stroke-width="2.4"/>
+<text x="702.0" y="54.0" text-anchor="end" font-size="9" fill="var(--warn)" font-weight="700">stiff pad (high E*)</text>
+<text x="702.0" y="141.6" text-anchor="end" font-size="9" fill="var(--accent)" font-weight="700">compliant / fluid-backed pad (low E*)</text>
+<line x1="234.4" y1="150.0" x2="234.4" y2="322" stroke="var(--warn)" stroke-width="1" stroke-dasharray="3 3"/>
+<circle cx="234.4" cy="150.0" r="3.2" fill="var(--warn)"/>
+<text x="234.4" y="337" text-anchor="middle" font-size="8.5" fill="var(--warn)">F_bruise (stiff)</text>
+<line x1="510.4" y1="150.0" x2="510.4" y2="322" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 3"/>
+<circle cx="510.4" cy="150.0" r="3.2" fill="var(--accent)"/>
+<text x="510.4" y="337" text-anchor="middle" font-size="8.5" fill="var(--accent)">F_bruise (compliant)</text>
+<line x1="234.4" y1="344" x2="510.4" y2="344" stroke="var(--text-muted)" stroke-width="1"/>
+<text x="372.4" y="356" text-anchor="middle" font-size="8.5" fill="var(--text-secondary)">compliance widens the safe-force window</text>
+<text x="78" y="92" font-size="9" fill="var(--text-secondary)">p_max ~ F^(1/3) (E*)^(2/3)  :  same force, two peak pressures (one safe, one bruising)</text>
+<line x1="464.3" y1="91.8" x2="464.3" y2="156.2" stroke="var(--accent)" stroke-width="1.3" marker-end="url(#d3)"/>
+<text x="470.3" y="124.0" font-size="8" fill="var(--accent)">lower E* lowers peak pressure</text>
+</svg>

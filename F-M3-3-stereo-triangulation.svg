@@ -1,0 +1,37 @@
+<svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Stereo triangulation: a world point projects into the left and right cameras separated by a baseline; the difference in its image position is the disparity, and by similar triangles the depth equals focal length times baseline divided by disparity, so nearer points have larger disparity." font-family="'IBM Plex Mono',monospace">
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Stereo triangulation and disparity</text>
+<circle cx="258" cy="108" r="6" fill="var(--accent-2)"/>
+<text x="267" y="111" font-size="8.5" fill="var(--accent-2)" font-weight="700">P (fruit)</text>
+<line x1="258" y1="108" x2="162.0" y2="250" stroke="var(--border-strong)" stroke-width="1.3"/>
+<line x1="258" y1="108" x2="302.0" y2="250" stroke="var(--border-strong)" stroke-width="1.3"/>
+<line x1="116.0" y1="180" x2="208.0" y2="180" stroke="var(--info)" stroke-width="2"/>
+<line x1="162.0" y1="180" x2="162.0" y2="250" stroke="var(--text-muted)" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="162.0" y="266" text-anchor="middle" font-size="7.4" fill="var(--text-muted)">left cam</text>
+<line x1="256.0" y1="180" x2="348.0" y2="180" stroke="var(--info)" stroke-width="2"/>
+<line x1="302.0" y1="180" x2="302.0" y2="250" stroke="var(--text-muted)" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="302.0" y="266" text-anchor="middle" font-size="7.4" fill="var(--text-muted)">right cam</text>
+<circle cx="162.0" cy="250" r="4.5" fill="var(--surface)" stroke="var(--text-secondary)" stroke-width="1.5"/>
+<circle cx="302.0" cy="250" r="4.5" fill="var(--surface)" stroke="var(--text-secondary)" stroke-width="1.5"/>
+<circle cx="209" cy="180" r="4" fill="var(--accent)"/>
+<text x="209" y="174" text-anchor="middle" font-size="7" fill="var(--accent)">p_L</text>
+<circle cx="280" cy="180" r="4" fill="var(--accent)"/>
+<text x="280" y="174" text-anchor="middle" font-size="7" fill="var(--accent)">p_R</text>
+<line x1="162.0" y1="276" x2="302.0" y2="276" stroke="var(--text-secondary)" stroke-width="1"/>
+<text x="232" y="288" text-anchor="middle" font-size="8" fill="var(--text-secondary)">baseline b</text>
+<line x1="140" y1="108" x2="140" y2="250" stroke="var(--accent-2)" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="134" y="179.0" text-anchor="end" font-size="8.5" fill="var(--accent-2)" font-weight="700">Z</text>
+<line x1="362.0" y1="180" x2="362.0" y2="250" stroke="var(--info)" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="366.0" y="215.0" font-size="8" fill="var(--info)">f</text>
+<text x="232" y="156" text-anchor="middle" font-size="7.6" fill="var(--accent)">disparity d = (p_L offset) - (p_R offset)</text>
+<rect x="470" y="52" width="278" height="86" rx="9" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="484" y="72" font-size="9.5" fill="var(--text-primary)" font-weight="700">By similar triangles:</text>
+<text x="484" y="95" font-size="13" fill="var(--accent)" font-weight="700">Z = f b / d</text>
+<text x="484" y="114" font-size="7.6" fill="var(--text-muted)">f focal length, b baseline,</text>
+<text x="484" y="126" font-size="7.6" fill="var(--text-muted)">d disparity = x_L - x_R.  Z &#8733; 1/d.</text>
+<rect x="470" y="150" width="278" height="70" rx="9" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="484" y="168" font-size="8" fill="var(--text-secondary)" font-weight="700">Nearer -&gt; larger disparity;</text>
+<text x="484" y="181" font-size="8" fill="var(--text-secondary)" font-weight="700">farther -&gt; smaller, then unresolvable.</text>
+<text x="484" y="199" font-size="7.4" fill="var(--text-muted)">Depth uncertainty grows as Z^2/(fb) (see the</text>
+<text x="484" y="210" font-size="7.4" fill="var(--text-muted)">depth-error figure): why staging close matters.</text>
+<text x="20" y="300" font-size="8.2" fill="var(--text-muted)">Each camera sees P at a slightly different image position; that offset is the disparity. Triangulating the two rays recovers depth. Geometry to scale.</text>
+</svg>

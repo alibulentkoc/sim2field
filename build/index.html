@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0e120d">
+<title>SIM2FIELD - Interactive Instrument Suite</title>
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
+<style>
+  :root{
+    --ground:#0e120d; --panel:#161c14; --panel-2:#1c231a; --line:#2b3527; --seed:#0b0e0a;
+    --rind:#9bcf3b; --rind-dim:#6f9a2c; --flesh:#f0556a; --flesh-dim:#b93b4c;
+    --amber:#e0a03b; --water:#6fb0d9; --violet:#b98bd9; --teal:#7fb0a0; --ink:#e9ede2; --mute2:#adb4a2;
+    --ink-2:var(--ink-2); --info-border:#345b6e; color-scheme:dark;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{background:var(--ground); color:var(--ink); -webkit-text-size-adjust:100%; text-size-adjust:100%; scroll-behavior:smooth}
+  body{background:var(--ground); color:var(--ink); font-family:'Inter',system-ui,sans-serif;
+    line-height:1.6; -webkit-font-smoothing:antialiased; padding:0 0 5rem}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 1.5rem; background:var(--ground); color:var(--ink)}
+  code,.mono{font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums}
+  a{color:inherit; text-decoration:none}
+
+  header{border-bottom:1px solid var(--line); padding:3.5rem 0 2.5rem; margin-bottom:2.5rem}
+  .eyebrow{font-family:'IBM Plex Mono',monospace; font-size:.74rem; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--rind); margin-bottom:1.1rem}
+  h1{font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(2.1rem,5.5vw,3.4rem);
+    line-height:1.03; letter-spacing:-.02em; margin-bottom:1rem}
+  h1 em{font-style:normal; color:var(--rind)}
+  .lede{font-size:1.08rem; color:var(--ink-2); max-width:66ch}
+  .stat-row{display:flex; gap:2.2rem; flex-wrap:wrap; margin-top:1.8rem}
+  .stat .n{font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:1.7rem; color:var(--rind)}
+  .stat .l{font-family:'IBM Plex Mono',monospace; font-size:.66rem; letter-spacing:.05em; text-transform:uppercase; color:var(--mute2)}
+
+  section{margin-top:3rem}
+  .kicker{font-family:'IBM Plex Mono',monospace; font-size:.72rem; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--rind-dim); margin-bottom:.7rem}
+  h2{font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:1.4rem; letter-spacing:-.01em; margin-bottom:.5rem}
+  .sub{color:var(--mute2); font-size:.92rem; margin-bottom:1.2rem}
+
+  /* spine hero */
+  .spine{display:flex; flex-wrap:wrap; gap:.5rem; align-items:stretch}
+  .spine .snode{flex:1; min-width:130px; display:block; background:var(--panel); border:1px solid var(--line);
+    border-radius:10px; padding:1rem .9rem; transition:.18s; position:relative}
+  .spine .snode:hover{border-color:var(--rind-dim); transform:translateY(-2px); background:var(--panel-2)}
+  .spine .snode:focus-visible{outline:2px solid var(--rind); outline-offset:2px}
+  .spine .ph{font-family:'IBM Plex Mono',monospace; font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; color:var(--rind-dim); margin-bottom:.35rem}
+  .spine .fsm{font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:1.05rem; margin-bottom:.2rem}
+  .spine .mod{font-family:'IBM Plex Mono',monospace; font-size:.66rem; color:var(--mute2)}
+  .spine .go{position:absolute; right:.7rem; top:.7rem; font-family:'IBM Plex Mono',monospace; font-size:.7rem; color:var(--rind); opacity:0; transition:.18s}
+  .spine .snode:hover .go{opacity:1}
+  .spine .arrow{align-self:center; color:var(--mute2); font-family:'IBM Plex Mono',monospace; font-size:1rem}
+  .spine-frame{font-family:'IBM Plex Mono',monospace; font-size:.78rem; color:var(--mute2); margin-top:.8rem; text-align:center}
+
+  /* filter bar */
+  .filter{display:flex; gap:.4rem; flex-wrap:wrap; margin-bottom:1.4rem}
+  .filter button{font-family:'IBM Plex Mono',monospace; font-size:.78rem; padding:.5rem .9rem;
+    background:var(--seed); color:var(--mute2); border:1px solid var(--line); border-radius:7px; cursor:pointer; transition:.15s}
+  .filter button.on{background:var(--rind-dim); color:var(--ground); font-weight:600; border-color:var(--rind)}
+  .filter button:focus-visible{outline:2px solid var(--rind); outline-offset:2px}
+
+  /* card grid */
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1rem}
+  .card{display:flex; flex-direction:column; background:var(--panel); border:1px solid var(--line);
+    border-radius:12px; padding:1.3rem; transition:.18s; position:relative; overflow:hidden}
+  .card::before{content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--accent,var(--rind-dim))}
+  .card:hover{border-color:var(--rind-dim); transform:translateY(-3px)}
+  .card:focus-visible{outline:2px solid var(--rind); outline-offset:2px}
+  .card .badges{display:flex; gap:.35rem; flex-wrap:wrap; margin-bottom:.7rem}
+  .badge{font-family:'IBM Plex Mono',monospace; font-size:.6rem; letter-spacing:.03em; padding:.2rem .45rem; border-radius:4px;
+    background:var(--seed); color:var(--mute2); border:1px solid var(--line)}
+  .badge.cec{color:var(--rind); border-color:var(--rind-dim)}
+  .badge.ei{color:var(--water); border-color:var(--info-border)}
+  .card h3{font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:1.12rem; margin-bottom:.4rem; line-height:1.2}
+  .card .teach{color:var(--ink-2); font-size:.9rem; flex:1; margin-bottom:.9rem}
+  .card .foot{display:flex; justify-content:space-between; align-items:center}
+  .card .mod{font-family:'IBM Plex Mono',monospace; font-size:.66rem; color:var(--mute2)}
+  .card .open{font-family:'IBM Plex Mono',monospace; font-size:.72rem; color:var(--rind); font-weight:600}
+  .card.hidden{display:none}
+
+  /* production progress bar (header) */
+  .prodbar{margin-top:1.6rem; max-width:640px}
+  .prodtrack{height:8px; background:var(--seed); border:1px solid var(--line); border-radius:5px; overflow:hidden}
+  .prodfill{height:100%; background:linear-gradient(90deg,var(--rind-dim),var(--rind)); border-radius:4px; transition:width .5s ease}
+  .prodlab{font-family:'IBM Plex Mono',monospace; font-size:.72rem; color:var(--ink-2); margin-top:.5rem}
+  .prodlab .prodsub{color:var(--mute2)}
+
+  /* per-card component status pills */
+  .pills{display:flex; gap:5px; align-items:center; margin:.2rem 0 .9rem}
+  .pill{font-family:'IBM Plex Mono',monospace; font-size:.62rem; font-weight:600; width:21px; height:21px;
+    border-radius:5px; display:grid; place-items:center; flex:none}
+  .pill.done{background:var(--rind-dim); color:var(--ground)}
+  .pill.todo{background:transparent; color:var(--mute2); border:1px dashed var(--line)}
+  .pill-count{font-family:'IBM Plex Mono',monospace; font-size:.66rem; color:var(--mute2); margin-left:.4rem}
+
+  /* component legend */
+  .legend{font-family:'IBM Plex Mono',monospace; font-size:.72rem; color:var(--mute2);
+    background:var(--seed); border:1px solid var(--line); border-radius:8px; padding:.7rem .9rem; margin-bottom:1.2rem; line-height:1.7}
+  .legend b{color:var(--rind)} .legend .todo-key{color:var(--mute2)}
+
+  /* coverage */
+  .cov{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:.6rem}
+  .cvcell{background:var(--seed); border:1px solid var(--rind-dim); border-radius:8px; padding:.7rem .8rem}
+  .cvcell .id{font-family:'IBM Plex Mono',monospace; font-size:.7rem; color:var(--rind); font-weight:600; margin-bottom:.15rem}
+  .cvcell .nm{font-size:.82rem; color:var(--ink-2)}
+  .cvcell .ck{float:right; font-family:'IBM Plex Mono',monospace; font-size:.66rem; color:var(--rind)}
+
+  footer{margin-top:4rem; padding-top:1.5rem; border-top:1px solid var(--line);
+    font-family:'IBM Plex Mono',monospace; font-size:.74rem; color:var(--mute2); line-height:1.8}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">SIM2FIELD / Graduate Robotics Curriculum / Interactive Instruments</div>
+    <h1>Nine instruments for one machine that turns a <em>camera frame into a grasped fruit</em>.</h1>
+    <p class="lede">Each instrument is a self-contained worked example built on the frozen engineering baselines: a thesis, a full derivation, a live interactive you can manipulate, the underlying principle, and a decision-oriented takeaway. Together they cover all six Core Engineering Concepts and the signal-to-action spine that binds them. Start with the spine, or jump to any concept below.</p>
+    <div class="stat-row">
+      <div class="stat"><div class="n">9</div><div class="l">interactive instruments</div></div>
+      <div class="stat"><div class="n">6 / 6</div><div class="l">core concepts covered</div></div>
+      <div class="stat"><div class="n">5</div><div class="l">engineering insights</div></div>
+      <div class="stat"><div class="n">4</div><div class="l">spine stations</div></div>
+    </div>
+    <div class="prodbar" role="img" aria-label="27 of 45 planned production components built, 60 percent">
+      <div class="prodtrack"><div class="prodfill" id="prodFill" style="width:60%"></div></div>
+      <div class="prodlab"><span id="prodPct">60%</span> of planned production components built <span class="prodsub">(<span id="prodNum">27</span> / 45) - derivations, interactives and figures done; homework and labs pending</span></div>
+    </div>
+  </header>
+
+  <!-- SPINE HERO -->
+  <section id="spine">
+    <div class="kicker">Start here - the signal-to-action spine</div>
+    <h2>The mission loop, station by station</h2>
+    <p class="sub">The harvester decomposes by function into one timed loop. These four stations are its heart - each has its own instrument. The cycle-time budget that binds them is CEC-01.</p>
+    <div class="spine">
+      <a class="snode" href="M4-detection-operating-point-worked-example.html">
+        <div class="ph">perceive</div><div class="fsm">Detect</div><div class="mod">M4 / EI-04</div><span class="go">open -&gt;</span>
+      </a>
+      <span class="arrow">-&gt;</span>
+      <a class="snode" href="M5-placement-error-budget-worked-example.html">
+        <div class="ph">localize</div><div class="fsm">Place</div><div class="mod">M5 / CEC-03</div><span class="go">open -&gt;</span>
+      </a>
+      <span class="arrow">-&gt;</span>
+      <a class="snode" href="M8-kinematics-singularity-explorer.html">
+        <div class="ph">reach</div><div class="fsm">Reach</div><div class="mod">M8 / EI-08</div><span class="go">open -&gt;</span>
+      </a>
+      <span class="arrow">-&gt;</span>
+      <a class="snode" href="M9-grip-force-window-worked-example.html">
+        <div class="ph">act</div><div class="fsm">Grip</div><div class="mod">M9 / CEC-02</div><span class="go">open -&gt;</span>
+      </a>
+    </div>
+    <div class="spine-frame">bound by the cycle-time budget - <a href="CEC01-signal-to-action-spine-worked-example.html" style="color:var(--rind)">CEC-01: the signal-to-action spine -&gt;</a></div>
+  </section>
+
+  <!-- ALL INSTRUMENTS -->
+  <section id="all">
+    <div class="kicker">The full suite - filter by kind</div>
+    <h2>All nine instruments</h2>
+    <div class="filter" id="filter">
+      <button data-f="all" class="on">All 9</button>
+      <button data-f="core">Core concepts (CEC)</button>
+      <button data-f="station">Spine stations</button>
+      <button data-f="crosscut">Cross-cutting</button>
+    </div>
+    <div class="legend">
+      Production components per instrument: <b>D</b> derivation, <b>I</b> interactive, <b>F</b> figures, <b>H</b> homework, <b>L</b> lab.
+      &nbsp;Filled = complete, <span class="todo-key">dashed = pending</span>. The dashboard fills in as each instrument's assessment materials are built.
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <!-- COVERAGE -->
+  <section id="coverage">
+    <div class="kicker">Coverage - the complete concept set</div>
+    <h2>Every Core Engineering Concept is instrumented</h2>
+    <p class="sub">All six CECs now have a dedicated live instrument.</p>
+    <div class="cov">
+      <div class="cvcell"><span class="ck">OK</span><div class="id">CEC-01</div><div class="nm">Signal-to-Action Spine</div></div>
+      <div class="cvcell"><span class="ck">OK</span><div class="id">CEC-02</div><div class="nm">Grip-Force Window</div></div>
+      <div class="cvcell"><span class="ck">OK</span><div class="id">CEC-03</div><div class="nm">Placement Error Budget</div></div>
+      <div class="cvcell"><span class="ck">OK</span><div class="id">CEC-04</div><div class="nm">No-Cloud Edge Boundary</div></div>
+      <div class="cvcell"><span class="ck">OK</span><div class="id">CEC-05</div><div class="nm">Sim-to-Real Pipeline</div></div>
+      <div class="cvcell"><span class="ck">OK</span><div class="id">CEC-06</div><div class="nm">Fidelity Ladder</div></div>
+    </div>
+  </section>
+
+  <footer>
+    SIM2FIELD - Autonomous Watermelon Harvesting Robotics<br>
+    Interactive instrument suite - nine worked examples derived from the frozen engineering baselines (Doc B/C/E/F/G, Rev 1.0)<br>
+    Each asset: thesis -&gt; derivation -&gt; live instrument -&gt; principle -&gt; engineering takeaway - Production Phase, configuration-controlled
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  const CARDS=[
+    {file:'CEC01-signal-to-action-spine-worked-example.html', title:'The Signal-to-Action Spine',
+     teach:'The mission cycle-time budget: sum the FSM stages, find the dominant one, and see why speed and throughput are one number. Ties the four stations together.',
+     cec:['CEC-01'], ei:[], mod:'Module 1', cats:['core','crosscut'], accent:'var(--rind)', comp:{D:1,I:1,F:1,H:0,L:0}},
+    {file:'M4-detection-operating-point-worked-example.html', title:'The Detection Operating Point',
+     teach:'Where to set the detector threshold: a live PR curve and cost-ratio slider that moves the optimum toward recall as missed fruit gets expensive.',
+     cec:[], ei:['EI-04'], mod:'Module 4', cats:['station'], accent:'var(--water)', comp:{D:1,I:1,F:1,H:0,L:0}},
+    {file:'M5-placement-error-budget-worked-example.html', title:'The Placement Error Budget',
+     teach:'Why errors add as variances: a live variance stack against the 40 mm gate, proving perception geometry - not calibration - dominates the budget.',
+     cec:['CEC-03'], ei:['EI-05'], mod:'Module 5', cats:['station','core'], accent:'var(--rind)', comp:{D:1,I:1,F:1,H:0,L:0}},
+    {file:'M6-edge-latency-boundary-worked-example.html', title:'The No-Cloud Edge Boundary',
+     teach:'Why the control loop stays on the robot: a latency budget with an edge/cloud toggle that shows the network worst case is unbounded - not merely slow.',
+     cec:['CEC-04'], ei:['EI-06'], mod:'Module 6', cats:['core','crosscut'], accent:'var(--rind)', comp:{D:1,I:1,F:1,H:0,L:0}},
+    {file:'M8-kinematics-singularity-explorer.html', title:'Kinematics and Singularities',
+     teach:'The reachable workspace: drag the target across a live map of safe, near-singular, and unreachable regions set by the anchor geometry.',
+     cec:[], ei:['EI-08'], mod:'Module 8', cats:['station'], accent:'var(--water)', comp:{D:1,I:1,F:1,H:0,L:0}},
+    {file:'M9-grip-force-window-worked-example.html', title:'The Grip-Force Window',
+     teach:'The band between slip and bruise: a live force gauge, a software-clip fault toggle, and the mechanical relief that holds the bound independently.',
+     cec:['CEC-02'], ei:['EI-09'], mod:'Module 9', cats:['station','core'], accent:'var(--rind)', comp:{D:1,I:1,F:1,H:0,L:0}},
+    {file:'EI05-dominant-term-through-line-worked-example.html', title:'The Dominant-Term Through-Line',
+     teach:'One habit across four budgets - accuracy, energy, reliability, cost: halve the dominant term for a big win, halve a small one for almost nothing.',
+     cec:[], ei:['EI-05'], mod:'Cross-cutting', cats:['crosscut'], accent:'var(--amber)', comp:{D:1,I:1,F:1,H:0,L:0}},
+    {file:'CEC05-sim-to-real-pipeline-worked-example.html', title:'The Sim-to-Real Pipeline',
+     teach:'Domain randomization and the reality gap: a validation gate that hides field performance until you measure it - because transfer is earned, not assumed.',
+     cec:['CEC-05'], ei:[], mod:'Module 7', cats:['core','crosscut'], accent:'var(--rind)', comp:{D:1,I:1,F:1,H:0,L:0}},
+    {file:'CEC06-fidelity-ladder-worked-example.html', title:'The Fidelity Ladder',
+     teach:'When a simulation counts as evidence: a six-rung ladder that judges each claim as admissible, over-trusting, or not yet validated.',
+     cec:['CEC-06'], ei:[], mod:'Module 13', cats:['core','crosscut'], accent:'var(--rind)', comp:{D:1,I:1,F:1,H:0,L:0}}
+  ];
+  const COMP_KEYS=[['D','Derivation'],['I','Interactive'],['F','Figures'],['H','Homework'],['L','Lab']];
+
+  const grid=document.getElementById('grid');
+  function pillRow(comp){
+    const done=COMP_KEYS.reduce((a,[k])=>a+(comp[k]?1:0),0);
+    const pills=COMP_KEYS.map(([k,name])=>
+      `<span class="pill ${comp[k]?'done':'todo'}" title="${name}: ${comp[k]?'complete':'pending'}">${k}</span>`
+    ).join('');
+    return `<div class="pills" aria-label="components ${done} of 5 complete">${pills}<span class="pill-count">${done}/5</span></div>`;
+  }
+  function build(){
+    grid.innerHTML='';
+    CARDS.forEach(c=>{
+      const a=document.createElement('a');
+      a.className='card'; a.href=c.file; a.dataset.cats=c.cats.join(' ');
+      a.style.setProperty('--accent',c.accent);
+      const badges=c.cec.map(x=>`<span class="badge cec">${x}</span>`).join('')+
+                   c.ei.map(x=>`<span class="badge ei">${x}</span>`).join('');
+      a.innerHTML=`<div class="badges">${badges}</div>`+
+        `<h3>${c.title}</h3>`+
+        `<div class="teach">${c.teach}</div>`+
+        pillRow(c.comp)+
+        `<div class="foot"><span class="mod">${c.mod}</span><span class="open">open -&gt;</span></div>`;
+      grid.appendChild(a);
+    });
+    // keep the header production bar in sync with the actual card data
+    const total=CARDS.length*COMP_KEYS.length;
+    const done=CARDS.reduce((a,c)=>a+COMP_KEYS.reduce((s,[k])=>s+(c.comp[k]?1:0),0),0);
+    const pct=Math.round(done/total*100);
+    const pf=document.getElementById('prodFill'); if(pf) pf.style.width=pct+'%';
+    const pp=document.getElementById('prodPct'); if(pp) pp.textContent=pct+'%';
+    const pn=document.getElementById('prodNum'); if(pn) pn.textContent=done;
+  }
+  build();
+
+  document.getElementById('filter').addEventListener('click',e=>{
+    if(e.target.tagName!=='BUTTON') return;
+    const f=e.target.dataset.f;
+    document.querySelectorAll('#filter button').forEach(b=>b.classList.toggle('on',b===e.target));
+    document.querySelectorAll('.card').forEach(card=>{
+      const show = f==='all' || card.dataset.cats.split(' ').includes(f);
+      card.classList.toggle('hidden',!show);
+    });
+  });
+})();
+</script>
+</body>
+</html>

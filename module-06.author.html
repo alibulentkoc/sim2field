@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark"><meta name="theme-color" content="#0e120d">
+<title>Module 6: Edge Computing, Optimization &amp; Deployment (SIM2FIELD, author)</title>
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<style>:root{
+  color-scheme:dark;
+  --bg:#0e120d; --surface:#161c14; --surface-2:#0b0e0a; --surface-3:#12160f;
+  --border:#2b3527; --border-strong:#3a4633; --grid-line:#1c231a;
+  --text-primary:#eef2e6; --text-secondary:#c8cfbe; --text-muted:#adb4a2;
+  --text-lede:#c9d0bf; --text-cons:#d4dbc9; --text-on-accent:#0e120d;
+  --accent:#9bcf3b; --accent-dim:#86ba35; --accent-strong:#6f9a2c;
+  --danger:#f0556a; --danger-text:#f697a4; --danger-dim:#b93b4c;
+  --warn:#e0a03b; --warn-text:#eed9b4; --info:#6fb0d9; --info-text:#bfe0f2; --accent-2:#b98bd9; --marker:#ffffff;
+  --tint-accent:rgba(155,207,59,.07); --tint-accent-soft:rgba(155,207,59,.05); --tint-hero:rgba(155,207,59,.06);
+  --tint-danger:rgba(240,85,106,.07); --tint-warn:rgba(224,160,59,.08); --tint-info:rgba(111,176,217,.08); --tint-gov:rgba(185,139,217,.07);
+  --font-sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --font-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --font-display:'Space Grotesk',var(--font-sans);
+  --rail:300px; --topbar:54px; --measure:54rem;
+
+  /* mission-FSM stage palette (used by inlined worked-example fragments) */
+  --stage-drive:#7fb0a0; --stage-stage:#6fb0d9; --stage-align:#9bcf3b; --stage-grab:#c9e06a;
+  --stage-lift:#b98bd9; --stage-swing:#f0556a; --stage-lower:#e0a03b; --stage-release:#d98b8b;
+  --status-ok-text:#d0d7c6; --status-warn-text:#eed9b4; --status-danger-text:#f3ccd2;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);color:var(--text-primary);-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text-primary);font-family:var(--font-sans);line-height:1.72;-webkit-font-smoothing:antialiased;letter-spacing:.002em}
+a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+code,.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.skip{position:absolute;left:-999px;top:0;background:var(--accent);color:var(--text-on-accent);padding:.5rem .8rem;border-radius:6px;z-index:60}
+.skip:focus{left:.5rem;top:.5rem}
+.katex{font-size:1.04em}
+
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar);z-index:40;background:var(--surface-2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem;padding:0 1.1rem}
+.topbar .mk{font-family:var(--font-display);font-weight:600;font-size:1rem;letter-spacing:-.01em}
+.topbar .cx{flex:1;min-width:0;font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar .src{flex:none;font-family:var(--font-mono);font-size:.66rem;color:var(--accent);border:1px solid var(--accent-strong);border-radius:6px;padding:.3rem .6rem}
+body.ed-author .topbar{border-bottom-color:var(--accent-2)}
+body.ed-author .topbar .src{color:var(--accent-2);border-color:var(--accent-2)}
+
+.book{display:grid;grid-template-columns:var(--rail) 1fr;padding-top:var(--topbar)}
+.rail{position:sticky;top:var(--topbar);align-self:start;height:calc(100vh - var(--topbar));overflow-y:auto;background:var(--surface);border-right:1px solid var(--border);padding:1.3rem 1rem 3rem}
+.rail h2{font-family:var(--font-mono);font-size:.64rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-dim);margin:0 .4rem .7rem}
+.toc{list-style:none} .toc li{margin:.05rem 0}
+.toc a{display:flex;gap:.5rem;align-items:baseline;color:var(--text-secondary);font-size:.83rem;line-height:1.35;padding:.32rem .5rem;border-radius:7px;border-left:2px solid transparent}
+.toc a:hover{background:var(--surface-3);text-decoration:none;color:var(--text-primary)}
+.toc a.active{background:var(--tint-accent);border-left-color:var(--accent);color:var(--text-primary)}
+.toc .tn{font-family:var(--font-mono);font-size:.68rem;color:var(--text-muted);flex:none;min-width:1.3em}
+.toc a.active .tn{color:var(--accent)}
+.toc .tt{margin-left:auto;font-family:var(--font-mono);font-size:.54rem;letter-spacing:.05em;text-transform:uppercase;padding:.05rem .3rem;border-radius:4px;border:1px solid var(--border);color:var(--text-muted)}
+.toc .tt.instr{color:var(--accent-2);border-color:var(--accent-2)} .toc .tt.spec{color:var(--warn);border-color:var(--warn)}
+
+.main{min-width:0;background:var(--bg)}
+.inner{max-width:var(--measure);margin:0 auto;padding:2.4rem 2rem 7rem}
+
+/* ---------- MISSION OPENING ---------- */
+.mission{margin-bottom:.5rem}
+.mission-hero{padding:1.2rem 0 2.4rem;border-bottom:1px solid var(--border)}
+.mission-hero .eyebrow{font-family:var(--font-mono);font-size:.72rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:1.4rem}
+.mission-hero .hook{font-family:var(--font-display);font-weight:600;font-size:clamp(1.7rem,3.6vw,2.55rem);line-height:1.12;letter-spacing:-.018em;color:var(--text-primary);max-width:22em;margin-bottom:1.3rem}
+.mission-hero h1{font-family:var(--font-display);font-weight:500;font-size:1.12rem;color:var(--text-secondary);letter-spacing:-.008em;margin-bottom:.7rem}
+.mission-hero .slim{font-family:var(--font-mono);font-size:.74rem;color:var(--text-muted);letter-spacing:.02em}
+.movement{padding:2.1rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:190px 1fr;gap:1.6rem}
+.movement .mv-label{font-family:var(--font-mono);font-size:.7rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-dim);padding-top:.25rem}
+.movement .mv-label::before{content:"";display:block;width:30px;height:2px;background:var(--accent-strong);margin-bottom:.75rem}
+.movement .mv-body p{color:var(--text-secondary);font-size:1.02rem;margin:0 0 .9rem}
+.movement .mv-body p:last-child{margin-bottom:0}
+.movement .mv-body strong{color:var(--text-primary);font-weight:600}
+.movement .mv-body em{color:var(--text-cons)}
+.movement.objectives .mv-body ul{list-style:none;margin:0}
+.movement.objectives .mv-body li{position:relative;padding-left:1.5rem;margin:.5rem 0;color:var(--text-secondary)}
+.movement.objectives .mv-body li::before{content:"\2192";position:absolute;left:0;color:var(--accent);font-family:var(--font-mono)}
+.movement.objectives .mv-body strong{color:var(--text-primary)}
+.chapter-start{display:flex;align-items:center;gap:1rem;margin:2.8rem 0 .3rem}
+.chapter-start::before,.chapter-start::after{content:"";height:1px;background:var(--border);flex:1}
+.chapter-start span{font-family:var(--font-mono);font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;color:var(--accent-dim)}
+
+/* ---------- PROSE ---------- */
+.section{margin-top:3.2rem}
+.section h2{font-family:var(--font-display);font-weight:600;font-size:1.6rem;letter-spacing:-.012em;line-height:1.15;margin-bottom:1rem;scroll-margin-top:calc(var(--topbar) + 1rem);display:flex;gap:.7rem;align-items:baseline;border-top:1px solid var(--border);padding-top:1.7rem}
+.section h2.unnum{display:block}
+.section h2 .secnum{font-family:var(--font-mono);font-size:.9rem;font-weight:600;color:var(--accent);flex:none}
+.section h3{font-family:var(--font-display);font-weight:600;font-size:1.14rem;color:var(--text-primary);margin:1.6rem 0 .5rem}
+.section p{margin:0 0 1rem;color:var(--text-secondary)}
+.section strong{color:var(--text-primary);font-weight:600}
+.section em{color:var(--text-cons)}
+.section ul,.section ol{margin:0 0 1.1rem 1.3rem;color:var(--text-secondary)}
+.section li{margin:.35rem 0} .section li::marker{color:var(--accent-dim)}
+.section code{background:var(--surface-3);border:1px solid var(--border);border-radius:4px;padding:.05rem .35rem;font-size:.88em;color:var(--text-cons)}
+.section pre{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem;overflow-x:auto;margin:0 0 1.1rem}
+.section pre code{background:none;border:none;padding:0;color:var(--text-secondary);font-size:.82rem;line-height:1.6}
+hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
+
+.eqwrap{background:var(--surface-3);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem;margin:0 0 1.15rem;overflow-x:auto}
+.eqwrap .katex-display{margin:0}
+
+.twrap{overflow-x:auto;margin:0 0 1.2rem;border:1px solid var(--border);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:.86rem}
+th,td{text-align:left;padding:.6rem .8rem;border-bottom:1px solid var(--border);vertical-align:top}
+thead th{font-family:var(--font-mono);font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);font-weight:500;background:var(--surface-3)}
+tbody tr:last-child td{border-bottom:none} td strong{color:var(--accent)}
+
+.callout{border-radius:12px;padding:1.1rem 1.35rem;margin:0 0 1.3rem;border:1px solid var(--border);background:var(--surface)}
+.callout p{margin:0 0 .6rem;color:var(--text-cons)} .callout p:last-child{margin-bottom:0}
+.callout.cec{border-color:var(--accent-strong);background:linear-gradient(180deg,var(--tint-hero),transparent)}
+.callout.cec h3{color:var(--accent);margin:.1rem 0 .5rem;font-size:1.05rem} .callout.cec strong{color:var(--accent)}
+.callout.industry{border-color:var(--info);background:var(--tint-info)}
+.callout.industry h3{color:var(--info-text);font-size:1rem;margin:.1rem 0 .6rem} .callout.industry strong{color:var(--info-text)}
+.callout.hook{border-color:var(--accent-strong);background:var(--tint-accent-soft)}
+.callout.note{border-left:3px solid var(--border-strong);background:var(--surface-3)}
+.callout.gov{border-color:var(--accent-2);background:var(--tint-gov)}
+.section.failure ul{list-style:none;margin-left:0}
+.section.failure ul li{padding:.55rem 0;border-bottom:1px solid var(--border)}
+.section.failure li::before{content:"\2020";color:var(--danger-text);font-family:var(--font-mono);margin-right:.6rem}
+
+.figure{margin:0 0 1.4rem;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.figure.diagram .ascii{margin:0;border:none;border-radius:0;background:var(--surface-3)}
+.figure.diagram .ascii code{color:var(--accent-dim);font-size:.8rem}
+.figure .figbody{padding:1rem 1.1rem;background:var(--surface-3);overflow-x:auto}
+.figure .figbody svg{display:block;width:100%;height:auto;min-width:520px}
+.figure figcaption{padding:.7rem 1rem;font-size:.82rem;color:var(--text-muted);border-top:1px solid var(--border)}
+.figure .fid{font-family:var(--font-mono);font-size:.64rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-right:.5rem}
+.figure.slot{border-style:dashed;border-color:var(--border-strong)}
+.figure.slot .slotbox{display:flex;flex-direction:column;gap:.3rem;padding:1.6rem 1.4rem;background:repeating-linear-gradient(135deg,var(--surface-3),var(--surface-3) 10px,transparent 10px,transparent 20px);border:none}
+.figure.slot .slit{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--warn-text)}
+.figure.slot b{color:var(--text-primary);font-size:.95rem} .figure.slot .desc{color:var(--text-muted);font-size:.84rem}
+
+.widget-embed{margin:1.6rem 0;border:0;background:transparent;overflow:visible}
+.we-head{display:flex;align-items:baseline;gap:.7rem;flex-wrap:wrap;padding:0 .2rem .6rem;background:transparent}
+.we-head .wid{font-family:var(--font-mono);font-size:.62rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-on-accent);background:var(--accent-strong);padding:.15rem .5rem;border-radius:5px}
+.we-head .wid.live{background:var(--accent)}
+.we-head b{font-family:var(--font-display);font-weight:600;color:var(--text-primary);font-size:1rem}
+.we-open{margin-left:auto;font-family:var(--font-mono);font-size:.72rem;color:var(--accent)}
+.we-cap{margin:.65rem 0 0;padding:0 .2rem;font-size:.8rem;color:var(--text-muted)}
+
+.answers,.instructor-wrap{border:1px solid var(--border-strong);border-radius:10px;background:var(--surface-3);margin:1.2rem 0}
+.answers summary,.instructor-wrap summary{cursor:pointer;padding:.8rem 1.1rem;font-family:var(--font-mono);font-size:.78rem;color:var(--accent-2);list-style:none}
+.answers summary::-webkit-details-marker,.instructor-wrap summary::-webkit-details-marker{display:none}
+.answers summary::before,.instructor-wrap summary::before{content:"\25B8 ";color:var(--accent-2)}
+.answers[open] summary::before,.instructor-wrap[open] summary::before{content:"\25BE "}
+.answers .keylist{margin:.2rem 1.4rem 1rem;color:var(--text-secondary);font-size:.88rem}
+.answers .keylist .qn{font-family:var(--font-mono);color:var(--accent);margin-right:.3rem}
+.instructor-wrap{margin-top:2.4rem}
+.instructor-wrap > :not(summary){padding:0 1.2rem} .instructor-wrap > :last-child{padding-bottom:1rem}
+.instructor-wrap p,.instructor-wrap li{color:var(--text-muted)}
+.cover-meta{font-family:var(--font-mono);font-size:.8rem;color:var(--text-muted);line-height:1.9}
+.cover-meta strong{color:var(--text-secondary);font-weight:600} .cover-meta p{margin:.1rem 0}
+.section.instructor{margin-top:2.6rem}
+
+footer{max-width:var(--measure);margin:0 auto;padding:2.5rem 2rem;border-top:1px solid var(--border);font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);line-height:1.85}
+
+@media(max-width:900px){:root{--rail:0px}.book{grid-template-columns:1fr}.rail{display:none}.inner{padding:1.6rem 1.2rem 5rem}}
+@media(max-width:720px){.movement{grid-template-columns:1fr;gap:.5rem}.movement .mv-label::before{margin-bottom:.4rem}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style></head>
+<body class="ed-author">
+<a class="skip" href="#main">Skip to chapter</a>
+<div class="topbar"><span class="mk">SIM2FIELD</span>
+  <span class="cx">Digital textbook / Author / production edition</span>
+  <span class="src">source: MODULE-06.md</span></div>
+<div class="book">
+  <nav class="rail" aria-label="Chapter contents"><h2>Chapter contents</h2><ul class="toc"><li><a href="#sec-2-learning-objectives"><span class="tn">2</span>Learning Objectives</a></li><li><a href="#sec-3-student-outcomes"><span class="tn">3</span>Student Outcomes</a></li><li><a href="#sec-4-engineering-motivation"><span class="tn">4</span>Engineering Motivation</a></li><li><a href="#sec-engineering-failure-cases-edge-deploymen">Engineering Failure Cases (edge-deployment-specific)</a></li><li><a href="#sec-5-background-knowledge"><span class="tn">5</span>Background Knowledge</a></li><li><a href="#sec-6-theory"><span class="tn">6</span>Theory</a></li><li><a href="#sec-7-mathematics"><span class="tn">7</span>Mathematics</a></li><li><a href="#sec-8-engineering-principles"><span class="tn">8</span>Engineering Principles</a></li><li><a href="#sec-9-system-requirements"><span class="tn">9</span>System Requirements</a></li><li><a href="#sec-10-design-decisions"><span class="tn">10</span>Design Decisions</a></li><li><a href="#sec-11-trade-studies"><span class="tn">11</span>Trade Studies</a></li><li><a href="#sec-12-simulation-activities"><span class="tn">12</span>Simulation Activities</a></li><li><a href="#sec-13-digital-twin-activities"><span class="tn">13</span>Digital Twin Activities</a></li><li><a href="#sec-14-hardware-activities"><span class="tn">14</span>Hardware Activities</a></li><li><a href="#sec-15-software-activities"><span class="tn">15</span>Software Activities</a></li><li><a href="#sec-16-ros-2-integration"><span class="tn">16</span>ROS 2 Integration</a></li><li><a href="#sec-17-ai-integration"><span class="tn">17</span>AI Integration</a></li><li><a href="#sec-18-edge-computing-integration"><span class="tn">18</span>Edge Computing Integration</a></li><li><a href="#sec-19-fluid-power-integration"><span class="tn">19</span>Fluid Power Integration</a></li><li><a href="#sec-20-interactive-html-components"><span class="tn">20</span>Interactive HTML Components<span class="tt spec">spec</span></a></li><li><a href="#sec-21-cad-illustrations"><span class="tn">21</span>CAD Illustrations<span class="tt spec">spec</span></a></li><li><a href="#sec-22-required-figures"><span class="tn">22</span>Required Figures<span class="tt spec">spec</span></a></li><li><a href="#sec-23-required-animations"><span class="tn">23</span>Required Animations<span class="tt spec">spec</span></a></li><li><a href="#sec-24-laboratory"><span class="tn">24</span>Laboratory</a></li><li><a href="#sec-25-homework"><span class="tn">25</span>Homework</a></li><li><a href="#sec-26-quiz"><span class="tn">26</span>Quiz</a></li><li><a href="#sec-27-challenge-problems"><span class="tn">27</span>Challenge Problems</a></li><li><a href="#sec-engineering-design-review">Engineering Design Review</a></li><li><a href="#sec-28-instructor-notes"><span class="tn">28</span>Instructor Notes<span class="tt instr">instructor</span></a></li><li><a href="#sec-29-research-frontiers"><span class="tn">29</span>Research Frontiers</a></li><li><a href="#sec-30-references"><span class="tn">30</span>References</a></li><li><a href="#sec-concise-quality-summary-honest-self-asse">Concise quality summary (honest self-assessment)<span class="tt instr">instructor</span></a></li></ul></nav>
+  <main class="main" id="main"><div class="inner">
+    <header class="mission">
+    <div class="mission-hero">
+      <div class="eyebrow">Author edition / Module 6 / Mission briefing</div>
+      
+      <h1>Edge Computing, Optimization &amp; Deployment</h1>
+      <div class="slim">Part III, Decide (compute substrate)  /  5 contact hours + a 2 to 3 hour laboratory + homework</div>
+    </div>
+    <section class="movement"><div class="mv-label">Mission</div><div class="mv-body"><p>This module makes the machine's intelligence deployable: it fits the perception-and-control pipeline onto the edge device within the cycle-time budget, optimizes the models to get there, and crosses from software-in-the-loop to hardware-in-the-loop, where the digital twin drives the real compute hardware.</p>
+</div></section><section class="movement"><div class="mv-label">Previous milestone</div><div class="mv-body"><p>Every capability built so far, detection, ripeness, localization, the estimator that carries covariance, has been designed as if computation were free. It is not. On a machine in a field, computation happens on a small on-robot device, under hard limits of latency, power, and heat, with no cloud to offload to.</p>
+</div></section><section class="movement"><div class="mv-label">Engineering problem</div><div class="mv-body"><p>The organizing constraint is one this course has carried since Module 1 and now masters: no cloud in the control loop. A field has no guaranteed network; a control loop that depends on one stalls when it drops. Everything the machine needs to decide and act must close on-robot.</p>
+</div></section><section class="movement"><div class="mv-label">Design tension</div><div class="mv-body"><p>This runtime-versus-development boundary is a recurring design tool: it governs what computation is allowed in the loop and what belongs offline, and because it recurs across the perception, decision, grasp, and integration modules, this module elevates it to a Core Engineering Concept: CEC-04, the No-Cloud Edge Boundary. The module's practical lesson is one every performance engineer learns painfully: your intuition about where the time and heat go is usually wrong. Datasheets promise throughput the real workload never sees; a &quot;slow&quot; model turns out to be memory-bound, not compute-bound; an accelerator throttles under field heat. The discipline is to measure on the actual target under real load, then attack the measured bottleneck, the module's Engineering Insight (EI-06), which sharpens EI-05's &quot;attack the dominant term&quot; into &quot;first, measure it.&quot;</p>
+</div></section><section class="movement"><div class="mv-label">What this module resolves</div><div class="mv-body"><p>By the end you will assemble a latency/power budget on real edge hardware, optimize a model to meet it without surrendering the recall that protects yield, and verify the whole stack in hardware-in-the-loop.</p>
+</div></section>
+    
+    <details class="instructor-wrap cover-gov"><summary>Module metadata and authoring note (author / production)</summary><div class="cover-meta"><p><strong>Course:</strong> SIM2FIELD, Autonomous Watermelon Harvesting Robotics
+<strong>Module ID:</strong> M6, <strong>Part III, Decide (compute substrate)</strong>
+<strong>Template:</strong> 30-section module standard, <strong>Delivery:</strong> tiered (core authored in full; CAD/figures/animations/HTML widgets as build specifications)
+<strong>Estimated time:</strong> 5 contact hours + a 2 to 3 hour laboratory + homework
+<strong>Lifecycle stage (this module):</strong> Software-in-the-Loop -&gt; <strong>Hardware-in-the-Loop</strong>, the twin drives the real edge device
+<strong>Prerequisites:</strong> M1 (cycle-time budget CEC-01, no-cloud constraint), M4 (the perception model to deploy), M5 (the estimator to run, CEC-03 latency term σ_sync). Math: algorithms basics, probability.
+<strong>Revision:</strong> <strong>1.0, frozen baseline (approved).</strong> Controlled changes only, and only if a future architectural conflict requires one.</p>
+</div><p><strong>Authoring note (governance).</strong> Consistent with frozen <strong>Modules 1 to 5</strong>, the Phase-0 Foundation, and the Phase-1 Curriculum Architecture. P0-document authority tagged <strong>[-&gt;Doc B/C/E/G/H/I]</strong>; perishable/vendor values tagged <strong>[VERIFY@PUB]</strong>. Recurring anchors cited per the <a href="curriculum/_core-concepts.md">Concept &amp; Insight Register</a>. <strong>New this module:</strong> formal designation of <strong>CEC-04 (the No-Cloud Edge Boundary)</strong> at its mastery point; <strong>Engineering Insight EI-06</strong>; and the module's <strong>Engineering Design Review</strong> section.</p>
+<p><em>Core concept in use.</em> This module builds the <strong>compute substrate</strong> on which the <strong>Signal-to-Action Spine (CEC-01)</strong> actually runs. Perceive (M4/M5) and Decide/Act (M7 to M9) are only real if they execute on-robot, in time, that is what this module guarantees.</p>
+<hr>
+</details>
+    <div class="chapter-start"><span>The chapter</span></div>
+  </header>
+    <section class="section"><h2 id="sec-2-learning-objectives"><span class="secnum">2</span><span class="sectitle">Learning Objectives</span></h2><ul>
+<li><strong>LO-M6.1</strong> Explain the no-cloud edge architecture and partition every capability into runtime (on-robot) and development (off-robot) sides., <em>Bloom: Understand (with Analyze)</em></li>
+<li><strong>LO-M6.2</strong> Assemble an end-to-end latency budget for the perception+control pipeline and fit it within the cycle-time budget (CEC-01) on the target device., <em>Bloom: Apply (with Evaluate)</em></li>
+<li><strong>LO-M6.3</strong> Apply the roofline model and Amdahl's law to locate the true bottleneck of a workload., <em>Bloom: Analyze</em></li>
+<li><strong>LO-M6.4</strong> Optimize a model (quantization, pruning, distillation, compilation, accelerators) and quantify the accuracy-latency-power tradeoff., <em>Bloom: Apply (with Evaluate)</em></li>
+<li><strong>LO-M6.5</strong> Measure latency, throughput, power, and thermal behavior on the real edge device under representative load., <em>Bloom: Apply</em></li>
+<li><strong>LO-M6.6</strong> Design and run a hardware-in-the-loop test in which the twin drives the deployed stack., <em>Bloom: Create</em></li>
+<li><strong>LO-M6.7</strong> Select an operating point that meets latency/power budgets while protecting mission-critical accuracy (EI-04 on the edge)., <em>Bloom: Evaluate</em></li>
+</ul>
+<p>Maps to course objectives <strong>LO5</strong> (primary), <strong>LO3/LO7</strong> (reinforcing), and ABET <strong>SO1, SO6</strong>. [-&gt;Doc I]</p>
+</section>
+<section class="section"><h2 id="sec-3-student-outcomes"><span class="secnum">3</span><span class="sectitle">Student Outcomes</span></h2><p>A student who has mastered this module can, without prompting:</p>
+<ol>
+<li>Draw the no-cloud runtime/development partition for the machine and audit that no runtime path crosses it., <em>Bloom: Analyze</em></li>
+<li>Build a latency/power budget and test it against the cycle-time budget on real hardware., <em>Bloom: Evaluate</em></li>
+<li>Use roofline/Amdahl reasoning to find the bottleneck before optimizing., <em>Bloom: Analyze</em></li>
+<li>Quantize/compile a model and report the accuracy, latency, and energy change., <em>Bloom: Apply</em></li>
+<li>Measure on the target device and distinguish datasheet from delivered performance., <em>Bloom: Apply</em></li>
+<li>Specify and run a hardware-in-the-loop test with the twin., <em>Bloom: Create</em></li>
+</ol>
+</section>
+<section class="section"><h2 id="sec-4-engineering-motivation"><span class="secnum">4</span><span class="sectitle">Engineering Motivation</span></h2><p>Module 4 named the <em>latency-overrun</em> failure: accuracy that arrives too late is worthless. This module is where that failure is prevented, and it turns out that &quot;make it run on-robot&quot; is not a packaging afterthought but a genuine engineering problem with its own physics of computation.</p>
+<p>The pressures are concrete and simultaneous. <strong>Latency:</strong> the perception+control pipeline must complete within the perception-and-control share of the cycle-time budget (CEC-01), or the machine cannot keep pace with its own driving speed. <strong>Power:</strong> the device draws from a finite rail; every watt spent computing is a watt not driving or actuating, and energy per inference sets how long the machine runs. <strong>Heat:</strong> an SoC that overheats <em>throttles</em>, its delivered performance silently collapses below its datasheet, and a pipeline that passed on the bench fails in the sun. <strong>Connectivity:</strong> there is none to rely on, so nothing in the loop may depend on the cloud. And underneath all of it, the trap that ends careers: <strong>&quot;it worked on my laptop.&quot;</strong> A workstation GPU is not the robot's edge device; performance measured on the wrong platform is a fiction.</p>
+<p>The motivation, then, is that intelligence is only useful if it is <em>deployable</em>, fast enough, cool enough, frugal enough, and self-contained enough to run in a field. This module supplies the discipline to get there: budget the compute, find the real bottleneck by measurement, optimize the model against a mission-aware operating point, and prove it in hardware-in-the-loop before the field ever sees it.</p>
+</section>
+<section class="section failure"><h2 id="sec-engineering-failure-cases-edge-deploymen" class="unnum">Engineering Failure Cases (edge-deployment-specific)</h2><p>Sharpening Module 1's <em>environmental</em> and <em>integration</em> failure classes at the compute substrate:</p>
+<ul>
+<li><strong>Latency overrun.</strong> The pipeline is accurate but exceeds its cycle-time share on the target device; the machine stalls or drops fruit. <em>Motivates</em> the latency budget (Section 7.1) and optimization (Section 6.5).</li>
+<li><strong>Thermal throttle in the field.</strong> The device passes on the bench, then throttles under sun and enclosure heat; delivered performance collapses. <em>Motivates</em> thermal/power analysis (Section 6.6) and measuring on the target (EI-06).</li>
+<li><strong>Cloud-dependence in the loop.</strong> A runtime path quietly depends on a network service; it stalls when connectivity drops. <em>Motivates</em> the no-cloud boundary audit (CEC-04, Section 6.2).</li>
+<li><strong>Accuracy lost to optimization.</strong> Aggressive quantization/pruning meets latency but sacrifices the recall that protects yield. <em>Motivates</em> the accuracy-latency operating point (Section 6.5, EI-04 revisit).</li>
+<li><strong>Optimizing the wrong thing.</strong> Effort is spent on a non-bottleneck because performance was guessed, not measured. <em>Motivates</em> EI-06 and roofline/Amdahl reasoning (Section 6.4).</li>
+</ul>
+<p>Each is a design or discipline failure this module prevents.</p>
+</section>
+<section class="section"><h2 id="sec-5-background-knowledge"><span class="secnum">5</span><span class="sectitle">Background Knowledge</span></h2><p><strong>Assumed (from prerequisites):</strong> basic algorithms and complexity; the M1 cycle-time budget (CEC-01) and no-cloud constraint (SR-C-01, DD-4); the M4 perception model and its latency target (SR-P-15); the M5 estimator and the σ_sync latency term of the placement budget (CEC-03). Elementary probability for accuracy metrics.</p>
+<p><strong>Introduced here, used later:</strong> the vocabulary of edge deployment, <em>latency vs throughput, pipeline, roofline (compute- vs memory-bound, arithmetic intensity), Amdahl's law, quantization (INT8), pruning/sparsity, distillation, operator fusion, compilation/graph optimization, accelerator (GPU/DLA/NPU), thermal throttling, energy per inference, hardware-in-the-loop</em>. Treated at applied (L2) depth; real-time scheduling is introduced but <strong>mastered in M11</strong> [-&gt;Doc H].</p>
+<p><strong>Where this sits in the dependency graph.</strong> M6 hard-depends on M4 (model) and M5 (estimator), and on M1 (budgets, no-cloud). It <strong>masters</strong> the edge-deployment/optimization thread and <strong>designates CEC-04</strong>; it <strong>reinforces</strong> the power/embedded thread (feeding M12) and <strong>introduces</strong> real-time scheduling (feeding M11). It hands forward: the deployed, budgeted runtime stack to M7/M9 (which run their decision/grasp loops on it), the measured power/thermal profile to M12, and the real-time timing constraints to M11.</p>
+</section>
+<section class="section"><h2 id="sec-6-theory"><span class="secnum">6</span><span class="sectitle">Theory</span></h2><h3>6.1 The edge computing problem</h3>
+<p>The machine computes on an on-robot system-on-chip with accelerators (a Jetson-class device [VERIFY@PUB]), drawing from a shared power rail inside a hot enclosure, with no dependable network. The problem: run the full perceive-&gt;decide-&gt;act pipeline <strong>on that device, within latency, power, and thermal budgets, with no cloud in the loop.</strong> Every later runtime capability inherits this substrate.</p>
+<h3>6.2 The no-cloud boundary: runtime vs development</h3>
+<p>Partition every capability into two sides:</p>
+<ul>
+<li><strong>Runtime (on-robot, in the loop):</strong> detection, localization, decision, grasp control, safety, everything the machine needs to perceive and act, closing entirely on-robot with no network dependency.</li>
+<li><strong>Development (off-robot):</strong> training, synthetic-data generation, calibration computation, heavy analysis, model compilation, over-the-air updates, done off the robot, at development time, and <em>delivered</em> as artifacts.</li>
+</ul>
+<p>The rule: <strong>no runtime path may depend on an off-robot resource.</strong> This boundary is a design <em>tool</em>, you apply it to classify each capability and to audit the architecture for hidden cloud dependencies, and it recurs across perception (M4), decision/grasp (M7/M9), and real-time integration (M11). It is designated here (Section 11.3) as CEC-04.</p>
+<h3>6.3 Latency and throughput</h3>
+<p><strong>Latency</strong> is the time from input to result for one item; <strong>throughput</strong> is items per second. A pipeline can have high throughput yet unacceptable latency (deep buffering), or low latency yet insufficient throughput. The harvester needs both: end-to-end latency within the cycle-time share (CEC-01), and throughput ≥ the fruit arrival rate. Latency also feeds accuracy: on the moving rover, processing latency becomes the σ_sync term in the placement budget (CEC-03), slow compute literally displaces the target.</p>
+<h3>6.4 Finding the bottleneck: roofline and Amdahl</h3>
+<p>Two tools locate where performance is actually lost:</p>
+<ul>
+<li><strong>Roofline model.</strong> Achievable performance is bounded by <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>min</mi><mo>⁡</mo><mo stretchy="false">(</mo><mtext>peak compute</mtext><mo separator="true">,</mo><mtext> arithmetic intensity</mtext><mo>×</mo><mtext>memory bandwidth</mtext><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\min(\text{peak compute},\ \text{arithmetic intensity}\times\text{memory bandwidth})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">min</span><span class="mopen">(</span><span class="mord text"><span class="mord">peak compute</span></span><span class="mpunct">,</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord">arithmetic intensity</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">memory bandwidth</span></span><span class="mclose">)</span></span></span></span>. A workload is <strong>compute-bound</strong> (limited by FLOPs) or <strong>memory-bound</strong> (limited by data movement); the fix differs entirely. Many perception kernels are memory-bound, so &quot;a faster core&quot; does nothing, a classic misdiagnosis.</li>
+<li><strong>Amdahl's law.</strong> Overall speedup from accelerating a fraction <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi></mrow><annotation encoding="application/x-tex">p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span></span></span></span> of the work by factor <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span> is <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>speedup</mtext><mo>=</mo><mn>1</mn><mi mathvariant="normal">/</mi><mo fence="false" stretchy="true" minsize="1.2em" maxsize="1.2em">(</mo><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>p</mi><mo stretchy="false">)</mo><mo>+</mo><mi>p</mi><mi mathvariant="normal">/</mi><mi>s</mi><mo fence="false" stretchy="true" minsize="1.2em" maxsize="1.2em">)</mo></mrow><annotation encoding="application/x-tex">\text{speedup}=1/\big((1-p)+p/s\big)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord text"><span class="mord">speedup</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.2em;vertical-align:-0.35em;"></span><span class="mord">1/</span><span class="mord"><span class="delimsizing size1">(</span></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">p</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.2em;vertical-align:-0.35em;"></span><span class="mord mathnormal">p</span><span class="mord">/</span><span class="mord mathnormal">s</span><span class="mord"><span class="delimsizing size1">)</span></span></span></span></span>. The un-accelerated part caps the gain: optimizing a 20%-of-time stage to infinite speed yields at most 1.25×. The bottleneck governs, a reinforcement of EI-05 (attack the dominant term) in the time domain.</li>
+</ul>
+<h3>6.5 Model optimization and the accuracy-latency-power tradeoff</h3>
+<p>To fit the budget, shrink the model's runtime cost:</p>
+<ul>
+<li><strong>Quantization</strong> (e.g., FP32-&gt;INT8): fewer bits per weight/activation, large speed/energy gains on integer accelerators, at a bounded accuracy cost (quantization error).</li>
+<li><strong>Pruning/sparsity:</strong> remove low-importance weights/channels.</li>
+<li><strong>Knowledge distillation:</strong> train a small model to mimic a large one.</li>
+<li><strong>Operator fusion &amp; compilation</strong> (TensorRT-class graph optimization): fuse ops, pick optimal kernels for the specific accelerator, often the largest single win with no accuracy loss.</li>
+<li><strong>Accelerator mapping:</strong> place work on the GPU/DLA/NPU best suited to it.</li>
+</ul>
+<p>Every technique except pure compilation trades some accuracy for speed/energy. The choice of how far to push is an <strong>operating-point</strong> decision, and per EI-04, it is made from consequence: preserve the recall that protects yield (M4), spend the accuracy you can afford elsewhere. Accuracy that overruns latency is worthless; accuracy sacrificed below the yield threshold is also worthless. The optimum lives between.</p>
+<h3>6.6 Power and thermal reality</h3>
+<p>Delivered performance is not the datasheet. Under sustained load in a hot enclosure, an SoC <strong>thermally throttles</strong>, dropping clocks to protect itself, so a pipeline validated cold can miss its latency budget hot. <strong>Power</strong> is budgeted too: energy per inference (<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>power</mtext><mo>×</mo><mtext>latency</mtext></mrow><annotation encoding="application/x-tex">\text{power}\times\text{latency}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7778em;vertical-align:-0.1944em;"></span><span class="mord text"><span class="mord">power</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord text"><span class="mord">latency</span></span></span></span></span>) times inferences per harvest sets the energy draw, competing with drive and actuation on a shared rail. These are <em>physical</em> constraints measured on the real device under real thermal conditions, never assumed. (Power/thermal design is mastered in M12; M6 fixes the budgets and the measurement discipline.)</p>
+<h3>6.7 Real-time considerations (introduced; mastered in M11)</h3>
+<p>The control loop needs <strong>bounded worst-case latency</strong>, not merely good average latency, a single late cycle can destabilize grasp-force regulation (CEC-02) or miss a fruit. This introduces determinism, scheduling, and worst-case analysis, which M11 masters; here we note that the edge stack must be architected so the real-time control path is isolated from best-effort perception jitter.</p>
+<h3>6.8 Hardware-in-the-loop (HIL)</h3>
+<p>The lifecycle now advances from SIL to <strong>HIL</strong>: the digital twin generates sensor streams and scenes that drive the <em>real</em> edge device running the <em>deployed</em> stack, measuring true latency, power, and thermal behavior against the budgets, the last validation before field hardware, and the honest test that catches &quot;worked on my laptop.&quot;</p>
+<figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The roofline model: attainable performance is the lower of the memory-bandwidth slope and the peak-compute ceiling, meeting at the ridge point; kernels left of the ridge are memory-bound, right of it compute-bound, and the two need different fixes." font-family="'IBM Plex Mono',monospace">
+<line x1="70" y1="48" x2="70" y2="322" stroke="var(--border-strong)" stroke-width="1.5"/>
+<line x1="70" y1="322" x2="706" y2="322" stroke="var(--border-strong)" stroke-width="1.5"/>
+<path d="M66,52 L70,45 L74,52 z" fill="var(--border-strong)"/>
+<path d="M706,318 L713,322 L706,326 z" fill="var(--border-strong)"/>
+<text x="62" y="187.0" text-anchor="middle" font-size="9.5" fill="var(--text-muted)" transform="rotate(-90 62 187.0)">attainable performance (FLOP/s)</text>
+<text x="388.0" y="352" text-anchor="middle" font-size="9.5" fill="var(--text-muted)">arithmetic intensity (FLOP / byte)</text>
+<rect x="70" y="52" width="282" height="270" fill="var(--warn)" fill-opacity="0.05"/>
+<rect x="352" y="52" width="354" height="270" fill="var(--accent)" fill-opacity="0.05"/>
+<line x1="70" y1="322" x2="352" y2="112" stroke="var(--warn)" stroke-width="2.6"/>
+<line x1="352" y1="112" x2="706" y2="112" stroke="var(--accent)" stroke-width="2.6"/>
+<circle cx="352" cy="112" r="4" fill="var(--text-primary)"/>
+<line x1="352" y1="112" x2="352" y2="322" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="352" y="104" text-anchor="middle" font-size="8.5" fill="var(--text-primary)" font-weight="700">ridge point</text>
+<text x="700" y="104" text-anchor="end" font-size="9" fill="var(--accent)" font-weight="700">peak compute (ceiling)</text>
+<text x="140" y="252" font-size="9" fill="var(--warn)" font-weight="700" transform="rotate(-38 140 252)">memory bandwidth (slope)</text>
+<text x="211.0" y="74" text-anchor="middle" font-size="10.5" fill="var(--warn-text)" font-weight="700">MEMORY-BOUND</text>
+<text x="211.0" y="89" text-anchor="middle" font-size="8" fill="var(--text-muted)">limited by data movement</text>
+<text x="529.0" y="74" text-anchor="middle" font-size="10.5" fill="var(--accent)" font-weight="700">COMPUTE-BOUND</text>
+<text x="529.0" y="89" text-anchor="middle" font-size="8" fill="var(--text-muted)">limited by FLOPs</text>
+<circle cx="180" cy="240.1" r="4.5" fill="var(--danger)"/>
+<text x="188" y="236.1" font-size="8.5" fill="var(--danger-text)" font-weight="700">a perception kernel</text>
+<text x="188" y="248.1" font-size="8" fill="var(--text-muted)">memory-bound: a faster core does nothing</text>
+<text x="78" y="310" font-size="8.5" fill="var(--text-secondary)">fix by region: memory-bound -> cut data movement / raise arithmetic intensity;  compute-bound -> faster compute / fewer FLOPs</text>
+</svg></div><figcaption><span class="fid">F-M6-3</span>The roofline model (compute- vs memory-bound). Attainable performance is the lower of the memory-bandwidth slope and the peak-compute ceiling, meeting at the ridge point. Kernels left of the ridge are memory-bound (a faster core does nothing), right of it compute-bound; the two need different fixes. Section 6.4.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 372" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Amdahl law: overall speedup versus the acceleration factor on the accelerated fraction p; each curve saturates at 1/(1-p), so accelerating a small fraction caps the gain, for example a 20 percent stage yields at most 1.25 times even at infinite speed." font-family="'IBM Plex Mono',monospace">
+<line x1="84" y1="58" x2="84" y2="322" stroke="var(--border-strong)" stroke-width="1.5"/>
+<line x1="84" y1="322" x2="690" y2="322" stroke="var(--border-strong)" stroke-width="1.5"/>
+<path d="M80,62 L84,55 L88,62 z" fill="var(--border-strong)"/>
+<path d="M690,318 L697,322 L690,326 z" fill="var(--border-strong)"/>
+<text x="76" y="192.0" text-anchor="middle" font-size="9.5" fill="var(--text-muted)" transform="rotate(-90 76 192.0)">overall speedup</text>
+<text x="387.0" y="352" text-anchor="middle" font-size="9.5" fill="var(--text-muted)">acceleration factor s on the accelerated fraction</text>
+<line x1="81" y1="322.0" x2="690" y2="322.0" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="77" y="325.0" text-anchor="end" font-size="7.5" fill="var(--text-muted)">1x</text>
+<line x1="81" y1="270.0" x2="690" y2="270.0" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="77" y="273.0" text-anchor="end" font-size="7.5" fill="var(--text-muted)">2x</text>
+<line x1="81" y1="218.0" x2="690" y2="218.0" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="77" y="221.0" text-anchor="end" font-size="7.5" fill="var(--text-muted)">3x</text>
+<line x1="81" y1="166.0" x2="690" y2="166.0" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="77" y="169.0" text-anchor="end" font-size="7.5" fill="var(--text-muted)">4x</text>
+<line x1="81" y1="114.0" x2="690" y2="114.0" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="77" y="117.0" text-anchor="end" font-size="7.5" fill="var(--text-muted)">5x</text>
+<line x1="81" y1="62.0" x2="690" y2="62.0" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="77" y="65.0" text-anchor="end" font-size="7.5" fill="var(--text-muted)">6x</text>
+<text x="84.0" y="335" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">1</text>
+<text x="205.2" y="335" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">4</text>
+<text x="366.8" y="335" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">8</text>
+<text x="528.4" y="335" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">12</text>
+<text x="690.0" y="335" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">16</text>
+<polyline points="84.0,322.0 94.1,319.8 104.2,318.3 114.3,317.1 124.4,316.2 134.5,315.5 144.6,314.9 154.7,314.4 164.8,314.0 174.9,313.6 185.0,313.3 195.1,313.1 205.2,312.8 215.3,312.6 225.4,312.4 235.5,312.2 245.6,312.1 255.7,312.0 265.8,311.8 275.9,311.7 286.0,311.6 296.1,311.5 306.2,311.4 316.3,311.3 326.4,311.2 336.5,311.2 346.6,311.1 356.7,311.0 366.8,311.0 376.9,310.9 387.0,310.9 397.1,310.8 407.2,310.8 417.3,310.7 427.4,310.7 437.5,310.6 447.6,310.6 457.7,310.5 467.8,310.5 477.9,310.5 488.0,310.4 498.1,310.4 508.2,310.4 518.3,310.4 528.4,310.3 538.5,310.3 548.6,310.3 558.7,310.2 568.8,310.2 578.9,310.2 589.0,310.2 599.1,310.2 609.2,310.1 619.3,310.1 629.4,310.1 639.5,310.1 649.6,310.1 659.7,310.0 669.8,310.0 679.9,310.0 690.0,310.0" fill="none" stroke="var(--danger)" stroke-width="2.4"/>
+<line x1="84" y1="309.0" x2="690" y2="309.0" stroke="var(--danger)" stroke-width="1" stroke-dasharray="3 3" opacity="0.7"/>
+<text x="686" y="305.0" text-anchor="end" font-size="7.6" fill="var(--danger)">asymptote 1/(1-p) = 1.25x</text>
+<text x="407.2" y="305.8" font-size="8" fill="var(--danger)" font-weight="700">p = 0.2  (20% of time)</text>
+<polyline points="84.0,322.0 94.1,316.2 104.2,311.6 114.3,307.8 124.4,304.7 134.5,302.0 144.6,299.7 154.7,297.7 164.8,296.0 174.9,294.5 185.0,293.1 195.1,291.9 205.2,290.8 215.3,289.8 225.4,288.9 235.5,288.1 245.6,287.3 255.7,286.6 265.8,286.0 275.9,285.4 286.0,284.9 296.1,284.3 306.2,283.9 316.3,283.4 326.4,283.0 336.5,282.6 346.6,282.2 356.7,281.9 366.8,281.6 376.9,281.2 387.0,280.9 397.1,280.7 407.2,280.4 417.3,280.1 427.4,279.9 437.5,279.7 447.6,279.5 457.7,279.2 467.8,279.0 477.9,278.9 488.0,278.7 498.1,278.5 508.2,278.3 518.3,278.2 528.4,278.0 538.5,277.8 548.6,277.7 558.7,277.6 568.8,277.4 578.9,277.3 589.0,277.2 599.1,277.1 609.2,276.9 619.3,276.8 629.4,276.7 639.5,276.6 649.6,276.5 659.7,276.4 669.8,276.3 679.9,276.2 690.0,276.1" fill="none" stroke="var(--warn)" stroke-width="2.4"/>
+<line x1="84" y1="270.0" x2="690" y2="270.0" stroke="var(--warn)" stroke-width="1" stroke-dasharray="3 3" opacity="0.7"/>
+<text x="686" y="266.0" text-anchor="end" font-size="7.6" fill="var(--warn)">asymptote 1/(1-p) = 2x</text>
+<text x="407.2" y="275.4" font-size="8" fill="var(--warn)" font-weight="700">p = 0.5</text>
+<polyline points="84.0,322.0 94.1,312.1 104.2,303.1 114.3,294.9 124.4,287.3 134.5,280.4 144.6,274.0 154.7,268.1 164.8,262.6 174.9,257.4 185.0,252.7 195.1,248.2 205.2,244.0 215.3,240.1 225.4,236.4 235.5,232.9 245.6,229.6 255.7,226.4 265.8,223.5 275.9,220.7 286.0,218.0 296.1,215.5 306.2,213.0 316.3,210.7 326.4,208.5 336.5,206.4 346.6,204.4 356.7,202.5 366.8,200.7 376.9,198.9 387.0,197.2 397.1,195.6 407.2,194.0 417.3,192.5 427.4,191.0 437.5,189.6 447.6,188.3 457.7,187.0 467.8,185.7 477.9,184.5 488.0,183.3 498.1,182.2 508.2,181.1 518.3,180.0 528.4,179.0 538.5,178.0 548.6,177.0 558.7,176.1 568.8,175.2 578.9,174.3 589.0,173.4 599.1,172.6 609.2,171.8 619.3,171.0 629.4,170.2 639.5,169.5 649.6,168.7 659.7,168.0 669.8,167.3 679.9,166.7 690.0,166.0" fill="none" stroke="var(--accent)" stroke-width="2.4"/>
+<line x1="84" y1="114.0" x2="690" y2="114.0" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 3" opacity="0.7"/>
+<text x="686" y="110.0" text-anchor="end" font-size="7.6" fill="var(--accent)">asymptote 1/(1-p) = 5x</text>
+<text x="407.2" y="189.0" font-size="8" fill="var(--accent)" font-weight="700">p = 0.8</text>
+<circle cx="690.0" cy="309.0" r="4" fill="var(--danger)"/>
+<text x="508.2" y="325.0" font-size="7.6" fill="var(--danger-text)">a 20%-of-time stage caps at 1.25x even as s -&gt; infinity</text>
+<rect x="92" y="64" width="212" height="30" rx="7" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="102" y="76" font-size="8.5" fill="var(--text-secondary)">speedup = 1 / ((1 - p) + p/s)</text>
+<text x="102" y="88" font-size="7.3" fill="var(--text-muted)">p = fraction of time accelerated</text>
+<text x="20" y="362" font-size="8.4" fill="var(--text-muted)">The un-accelerated part caps the gain: the bottleneck governs. This is EI-05 (attack the dominant term) in the time domain.</text>
+</svg></div><figcaption><span class="fid">F-M6-4</span>Amdahl's law: speedup vs accelerated fraction. Overall speedup = 1/((1-p)+p/s) saturates at 1/(1-p): accelerating a small fraction p caps the gain, so a 20%-of-time stage yields at most 1.25x even at infinite speed. The bottleneck governs, EI-05 (attack the dominant term) in the time domain. Section 6.4.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The no-cloud boundary partitions every capability into a runtime side that closes entirely on-robot with no network dependency (detection, localization, decision, grasp control, safety) and a development side done off-robot (training, synthetic data, calibration, analysis, compilation, updates) whose results are delivered as artifacts; no runtime path may depend on an off-robot resource." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">The no-cloud boundary: runtime vs development (CEC-04)</text>
+<rect x="30" y="46" width="330" height="196" rx="10" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.6"/>
+<text x="46" y="66" font-size="9.5" fill="var(--accent)" font-weight="700">RUNTIME  (on-robot, in the loop)</text>
+<text x="46" y="79" font-size="7" fill="var(--text-muted)">closes entirely on-robot, no network dependency</text>
+<rect x="46" y="98" width="298" height="20" rx="5" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.4"/>
+<text x="54" y="112" font-size="7.6" fill="var(--text-secondary)">detection (M4)</text>
+<rect x="46" y="124" width="298" height="20" rx="5" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.4"/>
+<text x="54" y="138" font-size="7.6" fill="var(--text-secondary)">localization + fusion (M5)</text>
+<rect x="46" y="150" width="298" height="20" rx="5" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.4"/>
+<text x="54" y="164" font-size="7.6" fill="var(--text-secondary)">decision / task FSM (M7)</text>
+<rect x="46" y="176" width="298" height="20" rx="5" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.4"/>
+<text x="54" y="190" font-size="7.6" fill="var(--text-secondary)">grasp control (M9)</text>
+<rect x="46" y="202" width="298" height="20" rx="5" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.4"/>
+<text x="54" y="216" font-size="7.6" fill="var(--text-secondary)">safety monitor (M11/M15)</text>
+<rect x="400" y="46" width="330" height="196" rx="10" fill="var(--surface)" stroke="var(--info)" stroke-width="1.6"/>
+<text x="416" y="66" font-size="9.5" fill="var(--info)" font-weight="700">DEVELOPMENT  (off-robot)</text>
+<text x="416" y="79" font-size="7" fill="var(--text-muted)">done at development time, delivered as artifacts</text>
+<rect x="416" y="98" width="298" height="20" rx="5" fill="var(--surface-2)" stroke="var(--info)" stroke-opacity="0.4"/>
+<text x="424" y="112" font-size="7.6" fill="var(--text-secondary)">training + synthetic data (M4/M7)</text>
+<rect x="416" y="124" width="298" height="20" rx="5" fill="var(--surface-2)" stroke="var(--info)" stroke-opacity="0.4"/>
+<text x="424" y="138" font-size="7.6" fill="var(--text-secondary)">calibration computation (M3)</text>
+<rect x="416" y="150" width="298" height="20" rx="5" fill="var(--surface-2)" stroke="var(--info)" stroke-opacity="0.4"/>
+<text x="424" y="164" font-size="7.6" fill="var(--text-secondary)">heavy analysis / evaluation</text>
+<rect x="416" y="176" width="298" height="20" rx="5" fill="var(--surface-2)" stroke="var(--info)" stroke-opacity="0.4"/>
+<text x="424" y="190" font-size="7.6" fill="var(--text-secondary)">model compilation</text>
+<rect x="416" y="202" width="298" height="20" rx="5" fill="var(--surface-2)" stroke="var(--info)" stroke-opacity="0.4"/>
+<text x="424" y="216" font-size="7.6" fill="var(--text-secondary)">over-the-air updates</text>
+<line x1="380" y1="52" x2="380" y2="236" stroke="var(--danger)" stroke-width="1.6" stroke-dasharray="5 3"/>
+<line x1="416" y1="230" x2="360" y2="230" stroke="var(--info)" stroke-width="1.6" marker-end="url(#a)"/>
+<text x="388" y="226" font-size="6.6" fill="var(--info)">artifacts (models, calib, updates) - one way</text>
+<rect x="30" y="252" width="700" height="34" rx="8" fill="var(--surface-2)" stroke="var(--danger)" stroke-opacity="0.55"/>
+<text x="44" y="266" font-size="8.4" fill="var(--danger-text)" font-weight="700">The rule: no runtime path may depend on an off-robot resource.</text>
+<text x="44" y="279" font-size="7.4" fill="var(--text-muted)">A design tool: classify each capability and audit the architecture for hidden cloud dependencies. Section 6.2.</text>
+</svg></div><figcaption><span class="fid">F-M6-1</span>The no-cloud boundary: runtime vs development. Every capability is partitioned into a runtime side that closes entirely on-robot with no network dependency (detection, localization, decision, grasp control, safety) and a development side done off-robot (training, synthetic data, calibration, analysis, compilation, OTA updates) delivered as artifacts. The rule: no runtime path may depend on an off-robot resource. A design tool (CEC-04). Section 6.2.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The accuracy-latency frontier: model-optimization techniques trade accuracy for speed and energy, tracing a Pareto frontier of variants; the feasible operating region is bounded on the right by the latency budget and below by the recall threshold that protects yield, and the operating point is chosen from consequence within that box." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Accuracy-latency-energy frontier</text>
+<rect x="110" y="70" width="279" height="76" fill="var(--accent)" fill-opacity="0.06"/>
+<line x1="389" y1="70" x2="389" y2="240" stroke="var(--danger)" stroke-width="1.4" stroke-dasharray="5 3"/>
+<text x="393.0" y="80" font-size="7" fill="var(--danger-text)">latency budget (CEC-01)</text>
+<line x1="110" y1="146" x2="560" y2="146" stroke="var(--warn)" stroke-width="1.4" stroke-dasharray="5 3"/>
+<text x="560" y="142.5" font-size="7" fill="var(--warn-text)" font-weight="end" text-anchor="end">recall / yield threshold (M4)</text>
+<polyline points="200.0,134.6 263.0,107.4 335.0,93.8 407.0,85.3 479.0,80.2 537.5,77.7" fill="none" stroke="var(--info)" stroke-width="2.2"/>
+<circle cx="200.0" cy="134.6" r="3" fill="var(--info)"/>
+<circle cx="263.0" cy="107.4" r="3" fill="var(--info)"/>
+<circle cx="335.0" cy="93.8" r="3" fill="var(--info)"/>
+<circle cx="407.0" cy="85.3" r="3" fill="var(--info)"/>
+<circle cx="479.0" cy="80.2" r="3" fill="var(--info)"/>
+<circle cx="537.5" cy="77.7" r="3" fill="var(--info)"/>
+<circle cx="335.0" cy="93.8" r="6" fill="var(--accent)"/>
+<text x="343.0" y="95.80000000000001" font-size="7.6" fill="var(--accent)" font-weight="700">operating point</text>
+<line x1="110" y1="66" x2="110" y2="240" stroke="var(--border-strong)" stroke-width="1.4"/>
+<line x1="110" y1="240" x2="560" y2="240" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="102" y="155.0" text-anchor="middle" font-size="8" fill="var(--text-muted)" transform="rotate(-90 102 155.0)">accuracy / recall</text>
+<text x="335.0" y="268" font-size="8" fill="var(--text-muted)" text-anchor="middle">faster / lower energy   &lt;-   speed (latency, energy)   ->   slower / more accurate</text>
+<rect x="580" y="70" width="162" height="170" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="592" y="88" font-size="7.6" fill="var(--text-primary)" font-weight="700">Levers:</text>
+<text x="592" y="104" font-size="6.8" fill="var(--info)" font-weight="700">quantization</text>
+<text x="592" y="113" font-size="6.2" fill="var(--text-muted)">INT8: big speed win</text>
+<text x="592" y="130" font-size="6.8" fill="var(--info)" font-weight="700">pruning</text>
+<text x="592" y="139" font-size="6.2" fill="var(--text-muted)">drop weak weights</text>
+<text x="592" y="156" font-size="6.8" fill="var(--info)" font-weight="700">distillation</text>
+<text x="592" y="165" font-size="6.2" fill="var(--text-muted)">small mimics large</text>
+<text x="592" y="182" font-size="6.8" fill="var(--info)" font-weight="700">fusion / compile</text>
+<text x="592" y="191" font-size="6.2" fill="var(--text-muted)">free (no accuracy loss)</text>
+<text x="592" y="208" font-size="6.8" fill="var(--info)" font-weight="700">accelerator map</text>
+<text x="592" y="217" font-size="6.2" fill="var(--text-muted)">GPU/DLA/NPU</text>
+<text x="20" y="266" font-size="7.8" fill="var(--text-muted)">Every technique except pure compilation trades accuracy for speed/energy. Accuracy that overruns latency is worthless; accuracy below the yield</text>
+<text x="20" y="278" font-size="7.8" fill="var(--text-muted)">threshold is also worthless. The operating point is chosen from consequence (EI-04): the optimum lives between. Sections 6.5 and 7.4.</text>
+</svg></div><figcaption><span class="fid">F-M6-5</span>Accuracy-latency-energy frontier. Model-optimization techniques (quantization, pruning, distillation, fusion/compilation, accelerator mapping) trace a Pareto frontier trading accuracy for speed/energy. The feasible region is bounded by the latency budget (CEC-01) and the recall threshold that protects yield; the operating point is chosen from consequence (EI-04). Accuracy over latency is worthless, accuracy below the yield threshold is worthless, and the optimum lives between. Sections 6.5 and 7.4.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The hardware-in-the-loop rig: the digital twin generates sensor streams and scenes that drive the real edge device running the deployed stack, measuring true latency, power, and thermal behavior against the budgets, the last validation before field hardware and the honest test that catches worked-on-my-laptop." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Software- to hardware-in-the-loop (SIL -> HIL)</text>
+<rect x="30" y="70" width="180" height="90" rx="10" fill="var(--surface)" stroke="var(--info)" stroke-width="1.6"/>
+<text x="120" y="92" font-size="9" fill="var(--info)" font-weight="700" text-anchor="middle">DIGITAL TWIN (sim)</text>
+<text x="120" y="110" font-size="6.8" fill="var(--text-muted)" text-anchor="middle">generates sensor streams</text>
+<text x="120" y="122" font-size="6.8" fill="var(--text-muted)" text-anchor="middle">+ scenes (M3 virtual sensors)</text>
+<text x="120" y="142" font-size="6.6" fill="var(--accent)" text-anchor="middle">rendered / played-back data</text>
+<line x1="210" y1="115" x2="270" y2="115" stroke="var(--border-strong)" stroke-width="1.6" marker-end="url(#a)"/>
+<text x="240" y="108" font-size="6.4" fill="var(--text-muted)">feeds</text>
+<rect x="272" y="70" width="200" height="90" rx="10" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.8"/>
+<text x="372" y="92" font-size="9" fill="var(--accent)" font-weight="700" text-anchor="middle">REAL EDGE DEVICE</text>
+<text x="372" y="108" font-size="6.8" fill="var(--text-muted)" text-anchor="middle">Jetson-class, the DEPLOYED stack</text>
+<text x="372" y="124" font-size="6.8" fill="var(--text-secondary)" text-anchor="middle">perceive -> decide -> act</text>
+<text x="372" y="144" font-size="6.6" fill="var(--warn-text)" text-anchor="middle">hot, loaded, real hardware</text>
+<rect x="534" y="70" width="200" height="90" rx="10" fill="var(--surface-2)" stroke="var(--warn)" stroke-width="1.5"/>
+<text x="634" y="92" font-size="8.4" fill="var(--warn-text)" font-weight="700" text-anchor="middle">MEASURE vs budgets</text>
+<text x="634" y="110" font-size="7" fill="var(--text-secondary)" text-anchor="middle">true latency (CEC-01)</text>
+<text x="634" y="122" font-size="7" fill="var(--text-secondary)" text-anchor="middle">power + thermal (M12)</text>
+<text x="634" y="142" font-size="6.6" fill="var(--text-muted)" text-anchor="middle">datasheet != delivered (EI-06)</text>
+<line x1="472" y1="115" x2="532" y2="115" stroke="var(--border-strong)" stroke-width="1.6" marker-end="url(#a)"/>
+<text x="20" y="192" font-size="7.8" fill="var(--text-secondary)" font-weight="700">The last validation before field hardware, and the honest test that catches "worked on my laptop."</text>
+<text x="20" y="206" font-size="7.8" fill="var(--text-muted)">SIL (stack against pure sim) advances to HIL (real edge/actuators driven by the sim). Prove it in hardware-in-the-loop before the field. Section 6.8.</text>
+</svg></div><figcaption><span class="fid">F-M6-7</span>Software- to hardware-in-the-loop (SIL -> HIL). The digital twin generates sensor streams and scenes that drive the real edge device running the deployed stack, measuring true latency, power, and thermal behavior against the budgets. This is the last validation before field hardware and the honest test that catches worked-on-my-laptop; datasheet is not delivered performance (EI-06). Section 6.8.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 265" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Thermal throttling: under sustained load in a hot enclosure the system-on-chip drops its clocks to protect itself, so delivered performance falls below the datasheet and a pipeline validated cold can miss its latency budget once hot; these are physical constraints measured on the real device under real thermal conditions, never assumed." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Thermal throttling: delivered vs datasheet performance</text>
+<line x1="110" y1="78" x2="600" y2="78" stroke="var(--info)" stroke-width="1.8" stroke-dasharray="6 3"/>
+<text x="600" y="72.51999999999998" font-size="7" fill="var(--info)" font-weight="end" text-anchor="end">datasheet (cold, idle)</text>
+<polyline points="110.0,80.4 257.0,80.4 330.5,83.3 404.0,120.7 477.5,138.0 600.0,143.8" fill="none" stroke="var(--accent)" stroke-width="2.4"/>
+<text x="159.0" y="74.4" font-size="7" fill="var(--accent)">delivered (sustained load)</text>
+<line x1="365" y1="66" x2="365" y2="210" stroke="var(--warn)" stroke-width="1.2" stroke-dasharray="3 3"/>
+<text x="364.8" y="68.88" font-size="6.8" fill="var(--warn-text)" text-anchor="middle">throttle onset</text>
+<line x1="110" y1="126" x2="600" y2="126" stroke="var(--danger)" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="116" y="122.48" font-size="6.8" fill="var(--danger-text)">perf floor to meet latency budget (CEC-01)</text>
+<circle cx="413.8" cy="123.6" r="4" fill="var(--danger)"/>
+<text x="423.6" y="126.60000000000001" font-size="6.6" fill="var(--danger-text)">hot: misses the budget</text>
+<line x1="110" y1="62" x2="110" y2="210" stroke="var(--border-strong)" stroke-width="1.4"/>
+<line x1="110" y1="210" x2="600" y2="210" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="102" y="138.0" text-anchor="middle" font-size="8" fill="var(--text-muted)" transform="rotate(-90 102 138.0)">delivered throughput / clock</text>
+<text x="355.0" y="238" font-size="8" fill="var(--text-muted)" text-anchor="middle">time under sustained load (junction temperature rising)  -></text>
+<text x="20" y="246" font-size="7.8" fill="var(--text-muted)">Delivered performance is not the datasheet. Measure on the real device under real thermal conditions (EI-06); validate hot and loaded, not cold</text>
+<text x="20" y="258" font-size="7.8" fill="var(--text-muted)">and idle. Illustrative curve. Section 6.6 (power/thermal mastered in M12).</text>
+</svg></div><figcaption><span class="fid">F-M6-6</span>Thermal throttling: delivered vs datasheet. Under sustained load in a hot enclosure the SoC drops clocks to protect itself, so delivered performance falls below the datasheet and a pipeline validated cold can miss its latency budget once hot. These are physical constraints measured on the real device under real thermal conditions, never assumed (EI-06): validate hot and loaded, not cold and idle. Section 6.6.</figcaption></figure></section>
+<section class="section"><h2 id="sec-7-mathematics"><span class="secnum">7</span><span class="sectitle">Mathematics</span></h2><p>Rigor tier for M6: <strong>L2</strong> (applied). The central result is latency/power budget closure on the target device.</p>
+<h3>7.1 The latency budget (central result)</h3>
+<p>Allocate the perception-and-control share of the cycle time:
+<div class="eqwrap"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>T</mi><mtext>compute</mtext></msub><mo>=</mo><msub><mi>t</mi><mtext>detect</mtext></msub><mo>+</mo><msub><mi>t</mi><mtext>localize</mtext></msub><mo>+</mo><msub><mi>t</mi><mtext>decide</mtext></msub><mo>+</mo><msub><mi>t</mi><mtext>control</mtext></msub><mtext>  </mtext><mo>≤</mo><mtext>  </mtext><msub><mi>T</mi><mtext>cycle,compute-share</mtext></msub><mtext>  </mtext><mo stretchy="false">(</mo><mtext>from CEC-01</mtext><mo stretchy="false">)</mo><mi mathvariant="normal">.</mi></mrow><annotation encoding="application/x-tex">T_\text{compute} = t_\text{detect} + t_\text{localize} + t_\text{decide} + t_\text{control} \;\le\; T_\text{cycle,compute-share}\ \ (\text{from CEC-01}).</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">compute</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7651em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">detect</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7651em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">localize</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7651em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">decide</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.786em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">control</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">cycle,compute-share</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace"> </span><span class="mspace"> </span><span class="mopen">(</span><span class="mord text"><span class="mord">from CEC-01</span></span><span class="mclose">)</span><span class="mord">.</span></span></span></span></span></div>
+Populate with <strong>measured</strong> per-stage latencies on the target device (EI-06), identify the dominant stage (EI-05), optimize it (Section 6.5), and re-measure. If it will not close, the levers are: optimize the dominant stage, move work to a faster accelerator, reduce input resolution/rate (trading accuracy, EI-04), or increase the cycle-time budget by staging/slowing (interacting with CEC-01 and throughput).</p>
+<h3>7.2 Throughput and arrival rate</h3>
+<p>Throughput must satisfy <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>rate</mtext><mo>≥</mo><mi>d</mi><mi mathvariant="normal">/</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">\text{rate} \ge d/v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord text"><span class="mord">rate</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span></span></span></span>-implied arrival (M1). Pipelining raises throughput without lowering per-item latency; but buffering that raises latency can violate Section 7.1 and inflate σ_sync (CEC-03). <em>Use:</em> balance latency and throughput, not one at the other's expense.</p>
+<h3>7.3 Roofline and Amdahl (applied)</h3>
+<p>Place each kernel on the roofline (compute- vs memory-bound) to choose the right optimization; apply Amdahl's law to bound the payoff of accelerating a given stage. <em>Use:</em> avoid optimizing a non-bottleneck (EI-06).</p>
+<h3>7.4 Quantization-error vs speed</h3>
+<p>Model the accuracy cost of INT8 quantization against its latency/energy benefit; choose the quantization scheme that meets latency while keeping recall above the yield threshold (EI-04). <strong>Grad (L3):</strong> analyze per-layer sensitivity and mixed-precision allocation, a budget-allocation problem structurally identical to CEC-03 (spend precision where it matters most).</p>
+<h3>7.5 Energy per harvest</h3>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>E</mi><mtext>inference</mtext></msub><mo>=</mo><mi>P</mi><mo>×</mo><msub><mi>T</mi><mtext>latency</mtext></msub></mrow><annotation encoding="application/x-tex">E_\text{inference}=P\times T_\text{latency}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">inference</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">latency</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span>; per-harvest energy <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo><msub><mi>E</mi><mtext>inference</mtext></msub><mo>×</mo><mo stretchy="false">(</mo><mtext>inferences</mtext><mo stretchy="false">)</mo><mo>+</mo><mo>…</mo></mrow><annotation encoding="application/x-tex">=E_\text{inference}\times(\text{inferences})+\ldots</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.3669em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">inference</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord text"><span class="mord">inferences</span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.123em;"></span><span class="minner">…</span></span></span></span>. <em>Use:</em> size the compute energy against the power/thermal budget (hand-off to M12).</p>
+<figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="End-to-end compute latency budget: detect plus localize plus decide plus control must fit within the cycle-time compute share; the dominant stage (detection) is attacked first, and on a moving rover the leftover latency becomes the sync term in the placement budget." font-family="'IBM Plex Mono',monospace">
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Compute latency budget within the cycle time</text>
+<text x="20" y="44" font-size="8.2" fill="var(--text-muted)">T_compute = t_detect + t_localize + t_decide + t_control  &lt;=  cycle-time compute share (CEC-01). Populate with MEASURED per-stage latency (EI-06).</text>
+<rect x="124.0" y="86" width="201.4" height="40" fill="var(--danger)" fill-opacity="0.85" stroke="var(--bg)" stroke-width="0.8"/>
+<text x="224.7" y="109.0" text-anchor="middle" font-size="7.4" fill="var(--text-on-accent)" font-weight="700">detect</text>
+<rect x="325.4" y="86" width="54.9" height="40" fill="var(--accent)" fill-opacity="0.55" stroke="var(--bg)" stroke-width="0.8"/>
+<text x="352.8" y="109.0" text-anchor="middle" font-size="7.4" fill="var(--text-on-accent)" font-weight="400">localize</text>
+<rect x="380.3" y="86" width="36.6" height="40" fill="var(--accent-strong)" fill-opacity="0.55" stroke="var(--bg)" stroke-width="0.8"/>
+<text x="398.6" y="109.0" text-anchor="middle" font-size="7.4" fill="var(--text-on-accent)" font-weight="400">decide</text>
+<rect x="416.9" y="86" width="27.5" height="40" fill="var(--info)" fill-opacity="0.55" stroke="var(--bg)" stroke-width="0.8"/>
+<text x="430.7" y="109.0" text-anchor="middle" font-size="7.4" fill="var(--text-on-accent)" font-weight="400">control</text>
+<line x1="535.9" y1="76" x2="535.9" y2="136" stroke="var(--danger)" stroke-width="1.6" stroke-dasharray="5 3"/>
+<text x="535.9" y="72" text-anchor="middle" font-size="8" fill="var(--danger-text)" font-weight="700">compute-share (CEC-01)</text>
+<line x1="444.4" y1="126" x2="444.4" y2="140" stroke="var(--text-secondary)" stroke-width="1"/>
+<text x="444.4" y="151" text-anchor="middle" font-size="7.4" fill="var(--text-secondary)">T_compute</text>
+<text x="490.2" y="151" text-anchor="middle" font-size="7" fill="var(--text-muted)">margin</text>
+<text x="224.7" y="80" text-anchor="middle" font-size="7.4" fill="var(--danger-text)" font-weight="700">dominant stage -> attack first (EI-05)</text>
+<text x="20" y="176" font-size="9" fill="var(--text-primary)" font-weight="700">If it will not close, the levers:</text>
+<text x="30" y="194" font-size="7.8" fill="var(--text-muted)">- optimize the dominant stage (Sec. 6.5)</text>
+<text x="30" y="208" font-size="7.8" fill="var(--text-muted)">- move work to a faster accelerator</text>
+<text x="30" y="222" font-size="7.8" fill="var(--text-muted)">- reduce input resolution / rate (trades accuracy, EI-04)</text>
+<text x="30" y="236" font-size="7.8" fill="var(--text-muted)">- increase the cycle-time budget (stage / slow, CEC-01)</text>
+<rect x="404" y="164" width="336" height="92" rx="8" fill="var(--surface-2)" stroke="var(--warn)" stroke-opacity="0.55"/>
+<text x="418" y="182" font-size="8.4" fill="var(--warn-text)" font-weight="700">Latency feeds accuracy</text>
+<text x="418" y="198" font-size="7.8" fill="var(--text-muted)">On the moving rover, compute latency becomes the</text>
+<text x="418" y="210" font-size="7.8" fill="var(--text-muted)">&#963;_sync term in the placement budget (CEC-03):</text>
+<text x="418" y="222" font-size="7.8" fill="var(--text-secondary)" font-weight="700">slow compute literally displaces the target.</text>
+<text x="418" y="240" font-size="7.4" fill="var(--text-muted)">Also need throughput &gt;= fruit arrival rate (latency</text>
+<text x="418" y="250" font-size="7.4" fill="var(--text-muted)">and throughput are distinct, Sec. 6.3).</text>
+<text x="20" y="284" font-size="7.8" fill="var(--text-muted)">Illustrative per-stage latencies; measured on the target device at publication [VERIFY@PUB]. Attack the dominant stage, then re-measure.</text>
+</svg></div><figcaption><span class="fid">F-M6-2</span>Compute latency budget within the cycle time. T_compute = t_detect + t_localize + t_decide + t_control must fit within the cycle-time compute share (CEC-01), populated with measured per-stage latency (EI-06). The dominant stage (detection) is attacked first (EI-05); levers if it won't close are optimize the dominant stage, faster accelerator, reduce resolution/rate (EI-04), or grow the budget. On a moving rover the latency becomes the sync term in the placement budget. Sections 7.1 and 6.3.</figcaption></figure></section>
+<section class="section"><h2 id="sec-8-engineering-principles"><span class="secnum">8</span><span class="sectitle">Engineering Principles</span></h2><ol>
+<li><strong>The loop closes on-robot.</strong> No runtime dependency crosses the no-cloud boundary (CEC-04).</li>
+<li><strong>Measure on the target, then optimize</strong> (EI-06); datasheet ≠ delivered performance.</li>
+<li><strong>Find the bottleneck first</strong> (roofline/Amdahl, EI-05); optimizing a non-bottleneck is wasted.</li>
+<li><strong>Optimization is an operating-point decision</strong> (EI-04): meet latency/power while protecting mission-critical accuracy.</li>
+<li><strong>Design for the hot, loaded device</strong>, validate under real thermal and load conditions, not cold and idle.</li>
+<li><strong>The control path needs bounded worst-case latency</strong>, not just a good average.</li>
+<li><strong>Prove it in hardware-in-the-loop</strong> before the field.</li>
+</ol>
+</section>
+<section class="section"><h2 id="sec-9-system-requirements"><span class="secnum">9</span><span class="sectitle">System Requirements</span></h2><p>Derived from the deployment mission; master the compute contract. IDs continue; [-&gt;Doc B] formalizes. Targets [VERIFY@PUB].</p>
+<div class="twrap"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Type</th>
+<th>Requirement (abbreviated)</th>
+<th>Verification method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SR-P-19</td>
+<td>Performance</td>
+<td>End-to-end perception+control latency shall fit the cycle-time compute share (CEC-01) on the target device <strong>under thermal load</strong>.</td>
+<td>HIL measurement</td>
+</tr>
+<tr>
+<td>SR-C-05</td>
+<td>Constraint</td>
+<td>No runtime path shall depend on off-robot/cloud resources (CEC-04).</td>
+<td>Architecture audit + test</td>
+</tr>
+<tr>
+<td>SR-P-20</td>
+<td>Performance</td>
+<td>Post-optimization detection recall shall remain <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>≥</mo></mrow><annotation encoding="application/x-tex">\ge</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mrel">≥</span></span></span></span> the yield threshold (EI-04/SR-P-13).</td>
+<td>Benchmark on target</td>
+</tr>
+<tr>
+<td>SR-P-21</td>
+<td>Performance</td>
+<td>Compute power draw and energy-per-harvest shall fit the power budget [VERIFY@PUB].</td>
+<td>Measurement (M12)</td>
+</tr>
+<tr>
+<td>SR-C-06</td>
+<td>Constraint</td>
+<td>The device shall not thermally throttle below the latency budget under field conditions.</td>
+<td>Thermal test</td>
+</tr>
+<tr>
+<td>SR-P-22</td>
+<td>Performance</td>
+<td>The real-time control path shall meet a bounded worst-case latency [VERIFY@PUB].</td>
+<td>Timing test (M11)</td>
+</tr>
+<tr>
+<td>SR-I-09</td>
+<td>Interface</td>
+<td>A hardware-in-the-loop rig (twin -&gt; edge device) shall exist to verify the deployed stack.</td>
+<td>Review (-&gt;Doc G)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Traceability: SR-P-19 -&gt; CEC-01; <strong>SR-C-05 -&gt; CEC-04</strong>; SR-P-20 -&gt; EI-04/M4; SR-P-21 -&gt; M12; SR-C-06 -&gt; M12; SR-P-22 -&gt; M11; SR-I-09 -&gt; twin/M13.</p>
+</section>
+<section class="section"><h2 id="sec-10-design-decisions"><span class="secnum">10</span><span class="sectitle">Design Decisions</span></h2><ul>
+<li><strong>DD-28 On-robot-only runtime (no cloud in the loop).</strong> <em>Rationale:</em> Section 6.2; field connectivity is not guaranteed. <em>Serves:</em> SR-C-05. (CEC-04.)</li>
+<li><strong>DD-29 Quantized + compiled models on the edge accelerator.</strong> <em>Rationale:</em> Section 6.5; large speed/energy gains meeting latency. <em>Serves:</em> SR-P-19/21.</li>
+<li><strong>DD-30 Measure-on-target optimization workflow.</strong> profile on the device under load, attack the measured bottleneck. <em>Rationale:</em> Section 6.4, EI-06. <em>Serves:</em> SR-P-19.</li>
+<li><strong>DD-31 Recall-preserving operating point.</strong> cap optimization aggressiveness to hold recall ≥ yield threshold. <em>Rationale:</em> EI-04. <em>Serves:</em> SR-P-20.</li>
+<li><strong>DD-32 Thermal/power headroom and graceful degradation.</strong> design with margin; degrade to a safe, lower-rate mode under throttle rather than failing. <em>Rationale:</em> Section 6.6. <em>Serves:</em> SR-C-06.</li>
+<li><strong>DD-33 Isolate the real-time control path</strong> from best-effort perception jitter. <em>Rationale:</em> Section 6.7. <em>Serves:</em> SR-P-22. (Realized in M11.)</li>
+<li><strong>DD-34 HIL verification rig.</strong> <em>Rationale:</em> Section 6.8; catch throttling/latency before the field. <em>Serves:</em> SR-I-09.</li>
+</ul>
+</section>
+<section class="section"><h2 id="sec-11-trade-studies"><span class="secnum">11</span><span class="sectitle">Trade Studies</span></h2><h3>11.1 TS-11: Model-optimization strategy</h3>
+<p><strong>Alternatives:</strong> (A) <strong>compilation/fusion only</strong>; (B) <strong>+INT8 quantization</strong>; (C) <strong>+pruning</strong>; (D) <strong>+distillation</strong>. Scored 1 to 5 (weights illustrative; ratified in -&gt;Doc B).</p>
+<div class="twrap"><table>
+<thead>
+<tr>
+<th>Criterion (weight)</th>
+<th style="text-align:center">A: Compile</th>
+<th style="text-align:center">B: +Quantize</th>
+<th style="text-align:center">C: +Prune</th>
+<th style="text-align:center">D: +Distill</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Latency/energy gain (0.30)</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">4</td>
+</tr>
+<tr>
+<td>Accuracy (recall) retention (0.28)</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">4</td>
+</tr>
+<tr>
+<td>Engineering effort / toolchain (0.20)</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">2</td>
+</tr>
+<tr>
+<td>Hardware-accelerator support (0.12)</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">4</td>
+</tr>
+<tr>
+<td>Robustness/maintainability (0.10)</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">3</td>
+</tr>
+<tr>
+<td><strong>Weighted total</strong></td>
+<td style="text-align:center"><strong>4.12</strong></td>
+<td style="text-align:center"><strong>4.44</strong></td>
+<td style="text-align:center"><strong>3.34</strong></td>
+<td style="text-align:center"><strong>3.56</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Selected: B (compilation + INT8 quantization)</strong> as the primary path, the best latency/energy gain with manageable, controllable accuracy loss and strong accelerator support; pruning/distillation held as further levers if the budget still will not close. Recorded weakness: INT8 accuracy loss must be checked against the recall threshold per fruit condition (DD-31, EI-04), and quantization sensitivity varies by layer (Section 7.4 grad).</p>
+<h3>11.2 TS-12: Edge compute hardware (summary)</h3>
+<p><strong>Alternatives:</strong> CPU-only, SoC+GPU, SoC+GPU+DLA/NPU, FPGA. <strong>Criteria:</strong> latency at required accuracy, power/energy, cost, toolchain maturity, real-time determinism. <strong>Outcome:</strong> <strong>SoC + GPU + DLA-class accelerator</strong> (Jetson-class [VERIFY@PUB]), the mature toolchain, good performance-per-watt, and heterogeneous accelerators let perception and control share one device within budget. FPGA reserved for fixed, latency-critical kernels if needed.</p>
+<h3>11.3 Explicit Core Engineering Concept evaluation <em>(standing requirement)</em></h3>
+<ul>
+<li><strong>The No-Cloud Edge Boundary (runtime/development partition).</strong> <em>Verdict: promoted from watchlist to full CEC, <strong>CEC-04</strong>, designated here at mastery.</em> It is a recurring design <em>tool</em>, introduced M1 (SR-C-01/DD-4), reinforced M4 (train-off/infer-on), <strong>mastered M6</strong> (edge deployment), applied M7/M9 (decision/grasp on-robot) and M11 (real-time). It is used repeatedly to classify capabilities and audit the architecture for hidden cloud dependence, meeting the recurrence and mastery tests. Register and Knowledge-Architecture links updated.</li>
+<li><strong>The latency/power budget.</strong> <em>Verdict: not a separate CEC.</em> It is another instance of the <strong>budget</strong> pattern already anchored by CEC-01 (cycle-time) and CEC-03 (error); minting a third budget-CEC would dilute the set. It is treated as CEC-01 applied to compute, and reinforces EI-05 in the time domain.</li>
+<li><strong>EI-06 (Measure on the Target)</strong> is added as this module's Engineering Insight, reinforcing CEC-04 and EI-05. <em>(One new CEC, one new EI, within discipline.)</em></li>
+</ul>
+<blockquote class="callout hook">
+<p><strong>Simulation-first hook.</strong> The deployed stack is validated in <strong>hardware-in-the-loop</strong> (Section 6.8, Section 12): the twin drives the real edge device, so latency/power/thermal are measured against the budgets on true hardware before the field, the concrete SIL-&gt;HIL transition this module owns.</p>
+</blockquote>
+</section>
+<section class="section"><h2 id="sec-12-simulation-activities"><span class="secnum">12</span><span class="sectitle">Simulation Activities</span></h2><p>M6 owns the <strong>SIL -&gt; HIL</strong> transition; its activities move from simulated to real compute.</p>
+<p><strong>SA-1, Latency budget in SIL.</strong> Instrument the perception+control pipeline in software and assemble the latency budget (Section 7.1); identify the dominant stage. <em>Outcome:</em> a first budget and bottleneck (to be re-measured on hardware).</p>
+<p><strong>SA-2, Optimization sweep.</strong> Apply compilation and INT8 quantization; record latency, energy, and recall at each step; plot the accuracy-latency frontier and choose the operating point (EI-04). <em>Outcome:</em> a defended optimization operating point.</p>
+<p><strong>SA-3, Roofline placement.</strong> Profile the heaviest kernels and place them on the roofline (compute- vs memory-bound); predict which optimization will actually help (Section 6.4). <em>Outcome:</em> bottleneck diagnosis before effort (EI-06).</p>
+<p><strong>SA-4, HIL dry run.</strong> Drive the deployed stack on the edge device with twin-generated sensor streams; compare measured latency to the SIL estimate, expose the gap. <em>Outcome:</em> the &quot;measure on target&quot; lesson made concrete (EI-06).</p>
+</section>
+<section class="section"><h2 id="sec-13-digital-twin-activities"><span class="secnum">13</span><span class="sectitle">Digital Twin Activities</span></h2><p><strong>DTA-1, HIL rig specification (deliverable to Doc G).</strong> Specify the hardware-in-the-loop setup: the twin streams synchronized sensor data to the real edge device running the deployed stack; the rig logs latency, power, and temperature against budgets. <em>Outcome:</em> SR-I-09; the standing deployment test.</p>
+<p><strong>DTA-2, Thermal-load test.</strong> Run the HIL rig to sustained thermal load and observe throttling; verify the latency budget holds hot, not just cold (SR-C-06). <em>Outcome:</em> an honest field-condition check.</p>
+<p><strong>DTA-3, No-cloud audit.</strong> Trace every runtime data path in the twin/stack and confirm none crosses the no-cloud boundary (CEC-04, SR-C-05). <em>Outcome:</em> a documented boundary audit.</p>
+</section>
+<section class="section"><h2 id="sec-14-hardware-activities"><span class="secnum">14</span><span class="sectitle">Hardware Activities</span></h2><p><em>(Tiered: benchmarking/measurement protocols at specification level; runnable on the target device.)</em></p>
+<p><strong>HA-1, On-target benchmark protocol.</strong> Specify measurement of per-stage latency, throughput, power, and temperature on the edge device under representative load, the empirical basis for the budget (EI-06). <em>Deliverable:</em> a benchmark harness and results template.</p>
+<p><strong>HA-2, Thermal characterization.</strong> Specify how to measure throttling onset and sustained-vs-burst performance in a representative enclosure/thermal environment. <em>Deliverable:</em> a throttling curve feeding SR-C-06 and M12.</p>
+</section>
+<section class="section"><h2 id="sec-15-software-activities"><span class="secnum">15</span><span class="sectitle">Software Activities</span></h2><p><strong>SWA-1, Optimization &amp; deployment pipeline.</strong> Specify the reproducible pipeline: trained model -&gt; compile/quantize -&gt; validate accuracy on target -&gt; package -&gt; deploy (development-time), with versioning and rollback. <em>Outcome:</em> the edge-MLOps workflow (Doc E).</p>
+<p><strong>SWA-2, Runtime/development boundary enforcement.</strong> Specify a build/deploy check that fails if a runtime component references an off-robot service (an automated CEC-04 guard). <em>Outcome:</em> the no-cloud boundary enforced in tooling, not just intention.</p>
+</section>
+<section class="section"><h2 id="sec-16-ros-2-integration"><span class="secnum">16</span><span class="sectitle">ROS 2 Integration</span></h2><p>M6 <strong>introduces</strong> the real-time considerations M11 masters. The deployed nodes run on the edge device; the architecture must isolate the <strong>real-time control path</strong> (bounded worst-case latency, SR-P-22) from best-effort perception (which may jitter under load). Node placement, executor/scheduler choice, and quality-of-service are introduced here as <em>deployment</em> concerns, the perception plane and control plane share one device but must not share timing fate. M11 formalizes the scheduling; M6 fixes the requirement that the control loop's timing is protected from perception jitter (DD-33).</p>
+</section>
+<section class="section"><h2 id="sec-17-ai-integration"><span class="secnum">17</span><span class="sectitle">AI Integration</span></h2><p>This is the module where development-time AI meets the runtime machine:</p>
+<ul>
+<li><strong>Optimization is model surgery with an accuracy budget.</strong> Quantization/pruning/distillation/compilation (Section 6.5) are applied under the constraint that recall stays above the yield threshold (EI-04), the accuracy-latency operating point.</li>
+<li><strong>The boundary is enforced (CEC-04).</strong> Training, synthesis, and compilation are development-time; only the optimized inference artifact runs on-robot. SWA-2 makes this an automated check.</li>
+<li><strong>Edge MLOps.</strong> Model versioning, on-target validation, and controlled (development-time, not runtime-cloud) updates, the lifecycle Doc E owns, feeding the drift-monitoring introduced in M4.</li>
+<li><strong>Measured, not assumed (EI-06).</strong> Model performance claims are only valid measured on the target under load; a model's benchmark on a workstation is not evidence for the robot.</li>
+</ul>
+</section>
+<section class="section"><h2 id="sec-18-edge-computing-integration"><span class="secnum">18</span><span class="sectitle">Edge Computing Integration</span></h2><p>This module <em>is</em> the edge-computing integration point for the whole machine, it is where CEC-04 is mastered. It fixes: the runtime/development partition (Section 6.2), the latency/power/thermal budgets (Section 7), the optimization operating point (Section 6.5), and the HIL verification (Section 6.8). Every later runtime capability (M7 decision, M9 grasp control, M11 real-time nodes) is allocated onto this substrate and inherits its budgets. The power/thermal <em>design</em> (as opposed to budgeting) is handed to M12; the real-time <em>scheduling</em> to M11.</p>
+</section>
+<section class="section"><h2 id="sec-19-fluid-power-integration"><span class="secnum">19</span><span class="sectitle">Fluid Power Integration</span></h2><p>The edge device runs the <strong>grasp-control loop</strong> (M9), so its timing directly governs grasp-force regulation within the Grip-Force Window (CEC-02). Two couplings are fixed here: (1) the control loop needs <strong>bounded worst-case latency</strong> (SR-P-22, DD-33), jitter in force regulation can push the grasp outside the window or destabilize it; (2) the edge's compute latency contributes to σ_sync in the placement budget (CEC-03), so slow perception literally degrades where the compliant gripper closes. Fluid-power compliance provides tolerance to these timing imperfections (a slow or slightly late command meets a compliant, back-drivable actuator rather than a stiff one), but the timing budget must still be met. M9 designs the loop; M6 guarantees the substrate can run it in time.</p>
+</section>
+<section class="section spec"><h2 id="sec-20-interactive-html-components"><span class="secnum">20</span><span class="sectitle">Interactive HTML Components</span></h2><ul>
+<li><strong>W-M6-1, Latency-Budget Builder.</strong> Inputs: per-stage latencies (with a &quot;measured vs. datasheet&quot; toggle), cycle-time share. Outputs: total vs. budget, highlighted dominant stage (EI-05), pass/fail, and an Amdahl payoff estimator for accelerating each stage. <em>Goal:</em> Section 7.1/Section 7.3.</li>
+<li><strong>W-M6-2, Accuracy-Latency Frontier.</strong> Slider over optimization aggressiveness showing recall vs. latency vs. energy and the recall-threshold line (EI-04). <em>Goal:</em> Section 6.5.</li>
+<li><strong>W-M6-3, Roofline Explorer.</strong> Plot kernels by arithmetic intensity vs. performance; show compute- vs memory-bound regions and which optimization helps. <em>Goal:</em> Section 6.4.</li>
+<li><strong>W-M6-4, Thermal-Throttle Simulator.</strong> Load vs. temperature vs. delivered clock, showing the latency budget breaking as the device heats. <em>Goal:</em> Section 6.6 (SR-C-06).</li>
+</ul>
+</section>
+<section class="section spec"><h2 id="sec-21-cad-illustrations"><span class="secnum">21</span><span class="sectitle">CAD Illustrations</span></h2><ul>
+<li><strong>CAD-M6-1</strong> Compute topology: edge SoC + accelerators, sensor and actuator interfaces, power/thermal path (block diagram).</li>
+<li><strong>CAD-M6-2</strong> The no-cloud boundary: runtime (on-robot) vs. development (off-robot) partition with data paths (annotated; CEC-04).
+Format per -&gt;Doc J (SVG block diagrams).</li>
+</ul>
+</section>
+<section class="section spec"><h2 id="sec-22-required-figures"><span class="secnum">22</span><span class="sectitle">Required Figures</span></h2><div class="twrap"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Figure</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F-M6-1</td>
+<td>No-cloud runtime/development partition</td>
+<td>Section 6.2 (CEC-04)</td>
+</tr>
+<tr>
+<td>F-M6-2</td>
+<td>End-to-end latency budget within the cycle time</td>
+<td>Section 7.1</td>
+</tr>
+<tr>
+<td>F-M6-3</td>
+<td>Roofline (compute- vs memory-bound)</td>
+<td>Section 6.4</td>
+</tr>
+<tr>
+<td>F-M6-4</td>
+<td>Amdahl's-law payoff vs. accelerated fraction</td>
+<td>Section 6.4</td>
+</tr>
+<tr>
+<td>F-M6-5</td>
+<td><strong>Accuracy-latency-energy frontier with recall threshold</strong></td>
+<td>Section 6.5 (central, EI-04)</td>
+</tr>
+<tr>
+<td>F-M6-6</td>
+<td>Thermal throttling: delivered vs. datasheet performance</td>
+<td>Section 6.6</td>
+</tr>
+<tr>
+<td>F-M6-7</td>
+<td>SIL-&gt;HIL rig (twin drives real edge device)</td>
+<td>Section 6.8</td>
+</tr>
+</tbody>
+</table></div>
+</section>
+<section class="section spec"><h2 id="sec-23-required-animations"><span class="secnum">23</span><span class="sectitle">Required Animations</span></h2><ul>
+<li><strong>AN-M6-1</strong> The latency budget filling stage by stage, the dominant stage shrinking under optimization, and the total crossing under the budget line.</li>
+<li><strong>AN-M6-2</strong> A device heating under load, clocks dropping, and the latency budget being breached, then margin/degradation saving it.</li>
+<li><strong>AN-M6-3</strong> The no-cloud audit: data paths lighting up, one attempting to cross the boundary and being blocked.</li>
+</ul>
+</section>
+<section class="section lab"><h2 id="sec-24-laboratory"><span class="secnum">24</span><span class="sectitle">Laboratory</span></h2><p><strong>Lab M6, Deploying the Pipeline to the Edge</strong></p>
+<ul>
+<li><strong>Objectives.</strong> (1) Assemble the latency/power budget on the target device; (2) find the bottleneck by measurement (roofline/Amdahl); (3) optimize a model and quantify the accuracy-latency-energy tradeoff; (4) choose a recall-preserving operating point; (5) verify in hardware-in-the-loop under thermal load.</li>
+<li><strong>Equipment.</strong> The target edge device (or a provided profile/emulation) [VERIFY@PUB]; the perception+estimator stack (M4/M5); the twin as HIL driver; measurement tooling (latency, power, temperature). <strong>Safety:</strong> electrical/thermal care with the device; standard lab practice.</li>
+<li><strong>Procedure.</strong>
+<ol>
+<li>Benchmark per-stage latency, power, and temperature on the target under representative load (HA-1); assemble the budget (Section 7.1) and compare to the SIL estimate, note the gap (EI-06).</li>
+<li>Profile the heaviest kernels; place them on the roofline; predict the useful optimization (Section 6.4).</li>
+<li>Apply compilation + INT8 quantization (TS-11); measure latency/energy/recall at each step; plot the frontier.</li>
+<li>Choose the operating point that meets the latency budget while holding recall ≥ threshold (EI-04); justify it.</li>
+<li>Run HIL under sustained thermal load; verify the budget holds hot (SR-C-06); audit for no-cloud dependencies (DTA-3).</li>
+</ol>
+</li>
+<li><strong>Data collection.</strong> On-target budget table (measured vs. SIL); roofline placement; optimization frontier; chosen operating point; HIL thermal results; no-cloud audit.</li>
+<li><strong>Analysis.</strong> Where was the real bottleneck vs. your guess (EI-06)? How much did quantization cost in recall? Did the budget hold under heat?</li>
+<li><strong>Discussion.</strong> Why is measuring on the target essential? What would you degrade first under thermal stress? How does compute latency feed σ_sync (CEC-03) and the cycle-time budget (CEC-01)?</li>
+<li><strong>Deliverables.</strong> A 4 to 6 page report: measured budget, bottleneck analysis, optimization frontier, operating-point defense, HIL/thermal results, no-cloud audit.</li>
+<li><strong>Rubric (100 pts).</strong> On-target budgeting (18); bottleneck diagnosis via roofline/Amdahl (18); optimization &amp; tradeoff quantification (20); operating-point defense (16, EI-04); HIL/thermal verification (18); communication (10). <em>Graduate band adds:</em> per-layer mixed-precision sensitivity analysis (Section 7.4) and a cited source.</li>
+<li><strong>Expected results.</strong> A measured budget that differs from the SIL estimate (motivating EI-06); a bottleneck often memory-bound (so &quot;faster core&quot; would not help); quantization meeting latency with a small, checkable recall cost; the budget holding only with thermal margin/degradation.</li>
+</ul>
+</section>
+<section class="section hw"><h2 id="sec-25-homework"><span class="secnum">25</span><span class="sectitle">Homework</span></h2><p>Tiered: all do 1 to 4; graduate add 5 to 6.</p>
+<ol>
+<li><strong>Latency budget.</strong> Given per-stage latencies and a cycle-time compute share, assemble the budget, test it, and identify the stage to optimize first (EI-05).</li>
+<li><strong>Amdahl's law.</strong> A stage is 30% of runtime; compute the maximum overall speedup from accelerating only it by 4× and by ∞; interpret.</li>
+<li><strong>Roofline.</strong> Given a kernel's arithmetic intensity and the device's peak compute and memory bandwidth, determine whether it is compute- or memory-bound and which optimization helps.</li>
+<li><strong>Optimization tradeoff.</strong> Given latency/recall at FP32, INT8, and pruned settings, choose the operating point that meets a latency budget while holding recall ≥ threshold; justify (EI-04).</li>
+<li><strong>(Grad) Mixed precision.</strong> Given per-layer quantization sensitivity, allocate precision to meet latency at maximum recall, a budget-allocation problem mirroring CEC-03.</li>
+<li><strong>(Grad) Energy per harvest.</strong> From power and latency, estimate compute energy over a harvest run; compare to a power budget and state the M12 implication.</li>
+</ol>
+</section>
+<section class="section quiz"><h2 id="sec-26-quiz"><span class="secnum">26</span><span class="sectitle">Quiz</span></h2><ol>
+<li><strong>(MC)</strong> &quot;No cloud in the control loop&quot; is required primarily because: (a) cloud is expensive; (b) field connectivity is not guaranteed and a networked loop stalls; (c) latency is always lower on-device; (d) privacy.</li>
+<li><strong>(MC)</strong> A memory-bound kernel is best improved by: (a) a faster compute core; (b) reducing/rearranging data movement; (c) more threads only; (d) higher clock only.</li>
+<li><strong>(MC)</strong> Amdahl's law says overall speedup is limited by: (a) the fastest stage; (b) the un-accelerated fraction; (c) the number of cores; (d) memory size.</li>
+<li><strong>(MC)</strong> Thermal throttling means: (a) the device speeds up when hot; (b) delivered performance drops below datasheet under sustained heat; (c) power increases; (d) accuracy improves.</li>
+<li><strong>(Short)</strong> State CEC-04 and the one rule it imposes on runtime paths.</li>
+<li><strong>(Calc)</strong> A stage is 25% of runtime; accelerate it 5×. Overall speedup?</li>
+<li><strong>(Calc)</strong> INT8 cuts latency from 40 ms to 18 ms and recall from 0.92 to 0.90 (threshold 0.88). Does it meet a 20 ms budget while preserving recall?</li>
+<li><strong>(Design)</strong> Why measure performance on the target device rather than a workstation?</li>
+<li><strong>(Critical thinking)</strong> How does compute latency degrade grasp placement accuracy?</li>
+<li><strong>(Critical thinking)</strong> Why can accuracy sacrificed to optimization be as bad as latency overrun?</li>
+</ol>
+<details class="answers"><summary>Answer key (instructor)</summary><ol class="keylist"><li><span class="qn">1.</span> b</li><li><span class="qn">2.</span> b</li><li><span class="qn">3.</span> b</li><li><span class="qn">4.</span> b</li><li><span class="qn">5.</span> The No-Cloud Edge Boundary: capabilities split into runtime (on-robot, in the loop) and development (off-robot); no runtime path may depend on an off-robot resource.</li><li><span class="qn">6.</span> <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi mathvariant="normal">/</mi><mo stretchy="false">(</mo><mn>0.75</mn><mo>+</mo><mn>0.25</mn><mi mathvariant="normal">/</mi><mn>5</mn><mo stretchy="false">)</mo><mo>=</mo><mn>1</mn><mi mathvariant="normal">/</mi><mn>0.80</mn><mo>=</mo><mn>1.25</mn><mo>×</mo></mrow><annotation encoding="application/x-tex">1/(0.75+0.25/5)=1/0.80=1.25×</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1/</span><span class="mopen">(</span><span class="mord">0.75</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0.25/5</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1/0.80</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">1.25</span><span class="mord">×</span></span></span></span>.</li><li><span class="qn">7.</span> Yes: 18 ≤ 20 ms and 0.90 ≥ 0.88.</li><li><span class="qn">8.</span> EI-06: the bottleneck, throttling, and delivered throughput differ on real hardware; workstation numbers are not evidence for the robot.</li><li><span class="qn">9.</span> On the moving rover it becomes σ_sync in the placement budget (CEC-03), displacing the target.</li><li><span class="qn">10.</span> Below the recall/yield threshold, missed fruit is lost revenue, the optimization defeated the mission (EI-04).</li></ol></details></section>
+<section class="section challenge"><h2 id="sec-27-challenge-problems"><span class="secnum">27</span><span class="sectitle">Challenge Problems</span></h2><ul>
+<li><strong>CP-M6-A, Joint compute/accuracy/throughput optimization.</strong> Given the cycle-time budget (CEC-01), the recall threshold (EI-04), and the device's roofline, choose model, quantization, and staging jointly to maximize harvested-fruit-per-hour. Identify the binding constraint. (Bridges CEC-01, CEC-04, EI-04.)</li>
+<li><strong>CP-M6-B, Thermal-robust deployment.</strong> Design a deployment that holds the latency budget across the field's thermal range, including a graceful-degradation policy; specify how you would validate it in HIL and what it costs in yield when degraded.</li>
+<li><strong>CP-M6-C, No-cloud architecture proof.</strong> Specify an architecture and an automated test suite that <em>prove</em> no runtime path depends on the cloud, including how updates and monitoring happen without violating the boundary at runtime. (Formalizes CEC-04; feeds M11/M15 and Doc E.)</li>
+</ul>
+</section>
+<section class="section"><h2 id="sec-engineering-design-review" class="unnum">Engineering Design Review</h2><p><em>Not graded. The questions a review board would ask; argue with evidence.</em></p>
+<ol>
+<li><strong>Assumptions.</strong> Your latency budget uses per-stage numbers. Are they measured on the target under load, or estimated/from a workstation? Where would an optimistic assumption most likely hide, and how would it surface only in the field (EI-06)?</li>
+<li><strong>Tradeoffs.</strong> You quantized to INT8 to meet latency. Defend the recall you sacrificed to a reviewer who argues any yield loss is unacceptable. At what recall would you refuse to quantize further, and how did you choose that line (EI-04)?</li>
+<li><strong>Risk.</strong> The device throttles under sustained field heat. What is your evidence it will not breach the latency budget hot, and what does the machine do if it does? Does your degradation policy cost fruit, and is that acceptable?</li>
+<li><strong>Verification.</strong> You validated in hardware-in-the-loop driven by the twin. A reviewer notes the twin's sensor streams may be gentler than the field (fewer objects, cleaner data). How do you make the HIL load representative, and what field evidence would close the gap?</li>
+<li><strong>Subsystem interaction.</strong> Compute latency feeds both the cycle-time budget (CEC-01) and σ_sync in the placement budget (CEC-03), and the control path needs bounded worst-case latency for stable grasp regulation (CEC-02). Who owns these cross-couplings, and how do you keep perception jitter from destabilizing control?</li>
+<li><strong>Boundary.</strong> Convince the board that no runtime path depends on the cloud (CEC-04). What automated evidence do you have, and how do model updates and monitoring happen without crossing the boundary at runtime?</li>
+</ol>
+</section>
+<section class="section instructor"><details class="instructor-wrap"><summary>28. Instructor Notes (instructor / author material, not part of the student reading)</summary><ul>
+<li><strong>Timing.</strong> Section 6, Section 7 (edge problem, boundary, budgets, roofline/Amdahl, optimization) are the core (~2.5 h); the CEC-04 designation (Section 11.3) and EI-06 are the peaks. Trade studies (Section 11) and SIL-&gt;HIL activities (Section 12, Section 13) form an interactive block (~1.5 h). Lab M6 is a separate 2 to 3 h session on real (or emulated) hardware.</li>
+<li><strong>Common misconceptions.</strong> (1) &quot;Faster core fixes it&quot;, many kernels are memory-bound (roofline). (2) Trusting datasheet/bench numbers, measure on target under load (EI-06). (3) Optimizing accuracy away to hit latency, EI-04 caps this. (4) Treating no-cloud as a slogan, SWA-2/CP-M6-C make it an enforced, tested property.</li>
+<li><strong>On CEC-04 and EI-06.</strong> CEC-04 is the <em>tool</em> (the runtime/development partition you apply and audit); EI-06 is the <em>judgment</em> (measure on the target). Both are essential and distinct. Note EI-05 recurs here (dominant latency), point it out so students feel an insight return.</li>
+<li><strong>Where to push graduate students.</strong> Mixed-precision allocation (HW5), joint optimization (CP-M6-A), and the no-cloud proof (CP-M6-C).</li>
+<li><strong>Thread to keep visible.</strong> Close by naming hand-offs: the deployed substrate -&gt; M7/M9 (decision/grasp run here); power/thermal profile -&gt; M12; real-time timing -&gt; M11.</li>
+</ul>
+</details></section>
+<section class="section"><h2 id="sec-29-research-frontiers"><span class="secnum">29</span><span class="sectitle">Research Frontiers</span></h2><ul>
+<li><strong>Landmark grounding.</strong> Foundational references on the roofline model and on parallel-speedup limits (Amdahl); the edge-AI/embedded-inference literature on quantization, pruning, distillation, and compilation. <em>(Consult current editions; entries in the reference set, not reproduced here.)</em></li>
+<li><strong>Recent advances (survey current literature [VERIFY@PUB]).</strong> Hardware-aware neural architecture search and mixed-precision quantization; efficient transformer/vision inference on embedded accelerators; compiler/runtime advances (graph optimization, kernel autotuning) for edge SoCs; on-device continual/federated learning that respects a no-cloud runtime; energy- and thermal-aware scheduling for field robots.</li>
+<li><strong>Open problems.</strong> Guaranteed worst-case latency for learned perception on shared edge devices; maintaining accuracy under aggressive quantization for small/occluded objects; thermal-robust sustained performance in field enclosures; verifiable no-cloud architectures with safe update paths.</li>
+<li><strong>Suggested thesis directions.</strong> (1) A thermal-aware deployment controller that trades model precision for sustained latency under field heat. (2) Mixed-precision quantization driven by mission-value (recall) rather than average accuracy. (3) A provably no-cloud runtime with a certified development/runtime boundary.</li>
+</ul>
+</section>
+<section class="section"><h2 id="sec-30-references"><span class="secnum">30</span><span class="sectitle">References</span></h2><p><em>Cited by role; consult current editions. No copyrighted text is reproduced. Full entries in <code>references/bibliography.md</code> [-&gt;Doc H].</em></p>
+<ul>
+<li>Roofline-model and parallel-performance references (roofline; Amdahl's law), bottleneck analysis (Section 6.4).</li>
+<li>Edge-AI / efficient-inference literature, quantization, pruning, distillation, compilation (Section 6.5).</li>
+<li>Embedded-systems / real-time references, latency, determinism, scheduling (Section 6.7; mastered M11).</li>
+<li>Power/thermal-aware computing literature, throttling, energy per inference (Section 6.6; M12).</li>
+<li>SIM2FIELD governing documents, <code>PHASE-0-FOUNDATION.md</code>, <code>PHASE-1-CURRICULUM-ARCHITECTURE.md</code>, <code>curriculum/_core-concepts.md</code>, <strong>Modules 1 to 5</strong>, and (forthcoming) Doc B, Doc C, Doc E, Doc G.</li>
+</ul>
+</section>
+<section class="section instructor"><details class="instructor-wrap"><summary>Concise quality summary (honest self-assessment) (instructor / author material, not part of the student reading)</summary><p><strong>Strengths.</strong> The module masters edge deployment and <strong>formally designates CEC-04 (the No-Cloud Edge Boundary)</strong> at its true mastery point, the runtime/development partition that recurs across perception, decision, grasp, and integration, now an audited, tooling-enforced property rather than a slogan. It adds a genuinely distinct Engineering Insight, <strong>EI-06 (Measure on the Target)</strong>, which sharpens EI-05 into an empirical discipline without duplicating it. The module keeps the &quot;budget&quot; family disciplined, explicitly declining to mint a third budget-CEC, treating latency as CEC-01 applied to compute, exactly the restraint you asked for. It grounds optimization in the mission via EI-04 (protect recall), advances the lifecycle from SIL to HIL, and connects compute latency to both the cycle-time budget (CEC-01) and the placement budget (CEC-03, σ_sync). All 30 sections present; the Engineering Design Review is included and framed as judgment; every standing convention is exercised; consistency with the frozen modules maintained.</p>
+<p><strong>Known weaknesses / items for your review.</strong></p>
+<ol>
+<li><strong>Targets are [VERIFY@PUB].</strong> Latency, power, thermal, and worst-case-timing targets and the specific device depend on Doc B/C and real hardware measurement; the budgeting and optimization <em>methods</em> are exact.</li>
+<li><strong>Real-time scheduling is introduced, not mastered.</strong> Bounded worst-case latency (SR-P-22) is stated as a requirement and deferred to M11 for its realization, a forward dependency, flagged.</li>
+<li><strong>HIL rig and thermal envelope are specified, not built.</strong> They depend on Doc G and real hardware, the same critical path noted since M2, now including physical compute hardware.</li>
+<li><strong>CEC-04 vs. the budget family.</strong> I judged the No-Cloud Boundary a CEC and the latency budget <em>not</em> a separate CEC; if you would prefer the latency budget also anchored (or CEC-04 held on the watchlist instead), both are one-line register changes, flagged, not decided unilaterally.</li>
+</ol>
+<p>I have not scored this against the 9.5 bar, that judgment is yours. Items 1 to 3 close chiefly by authoring Doc B/C/E/G and by reaching M11/M12.</p>
+<p><strong>END OF MODULE 6, STOP. Awaiting your review before freezing Module 6 or proceeding to Module 7.</strong></p>
+</details></section>
+    <footer>Rendered from <b>MODULE-06.md</b> by Module Rendering Pipeline v1.3. Author / production edition. The module is the single source of truth.<br>
+    Includes production specifications, figure placeholders, governance and instructor notes, and the answer key.<br>
+    SIM2FIELD / Autonomous Watermelon Harvesting Robotics</footer>
+  </div></main>
+</div>
+<script>
+(function(){var links=[].slice.call(document.querySelectorAll('.toc a'));var map={};
+ links.forEach(function(a){map[a.getAttribute('href').slice(1)]=a;});
+ if(!('IntersectionObserver' in window))return;
+ var io=new IntersectionObserver(function(es){es.forEach(function(e){var id=e.target.id;
+   if(e.isIntersecting&&map[id]){links.forEach(function(l){l.classList.remove('active');});map[id].classList.add('active');map[id].scrollIntoView({block:'nearest'});}});},
+   {rootMargin:'-12% 0px -78% 0px'});
+ document.querySelectorAll('.section h2[id]').forEach(function(h){io.observe(h);});})();
+</script>
+</body></html>

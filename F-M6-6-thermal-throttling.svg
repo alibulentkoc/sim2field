@@ -1,0 +1,20 @@
+<svg viewBox="0 0 760 265" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Thermal throttling: under sustained load in a hot enclosure the system-on-chip drops its clocks to protect itself, so delivered performance falls below the datasheet and a pipeline validated cold can miss its latency budget once hot; these are physical constraints measured on the real device under real thermal conditions, never assumed." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Thermal throttling: delivered vs datasheet performance</text>
+<line x1="110" y1="78" x2="600" y2="78" stroke="var(--info)" stroke-width="1.8" stroke-dasharray="6 3"/>
+<text x="600" y="72.51999999999998" font-size="7" fill="var(--info)" font-weight="end" text-anchor="end">datasheet (cold, idle)</text>
+<polyline points="110.0,80.4 257.0,80.4 330.5,83.3 404.0,120.7 477.5,138.0 600.0,143.8" fill="none" stroke="var(--accent)" stroke-width="2.4"/>
+<text x="159.0" y="74.4" font-size="7" fill="var(--accent)">delivered (sustained load)</text>
+<line x1="365" y1="66" x2="365" y2="210" stroke="var(--warn)" stroke-width="1.2" stroke-dasharray="3 3"/>
+<text x="364.8" y="68.88" font-size="6.8" fill="var(--warn-text)" text-anchor="middle">throttle onset</text>
+<line x1="110" y1="126" x2="600" y2="126" stroke="var(--danger)" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="116" y="122.48" font-size="6.8" fill="var(--danger-text)">perf floor to meet latency budget (CEC-01)</text>
+<circle cx="413.8" cy="123.6" r="4" fill="var(--danger)"/>
+<text x="423.6" y="126.60000000000001" font-size="6.6" fill="var(--danger-text)">hot: misses the budget</text>
+<line x1="110" y1="62" x2="110" y2="210" stroke="var(--border-strong)" stroke-width="1.4"/>
+<line x1="110" y1="210" x2="600" y2="210" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="102" y="138.0" text-anchor="middle" font-size="8" fill="var(--text-muted)" transform="rotate(-90 102 138.0)">delivered throughput / clock</text>
+<text x="355.0" y="238" font-size="8" fill="var(--text-muted)" text-anchor="middle">time under sustained load (junction temperature rising)  -></text>
+<text x="20" y="246" font-size="7.8" fill="var(--text-muted)">Delivered performance is not the datasheet. Measure on the real device under real thermal conditions (EI-06); validate hot and loaded, not cold</text>
+<text x="20" y="258" font-size="7.8" fill="var(--text-muted)">and idle. Illustrative curve. Section 6.6 (power/thermal mastered in M12).</text>
+</svg>

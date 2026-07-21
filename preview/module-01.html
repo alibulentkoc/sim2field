@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Problem &amp; The System — SIM2FIELD</title>
+<meta name="description" content="A short university course on the engineering of an autonomous watermelon/pumpkin harvesting robot: perception, edge AI, manipulation, and field deployment.">
+<link rel="stylesheet" href="assets/style.css">
+
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a class="brand" href="index.html"><span class="dot"></span>SIM2FIELD</a>
+  <div class="nav-links"><a href="index.html">Home</a><a href="index.html#modules" class="active">Modules</a><a href="demo-page.html">Live Demo</a><a href="index.html#specs">Specs</a><a href="capstone.html">Capstone</a></div>
+</div></nav>
+<header class="article-head"><div class="inner"><p class="eyebrow">Module 1</p><h1>The Problem &amp; The System</h1><div class="dur">◷ 3 hours</div></div></header><main class="page prose">
+
+<h2 id="learning-outcomes">Learning outcomes</h2>
+<p>By the end of this module, students can:</p>
+<ol>
+<li>Explain why heavy specialty fruit (watermelon, pumpkin) has resisted
+   mechanization where grains and some vegetables have not.</li>
+<li>Decompose an autonomous harvester into its five functional subsystems and
+   state the role of each.</li>
+<li>Trace the end-to-end "signal-to-action" data path from camera photons to a
+   fruit in the bin.</li>
+<li>Read a system-level requirement and classify it as functional, performance,
+   or constraint.</li>
+</ol>
+<h2 id="core-concepts">Core concepts</h2>
+<h3 id="why-this-problem-is-hard">Why this problem is hard</h3>
+<p>Watermelon and pumpkin sit at an awkward intersection of properties that defeats
+both grain-style bulk mechanization and orchard-style robotic picking:</p>
+<ul>
+<li><strong>Mass.</strong> A field watermelon is commonly 5–10 kg. That is roughly an order of
+  magnitude heavier than the apples, strawberries, or peppers that most robotic
+  harvesting research targets, and it pushes typical collaborative-robot arms
+  past their rated payload. The manipulator cannot be an off-the-shelf cobot.</li>
+<li><strong>Camouflage.</strong> A ripe melon is often the same green as its canopy, so simple
+  color thresholding fails. Ripeness cues (ground-spot color, tendril dieback,
+  sound) are subtle and partially hidden.</li>
+<li><strong>Occlusion.</strong> Fruit grows under a dense, sprawling vine canopy on the ground,
+  not presented at arm height on a trellis. The robot must often clear leaves
+  before it can even see, let alone grasp.</li>
+<li><strong>Reproducibility.</strong> One-off research rigs rarely survive contact with a
+  commercial field and are nearly impossible for another lab to replicate, which
+  is why so many promising prototypes never propagate.</li>
+</ul>
+<p>Framing the difficulty precisely is the point: every later module exists to
+defeat one of these four properties.</p>
+<h3 id="the-five-subsystems">The five subsystems</h3>
+<p>Any field harvester, ours included, decomposes into five cooperating subsystems:</p>
+<ol>
+<li><strong>Mobility</strong> — the platform that carries everything down the row and positions
+   the tool. (Here: the Amiga rover, drive-over stance.)</li>
+<li><strong>Perception</strong> — cameras and algorithms that detect fruit, estimate ripeness,
+   and localize the target in 3D. (Module 2.)</li>
+<li><strong>Cognition / edge compute</strong> — the on-board computer and the AI that turns
+   perception into decisions and grasp commands under a no-cloud constraint.
+   (Module 3.)</li>
+<li><strong>Manipulation</strong> — the arm and gripper that physically reach, grasp, lift, and
+   place the fruit. (Module 4.)</li>
+<li><strong>Supervision &amp; integration</strong> — the state machine, buses, safety interlocks,
+   and power that make the four above behave as one machine. (Modules 5–6.)</li>
+</ol>
+<h3 id="the-signal-to-action-path">The signal-to-action path</h3>
+<p>The organizing thread of the whole course. Photons enter the camera; a detector
+proposes fruit; a pose estimator places each fruit in the robot's coordinate
+frame; the supervisor decides which to pick and drives the rover until that fruit
+is at the pick station; a motion planner produces a collision-free, singularity-
+aware arm trajectory; a grasp controller closes the gripper with a learned force;
+the arm lifts and places; the cycle repeats. Latency, reliability, and power
+accumulate along this path, and the machine is only as good as its weakest link.</p>
+<h3 id="the-drive-over-architecture-our-case-studys-key-idea">The drive-over architecture (our case study's key idea)</h3>
+<p>Rather than reaching <em>sideways</em> to a bed beside the rover, the Amiga <em>straddles</em>
+the bed. The fruit passes through the open tool space beneath the frame as the
+rover advances, and the arm picks it at a fixed station inside the wheelbase.
+This one decision cascades into simplifications students will see repeatedly:
+the camera's downward sight line stays clear of the arm; no reversing maneuver is
+needed; and — most importantly — pick geometry is nearly identical for every
+fruit, which is what makes learned grasping and tight cycle times achievable.</p>
+<h2 id="grad-extension"><span class="tagpill tag-grad">Graduate</span>Grad extension</h2>
+<p>Read one recent (past ~5 years) peer-reviewed paper on robotic harvesting of a
+heavy or ground-grown crop. In one page, identify which of the four hard
+properties the paper primarily attacks, what it trades away to do so, and whether
+its result would transfer to watermelon. Bring it to the Module 2 discussion.</p>
+<h2 id="demo-or-lab"><span class="tagpill tag-lab">Hands-on</span>Demo or lab</h2><div class="embed"><div class="bar"><span class="live"></span>LIVE SIMULATION — AMIGA PARALLEL 2-CYLINDER HARVESTER<a href="demo.html" target="_blank" rel="noopener">Open full screen ↗</a></div><iframe src="demo.html" title="Harvester simulation" loading="lazy"></iframe></div>
+<p><strong>Digital-twin walkthrough.</strong> Open the browser digital twin
+(<a href="../../labs/lab-01-twin-tour.md"><code>labs/lab-01-twin-tour.md</code></a>). Run a full
+harvest cycle. Students annotate — on paper or a shared doc — where each of the
+five subsystems is visible in the running simulation, and mark the exact moment
+in the cycle where each of the four hard properties is being addressed. This
+grounds the abstractions in something moving on screen before any math appears.</p>
+<h2 id="knowledge-check"><span class="tagpill tag-quiz">Quiz</span>Knowledge check</h2><div class="quiz" data-quiz><div class="quiz-head"><span class="ic">◇</span>Module 1 — Knowledge Check<span class="score">0 / 2</span></div><div class="q" data-correct="1"><p class="qtext"><span class="qn">01</span>The drive-over architecture primarily keeps clear:</p><button class="opt" data-q="0" data-o="0">the battery compartment<span class="mark"></span></button><button class="opt" data-q="0" data-o="1">the camera&#x27;s sight line to the fruit<span class="mark"></span></button><button class="opt" data-q="0" data-o="2">the operator&#x27;s seat<span class="mark"></span></button><button class="opt" data-q="0" data-o="3">the CAN bus<span class="mark"></span></button><div class="qexpl"><b>Why:</b> Because the rover straddles the bed and the arm works beneath the frame, the downward camera view stays clear of the manipulator — unlike a side-reaching arm that swings through the camera&#x27;s field.</div></div><div class="q" data-correct="1"><p class="qtext"><span class="qn">02</span>In the case-study DOF reduction, fore/aft (x) positioning of the fruit is provided by:</p><button class="opt" data-q="1" data-o="0">a base yaw motor<span class="mark"></span></button><button class="opt" data-q="1" data-o="1">the vehicle driving the fruit to a fixed station<span class="mark"></span></button><button class="opt" data-q="1" data-o="2">the wrist joint<span class="mark"></span></button><button class="opt" data-q="1" data-o="3">the gripper compliance<span class="mark"></span></button><div class="qexpl"><b>Why:</b> The vehicle supplies the x axis: it advances until the target reaches a fixed pick station, so the arm needs no fore/aft actuator.</div></div><div class="quiz-foot"><button class="btn btn-dark" data-reset>Reset</button><span class="msg">Pick an answer to check it instantly.</span></div></div>
+<ol>
+<li>Name the four fruit properties that make watermelon/pumpkin harvest hard to
+   mechanize, and give one design consequence of each.</li>
+<li>A requirement reads: <em>"The system shall place fruit in the collection bin with
+   less than 5% incidence of visible bruising."</em> Classify it (functional /
+   performance / constraint) and justify.</li>
+<li>In the drive-over architecture, why does the camera sight line stay clear of
+   the manipulator? Contrast with a side-reaching design.</li>
+<li>Trace the signal-to-action path in your own words, naming at least six
+   distinct stages.</li>
+<li>Which subsystem would you expect to dominate the <em>power</em> budget, and which the
+   <em>latency</em> budget? Defend your answer (you will revisit this in Module 3).</li>
+</ol>
+<h2 id="take-home-assignment"><span class="tagpill tag-take">Assignment</span>Take-home assignment</h2>
+<p>Write a <strong>one-page system brief</strong> for a harvesting robot for a crop of <em>your</em>
+choice other than watermelon or pumpkin (e.g., cabbage, cantaloupe, sweet
+potato). Identify which of the four hard properties dominate, sketch the five
+subsystems, and state three top-level requirements (one functional, one
+performance, one constraint). This brief seeds your capstone crop if you want it
+to. Deliverable: <code>assignments/m1-system-brief.md</code> in your own course fork.</p><div class="pager"><a class="next" href="module-02.html"><span class="d">Next →</span>Module 2: Machine Vision &amp; Perception</a></div></main>
+<footer class="foot"><div class="inner">
+  <div>SIM2FIELD · Robotic Harvesting Systems — course materials</div>
+  <div><a href="index.html">Home</a> · <a href="demo-page.html">Live Demo</a> · <a href="capstone.html">Capstone</a></div>
+</div></footer>
+
+<script>
+document.querySelectorAll('[data-quiz]').forEach(function(quiz){
+  var total = quiz.querySelectorAll('.q').length;
+  var answered = {};
+  function refresh(){
+    var correct = Object.values(answered).filter(Boolean).length;
+    quiz.querySelector('.score').textContent = correct + ' / ' + total;
+    var msg = quiz.querySelector('.msg');
+    if (Object.keys(answered).length === total){
+      msg.textContent = correct === total ? 'Perfect — all correct.' :
+        'You got ' + correct + ' of ' + total + '. Review the explanations and try again.';
+    }
+  }
+  quiz.querySelectorAll('.opt').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var qEl = btn.closest('.q');
+      if (qEl.dataset.locked) return;
+      qEl.dataset.locked = '1';
+      var correct = parseInt(qEl.dataset.correct,10);
+      var chosen = parseInt(btn.dataset.o,10);
+      qEl.querySelectorAll('.opt').forEach(function(o){
+        o.classList.add('locked');
+        var oi = parseInt(o.dataset.o,10);
+        if (oi === correct) o.classList.add('correct');
+        else if (o === btn) o.classList.add('wrong');
+      });
+      qEl.querySelector('.qexpl').classList.add('show');
+      answered[qEl.dataset.q || btn.dataset.q] = (chosen === correct);
+      refresh();
+    });
+  });
+  quiz.querySelector('[data-reset]').addEventListener('click', function(){
+    answered = {};
+    quiz.querySelectorAll('.q').forEach(function(qEl){
+      delete qEl.dataset.locked;
+      qEl.querySelectorAll('.opt').forEach(function(o){ o.className='opt'; });
+      qEl.querySelector('.qexpl').classList.remove('show');
+    });
+    quiz.querySelector('.msg').textContent = 'Pick an answer to check it instantly.';
+    refresh();
+  });
+});
+</script>
+
+</body>
+</html>

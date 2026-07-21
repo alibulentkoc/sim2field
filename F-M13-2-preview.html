@@ -1,0 +1,86 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="color-scheme" content="dark"><title>F-M13-2 preview - Incremental integration</title><style>:root{--bg:#0e120d;--surface:#161c14;--surface-2:#0b0e0a;--surface-3:#12160f;--border:#2b3527;--border-strong:#3a4633;--text-primary:#eef2e6;--text-secondary:#c8cfbe;--text-muted:#adb4a2;--accent:#9bcf3b;--danger:#f0556a;--danger-text:#f697a4}
+body{margin:0;background:var(--bg);color:var(--text-primary);font-family:'IBM Plex Mono',ui-monospace,monospace;padding:2rem}
+.figure{max-width:840px;margin:0 auto;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.figbody{padding:1rem 1.1rem;background:var(--surface-3);overflow-x:auto} .figbody svg{display:block;width:100%;height:auto;min-width:640px}
+figcaption{padding:.7rem 1rem;font-size:.82rem;color:var(--text-muted);border-top:1px solid var(--border)} .fid{font-size:.64rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-right:.5rem}</style></head>
+<body><figure class="figure"><div class="figbody"><svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Incremental versus big-bang integration: connecting all subsystems at once leaves a broken metric hidden among order n-squared pairwise interactions, while adding one interface at a time localizes any break to the newly added subsystem, an order n debug path." font-family="'IBM Plex Mono',monospace">
+<text x="20" y="26" font-size="10" fill="var(--danger-text)" font-weight="700" font-family="'Space Grotesk',sans-serif">BIG BANG: connect all at once</text>
+<line x1="180" y1="64" x2="254" y2="107" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<line x1="180" y1="64" x2="254" y2="193" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<line x1="180" y1="64" x2="180" y2="236" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<line x1="180" y1="64" x2="106" y2="193" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<line x1="180" y1="64" x2="106" y2="107" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<line x1="254" y1="107" x2="254" y2="193" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<line x1="254" y1="107" x2="180" y2="236" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<line x1="254" y1="107" x2="106" y2="193" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<line x1="254" y1="107" x2="106" y2="107" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<line x1="254" y1="193" x2="180" y2="236" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<line x1="254" y1="193" x2="106" y2="193" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<line x1="254" y1="193" x2="106" y2="107" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<line x1="180" y1="236" x2="106" y2="193" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<line x1="180" y1="236" x2="106" y2="107" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<line x1="106" y1="193" x2="106" y2="107" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<circle cx="180" cy="64" r="12" fill="var(--surface)" stroke="var(--danger)" stroke-width="1.3"/>
+<text x="180" y="67" text-anchor="middle" font-size="8" fill="var(--text-secondary)">1</text>
+<circle cx="254" cy="107" r="12" fill="var(--surface)" stroke="var(--danger)" stroke-width="1.3"/>
+<text x="254" y="110" text-anchor="middle" font-size="8" fill="var(--text-secondary)">2</text>
+<circle cx="254" cy="193" r="12" fill="var(--surface)" stroke="var(--danger)" stroke-width="1.3"/>
+<text x="254" y="196" text-anchor="middle" font-size="8" fill="var(--text-secondary)">3</text>
+<circle cx="180" cy="236" r="12" fill="var(--surface)" stroke="var(--danger)" stroke-width="1.3"/>
+<text x="180" y="239" text-anchor="middle" font-size="8" fill="var(--text-secondary)">4</text>
+<circle cx="106" cy="193" r="12" fill="var(--surface)" stroke="var(--danger)" stroke-width="1.3"/>
+<text x="106" y="196" text-anchor="middle" font-size="8" fill="var(--text-secondary)">5</text>
+<circle cx="106" cy="107" r="12" fill="var(--surface)" stroke="var(--danger)" stroke-width="1.3"/>
+<text x="106" y="110" text-anchor="middle" font-size="8" fill="var(--text-secondary)">6</text>
+<text x="180" y="154" text-anchor="middle" font-size="9" fill="var(--danger)" font-weight="700">metric breaks</text>
+<text x="180" y="304" text-anchor="middle" font-size="7.6" fill="var(--text-muted)">the fault could be any of O(n^2) pairwise interactions</text>
+<text x="180" y="268" text-anchor="middle" font-size="7.4" fill="var(--danger-text)">O(n^2) interaction search</text>
+<line x1="372" y1="16" x2="372" y2="284" stroke="var(--border)" stroke-width="1"/>
+<text x="392" y="26" font-size="10" fill="var(--accent)" font-weight="700" font-family="'Space Grotesk',sans-serif">INCREMENTAL: one interface at a time</text>
+<circle cx="404" cy="64" r="11" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="404" y="67" text-anchor="middle" font-size="7.6" fill="var(--text-secondary)">1</text>
+<circle cx="448" cy="64" r="11" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="448" y="67" text-anchor="middle" font-size="7.6" fill="var(--text-secondary)">2</text>
+<line x1="415" y1="64" x2="437" y2="64" stroke="var(--accent)" stroke-width="2.2"/>
+<text x="494" y="67" font-size="7" fill="var(--text-muted)">verify new interface</text>
+<circle cx="404" cy="104" r="11" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="404" y="107" text-anchor="middle" font-size="7.6" fill="var(--text-secondary)">1</text>
+<circle cx="448" cy="104" r="11" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="448" y="107" text-anchor="middle" font-size="7.6" fill="var(--text-secondary)">2</text>
+<line x1="415" y1="104" x2="437" y2="104" stroke="var(--border-strong)" stroke-width="1"/>
+<circle cx="492" cy="104" r="11" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="492" y="107" text-anchor="middle" font-size="7.6" fill="var(--text-secondary)">3</text>
+<line x1="459" y1="104" x2="481" y2="104" stroke="var(--accent)" stroke-width="2.2"/>
+<text x="538" y="107" font-size="7" fill="var(--text-muted)">verify new interface</text>
+<circle cx="404" cy="144" r="11" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="404" y="147" text-anchor="middle" font-size="7.6" fill="var(--text-secondary)">1</text>
+<circle cx="448" cy="144" r="11" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="448" y="147" text-anchor="middle" font-size="7.6" fill="var(--text-secondary)">2</text>
+<line x1="415" y1="144" x2="437" y2="144" stroke="var(--border-strong)" stroke-width="1"/>
+<circle cx="492" cy="144" r="11" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="492" y="147" text-anchor="middle" font-size="7.6" fill="var(--text-secondary)">3</text>
+<line x1="459" y1="144" x2="481" y2="144" stroke="var(--border-strong)" stroke-width="1"/>
+<circle cx="536" cy="144" r="11" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="536" y="147" text-anchor="middle" font-size="7.6" fill="var(--text-secondary)">4</text>
+<line x1="503" y1="144" x2="525" y2="144" stroke="var(--accent)" stroke-width="2.2"/>
+<text x="582" y="147" font-size="7" fill="var(--text-muted)">verify new interface</text>
+<circle cx="404" cy="184" r="11" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="404" y="187" text-anchor="middle" font-size="7.6" fill="var(--text-secondary)">1</text>
+<circle cx="448" cy="184" r="11" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="448" y="187" text-anchor="middle" font-size="7.6" fill="var(--text-secondary)">2</text>
+<line x1="415" y1="184" x2="437" y2="184" stroke="var(--border-strong)" stroke-width="1"/>
+<circle cx="492" cy="184" r="11" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="492" y="187" text-anchor="middle" font-size="7.6" fill="var(--text-secondary)">3</text>
+<line x1="459" y1="184" x2="481" y2="184" stroke="var(--border-strong)" stroke-width="1"/>
+<circle cx="536" cy="184" r="11" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="536" y="187" text-anchor="middle" font-size="7.6" fill="var(--text-secondary)">4</text>
+<line x1="503" y1="184" x2="525" y2="184" stroke="var(--border-strong)" stroke-width="1"/>
+<circle cx="580" cy="184" r="11" fill="var(--surface)" stroke="var(--danger)" stroke-width="1.3"/>
+<text x="580" y="187" text-anchor="middle" font-size="7.6" fill="var(--text-secondary)">5</text>
+<line x1="547" y1="184" x2="569" y2="184" stroke="var(--accent)" stroke-width="2.2"/>
+<text x="598" y="187" font-size="7.4" fill="var(--danger-text)" font-weight="700">break -&gt; it is 5's interface</text>
+<text x="392" y="222" font-size="7.6" fill="var(--accent)" font-weight="700">A break localizes to the just-added subsystem: O(n) debug path.</text>
+<text x="392" y="236" font-size="7.4" fill="var(--text-muted)">Each step verifies one interface and interaction before adding the next.</text>
+<text x="20" y="270" font-size="8.2" fill="var(--text-secondary)">Incremental integration localizes the interaction that breaks and is far easier to debug (EI-13).</text>
+<text x="20" y="283" font-size="8.2" fill="var(--text-muted)">The twin is the environment where this incremental composition happens first, before hardware.</text>
+</svg></div><figcaption><span class="fid">F-M13-2</span>Incremental vs big-bang integration. Connecting everything at once leaves a broken metric hidden among order n-squared interactions; adding one interface at a time localizes any break to the just-added subsystem, an order n debug path. The twin is where this happens first. Third Module 13 figure. Module 13, Sections 6.1 and 7.3.</figcaption></figure></body></html>

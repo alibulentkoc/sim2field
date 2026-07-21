@@ -1,0 +1,49 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="color-scheme" content="dark"><title>F-M7-2 preview - Mission FSM</title><style>:root{--bg:#0e120d;--surface:#161c14;--surface-2:#0b0e0a;--surface-3:#12160f;--border:#2b3527;--border-strong:#3a4633;--text-primary:#eef2e6;--text-secondary:#c8cfbe;--text-muted:#adb4a2;--accent:#9bcf3b;--info:#6fb0d9;--warn:#e0a03b;--warn-text:#eed9b4;--danger:#f0556a;--danger-text:#f697a4}
+body{margin:0;background:var(--bg);color:var(--text-primary);font-family:'IBM Plex Mono',ui-monospace,monospace;padding:2rem}
+.figure{max-width:840px;margin:0 auto;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.figbody{padding:1rem 1.1rem;background:var(--surface-3);overflow-x:auto} .figbody svg{display:block;width:100%;height:auto;min-width:640px}
+figcaption{padding:.7rem 1rem;font-size:.82rem;color:var(--text-muted);border-top:1px solid var(--border)} .fid{font-size:.64rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-right:.5rem}</style></head>
+<body><figure class="figure"><div class="figbody"><svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The mission finite state machine sequences drive, stage, align, grab, lift, swing, lower, release, and before grabbing a gate uses ripeness confidence and pose covariance to decide whether to attempt: risky targets are deferred or skipped, safe ones proceed, and release loops to the next candidate." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker><marker id="p" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/></marker><marker id="x" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--danger)"/></marker></defs>
+<rect x="52" y="88" width="100" height="38" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="102.0" y="112" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">DRIVE</text>
+<rect x="164" y="88" width="100" height="38" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="214.0" y="112" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">STAGE</text>
+<rect x="276" y="88" width="100" height="38" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="326.0" y="112" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">ALIGN</text>
+<polygon points="430,80 466,107 430,134 394,107" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.6"/>
+<text x="430" y="105" text-anchor="middle" font-size="7.6" fill="var(--warn-text)" font-weight="700">attempt?</text>
+<text x="430" y="115" text-anchor="middle" font-size="6.2" fill="var(--text-muted)">gate</text>
+<rect x="536" y="88" width="100" height="38" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="586.0" y="112" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">GRAB</text>
+<rect x="536" y="214" width="100" height="38" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="586.0" y="238" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">LIFT</text>
+<rect x="400" y="214" width="100" height="38" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="450.0" y="238" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">SWING</text>
+<rect x="276" y="214" width="100" height="38" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="326.0" y="238" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">LOWER</text>
+<rect x="152" y="214" width="100" height="38" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="202.0" y="238" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">RELEASE</text>
+<line x1="152" y1="107" x2="164" y2="107" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#a)"/>
+<line x1="264" y1="107" x2="276" y2="107" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#a)"/>
+<line x1="376" y1="107" x2="394" y2="107" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#a)"/>
+<line x1="466" y1="107" x2="536" y2="107" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#p)"/>
+<text x="500" y="100" text-anchor="middle" font-size="6.6" fill="var(--accent)">pass</text>
+<line x1="586" y1="126" x2="586" y2="214" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#a)"/>
+<line x1="536" y1="233" x2="500" y2="233" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#a)"/>
+<line x1="400" y1="233" x2="376" y2="233" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#a)"/>
+<line x1="276" y1="233" x2="252" y2="233" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#a)"/>
+<path d="M152,233 L110,233 L110,126" fill="none" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#a)"/>
+<text x="96" y="180" font-size="6.6" fill="var(--text-muted)">next candidate</text>
+<path d="M430,134 L430,170 L102,170 L102,128" fill="none" stroke="var(--danger)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#x)"/>
+<text x="250" y="164" text-anchor="middle" font-size="7" fill="var(--danger-text)">gated out: defer / skip (low ripeness conf. OR high pose covariance)</text>
+<rect x="330" y="26" width="94" height="30" rx="6" fill="var(--surface)" stroke="var(--info)" stroke-width="1.2"/>
+<text x="377" y="45" text-anchor="middle" font-size="7.6" fill="var(--info)">ripeness conf. (M4)</text>
+<rect x="436" y="26" width="94" height="30" rx="6" fill="var(--surface)" stroke="var(--info)" stroke-width="1.2"/>
+<text x="483" y="45" text-anchor="middle" font-size="7.6" fill="var(--info)">pose cov. (M5)</text>
+<line x1="390" y1="56" x2="422" y2="83" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#a)"/>
+<line x1="470" y1="56" x2="438" y2="83" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#a)"/>
+<text x="20" y="272" font-size="8.3" fill="var(--text-secondary)">Among admitted targets, sequencing balances value (ripeness), reachability (M8 preview), uncertainty, and cycle cost (CEC-01).</text>
+<text x="20" y="286" font-size="8.3" fill="var(--text-muted)">The task layer is discrete, auditable logic, kept separate from the learned grasp policy so the sequencing can be verified independently.</text>
+<text x="20" y="300" font-size="8.3" fill="var(--text-muted)">This is decision-making that USES the distributions perception provides: the occlusion/uncertainty gate (M5) elevated to a decision.</text>
+</svg></div><figcaption><span class="fid">F-M7-2</span>Mission FSM with uncertainty and ripeness gating. The machine sequences drive through release, and before grabbing a gate uses ripeness confidence (M4) and pose covariance (M5) to decide whether to attempt: risky targets are deferred or skipped, safe ones proceed, and release loops to the next candidate. Companion to propose-then-bound. Module 7, Section 6.2.</figcaption></figure></body></html>

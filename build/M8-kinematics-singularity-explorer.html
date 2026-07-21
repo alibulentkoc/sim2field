@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0e120d">
+<title>Kinematics &amp; Singularities - Worked Example (M8 / EI-08)</title>
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<style>
+  /* ================= THEME DEFINITION - the ONLY place raw color values live ================= */
+  :root{
+    color-scheme: dark;
+    --bg:#0e120d; --surface:#161c14; --surface-2:#0b0e0a; --surface-3:#12160f;
+    --border:#2b3527; --border-strong:#3a4633; --grid-line:#1c231a;
+    --text-primary:#eef2e6; --text-secondary:#c8cfbe; --text-muted:#adb4a2;
+    --text-lede:#c9d0bf; --text-cons:#d4dbc9; --text-on-accent:#0e120d;
+    --accent:#9bcf3b; --accent-dim:#86ba35; --accent-strong:#6f9a2c;
+    --danger:#f0556a; --danger-text:#f697a4; --danger-dim:#b93b4c;
+    --warn:#e0a03b; --info:#6fb0d9; --accent-2:#b98bd9;
+    /* tints */
+    --tint-accent:rgba(155,207,59,.07); --tint-accent-soft:rgba(155,207,59,.05);
+    --tint-hero:rgba(155,207,59,.06); --tint-danger:rgba(240,85,106,.08); --tint-warn:rgba(224,160,59,.08);
+    /* region-map cell fills */
+    --cell-safe:rgba(155,207,59,.16); --cell-near:rgba(224,160,59,.20); --cell-singular:rgba(240,85,106,.18);
+    --legend-safe:rgba(155,207,59,.30); --legend-near:rgba(224,160,59,.30); --legend-singular:rgba(240,85,106,.28);
+    /* status text */
+    --status-ok-text:#d0d7c6; --status-warn-text:#eed9b4; --status-danger-text:#f3ccd2;
+    --font-sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --font-display:'Space Grotesk',var(--font-sans);
+  }
+  /* ========================================================================================== */
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{background:var(--bg); color:var(--text-primary); -webkit-text-size-adjust:100%; text-size-adjust:100%; scroll-behavior:smooth}
+  body{background:var(--bg); color:var(--text-primary); font-family:var(--font-sans);
+    line-height:1.7; -webkit-font-smoothing:antialiased; padding:0 0 6rem; letter-spacing:.002em}
+  .wrap{max-width:820px; margin:0 auto; padding:0 1.6rem; background:var(--bg); color:var(--text-primary)}
+  code,.mono,.num{font-family:var(--font-mono); font-variant-numeric:tabular-nums}
+  a{color:var(--accent)}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+  .katex{font-size:1.06em}
+  .katex-display{margin:0}
+  .eq{background:var(--surface-3); color:var(--text-primary); border:1px solid var(--border); border-radius:10px;
+    padding:1.15rem 1.3rem; margin:1.15rem 0; overflow-x:auto; overflow-y:hidden}
+  .eq .katex-display{margin:0}
+
+  header{background:var(--bg); color:var(--text-primary); border-bottom:1px solid var(--border); padding:3.6rem 0 2.6rem; margin-bottom:2.6rem}
+  .eyebrow{font-family:var(--font-mono); font-size:.73rem; font-weight:500; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--accent); margin-bottom:1.15rem; display:flex; gap:.85rem; flex-wrap:wrap}
+  .eyebrow span{color:var(--text-muted)}
+  h1{font-family:var(--font-display); font-weight:600; font-size:clamp(2rem,5vw,3rem);
+    line-height:1.05; letter-spacing:-.021em; margin-bottom:1.05rem; color:var(--text-primary)}
+  h1 em{font-style:normal; color:var(--accent)}
+  .lede{font-size:1.08rem; color:var(--text-lede); max-width:64ch}
+
+  .hero{position:relative; margin:2.4rem 0 .6rem; padding:2.2rem 1.6rem 1.9rem; isolation:isolate}
+  .hero-bg{position:absolute; inset:0; width:100%; height:100%; z-index:-1}
+  .hero-inner{position:relative; text-align:center}
+  .hero-tab{display:inline-block; font-family:var(--font-mono); font-size:.66rem; font-weight:500; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--accent); background:var(--bg); padding:.28rem .7rem;
+    border:1px solid var(--accent-strong); border-radius:5px; margin-bottom:1.2rem}
+  .hero-eq{margin:.4rem 0 1rem}
+  .hero-eq .katex{font-size:1.5em}
+  .hero-sub{font-size:.92rem; color:var(--text-muted); max-width:52ch; margin:0 auto}
+
+  section{margin-top:3.4rem}
+  .kicker{font-family:var(--font-mono); font-size:.71rem; font-weight:500; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--accent-dim); margin-bottom:.7rem}
+  h2{font-family:var(--font-display); font-weight:600; font-size:1.55rem; letter-spacing:-.012em; margin-bottom:1rem; color:var(--text-primary)}
+  p{margin-bottom:1.05rem; color:var(--text-secondary)} strong{color:var(--text-primary); font-weight:600}
+  .rind-t{color:var(--accent)} .flesh-t{color:var(--danger-text)} .amber-t{color:var(--warn)} .water-t{color:var(--info)}
+
+  .dstep{margin:2rem 0; padding-left:1.5rem; border-left:2px solid var(--border); position:relative}
+  .dstep::before{content:attr(data-n); position:absolute; left:-.9rem; top:-.1rem;
+    font-family:var(--font-mono); font-size:.7rem; font-weight:600; color:var(--text-on-accent);
+    background:var(--accent-strong); width:1.6rem; height:1.6rem; border-radius:50%; display:grid; place-items:center}
+  .d-state{font-family:var(--font-display); font-weight:500; font-size:1.12rem; color:var(--text-primary); margin-bottom:.2rem; line-height:1.4}
+  .d-exp{color:var(--text-secondary); margin:.9rem 0}
+  .d-cons{display:flex; gap:.7rem; align-items:flex-start; margin-top:.9rem; padding:.75rem .95rem;
+    background:var(--tint-accent-soft); border:1px solid var(--accent-strong); border-radius:8px}
+  .d-cons .lab{font-family:var(--font-mono); font-size:.63rem; font-weight:500; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--accent); flex:none; margin-top:.18rem}
+  .d-cons p{margin:0; color:var(--text-cons); font-size:.94rem}
+
+  .instrument{background:var(--surface); color:var(--text-secondary); border:1px solid var(--border); border-radius:14px; padding:1.7rem; margin-top:1.3rem}
+  .inst-head{display:flex; justify-content:space-between; align-items:baseline; gap:1rem; flex-wrap:wrap; margin-bottom:1.3rem}
+  .inst-title{font-family:var(--font-display); font-weight:600; font-size:1.05rem; color:var(--text-primary)}
+  .reset{font-family:var(--font-mono); font-size:.75rem; font-weight:500; color:var(--accent); background:transparent;
+    border:1px solid var(--accent-strong); border-radius:6px; padding:.5rem .85rem; cursor:pointer; transition:.15s}
+  .reset:hover{background:var(--accent-strong); color:var(--text-on-accent)}
+  .noscript-note{background:var(--tint-warn); color:var(--status-warn-text); border:1px solid var(--warn); border-radius:8px;
+    padding:.8rem 1rem; font-size:.86rem; margin-bottom:1rem}
+
+  .stage-row{display:grid; grid-template-columns:1fr 240px; gap:1.4rem; align-items:start}
+  #stage{width:100%; height:auto; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; touch-action:none; cursor:crosshair}
+  #stage:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+  #stage .cell-safe{fill:var(--cell-safe)}
+  #stage .cell-near{fill:var(--cell-near)}
+  #stage .cell-singular{fill:var(--cell-singular)}
+  .side{display:flex; flex-direction:column; gap:.6rem}
+  .ro{background:var(--surface-2); color:var(--text-secondary); border:1px solid var(--border); border-radius:8px; padding:.7rem .85rem;
+    display:flex; justify-content:space-between; align-items:baseline}
+  .ro .lab{font-family:var(--font-mono); font-size:.68rem; font-weight:500; letter-spacing:.05em; color:var(--text-muted)}
+  .ro .lab .katex{font-size:.94em}
+  .ro .val{font-family:var(--font-mono); font-size:1.05rem; font-weight:600; color:var(--text-primary)}
+  .ro .val small{font-size:.62rem; color:var(--text-muted); font-weight:400}
+  .status{padding:.85rem .95rem; border-radius:8px; border:1px solid; font-family:var(--font-mono); font-size:.74rem; font-weight:500; line-height:1.5}
+  .status.ok{border-color:var(--accent-strong); background:var(--tint-accent); color:var(--status-ok-text)}
+  .status.warn{border-color:var(--warn); background:var(--tint-warn); color:var(--status-warn-text)}
+  .status.bad{border-color:var(--danger-dim); background:var(--tint-danger); color:var(--status-danger-text)}
+  .status b{color:var(--text-primary)}
+  .legend{display:flex; gap:1rem; flex-wrap:wrap; font-family:var(--font-mono); font-size:.7rem; font-weight:500; color:var(--text-muted); margin-top:1rem}
+  .legend i{width:22px; height:8px; border-radius:2px; display:inline-block; vertical-align:middle; margin-right:.35rem}
+  .legend .katex{font-size:.92em}
+  .hint{font-size:.8rem; color:var(--text-muted); margin-top:.7rem}
+  .hint .katex{font-size:.94em}
+
+  .insight{border:1px solid var(--accent-strong); border-radius:12px; padding:1.4rem 1.6rem; margin-top:1.6rem;
+    background:linear-gradient(180deg,var(--tint-hero),transparent)}
+  .insight .tag{font-family:var(--font-mono); font-size:.72rem; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin-bottom:.55rem}
+  .insight p{color:var(--text-cons); margin-bottom:0} .insight strong{color:var(--accent)}
+  .takeaway{border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:12px; padding:1.5rem 1.7rem; background:var(--surface)}
+  .tk-list{list-style:none}
+  .tk-list li{display:flex; gap:.85rem; align-items:flex-start; padding:.6rem 0; color:var(--text-secondary); border-bottom:1px solid var(--border)}
+  .tk-list li:last-child{border-bottom:none; padding-top:.95rem}
+  .tk-mark{font-family:var(--font-mono); color:var(--text-muted); flex:none; margin-top:.1rem}
+  .tk-mark.tk-hot{color:var(--accent)} .tk-list strong{color:var(--text-primary)}
+  footer{margin-top:4rem; padding-top:1.6rem; border-top:1px solid var(--border);
+    font-family:var(--font-mono); font-size:.74rem; color:var(--text-muted); line-height:1.85}
+
+  @media(max-width:660px){ .stage-row{grid-template-columns:1fr} }
+  @media(prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <header>
+    <div class="eyebrow">Worked Example <span>/</span> Module 8 <span>/</span> EI-08 <span>/</span> Kinematics &amp; Singularities</div>
+    <h1>Reach every melon - and never through a <em>singularity</em>.</h1>
+    <p class="lede">The manipulator is deliberately simple: two actuators on a rail, because the rover already supplies the fore/aft motion. That simplicity makes the whole thing solvable in closed form - the reach, the precision, and the configurations to avoid. Here it is, worked, then made draggable.</p>
+
+    <div class="hero">
+      <svg class="hero-bg" viewBox="0 0 800 230" preserveAspectRatio="none" role="presentation" aria-hidden="true" focusable="false">
+        <defs>
+          <pattern id="grid" width="26" height="26" patternUnits="userSpaceOnUse">
+            <path d="M26 0H0V26" fill="none" style="stroke:var(--grid-line)" stroke-width="1" vector-effect="non-scaling-stroke"/>
+          </pattern>
+        </defs>
+        <rect x="6" y="6" width="788" height="218" rx="12" style="fill:var(--surface-3)"/>
+        <rect x="6" y="6" width="788" height="218" rx="12" fill="url(#grid)" opacity="0.5"/>
+        <rect x="6" y="6" width="788" height="218" rx="12" fill="none" style="stroke:var(--border)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M20 6V22 M6 20H22" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M780 6V22 M778 20H794" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M20 224V208 M6 210H22" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M780 224V208 M778 210H794" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+      </svg>
+      <div class="hero-inner">
+        <div class="hero-tab">Governing relation</div>
+        <div class="hero-eq" role="math" aria-label="L sub i equals the norm of G minus B sub i"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>L</mi><mi>i</mi></msub><mo>=</mo><mo stretchy="false">∥</mo><mi>G</mi><mo>−</mo><msub><mi>B</mi><mi>i</mi></msub><mo stretchy="false">∥</mo></mrow><annotation encoding="application/x-tex">L_i = \lVert G - B_i \rVert</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">∥</span><span class="mord mathnormal">G</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0502em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">∥</span></span></span></span></span></div>
+        <div class="hero-sub">Each actuator length is a distance in closed form - and every safe pose keeps the transmission angle in [45 deg, 135 deg].</div>
+      </div>
+    </div>
+  </header>
+
+  <section id="derivation" aria-labelledby="deriv-h">
+    <div class="kicker">Full derivation / from target point to safe configuration</div>
+    <h2 id="deriv-h">How the arm is solved</h2>
+    <p>Because the arm has only two actuators, the kinematics are closed-form - no iterative solver, cheap enough for the edge (DD-47). We follow Module 8 Sec. 7 exactly.</p>
+
+    <div class="dstep" data-n="1">
+      <div class="d-state">Two actuators on a rail make the inverse kinematics a closed-form distance.</div>
+      <div class="eq"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>L</mi><mi>i</mi></msub><mo>=</mo><mo stretchy="false">∥</mo><mi>G</mi><mo>−</mo><msub><mi>B</mi><mi>i</mi></msub><mo stretchy="false">∥</mo><mo>=</mo><msqrt><mrow><mo stretchy="false">(</mo><mi>y</mi><mo>−</mo><msub><mi>B</mi><mrow><mi>i</mi><mi>y</mi></mrow></msub><msup><mo stretchy="false">)</mo><mn>2</mn></msup><mo>+</mo><mo stretchy="false">(</mo><mi>z</mi><mo>−</mo><msub><mi>B</mi><mrow><mi>i</mi><mi>z</mi></mrow></msub><msup><mo stretchy="false">)</mo><mn>2</mn></msup></mrow></msqrt></mrow><annotation encoding="application/x-tex">L_i = \lVert G - B_i \rVert = \sqrt{(y-B_{iy})^{2} + (z-B_{iz})^{2}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">∥</span><span class="mord mathnormal">G</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0502em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">∥</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.84em;vertical-align:-0.5742em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.2658em;"><span class="svg-align" style="top:-3.8em;"><span class="pstrut" style="height:3.8em;"></span><span class="mord" style="padding-left:1em;"><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0502em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7401em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0502em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight" style="margin-right:0.04398em;">z</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7401em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span><span style="top:-3.2258em;"><span class="pstrut" style="height:3.8em;"></span><span class="hide-tail" style="min-width:1.02em;height:1.88em;"><svg xmlns="http://www.w3.org/2000/svg" width='400em' height='1.88em' viewBox='0 0 400000 1944' preserveAspectRatio='xMinYMin slice'><path d='M983 90
+l0 -0
+c4,-6.7,10,-10,18,-10 H400000v40
+H1013.1s-83.4,268,-264.1,840c-180.7,572,-277,876.3,-289,913c-4.7,4.7,-12.7,7,-24,7
+s-12,0,-12,0c-1.3,-3.3,-3.7,-11.7,-7,-25c-35.3,-125.3,-106.7,-373.3,-214,-744
+c-10,12,-21,25,-33,39s-32,39,-32,39c-6,-5.3,-15,-14,-27,-26s25,-30,25,-30
+c26.7,-32.7,52,-63,76,-91s52,-60,52,-60s208,722,208,722
+c56,-175.3,126.3,-397.3,211,-666c84.7,-268.7,153.8,-488.2,207.5,-658.5
+c53.7,-170.3,84.5,-266.8,92.5,-289.5z
+M1001 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.5742em;"><span></span></span></span></span></span></span></span></span></span></div>
+      <p class="d-exp">For a target gripper point <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>G</mi><mo>=</mo><mo stretchy="false">(</mo><mi>y</mi><mo separator="true">,</mo><mi>z</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">G = (y, z)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">G</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mclose">)</span></span></span></span> and fixed actuator anchors <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>B</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>B</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">B_1, B_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0502em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0502em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> on the rail, each actuator length is simply the distance. If either length falls outside the actuator stroke <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><msub><mi>L</mi><mi>min</mi><mo>⁡</mo></msub><mo separator="true">,</mo><msub><mi>L</mi><mi>max</mi><mo>⁡</mo></msub><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[L_{\min}, L_{\max}]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3175em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mop mtight"><span class="mtight">m</span><span class="mtight">i</span><span class="mtight">n</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mop mtight"><span class="mtight">m</span><span class="mtight">a</span><span class="mtight">x</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">]</span></span></span></span>, the target is <strong>out of reach</strong> - the forward two-circle intersection has no valid solution.</p>
+      <div class="d-cons"><span class="lab">Consequence</span><p>No iterative solver is needed - the pose is exact and <strong>cheap enough to run on the edge</strong> (DD-47).</p></div>
+    </div>
+
+    <div class="dstep" data-n="2">
+      <div class="d-state">The reachable span must cover the bed, so workspace couples to track width.</div>
+      <div class="eq"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">p</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi></mrow><mo stretchy="false">(</mo><mi>w</mi><mo separator="true">,</mo><msub><mi>L</mi><mi>min</mi><mo>⁡</mo></msub><mo separator="true">,</mo><msub><mi>L</mi><mi>max</mi><mo>⁡</mo></msub><mo stretchy="false">)</mo><mtext>  </mtext><mo>≥</mo><mtext>  </mtext><msub><mi>W</mi><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">d</mi></mrow></msub><mo>+</mo><mtext>margin</mtext><mo>=</mo><mn>1.7</mn><mtext> </mtext><mi mathvariant="normal">m</mi></mrow><annotation encoding="application/x-tex">\mathrm{span}(w, L_{\min}, L_{\max}) \;\ge\; W_{\mathrm{bed}} + \text{margin} = 1.7\ \mathrm{m}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathrm">span</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3175em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mop mtight"><span class="mtight">m</span><span class="mtight">i</span><span class="mtight">n</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mop mtight"><span class="mtight">m</span><span class="mtight">a</span><span class="mtight">x</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathrm mtight">bed</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8623em;vertical-align:-0.1944em;"></span><span class="mord text"><span class="mord">margin</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1.7</span><span class="mspace"> </span><span class="mord mathrm">m</span></span></span></span></span></div>
+      <p class="d-exp">Because the rover supplies the fore/aft motion, the arm only has to span the bed transversely. The reachable transverse span - set by the anchor separation <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi></mrow><annotation encoding="application/x-tex">w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span></span></span></span> and the stroke <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><msub><mi>L</mi><mi>min</mi><mo>⁡</mo></msub><mo separator="true">,</mo><msub><mi>L</mi><mi>max</mi><mo>⁡</mo></msub><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[L_{\min}, L_{\max}]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3175em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mop mtight"><span class="mtight">m</span><span class="mtight">i</span><span class="mtight">n</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mop mtight"><span class="mtight">m</span><span class="mtight">a</span><span class="mtight">x</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">]</span></span></span></span> - must exceed the bed width plus margin.</p>
+      <div class="d-cons"><span class="lab">Consequence</span><p>The workspace <strong>couples to track width</strong>: a system-level constraint tying the arm to the rover geometry, not a local arm property.</p></div>
+    </div>
+
+    <div class="dstep" data-n="3">
+      <div class="d-state">Singularities are geometric - and the design enforces a hard keep-out.</div>
+      <div class="eq"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>det</mi><mo>⁡</mo><mi>J</mi><mo>∼</mo><mi>sin</mi><mo>⁡</mo><mi>γ</mi><mspace width="1em"/><mo>⟹</mo><mspace width="1em"/><mi>γ</mi><mo>→</mo><msup><mn>0</mn><mo>∘</mo></msup><mtext> or </mtext><mn>18</mn><msup><mn>0</mn><mo>∘</mo></msup><mtext> is </mtext><mtext mathvariant="sans-serif">singular</mtext></mrow><annotation encoding="application/x-tex">\det J \sim \sin\gamma \quad\Longrightarrow\quad \gamma \to 0^\circ \text{ or } 180^\circ \text{ is } \textsf{singular}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mop">det</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.09618em;">J</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8623em;vertical-align:-0.1944em;"></span><span class="mop">sin</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.05556em;">γ</span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">⟹</span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05556em;">γ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.9186em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7241em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∘</span></span></span></span></span></span></span></span><span class="mord text"><span class="mord"> or </span></span><span class="mord">18</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7241em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∘</span></span></span></span></span></span></span></span><span class="mord text"><span class="mord"> is </span></span><span class="mord text"><span class="mord textsf">singular</span></span></span></span></span></span></div>
+      <p class="d-exp">The Jacobian <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>J</mi></mrow><annotation encoding="application/x-tex">J</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.09618em;">J</span></span></span></span> maps actuator rates to gripper motion. A <strong>singularity</strong> is where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>det</mi><mo>⁡</mo><mi>J</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\det J = 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mop">det</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.09618em;">J</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span> - the actuator lines become geometrically degenerate and force transmission collapses. The transmission angle <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>γ</mi></mrow><annotation encoding="application/x-tex">\gamma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05556em;">γ</span></span></span></span> between the two actuators captures it, and the scalar distance from a singularity is the manipulability:</p>
+      <div class="eq"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>μ</mi><mo>=</mo><msqrt><mrow><mi>det</mi><mo>⁡</mo><mtext> ⁣</mtext><mrow><mo fence="true">(</mo><mi>J</mi><msup><mi>J</mi><mi mathvariant="sans-serif">T</mi></msup><mo fence="true">)</mo></mrow></mrow></msqrt></mrow><annotation encoding="application/x-tex">\mu = \sqrt{\det\!\left(J J^{\mathsf{T}}\right)}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">μ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.84em;vertical-align:-0.5436em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.2964em;"><span class="svg-align" style="top:-3.8em;"><span class="pstrut" style="height:3.8em;"></span><span class="mord" style="padding-left:1em;"><span class="mop">det</span><span class="mspace" style="margin-right:-0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">(</span><span class="mord mathnormal" style="margin-right:0.09618em;">J</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.09618em;">J</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7751em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathsf mtight">T</span></span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;">)</span></span></span></span><span style="top:-3.2564em;"><span class="pstrut" style="height:3.8em;"></span><span class="hide-tail" style="min-width:1.02em;height:1.88em;"><svg xmlns="http://www.w3.org/2000/svg" width='400em' height='1.88em' viewBox='0 0 400000 1944' preserveAspectRatio='xMinYMin slice'><path d='M983 90
+l0 -0
+c4,-6.7,10,-10,18,-10 H400000v40
+H1013.1s-83.4,268,-264.1,840c-180.7,572,-277,876.3,-289,913c-4.7,4.7,-12.7,7,-24,7
+s-12,0,-12,0c-1.3,-3.3,-3.7,-11.7,-7,-25c-35.3,-125.3,-106.7,-373.3,-214,-744
+c-10,12,-21,25,-33,39s-32,39,-32,39c-6,-5.3,-15,-14,-27,-26s25,-30,25,-30
+c26.7,-32.7,52,-63,76,-91s52,-60,52,-60s208,722,208,722
+c56,-175.3,126.3,-397.3,211,-666c84.7,-268.7,153.8,-488.2,207.5,-658.5
+c53.7,-170.3,84.5,-266.8,92.5,-289.5z
+M1001 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.5436em;"><span></span></span></span></span></span></span></span></span></span></div>
+      <p class="d-exp">Precision degrades near singularities too: joint error scales into task error through <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>J</mi></mrow><annotation encoding="application/x-tex">J</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.09618em;">J</span></span></span></span>, so error blows up as <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>→</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\mu \to 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">μ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span>. The design therefore keeps <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>γ</mi><mo>∈</mo><mo stretchy="false">[</mo><mn>4</mn><msup><mn>5</mn><mo>∘</mo></msup><mo separator="true">,</mo><mn>13</mn><msup><mn>5</mn><mo>∘</mo></msup><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">\gamma \in [45^\circ, 135^\circ]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7335em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05556em;">γ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">4</span><span class="mord"><span class="mord">5</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6741em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∘</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">13</span><span class="mord"><span class="mord">5</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6741em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∘</span></span></span></span></span></span></span></span><span class="mclose">]</span></span></span></span> and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>≥</mo><msub><mi>μ</mi><mi>min</mi><mo>⁡</mo></msub></mrow><annotation encoding="application/x-tex">\mu \ge \mu_{\min}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8304em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">μ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">μ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3175em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mop mtight"><span class="mtight">m</span><span class="mtight">i</span><span class="mtight">n</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> everywhere the arm works (SR-C-07, DD-44).</p>
+      <div class="d-cons"><span class="lab">Consequence</span><p>A <strong>quantitative keep-out</strong> guarantees controllable, safe force transmission - and the accuracy that comes with staying clear of <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>→</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\mu \to 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">μ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span>.</p></div>
+    </div>
+  </section>
+
+  <section id="instrument" aria-labelledby="inst-h">
+    <div class="kicker">The workspace, live / drag the gripper point</div>
+    <h2 id="inst-h">Where the arm can safely work</h2>
+    <p>Drag the <span class="rind-t">gripper point G</span> anywhere over the bed. Watch the two actuator lengths, the transmission angle <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>γ</mi></mrow><annotation encoding="application/x-tex">\gamma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05556em;">γ</span></span></span></span>, and the manipulability update live. The shaded regions show where the arm is <span class="rind-t">safe</span>, where it is <span class="amber-t">near a singularity</span>, and where it is <span class="flesh-t">out of reach or singular</span>.</p>
+
+    <div class="instrument">
+      <div class="inst-head">
+        <div class="inst-title">Two-actuator manipulator - workspace &amp; singularity map</div>
+        <button class="reset" id="resetBtn" type="button">Reset</button>
+      </div>
+
+      <noscript><p class="noscript-note">This interactive workspace map requires JavaScript. The full worked result is in the derivation above: each actuator length is the distance from its rail anchor to the target; the design keeps the transmission angle within [45 deg, 135 deg] and manipulability above its floor everywhere the arm operates.</p></noscript>
+
+      <div class="stage-row">
+        <svg id="stage" viewBox="0 0 520 380" role="img" aria-label="Manipulator workspace map: drag the gripper point over the bed; shaded regions mark safe, near-singular, and out-of-reach configurations. Use arrow keys to move the point when focused."></svg>
+        <div class="side">
+          <div class="ro"><span class="lab"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">L_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span class="val"><span id="l1">0.72</span> <small>m</small></span></div>
+          <div class="ro"><span class="lab"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">L_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span class="val"><span id="l2">0.72</span> <small>m</small></span></div>
+          <div class="ro"><span class="lab"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>γ</mi></mrow><annotation encoding="application/x-tex">\gamma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05556em;">γ</span></span></span></span> transmission</span><span class="val"><span id="gamma">90</span><small> deg</small></span></div>
+          <div class="ro"><span class="lab"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi></mrow><annotation encoding="application/x-tex">\mu</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">μ</span></span></span></span> manipulability</span><span class="val"><span id="mu">1.00</span></span></div>
+          <div class="status ok" id="status" aria-live="polite"></div>
+        </div>
+      </div>
+      <div class="legend">
+        <span><i style="background:var(--legend-safe)"></i>safe: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>γ</mi><mo>∈</mo><mo stretchy="false">[</mo><mn>4</mn><msup><mn>5</mn><mo>∘</mo></msup><mo separator="true">,</mo><mn>13</mn><msup><mn>5</mn><mo>∘</mo></msup><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">\gamma \in [45^\circ,135^\circ]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7335em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05556em;">γ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">4</span><span class="mord"><span class="mord">5</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6741em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∘</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">13</span><span class="mord"><span class="mord">5</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6741em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∘</span></span></span></span></span></span></span></span><span class="mclose">]</span></span></span></span></span>
+        <span><i style="background:var(--legend-near)"></i>near singular</span>
+        <span><i style="background:var(--legend-singular)"></i>out of reach / singular</span>
+      </div>
+      <p class="hint">Anchors <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>B</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>B</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">B_1, B_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0502em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0502em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> sit on the rail (top); the bed spans the width below. Drag anywhere, tap, or focus the map and use the arrow keys.</p>
+    </div>
+  </section>
+
+  <section id="ei08" aria-labelledby="ei-h">
+    <div class="kicker">Engineering Insight EI-08 / the design behind the simplicity</div>
+    <h2 id="ei-h">The cheapest axis is the one you never build</h2>
+    <div class="insight">
+      <div class="tag">EI-08 - Design the Degree of Freedom Out</div>
+      <p><strong>Before adding an axis to solve a problem, ask whether the architecture can remove the need for it.</strong> This entire map is analyzable in closed form - reach, precision, singularities, all exact - <em>only because</em> the arm has just two actuators. Letting the drive-over rover supply the fore/aft motion removed a whole arm axis: the most reliable axis on the machine, because it does not exist - nothing to build, calibrate, break, or drive into a singularity. The cost is real but paid elsewhere: the workspace now couples to track width (this map) and the timing to the drive (CEC-01). The discipline is to move complexity to where it is cheapest to bear, not to pretend it vanished.</p>
+    </div>
+  </section>
+
+  <section id="takeaway" aria-labelledby="tk-h">
+    <div class="kicker">Engineering takeaway / what to do next</div>
+    <h2 id="tk-h">Where the next effort belongs</h2>
+    <div class="takeaway">
+      <ul class="tk-list">
+        <li><span class="tk-mark" aria-hidden="true">-&gt;</span> The safe region shrinks toward the edges of the bed, where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>γ</mi></mrow><annotation encoding="application/x-tex">\gamma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05556em;">γ</span></span></span></span> approaches the keep-out. If any fruit sits in the <span class="amber-t">near-singular</span> band, do not fix it with a better controller - <strong>the geometry is the problem</strong>.</li>
+        <li><span class="tk-mark tk-hot" aria-hidden="true">-&gt;</span> The highest-leverage move is <span class="rind-t">anchor placement and stroke</span> - where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>B</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>B</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">B_1, B_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0502em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0502em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> sit and how far the actuators travel. Re-siting the anchors reshapes the entire safe region for free, before any control effort.</li>
+        <li><span class="tk-mark" aria-hidden="true">-&gt;</span> <strong>Decision:</strong> the next effort belongs in <strong class="rind-t">workspace geometry</strong> - anchors, stroke, and staging position - <strong>not in controller tuning</strong>. Precision degrades fastest near singularities, so keeping the corridor in the safe region buys accuracy that no gain schedule can.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    SIM2FIELD / Autonomous Watermelon Harvesting Robotics<br>
+    Worked example for Module 8 (Manipulator Kinematics, Workspace &amp; Singularities) / realizes EI-08 and the gamma keep-out (SR-C-07)<br>
+    Values ratified in Doc B Sec. 4.3/Sec. 5.5 / method harvested from Module 8 Sec. 7 / relations per Doc F Sec. 2 (frozen Rev 1.0)<br>
+    Production Phase asset - configuration-controlled
+  </footer>
+</main>
+
+<script>
+/* Interactive enhancement only. All engineering content above is static and
+   readable with JavaScript disabled. Vanilla JS, no external dependencies.
+   Colors come from semantic tokens (var(--...)), never raw hex. */
+(function(){
+  "use strict";
+  const SVG=document.getElementById('stage');
+  if(!SVG) return;
+  const W=520,H=380, mx=40, myTop=40, myBot=40;
+  const Ymin=-0.9,Ymax=0.9, Zmin=0, Zmax=0.95;
+  const B1={y:-0.55, z:0}, B2={y:0.55, z:0};
+  const Lmin=0.35, Lmax=1.15;
+  const GAMMA_LO=45, GAMMA_HI=135;
+
+  function px(y){ return mx + (y-Ymin)/(Ymax-Ymin)*(W-2*mx); }
+  function py(z){ return myTop + (z-Zmin)/(Zmax-Zmin)*(H-myTop-myBot); }
+  function wx(pxv){ return Ymin + (pxv-mx)/(W-2*mx)*(Ymax-Ymin); }
+  function wz(pyv){ return Zmin + (pyv-myTop)/(H-myTop-myBot)*(Zmax-Zmin); }
+
+  function dist(a,b){ return Math.hypot(a.y-b.y, a.z-b.z); }
+  function transAngle(G){
+    const v1={y:G.y-B1.y, z:G.z-B1.z}, v2={y:G.y-B2.y, z:G.z-B2.z};
+    const dot=v1.y*v2.y+v1.z*v2.z;
+    const m1=Math.hypot(v1.y,v1.z), m2=Math.hypot(v2.y,v2.z);
+    if(m1<1e-6||m2<1e-6) return 0;
+    let c=dot/(m1*m2); c=Math.max(-1,Math.min(1,c));
+    return Math.acos(c)*180/Math.PI;
+  }
+  function reachable(G){
+    const L1=dist(G,B1), L2=dist(G,B2);
+    return L1>=Lmin && L1<=Lmax && L2>=Lmin && L2<=Lmax;
+  }
+  function classify(G){
+    if(!reachable(G)) return 'unreach';
+    const g=transAngle(G);
+    const near = Math.min(Math.abs(g-GAMMA_LO), Math.abs(g-GAMMA_HI));
+    if(g<GAMMA_LO || g>GAMMA_HI) return 'singular';
+    if(near<12) return 'near';
+    return 'safe';
+  }
+
+  function paintMap(){
+    const cols=52, rows=38;
+    const cw=(W-2*mx)/cols, ch=(H-myTop-myBot)/rows;
+    let cells='';
+    for(let i=0;i<cols;i++){
+      for(let j=0;j<rows;j++){
+        const cx=mx+(i+0.5)*cw, cy=myTop+(j+0.5)*ch;
+        const G={y:wx(cx), z:wz(cy)};
+        const cls=classify(G);
+        let cellCls=null;
+        if(cls==='safe') cellCls='cell-safe';
+        else if(cls==='near') cellCls='cell-near';
+        else if(cls==='singular') cellCls='cell-singular';
+        if(cellCls) cells+=`<rect x="${(cx-cw/2).toFixed(1)}" y="${(cy-ch/2).toFixed(1)}" width="${(cw+0.6).toFixed(1)}" height="${(ch+0.6).toFixed(1)}" class="${cellCls}"/>`;
+      }
+    }
+    return cells;
+  }
+
+  let G={y:0, z:0.6};
+
+  function draw(){
+    const b1x=px(B1.y),b1y=py(B1.z), b2x=px(B2.y),b2y=py(B2.z);
+    const gx=px(G.y),gy=py(G.z);
+    const L1=dist(G,B1), L2=dist(G,B2), g=transAngle(G);
+    const cls=classify(G);
+    const mu=Math.abs(Math.sin(g*Math.PI/180));
+
+    const armColor = cls==='safe'?'var(--accent)':cls==='near'?'var(--warn)':'var(--danger)';
+    const gColor = armColor;
+
+    SVG.innerHTML =
+      paintMap() +
+      `<line x1="${mx}" y1="${myTop}" x2="${W-mx}" y2="${myTop}" style="stroke:var(--border-strong)" stroke-width="3"/>`+
+      `<text x="${W-mx}" y="${myTop-10}" text-anchor="end" style="fill:var(--text-muted)" font-family="IBM Plex Mono" font-size="10">rail (rover frame)</text>`+
+      `<line x1="${mx}" y1="${py(0.9)}" x2="${W-mx}" y2="${py(0.9)}" style="stroke:var(--border)" stroke-width="1" stroke-dasharray="3 4"/>`+
+      `<text x="${mx}" y="${py(0.9)+16}" style="fill:var(--text-muted)" font-family="IBM Plex Mono" font-size="10">bed width 1.8 m</text>`+
+      `<line x1="${b1x}" y1="${b1y}" x2="${gx}" y2="${gy}" style="stroke:${armColor}" stroke-width="2.5" opacity="0.9"/>`+
+      `<line x1="${b2x}" y1="${b2y}" x2="${gx}" y2="${gy}" style="stroke:${armColor}" stroke-width="2.5" opacity="0.9"/>`+
+      `<circle cx="${b1x}" cy="${b1y}" r="5" style="fill:var(--border-strong);stroke:var(--text-muted)"/>`+
+      `<circle cx="${b2x}" cy="${b2y}" r="5" style="fill:var(--border-strong);stroke:var(--text-muted)"/>`+
+      `<text x="${b1x}" y="${b1y-9}" text-anchor="middle" style="fill:var(--text-muted)" font-family="IBM Plex Mono" font-size="10">B1</text>`+
+      `<text x="${b2x}" y="${b2y-9}" text-anchor="middle" style="fill:var(--text-muted)" font-family="IBM Plex Mono" font-size="10">B2</text>`+
+      arcPath(gx,gy,b1x,b1y,b2x,b2y,gColor)+
+      `<circle cx="${gx}" cy="${gy}" r="8" style="fill:${armColor};stroke:var(--bg)" stroke-width="2"/>`+
+      `<circle cx="${gx}" cy="${gy}" r="14" fill="none" style="stroke:${armColor}" stroke-width="1" opacity="0.4"/>`+
+      `<text x="${gx+14}" y="${gy+4}" style="fill:var(--text-primary)" font-family="IBM Plex Mono" font-size="11" font-weight="600">G</text>`;
+
+    document.getElementById('l1').textContent=L1.toFixed(2);
+    document.getElementById('l2').textContent=L2.toFixed(2);
+    document.getElementById('gamma').textContent=g.toFixed(0);
+    document.getElementById('mu').textContent=mu.toFixed(2);
+
+    const st=document.getElementById('status');
+    if(cls==='unreach'){ st.className='status bad';
+      st.innerHTML=`<b>Out of reach.</b> One actuator length is outside the stroke [${Lmin}, ${Lmax}] m - no valid two-circle solution. Stage the fruit closer, or the target is off the bed.`; }
+    else if(cls==='singular'){ st.className='status bad';
+      st.innerHTML=`<b>Singular.</b> gamma = ${g.toFixed(0)} deg is outside [45 deg, 135 deg] - force transmission collapses and precision blows up. The arm must not operate here.`; }
+    else if(cls==='near'){ st.className='status warn';
+      st.innerHTML=`<b>Near singular.</b> gamma = ${g.toFixed(0)} deg is close to the keep-out edge. Workable, but precision is degrading (mu = ${mu.toFixed(2)}). Prefer to stage fruit toward the center.`; }
+    else { st.className='status ok';
+      st.innerHTML=`<b>Safe configuration.</b> gamma = ${g.toFixed(0)} deg is well inside [45 deg, 135 deg]; manipulability mu = ${mu.toFixed(2)}. Reach and force transmission are both good here.`; }
+  }
+
+  function arcPath(gx,gy,b1x,b1y,b2x,b2y,color){
+    const a1=Math.atan2(b1y-gy,b1x-gx), a2=Math.atan2(b2y-gy,b2x-gx);
+    const r=26;
+    const x1=gx+r*Math.cos(a1), y1=gy+r*Math.sin(a1);
+    const x2=gx+r*Math.cos(a2), y2=gy+r*Math.sin(a2);
+    let d=a2-a1; while(d<-Math.PI)d+=2*Math.PI; while(d>Math.PI)d-=2*Math.PI;
+    const large=Math.abs(d)>Math.PI?1:0, sweep=d>0?1:0;
+    return `<path d="M ${x1.toFixed(1)} ${y1.toFixed(1)} A ${r} ${r} 0 ${large} ${sweep} ${x2.toFixed(1)} ${y2.toFixed(1)}" fill="none" style="stroke:${color}" stroke-width="1.5" opacity="0.7"/>`;
+  }
+
+  function setFromEvent(e){
+    const rect=SVG.getBoundingClientRect();
+    const cx=(e.clientX-rect.left)/rect.width*W;
+    const cy=(e.clientY-rect.top)/rect.height*H;
+    let y=wx(cx), z=wz(cy);
+    y=Math.max(Ymin,Math.min(Ymax,y)); z=Math.max(0.05,Math.min(0.92,z));
+    G={y,z}; draw();
+  }
+  let dragging=false;
+  SVG.addEventListener('pointerdown',e=>{dragging=true; SVG.setPointerCapture(e.pointerId); setFromEvent(e);});
+  SVG.addEventListener('pointermove',e=>{ if(dragging) setFromEvent(e); });
+  SVG.addEventListener('pointerup',()=>dragging=false);
+  SVG.addEventListener('pointercancel',()=>dragging=false);
+  SVG.setAttribute('tabindex','0');
+  SVG.addEventListener('keydown',e=>{
+    const step=0.02; let moved=true;
+    if(e.key==='ArrowLeft') G.y-=step;
+    else if(e.key==='ArrowRight') G.y+=step;
+    else if(e.key==='ArrowUp') G.z-=step;
+    else if(e.key==='ArrowDown') G.z+=step;
+    else moved=false;
+    if(moved){ e.preventDefault();
+      G.y=Math.max(Ymin,Math.min(Ymax,G.y)); G.z=Math.max(0.05,Math.min(0.92,G.z)); draw(); }
+  });
+  document.getElementById('resetBtn').addEventListener('click',()=>{ G={y:0,z:0.6}; draw(); });
+
+  draw();
+})();
+</script>
+</body>
+</html>

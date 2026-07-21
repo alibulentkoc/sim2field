@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark"><meta name="theme-color" content="#0e120d">
+<title>Module 13: System Integration &amp; the Digital Twin (SIM2FIELD, author)</title>
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<style>:root{
+  color-scheme:dark;
+  --bg:#0e120d; --surface:#161c14; --surface-2:#0b0e0a; --surface-3:#12160f;
+  --border:#2b3527; --border-strong:#3a4633; --grid-line:#1c231a;
+  --text-primary:#eef2e6; --text-secondary:#c8cfbe; --text-muted:#adb4a2;
+  --text-lede:#c9d0bf; --text-cons:#d4dbc9; --text-on-accent:#0e120d;
+  --accent:#9bcf3b; --accent-dim:#86ba35; --accent-strong:#6f9a2c;
+  --danger:#f0556a; --danger-text:#f697a4; --danger-dim:#b93b4c;
+  --warn:#e0a03b; --warn-text:#eed9b4; --info:#6fb0d9; --info-text:#bfe0f2; --accent-2:#b98bd9; --marker:#ffffff;
+  --tint-accent:rgba(155,207,59,.07); --tint-accent-soft:rgba(155,207,59,.05); --tint-hero:rgba(155,207,59,.06);
+  --tint-danger:rgba(240,85,106,.07); --tint-warn:rgba(224,160,59,.08); --tint-info:rgba(111,176,217,.08); --tint-gov:rgba(185,139,217,.07);
+  --font-sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --font-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --font-display:'Space Grotesk',var(--font-sans);
+  --rail:300px; --topbar:54px; --measure:54rem;
+
+  /* mission-FSM stage palette (used by inlined worked-example fragments) */
+  --stage-drive:#7fb0a0; --stage-stage:#6fb0d9; --stage-align:#9bcf3b; --stage-grab:#c9e06a;
+  --stage-lift:#b98bd9; --stage-swing:#f0556a; --stage-lower:#e0a03b; --stage-release:#d98b8b;
+  --status-ok-text:#d0d7c6; --status-warn-text:#eed9b4; --status-danger-text:#f3ccd2;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);color:var(--text-primary);-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text-primary);font-family:var(--font-sans);line-height:1.72;-webkit-font-smoothing:antialiased;letter-spacing:.002em}
+a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+code,.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.skip{position:absolute;left:-999px;top:0;background:var(--accent);color:var(--text-on-accent);padding:.5rem .8rem;border-radius:6px;z-index:60}
+.skip:focus{left:.5rem;top:.5rem}
+.katex{font-size:1.04em}
+
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar);z-index:40;background:var(--surface-2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem;padding:0 1.1rem}
+.topbar .mk{font-family:var(--font-display);font-weight:600;font-size:1rem;letter-spacing:-.01em}
+.topbar .cx{flex:1;min-width:0;font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar .src{flex:none;font-family:var(--font-mono);font-size:.66rem;color:var(--accent);border:1px solid var(--accent-strong);border-radius:6px;padding:.3rem .6rem}
+body.ed-author .topbar{border-bottom-color:var(--accent-2)}
+body.ed-author .topbar .src{color:var(--accent-2);border-color:var(--accent-2)}
+
+.book{display:grid;grid-template-columns:var(--rail) 1fr;padding-top:var(--topbar)}
+.rail{position:sticky;top:var(--topbar);align-self:start;height:calc(100vh - var(--topbar));overflow-y:auto;background:var(--surface);border-right:1px solid var(--border);padding:1.3rem 1rem 3rem}
+.rail h2{font-family:var(--font-mono);font-size:.64rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-dim);margin:0 .4rem .7rem}
+.toc{list-style:none} .toc li{margin:.05rem 0}
+.toc a{display:flex;gap:.5rem;align-items:baseline;color:var(--text-secondary);font-size:.83rem;line-height:1.35;padding:.32rem .5rem;border-radius:7px;border-left:2px solid transparent}
+.toc a:hover{background:var(--surface-3);text-decoration:none;color:var(--text-primary)}
+.toc a.active{background:var(--tint-accent);border-left-color:var(--accent);color:var(--text-primary)}
+.toc .tn{font-family:var(--font-mono);font-size:.68rem;color:var(--text-muted);flex:none;min-width:1.3em}
+.toc a.active .tn{color:var(--accent)}
+.toc .tt{margin-left:auto;font-family:var(--font-mono);font-size:.54rem;letter-spacing:.05em;text-transform:uppercase;padding:.05rem .3rem;border-radius:4px;border:1px solid var(--border);color:var(--text-muted)}
+.toc .tt.instr{color:var(--accent-2);border-color:var(--accent-2)} .toc .tt.spec{color:var(--warn);border-color:var(--warn)}
+
+.main{min-width:0;background:var(--bg)}
+.inner{max-width:var(--measure);margin:0 auto;padding:2.4rem 2rem 7rem}
+
+/* ---------- MISSION OPENING ---------- */
+.mission{margin-bottom:.5rem}
+.mission-hero{padding:1.2rem 0 2.4rem;border-bottom:1px solid var(--border)}
+.mission-hero .eyebrow{font-family:var(--font-mono);font-size:.72rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:1.4rem}
+.mission-hero .hook{font-family:var(--font-display);font-weight:600;font-size:clamp(1.7rem,3.6vw,2.55rem);line-height:1.12;letter-spacing:-.018em;color:var(--text-primary);max-width:22em;margin-bottom:1.3rem}
+.mission-hero h1{font-family:var(--font-display);font-weight:500;font-size:1.12rem;color:var(--text-secondary);letter-spacing:-.008em;margin-bottom:.7rem}
+.mission-hero .slim{font-family:var(--font-mono);font-size:.74rem;color:var(--text-muted);letter-spacing:.02em}
+.movement{padding:2.1rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:190px 1fr;gap:1.6rem}
+.movement .mv-label{font-family:var(--font-mono);font-size:.7rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-dim);padding-top:.25rem}
+.movement .mv-label::before{content:"";display:block;width:30px;height:2px;background:var(--accent-strong);margin-bottom:.75rem}
+.movement .mv-body p{color:var(--text-secondary);font-size:1.02rem;margin:0 0 .9rem}
+.movement .mv-body p:last-child{margin-bottom:0}
+.movement .mv-body strong{color:var(--text-primary);font-weight:600}
+.movement .mv-body em{color:var(--text-cons)}
+.movement.objectives .mv-body ul{list-style:none;margin:0}
+.movement.objectives .mv-body li{position:relative;padding-left:1.5rem;margin:.5rem 0;color:var(--text-secondary)}
+.movement.objectives .mv-body li::before{content:"\2192";position:absolute;left:0;color:var(--accent);font-family:var(--font-mono)}
+.movement.objectives .mv-body strong{color:var(--text-primary)}
+.chapter-start{display:flex;align-items:center;gap:1rem;margin:2.8rem 0 .3rem}
+.chapter-start::before,.chapter-start::after{content:"";height:1px;background:var(--border);flex:1}
+.chapter-start span{font-family:var(--font-mono);font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;color:var(--accent-dim)}
+
+/* ---------- PROSE ---------- */
+.section{margin-top:3.2rem}
+.section h2{font-family:var(--font-display);font-weight:600;font-size:1.6rem;letter-spacing:-.012em;line-height:1.15;margin-bottom:1rem;scroll-margin-top:calc(var(--topbar) + 1rem);display:flex;gap:.7rem;align-items:baseline;border-top:1px solid var(--border);padding-top:1.7rem}
+.section h2.unnum{display:block}
+.section h2 .secnum{font-family:var(--font-mono);font-size:.9rem;font-weight:600;color:var(--accent);flex:none}
+.section h3{font-family:var(--font-display);font-weight:600;font-size:1.14rem;color:var(--text-primary);margin:1.6rem 0 .5rem}
+.section p{margin:0 0 1rem;color:var(--text-secondary)}
+.section strong{color:var(--text-primary);font-weight:600}
+.section em{color:var(--text-cons)}
+.section ul,.section ol{margin:0 0 1.1rem 1.3rem;color:var(--text-secondary)}
+.section li{margin:.35rem 0} .section li::marker{color:var(--accent-dim)}
+.section code{background:var(--surface-3);border:1px solid var(--border);border-radius:4px;padding:.05rem .35rem;font-size:.88em;color:var(--text-cons)}
+.section pre{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem;overflow-x:auto;margin:0 0 1.1rem}
+.section pre code{background:none;border:none;padding:0;color:var(--text-secondary);font-size:.82rem;line-height:1.6}
+hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
+
+.eqwrap{background:var(--surface-3);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem;margin:0 0 1.15rem;overflow-x:auto}
+.eqwrap .katex-display{margin:0}
+
+.twrap{overflow-x:auto;margin:0 0 1.2rem;border:1px solid var(--border);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:.86rem}
+th,td{text-align:left;padding:.6rem .8rem;border-bottom:1px solid var(--border);vertical-align:top}
+thead th{font-family:var(--font-mono);font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);font-weight:500;background:var(--surface-3)}
+tbody tr:last-child td{border-bottom:none} td strong{color:var(--accent)}
+
+.callout{border-radius:12px;padding:1.1rem 1.35rem;margin:0 0 1.3rem;border:1px solid var(--border);background:var(--surface)}
+.callout p{margin:0 0 .6rem;color:var(--text-cons)} .callout p:last-child{margin-bottom:0}
+.callout.cec{border-color:var(--accent-strong);background:linear-gradient(180deg,var(--tint-hero),transparent)}
+.callout.cec h3{color:var(--accent);margin:.1rem 0 .5rem;font-size:1.05rem} .callout.cec strong{color:var(--accent)}
+.callout.industry{border-color:var(--info);background:var(--tint-info)}
+.callout.industry h3{color:var(--info-text);font-size:1rem;margin:.1rem 0 .6rem} .callout.industry strong{color:var(--info-text)}
+.callout.hook{border-color:var(--accent-strong);background:var(--tint-accent-soft)}
+.callout.note{border-left:3px solid var(--border-strong);background:var(--surface-3)}
+.callout.gov{border-color:var(--accent-2);background:var(--tint-gov)}
+.section.failure ul{list-style:none;margin-left:0}
+.section.failure ul li{padding:.55rem 0;border-bottom:1px solid var(--border)}
+.section.failure li::before{content:"\2020";color:var(--danger-text);font-family:var(--font-mono);margin-right:.6rem}
+
+.figure{margin:0 0 1.4rem;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.figure.diagram .ascii{margin:0;border:none;border-radius:0;background:var(--surface-3)}
+.figure.diagram .ascii code{color:var(--accent-dim);font-size:.8rem}
+.figure .figbody{padding:1rem 1.1rem;background:var(--surface-3);overflow-x:auto}
+.figure .figbody svg{display:block;width:100%;height:auto;min-width:520px}
+.figure figcaption{padding:.7rem 1rem;font-size:.82rem;color:var(--text-muted);border-top:1px solid var(--border)}
+.figure .fid{font-family:var(--font-mono);font-size:.64rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-right:.5rem}
+.figure.slot{border-style:dashed;border-color:var(--border-strong)}
+.figure.slot .slotbox{display:flex;flex-direction:column;gap:.3rem;padding:1.6rem 1.4rem;background:repeating-linear-gradient(135deg,var(--surface-3),var(--surface-3) 10px,transparent 10px,transparent 20px);border:none}
+.figure.slot .slit{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--warn-text)}
+.figure.slot b{color:var(--text-primary);font-size:.95rem} .figure.slot .desc{color:var(--text-muted);font-size:.84rem}
+
+.widget-embed{margin:1.6rem 0;border:0;background:transparent;overflow:visible}
+.we-head{display:flex;align-items:baseline;gap:.7rem;flex-wrap:wrap;padding:0 .2rem .6rem;background:transparent}
+.we-head .wid{font-family:var(--font-mono);font-size:.62rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-on-accent);background:var(--accent-strong);padding:.15rem .5rem;border-radius:5px}
+.we-head .wid.live{background:var(--accent)}
+.we-head b{font-family:var(--font-display);font-weight:600;color:var(--text-primary);font-size:1rem}
+.we-open{margin-left:auto;font-family:var(--font-mono);font-size:.72rem;color:var(--accent)}
+.we-cap{margin:.65rem 0 0;padding:0 .2rem;font-size:.8rem;color:var(--text-muted)}
+
+.answers,.instructor-wrap{border:1px solid var(--border-strong);border-radius:10px;background:var(--surface-3);margin:1.2rem 0}
+.answers summary,.instructor-wrap summary{cursor:pointer;padding:.8rem 1.1rem;font-family:var(--font-mono);font-size:.78rem;color:var(--accent-2);list-style:none}
+.answers summary::-webkit-details-marker,.instructor-wrap summary::-webkit-details-marker{display:none}
+.answers summary::before,.instructor-wrap summary::before{content:"\25B8 ";color:var(--accent-2)}
+.answers[open] summary::before,.instructor-wrap[open] summary::before{content:"\25BE "}
+.answers .keylist{margin:.2rem 1.4rem 1rem;color:var(--text-secondary);font-size:.88rem}
+.answers .keylist .qn{font-family:var(--font-mono);color:var(--accent);margin-right:.3rem}
+.instructor-wrap{margin-top:2.4rem}
+.instructor-wrap > :not(summary){padding:0 1.2rem} .instructor-wrap > :last-child{padding-bottom:1rem}
+.instructor-wrap p,.instructor-wrap li{color:var(--text-muted)}
+.cover-meta{font-family:var(--font-mono);font-size:.8rem;color:var(--text-muted);line-height:1.9}
+.cover-meta strong{color:var(--text-secondary);font-weight:600} .cover-meta p{margin:.1rem 0}
+.section.instructor{margin-top:2.6rem}
+
+footer{max-width:var(--measure);margin:0 auto;padding:2.5rem 2rem;border-top:1px solid var(--border);font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);line-height:1.85}
+
+@media(max-width:900px){:root{--rail:0px}.book{grid-template-columns:1fr}.rail{display:none}.inner{padding:1.6rem 1.2rem 5rem}}
+@media(max-width:720px){.movement{grid-template-columns:1fr;gap:.5rem}.movement .mv-label::before{margin-bottom:.4rem}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style></head>
+<body class="ed-author">
+<a class="skip" href="#main">Skip to chapter</a>
+<div class="topbar"><span class="mk">SIM2FIELD</span>
+  <span class="cx">Digital textbook / Author / production edition</span>
+  <span class="src">source: MODULE-13.md</span></div>
+<div class="book">
+  <nav class="rail" aria-label="Chapter contents"><h2>Chapter contents</h2><ul class="toc"><li><a href="#sec-2-learning-objectives"><span class="tn">2</span>Learning Objectives</a></li><li><a href="#sec-3-student-outcomes"><span class="tn">3</span>Student Outcomes</a></li><li><a href="#sec-4-engineering-motivation"><span class="tn">4</span>Engineering Motivation</a></li><li><a href="#sec-engineering-failure-cases-integration-an">Engineering Failure Cases (integration-and-twin-specific)</a></li><li><a href="#sec-5-background-knowledge"><span class="tn">5</span>Background Knowledge</a></li><li><a href="#sec-6-theory"><span class="tn">6</span>Theory</a></li><li><a href="#sec-7-mathematics"><span class="tn">7</span>Mathematics</a></li><li><a href="#sec-8-engineering-principles"><span class="tn">8</span>Engineering Principles</a></li><li><a href="#sec-9-system-requirements"><span class="tn">9</span>System Requirements</a></li><li><a href="#sec-10-design-decisions"><span class="tn">10</span>Design Decisions</a></li><li><a href="#sec-11-trade-studies"><span class="tn">11</span>Trade Studies</a></li><li><a href="#sec-12-simulation-activities"><span class="tn">12</span>Simulation Activities</a></li><li><a href="#sec-13-digital-twin-activities"><span class="tn">13</span>Digital Twin Activities</a></li><li><a href="#sec-14-hardware-activities"><span class="tn">14</span>Hardware Activities</a></li><li><a href="#sec-15-software-activities"><span class="tn">15</span>Software Activities</a></li><li><a href="#sec-16-ros-2-integration"><span class="tn">16</span>ROS 2 Integration</a></li><li><a href="#sec-17-ai-integration"><span class="tn">17</span>AI Integration</a></li><li><a href="#sec-18-edge-computing-integration"><span class="tn">18</span>Edge Computing Integration</a></li><li><a href="#sec-19-fluid-power-integration"><span class="tn">19</span>Fluid Power Integration</a></li><li><a href="#sec-20-interactive-html-components"><span class="tn">20</span>Interactive HTML Components<span class="tt spec">spec</span></a></li><li><a href="#sec-21-cad-illustrations"><span class="tn">21</span>CAD Illustrations<span class="tt spec">spec</span></a></li><li><a href="#sec-22-required-figures"><span class="tn">22</span>Required Figures<span class="tt spec">spec</span></a></li><li><a href="#sec-23-required-animations"><span class="tn">23</span>Required Animations<span class="tt spec">spec</span></a></li><li><a href="#sec-24-laboratory"><span class="tn">24</span>Laboratory</a></li><li><a href="#sec-25-homework"><span class="tn">25</span>Homework</a></li><li><a href="#sec-26-quiz"><span class="tn">26</span>Quiz</a></li><li><a href="#sec-27-challenge-problems"><span class="tn">27</span>Challenge Problems</a></li><li><a href="#sec-engineering-design-review">Engineering Design Review</a></li><li><a href="#sec-28-instructor-notes"><span class="tn">28</span>Instructor Notes<span class="tt instr">instructor</span></a></li><li><a href="#sec-29-research-frontiers"><span class="tn">29</span>Research Frontiers</a></li><li><a href="#sec-30-references"><span class="tn">30</span>References</a></li><li><a href="#sec-concise-quality-summary-honest-self-asse">Concise quality summary (honest self-assessment)<span class="tt instr">instructor</span></a></li></ul></nav>
+  <main class="main" id="main"><div class="inner">
+    <header class="mission">
+    <div class="mission-hero">
+      <div class="eyebrow">Author edition / Module 13 / Mission briefing</div>
+      
+      <h1>System Integration &amp; the Digital Twin</h1>
+      <div class="slim">Part V, Integrate  /  6 contact hours + a 3 hour laboratory + homework</div>
+    </div>
+    <section class="movement"><div class="mv-label">Mission</div><div class="mv-body"><p>This module is where the pieces must fit. System integration composes perception, decision, manipulation, the fluid-powered grasp, mobility, the real-time software, the safety architecture, and power/thermal into one machine, and confronts the hardest failure class in Module 1's taxonomy, the one that lives between subsystems and that no module could see alone: integration failure.</p>
+</div></section><section class="movement"><div class="mv-label">Previous milestone</div><div class="mv-body"><p>Twelve modules have each built a piece and, at their edges, promised that the pieces would fit.</p>
+</div></section><section class="movement"><div class="mv-label">Engineering problem</div><div class="mv-body"><p>The course's answer to that class has been present from the first page: simulation-first. Build and integrate in a digital twin before committing to hardware, so the interactions surface cheaply, safely, and early. This module masters that instrument. The digital twin is not a graphic; it is a validated virtual replica used across the whole course, as a design tool, a policy training environment (CEC-05), an error-budget instrument (CEC-03), a timing bench (M11), and now a system-integration environment and the evidence source that feeds verification (M14). Its power is entirely conditional on one thing: whether its fidelity is trustworthy for the decision at hand.</p>
+</div></section><section class="movement"><div class="mv-label">Design tension</div><div class="mv-body"><p>That condition is this module's central analytical contribution, and the reason a new Core Engineering Concept is designated here. A twin has many fidelity levels, kinematic, dynamic, contact/fluid, sensor-in-the-loop, hardware-in-the-loop, each more expensive and more faithful than the last. The discipline is to match fidelity to the decision, identify where fidelity is binding, and validate each rung against reality before trusting it. That discipline, the Simulation-First Fidelity Ladder, is the organizing analytical tool of a simulation-first program, used in every module's Sim/Twin activities, and mastered here at the system level. It is also how this module finally confronts CR-03: the contact/fluid rung is the hardest and most decision-critical, and the machine's grasp results are trustworthy only if that rung is validated.</p>
+</div></section><section class="movement"><div class="mv-label">What this module resolves</div><div class="mv-body"><p>The module's Engineering Insight is the integration lesson every experienced engineer carries: the surprises live between the modules. Resource contention, timing coupling, interface drift, and dynamic interactions are invisible in a validated part and appear only when the parts run together, so integrate early and continuously in the twin, and expect the system to behave differently than the sum of its verified pieces.</p>
+</div></section>
+    
+    <details class="instructor-wrap cover-gov"><summary>Module metadata and authoring note (author / production)</summary><div class="cover-meta"><p><strong>Course:</strong> SIM2FIELD, Autonomous Watermelon Harvesting Robotics
+<strong>Module ID:</strong> M13, <strong>Part V, Integrate</strong>, <em>Integration Keystone</em>
+<strong>Template:</strong> 30-section module standard, <strong>Delivery:</strong> tiered (core authored in full; CAD/figures/animations/HTML widgets as build specifications)
+<strong>Estimated time:</strong> 6 contact hours + a 3 hour laboratory + homework
+<strong>Lifecycle stage (this module):</strong> the whole ladder, Sim -&gt; Twin -&gt; SIL -&gt; HIL -&gt; (Prototype bring-up)
+<strong>Prerequisites:</strong> all of M1 to M12, this module composes them. Especially: the spine and budgets (CEC-01, CEC-03), the grasp and fluid contact (CEC-02, M9, CR-03), the sim-to-real pipeline (CEC-05), the real-time integration and safety architecture (M11), and power/thermal (M12). Math: system-level error/timing/energy composition; model validation.
+<strong>Revision:</strong> <strong>1.0, frozen baseline (approved).</strong> Controlled changes only, and only if a future architectural conflict requires one.</p>
+</div><p><strong>Authoring note (governance).</strong> Consistent with frozen <strong>Modules 1 to 12</strong>, the Phase-0 Foundation, and the Phase-1 Curriculum Architecture. This is the <strong>system-integration keystone</strong>: it composes every subsystem into one working machine, masters the <strong>digital twin</strong> as the integration environment and evidence source, and <strong>confronts and closes Foundation conflict CR-03</strong> (the twin's fluid/contact-fidelity gap) at the system level. P0-document authority tagged <strong>[-&gt;Doc B/C/D/F/G/H/I]</strong>; perishable values tagged <strong>[VERIFY@PUB]</strong>. Recurring anchors cited per the <a href="curriculum/_core-concepts.md">Concept &amp; Insight Register</a>. <strong>New this module:</strong> the designation of <strong>CEC-06 (the Simulation-First Fidelity Ladder)</strong> at its mastery point, the watchlist candidate scheduled for evaluation here; <strong>Engineering Insight EI-13</strong>; and the module's <strong>Engineering Design Review</strong>.</p>
+<p><em>Core concepts converging.</em> This module assembles the whole <strong>Signal-to-Action Spine (CEC-01)</strong> into one running machine and verifies its budgets <em>together</em>: the placement budget (<strong>CEC-03</strong>) system-wide, the grasp inside the window (<strong>CEC-02</strong>), the no-cloud runtime (<strong>CEC-04</strong>), the sim-to-real pipeline (<strong>CEC-05</strong>) at system scale, and the power/thermal envelope (M12). It is where the course's central bet, <em>simulation-first</em>, is finally cashed at the level of the entire machine.</p>
+<hr>
+</details>
+    <div class="chapter-start"><span>The chapter</span></div>
+  </header>
+    <section class="section"><h2 id="sec-2-learning-objectives"><span class="secnum">2</span><span class="sectitle">Learning Objectives</span></h2><ul>
+<li><strong>LO-M13.1</strong> Compose all subsystems into one integrated machine and verify the end-to-end harvest mission against all budgets (CEC-01/CEC-03, power/thermal)., <em>Bloom: Create (with Evaluate)</em></li>
+<li><strong>LO-M13.2</strong> Use the digital twin as the system-integration environment and evidence source across the lifecycle (Sim-&gt;Twin-&gt;SIL-&gt;HIL)., <em>Bloom: Apply (with Create)</em></li>
+<li><strong>LO-M13.3</strong> Apply the Simulation-First Fidelity Ladder: match fidelity to the decision, find where fidelity is binding, and validate each rung against reality (CEC-06)., <em>Bloom: Evaluate (with Analyze)</em></li>
+<li><strong>LO-M13.4</strong> Close CR-03 at the system level: integrate and validate the contact/fluid-fidelity rung so grasp results are trustworthy., <em>Bloom: Evaluate</em></li>
+<li><strong>LO-M13.5</strong> Detect and analyze emergent, cross-subsystem behavior (resource contention, timing/dynamic coupling, interface drift) through incremental integration (EI-13)., <em>Bloom: Analyze</em></li>
+<li><strong>LO-M13.6</strong> Verify system-level budget composition (placement, timing, power) holds when subsystems run together., <em>Bloom: Evaluate</em></li>
+<li><strong>LO-M13.7</strong> Specify the validated twin as the evidence source for verification and the safety case (M14/M15)., <em>Bloom: Create</em></li>
+</ul>
+<p>Maps to course objectives <strong>LO7</strong> (primary), <strong>all</strong> (integrative), and ABET <strong>SO1, SO2, SO6</strong>. [-&gt;Doc I]</p>
+</section>
+<section class="section"><h2 id="sec-3-student-outcomes"><span class="secnum">3</span><span class="sectitle">Student Outcomes</span></h2><p>A student who has mastered this module can, without prompting:</p>
+<ol>
+<li>Integrate the subsystems and verify the end-to-end mission against every budget., <em>Bloom: Create</em></li>
+<li>Use the twin across the lifecycle as an integration and evidence environment., <em>Bloom: Apply</em></li>
+<li>Choose and validate the right twin fidelity for a given decision (CEC-06)., <em>Bloom: Evaluate</em></li>
+<li>Close the contact-fidelity gap (CR-03) so grasp results can be trusted., <em>Bloom: Evaluate</em></li>
+<li>Find and explain emergent behavior that no module owned., <em>Bloom: Analyze</em></li>
+<li>Show that composed budgets hold at the system level., <em>Bloom: Evaluate</em></li>
+</ol>
+</section>
+<section class="section"><h2 id="sec-4-engineering-motivation"><span class="secnum">4</span><span class="sectitle">Engineering Motivation</span></h2><p>The most dangerous failures in Module 1's taxonomy were the integration failures, precisely because each subsystem passes its own tests and the machine fails anyway. This module exists because <strong>the properties that decide whether a robot works are system properties</strong>, end-to-end timing, composed accuracy, resource sharing, dynamic coupling, and safe interaction, and none of them can be established by testing parts in isolation.</p>
+<p>Consider what integration must reconcile. The perception, decision, and grasp loops each fit <em>their</em> share of the cycle-time budget (CEC-01), but do they fit <em>together</em>, on one edge device, sharing compute (M6/M11) and power (M12), without contention? Each subsystem's contribution to the placement budget (CEC-03) was allocated, but does the assembled 3σ actually meet the capture tolerance when perception, mechanism, navigation, and timing all contribute at once? The arm's swing was designed for the grasp (M8/M9), but does that swing, integrated with the moving platform on a slope (M10), erode stability in a way no module analyzed alone? These are integration questions, and answering them on hardware, by trial, is slow, expensive, and, for a machine that exerts force and moves a heavy payload, sometimes dangerous.</p>
+<p>The motivation for the digital twin, and for this module's mastery of it, is that the twin lets integration happen <em>first in simulation</em>: compose the subsystems virtually, run the whole mission, and surface the interactions cheaply and safely before committing to steel and fluid. But a twin can lie. A low-fidelity twin will happily report a successful grasp that the real contact physics would bruise (CR-03), or a stable machine that real terrain would tip. So the twin's value is entirely conditional on <strong>fidelity trustworthiness</strong>, and the engineer's central judgment becomes: <em>for this decision, is my twin faithful enough, and how do I know?</em> That judgment, matching fidelity to the decision and validating each rung against reality, is the analytical tool this module designates as a Core Engineering Concept, because a simulation-first curriculum returns to it in every module and lives or dies on getting it right.</p>
+</section>
+<section class="section failure"><h2 id="sec-engineering-failure-cases-integration-an" class="unnum">Engineering Failure Cases (integration-and-twin-specific)</h2><p>Sharpening Module 1's <em>integration</em> class and the simulation-first bet:</p>
+<ul>
+<li><strong>Emergent overrun.</strong> Each loop meets its budget alone; running together, compute/power contention pushes a loop past its deadline (CEC-01) or the composed 3σ past the capture tolerance (CEC-03). <em>Motivates</em> system-level budget verification and incremental integration (Section 6.5, Section 7.2, EI-13).</li>
+<li><strong>Twin over-trust.</strong> A grasp validated on a low-fidelity twin bruises on real contact physics (CR-03). <em>Motivates</em> the fidelity ladder and per-rung validation (Section 6.3 to 6.4, CEC-06).</li>
+<li><strong>Interface drift.</strong> Two subsystems agreed on an interface that quietly diverged (units, frame, timing); integration mislocates or mistimes. <em>Motivates</em> interface verification (Section 6.2).</li>
+<li><strong>Hidden dynamic coupling.</strong> Arm swing + moving platform + slope interact to erode stability in a way no single module modeled. <em>Motivates</em> integrated dynamic testing (Section 6.6, EI-13).</li>
+<li><strong>Fidelity misallocation.</strong> Fidelity effort spent where a decision was insensitive to it, while the binding rung (contact) stayed low-fidelity. <em>Motivates</em> matching fidelity to decision sensitivity (Section 6.4, CEC-06).</li>
+</ul>
+<p>Each is caught by integrating early in a fidelity-appropriate, validated twin.</p>
+</section>
+<section class="section"><h2 id="sec-5-background-knowledge"><span class="secnum">5</span><span class="sectitle">Background Knowledge</span></h2><p><strong>Assumed (from prerequisites):</strong> all of M1 to M12, every subsystem, budget, and interface; the simulation-first lifecycle (Sim-&gt;Twin-&gt;SIL-&gt;HIL-&gt;Prototype-&gt;Field, M1); the twin's prior roles (design, training env CEC-05, budget instrument CEC-03, timing bench M11); CR-03 (the fluid/contact fidelity gap); model-validation basics.</p>
+<p><strong>Introduced here, used later:</strong> the vocabulary of system integration and twin fidelity, <em>incremental/continuous integration, bring-up, interface verification, emergent behavior, resource contention, dynamic coupling, digital twin, fidelity level, fidelity ladder, model validation, reality gap (per rung), fidelity-decision sensitivity, evidence source</em>. Developed at applied (L2) depth; formal systems-integration/V&amp;V is expanded in M14 and referenced [-&gt;Doc H].</p>
+<p><strong>Where this sits in the dependency graph.</strong> M13 depends on all of M1 to M12. It <strong>masters</strong> the system-integration and digital-twin threads and <strong>designates CEC-06 (the Fidelity Ladder)</strong>; it <strong>applies</strong> every prior anchor at system scale (CEC-01/02/03/04/05) and <strong>closes CR-03</strong> at the system level. It hands forward: the integrated, budget-verified machine and the <em>validated twin as evidence source</em> to M14 (V&amp;V) and M15 (safety case); the bring-up learnings to the prototype; and the integrated system to M17 (capstone).</p>
+</section>
+<section class="section"><h2 id="sec-6-theory"><span class="secnum">6</span><span class="sectitle">Theory</span></h2><h3>6.1 System integration: composing the machine</h3>
+<p>Integration composes the subsystems into one machine that executes the end-to-end mission (<code>DRIVE-&gt;STAGE-&gt;ALIGN-&gt;GRAB-&gt;LIFT-&gt;SWING-&gt;LOWER-&gt;RELEASE</code>). It is done <strong>incrementally</strong>, bring up two subsystems, verify their interface and interaction, add a third, rather than all at once (&quot;big bang&quot;), because incremental integration localizes the interaction that breaks and is far easier to debug (EI-13). The twin is the environment where this incremental composition happens first.</p>
+<h3>6.2 Interface verification</h3>
+<p>Each pair of subsystems meets at an interface the earlier modules fixed (a message type, a physical mounting, a timing contract). Integration verifies these interfaces actually agree, units, coordinate frames, timing, message age, physical fit, because <em>interface drift</em> (a quiet divergence between what two teams assumed) is a classic integration failure. Verified interfaces are the seams that let the incremental composition hold.</p>
+<h3>6.3 The digital twin as a system</h3>
+<p>The <strong>digital twin</strong> is a validated virtual replica of the machine and its environment, used to design, integrate, verify, and generate evidence. Across the course it has served many roles; at the system level it becomes the <strong>integration bench</strong> (compose and run the whole mission in sim), the <strong>timing/resource bench</strong> (M11/M12 contention), and, once validated, the <strong>evidence source</strong> that verification (M14) and the safety case (M15) draw on. Its trustworthiness is not assumed; it is <em>earned per fidelity rung</em> (Section 6.4).</p>
+<h3>6.4 The Simulation-First Fidelity Ladder (the designated concept)</h3>
+<p>A twin exists at multiple <strong>fidelity levels</strong>, a ladder from cheap-and-approximate to expensive-and-faithful: <strong>kinematic</strong> (geometry/reach), <strong>dynamic</strong> (masses, forces, stability), <strong>contact/fluid</strong> (grasp contact, bruise/slip, fluid actuation, the CR-03 rung), <strong>sensor-in-the-loop</strong> (real perception on rendered/played-back data), <strong>hardware-in-the-loop</strong> (real edge/actuators against the sim), up to <strong>prototype/field</strong>. The analytical discipline has three parts:</p>
+<ol>
+<li><strong>Match fidelity to the decision.</strong> A reach question needs only kinematic fidelity; a <em>grasp-will-not-bruise</em> question needs contact/fluid fidelity. Using low fidelity for a fidelity-sensitive decision is over-trust; using high fidelity for an insensitive one wastes effort.</li>
+<li><strong>Find where fidelity is binding.</strong> Identify the decisions whose outcome <em>changes</em> across fidelity levels, those are where fidelity investment and validation must go.</li>
+<li><strong>Validate each rung against reality before trusting it.</strong> Every fidelity level has a reality gap; a rung is trustworthy only after its predictions are checked against real data to a tolerance (the per-rung acceptance gate). Climb the ladder deliberately.</li>
+</ol>
+<p>This is the tool that makes a simulation-first program <em>rigorous</em> rather than merely simulated. It is distinct from CEC-05 (the sim-to-real <em>learning-transfer</em> pipeline): CEC-05 transfers <em>learned behaviors</em> (domain randomization, policy transfer); CEC-06 governs the fidelity and validation of <em>any</em> model-based decision, physical or learned, including kinematics, stability, thermal, and contact. And it is distinct from the simulation-first <em>lifecycle</em> (the Sim-&gt;...-&gt;Field sequence, a process): CEC-06 is the <em>analytical judgment</em> exercised within that process about how much to trust each rung for each decision.</p>
+<h3>6.5 System-level budget composition</h3>
+<p>The course's budgets were allocated per subsystem; integration verifies they hold <em>together</em>. The placement budget (CEC-03) is assembled from all real contributors at once and tested against the capture tolerance (CEC-02); the cycle-time budget (CEC-01) is verified end-to-end with all loops sharing the edge (M11) and power (M12); the power/thermal budget (M12) is checked under the true coincident load. Composition can reveal an <em>emergent</em> overrun that no single allocation predicted, the integration surprise (EI-13).</p>
+<h3>6.6 Emergent and cross-subsystem behavior</h3>
+<p>Integration reveals behavior no module owned: <strong>resource contention</strong> (compute/power shared across perception, control, navigation, M6/M11/M12); <strong>timing coupling</strong> (one loop's jitter perturbing another, M11); <strong>dynamic coupling</strong> (arm swing &lt;-&gt; platform stability on a slope, M8/M9/M10; fluid compliance &lt;-&gt; placement stiffness, M9/M8); <strong>interface drift</strong> (Section 6.2). These emergent effects are the reason integration is a distinct engineering activity and not a formality, and the reason to integrate early and continuously (EI-13), using the twin to make the surprises cheap.</p>
+<h3>6.7 Closing CR-03 at the system level</h3>
+<p>Foundation conflict CR-03 named the twin's missing fluid/contact fidelity. Module 9 specified the contact/fluid rung; this module <strong>integrates and validates it into the system twin</strong> so that whole-mission grasp results (bruise/slip rates, window membership) are trustworthy, with real validation as the acceptance gate (CEC-06/CEC-05). Closing CR-03 is what lets the integrated twin be an <em>evidence source</em> for the grasp (M14/M15) rather than an optimistic guess.</p>
+<figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Incremental versus big-bang integration: connecting all subsystems at once leaves a broken metric hidden among order n-squared pairwise interactions, while adding one interface at a time localizes any break to the newly added subsystem, an order n debug path." font-family="'IBM Plex Mono',monospace">
+<text x="20" y="26" font-size="10" fill="var(--danger-text)" font-weight="700" font-family="'Space Grotesk',sans-serif">BIG BANG: connect all at once</text>
+<line x1="180" y1="64" x2="254" y2="107" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<line x1="180" y1="64" x2="254" y2="193" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<line x1="180" y1="64" x2="180" y2="236" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<line x1="180" y1="64" x2="106" y2="193" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<line x1="180" y1="64" x2="106" y2="107" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<line x1="254" y1="107" x2="254" y2="193" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<line x1="254" y1="107" x2="180" y2="236" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<line x1="254" y1="107" x2="106" y2="193" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<line x1="254" y1="107" x2="106" y2="107" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<line x1="254" y1="193" x2="180" y2="236" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<line x1="254" y1="193" x2="106" y2="193" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<line x1="254" y1="193" x2="106" y2="107" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<line x1="180" y1="236" x2="106" y2="193" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<line x1="180" y1="236" x2="106" y2="107" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<line x1="106" y1="193" x2="106" y2="107" stroke="var(--border-strong)" stroke-width="0.8" opacity="0.55"/>
+<circle cx="180" cy="64" r="12" fill="var(--surface)" stroke="var(--danger)" stroke-width="1.3"/>
+<text x="180" y="67" text-anchor="middle" font-size="8" fill="var(--text-secondary)">1</text>
+<circle cx="254" cy="107" r="12" fill="var(--surface)" stroke="var(--danger)" stroke-width="1.3"/>
+<text x="254" y="110" text-anchor="middle" font-size="8" fill="var(--text-secondary)">2</text>
+<circle cx="254" cy="193" r="12" fill="var(--surface)" stroke="var(--danger)" stroke-width="1.3"/>
+<text x="254" y="196" text-anchor="middle" font-size="8" fill="var(--text-secondary)">3</text>
+<circle cx="180" cy="236" r="12" fill="var(--surface)" stroke="var(--danger)" stroke-width="1.3"/>
+<text x="180" y="239" text-anchor="middle" font-size="8" fill="var(--text-secondary)">4</text>
+<circle cx="106" cy="193" r="12" fill="var(--surface)" stroke="var(--danger)" stroke-width="1.3"/>
+<text x="106" y="196" text-anchor="middle" font-size="8" fill="var(--text-secondary)">5</text>
+<circle cx="106" cy="107" r="12" fill="var(--surface)" stroke="var(--danger)" stroke-width="1.3"/>
+<text x="106" y="110" text-anchor="middle" font-size="8" fill="var(--text-secondary)">6</text>
+<text x="180" y="154" text-anchor="middle" font-size="9" fill="var(--danger)" font-weight="700">metric breaks</text>
+<text x="180" y="304" text-anchor="middle" font-size="7.6" fill="var(--text-muted)">the fault could be any of O(n^2) pairwise interactions</text>
+<text x="180" y="268" text-anchor="middle" font-size="7.4" fill="var(--danger-text)">O(n^2) interaction search</text>
+<line x1="372" y1="16" x2="372" y2="284" stroke="var(--border)" stroke-width="1"/>
+<text x="392" y="26" font-size="10" fill="var(--accent)" font-weight="700" font-family="'Space Grotesk',sans-serif">INCREMENTAL: one interface at a time</text>
+<circle cx="404" cy="64" r="11" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="404" y="67" text-anchor="middle" font-size="7.6" fill="var(--text-secondary)">1</text>
+<circle cx="448" cy="64" r="11" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="448" y="67" text-anchor="middle" font-size="7.6" fill="var(--text-secondary)">2</text>
+<line x1="415" y1="64" x2="437" y2="64" stroke="var(--accent)" stroke-width="2.2"/>
+<text x="494" y="67" font-size="7" fill="var(--text-muted)">verify new interface</text>
+<circle cx="404" cy="104" r="11" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="404" y="107" text-anchor="middle" font-size="7.6" fill="var(--text-secondary)">1</text>
+<circle cx="448" cy="104" r="11" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="448" y="107" text-anchor="middle" font-size="7.6" fill="var(--text-secondary)">2</text>
+<line x1="415" y1="104" x2="437" y2="104" stroke="var(--border-strong)" stroke-width="1"/>
+<circle cx="492" cy="104" r="11" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="492" y="107" text-anchor="middle" font-size="7.6" fill="var(--text-secondary)">3</text>
+<line x1="459" y1="104" x2="481" y2="104" stroke="var(--accent)" stroke-width="2.2"/>
+<text x="538" y="107" font-size="7" fill="var(--text-muted)">verify new interface</text>
+<circle cx="404" cy="144" r="11" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="404" y="147" text-anchor="middle" font-size="7.6" fill="var(--text-secondary)">1</text>
+<circle cx="448" cy="144" r="11" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="448" y="147" text-anchor="middle" font-size="7.6" fill="var(--text-secondary)">2</text>
+<line x1="415" y1="144" x2="437" y2="144" stroke="var(--border-strong)" stroke-width="1"/>
+<circle cx="492" cy="144" r="11" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="492" y="147" text-anchor="middle" font-size="7.6" fill="var(--text-secondary)">3</text>
+<line x1="459" y1="144" x2="481" y2="144" stroke="var(--border-strong)" stroke-width="1"/>
+<circle cx="536" cy="144" r="11" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="536" y="147" text-anchor="middle" font-size="7.6" fill="var(--text-secondary)">4</text>
+<line x1="503" y1="144" x2="525" y2="144" stroke="var(--accent)" stroke-width="2.2"/>
+<text x="582" y="147" font-size="7" fill="var(--text-muted)">verify new interface</text>
+<circle cx="404" cy="184" r="11" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="404" y="187" text-anchor="middle" font-size="7.6" fill="var(--text-secondary)">1</text>
+<circle cx="448" cy="184" r="11" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="448" y="187" text-anchor="middle" font-size="7.6" fill="var(--text-secondary)">2</text>
+<line x1="415" y1="184" x2="437" y2="184" stroke="var(--border-strong)" stroke-width="1"/>
+<circle cx="492" cy="184" r="11" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="492" y="187" text-anchor="middle" font-size="7.6" fill="var(--text-secondary)">3</text>
+<line x1="459" y1="184" x2="481" y2="184" stroke="var(--border-strong)" stroke-width="1"/>
+<circle cx="536" cy="184" r="11" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="536" y="187" text-anchor="middle" font-size="7.6" fill="var(--text-secondary)">4</text>
+<line x1="503" y1="184" x2="525" y2="184" stroke="var(--border-strong)" stroke-width="1"/>
+<circle cx="580" cy="184" r="11" fill="var(--surface)" stroke="var(--danger)" stroke-width="1.3"/>
+<text x="580" y="187" text-anchor="middle" font-size="7.6" fill="var(--text-secondary)">5</text>
+<line x1="547" y1="184" x2="569" y2="184" stroke="var(--accent)" stroke-width="2.2"/>
+<text x="598" y="187" font-size="7.4" fill="var(--danger-text)" font-weight="700">break -&gt; it is 5's interface</text>
+<text x="392" y="222" font-size="7.6" fill="var(--accent)" font-weight="700">A break localizes to the just-added subsystem: O(n) debug path.</text>
+<text x="392" y="236" font-size="7.4" fill="var(--text-muted)">Each step verifies one interface and interaction before adding the next.</text>
+<text x="20" y="270" font-size="8.2" fill="var(--text-secondary)">Incremental integration localizes the interaction that breaks and is far easier to debug (EI-13).</text>
+<text x="20" y="283" font-size="8.2" fill="var(--text-muted)">The twin is the environment where this incremental composition happens first, before hardware.</text>
+</svg></div><figcaption><span class="fid">F-M13-2</span>Incremental vs big-bang integration. Connecting all subsystems at once (big bang) leaves a broken metric hidden among O(n^2) pairwise interactions; adding one interface at a time (incremental) localizes any break to the just-added subsystem, an O(n) debug path. Incremental integration localizes the interaction that breaks and is far easier to debug (EI-13); the twin is where this composition happens first. Sections 6.1 and 7.3.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Composed budgets versus limits: the placement, cycle-time, and power budgets are assembled from all real contributors at once and each tested against its limit; composition can reveal an emergent overrun no single allocation predicted, shown as the cycle-time budget pushed toward its limit by shared-resource effects." font-family="'IBM Plex Mono',monospace">
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Composed budgets, all at once, vs limits</text>
+<text x="20" y="42" font-size="8.2" fill="var(--text-muted)">Per-subsystem allocations were checked alone; integration verifies they hold together. Composition can reveal an emergent overrun (EI-13).</text>
+<line x1="637" y1="60" x2="637" y2="248" stroke="var(--danger)" stroke-width="1.6" stroke-dasharray="5 3"/>
+<text x="637" y="54" text-anchor="middle" font-size="8.5" fill="var(--danger-text)" font-weight="700">limit</text>
+<defs><pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="var(--warn)" stroke-width="1.4"/></pattern></defs>
+<text x="16" y="84" font-size="8.6" fill="var(--text-primary)" font-weight="700">Placement budget</text>
+<text x="16" y="96" font-size="7.2" fill="var(--text-muted)">3&#963;_place = sqrt(sum &#963;_i^2)  vs c   test: 3&#963;_place &lt;= c</text>
+<rect x="196" y="102" width="374.9" height="26" rx="2" fill="var(--accent)" fill-opacity="0.6" stroke="var(--accent)"/>
+<text x="604" y="142" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">margin</text>
+<text x="202" y="119" font-size="6.6" fill="var(--text-on-accent)">dominant: &#963;_Z</text>
+<text x="16" y="154" font-size="8.6" fill="var(--text-primary)" font-weight="700">Cycle-time budget</text>
+<text x="16" y="166" font-size="7.2" fill="var(--text-muted)">T_cycle = sum stage times  vs  d/v   test: T_cycle &lt;= d/v</text>
+<rect x="196" y="172" width="344.0" height="26" rx="2" fill="var(--accent)" fill-opacity="0.6" stroke="var(--accent)"/>
+<rect x="540.0" y="172" width="70.6" height="26" fill="url(#hatch)" stroke="var(--warn)" stroke-width="1"/>
+<text x="615" y="182" font-size="6.8" fill="var(--warn-text)">+ shared-resource (EI-13)</text>
+<text x="624" y="212" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">margin</text>
+<text x="16" y="224" font-size="8.6" fill="var(--text-primary)" font-weight="700">Power / thermal</text>
+<text x="16" y="236" font-size="7.2" fill="var(--text-muted)">P_coincident  vs  delivery capacity   test: &lt;= capacity</text>
+<rect x="196" y="242" width="361.7" height="26" rx="2" fill="var(--accent)" fill-opacity="0.6" stroke="var(--accent)"/>
+<text x="597" y="282" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">margin</text>
+<text x="20" y="286" font-size="8.2" fill="var(--text-muted)">Placement is assembled by RSS over all real contributors; cycle time and power are summed with shared-resource effects. Fractions of limit shown; values [VERIFY@PUB].</text>
+</svg></div><figcaption><span class="fid">F-M13-5</span>Composed budgets, all at once, vs limits. The placement (RSS vs capture tolerance c), cycle-time (sum of stage times vs d/v), and power (coincident load vs capacity) budgets are assembled from all real contributors at once and each tested against its limit. Composition can reveal an emergent overrun no single allocation predicted (EI-13), shown as shared-resource effects pushing the cycle-time budget toward its limit. Fractions of limit; illustrative. Sections 6.5 and 7.2.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Emergent coupling map: integration reveals cross-subsystem behaviour no module owns. Dynamic coupling links the arm, grasp, and base; resource contention links perception, decision, mobility, and compute; timing jitter and shared power couple the control loops. The twin makes these surprises cheap." font-family="'IBM Plex Mono',monospace">
+<path d="M560,84 Q317.0,66.0 110,84" fill="none" stroke="var(--info)" stroke-width="1.4" stroke-dasharray="5 4" opacity="0.9"/>
+<path d="M560,84 Q458.0,66.0 392,84" fill="none" stroke="var(--info)" stroke-width="1.4" stroke-dasharray="5 4" opacity="0.9"/>
+<path d="M560,84 Q533.0,129.0 542,210" fill="none" stroke="var(--info)" stroke-width="1.4" stroke-dasharray="5 4" opacity="0.9"/>
+<path d="M500,320 Q541.0,285.0 542,210" fill="none" stroke="var(--warn)" stroke-width="1.4" stroke-dasharray="2 4" opacity="0.9"/>
+<path d="M500,320 Q459.0,285.0 378,210" fill="none" stroke="var(--warn)" stroke-width="1.4" stroke-dasharray="2 4" opacity="0.9"/>
+<path d="M500,320 Q550.0,222.0 560,84" fill="none" stroke="var(--warn)" stroke-width="1.4" stroke-dasharray="2 4" opacity="0.9"/>
+<path d="M214,320 Q282.0,251.0 378,210" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="1 4" opacity="0.9"/>
+<path d="M214,320 Q364.0,251.0 542,210" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="1 4" opacity="0.9"/>
+<path d="M214,210 Q338.0,170.0 542,210" fill="none" stroke="var(--accent-2)" stroke-width="2.2" opacity="0.9"/>
+<text x="378" y="176" text-anchor="middle" font-size="7.3" fill="var(--accent-2)">arm swing  &lt;-&gt;  stability (on a slope)</text>
+<path d="M378,210 Q322.0,236.0 214,210" fill="none" stroke="var(--accent-2)" stroke-width="2.2" opacity="0.9"/>
+<text x="300" y="250" text-anchor="middle" font-size="7.3" fill="var(--accent-2)">fluid compliance &lt;-&gt; placement stiffness</text>
+<rect x="46" y="64" width="128" height="40" rx="8" fill="var(--surface)" stroke="var(--border-strong)" stroke-width="1.3"/>
+<text x="110" y="81" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">Perception</text>
+<text x="110" y="95" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">M4</text>
+<rect x="184" y="64" width="128" height="40" rx="8" fill="var(--surface)" stroke="var(--border-strong)" stroke-width="1.3"/>
+<text x="248" y="81" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">Localization</text>
+<text x="248" y="95" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">M5</text>
+<rect x="328" y="64" width="128" height="40" rx="8" fill="var(--surface)" stroke="var(--border-strong)" stroke-width="1.3"/>
+<text x="392" y="81" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">Decision</text>
+<text x="392" y="95" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">M7</text>
+<rect x="496" y="64" width="128" height="40" rx="8" fill="var(--surface)" stroke="var(--border-strong)" stroke-width="1.3"/>
+<text x="560" y="81" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">Edge compute</text>
+<text x="560" y="95" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">M6</text>
+<rect x="150" y="190" width="128" height="40" rx="8" fill="var(--surface)" stroke="var(--border-strong)" stroke-width="1.3"/>
+<text x="214" y="207" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">Arm / kinematics</text>
+<text x="214" y="221" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">M8</text>
+<rect x="314" y="190" width="128" height="40" rx="8" fill="var(--surface)" stroke="var(--border-strong)" stroke-width="1.3"/>
+<text x="378" y="207" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">Grasp / fluid</text>
+<text x="378" y="221" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">M9</text>
+<rect x="478" y="190" width="128" height="40" rx="8" fill="var(--surface)" stroke="var(--border-strong)" stroke-width="1.3"/>
+<text x="542" y="207" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">Base / mobility</text>
+<text x="542" y="221" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">M10</text>
+<rect x="150" y="300" width="128" height="40" rx="8" fill="var(--surface)" stroke="var(--border-strong)" stroke-width="1.3"/>
+<text x="214" y="317" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">Timing / software</text>
+<text x="214" y="331" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">M11</text>
+<rect x="436" y="300" width="128" height="40" rx="8" fill="var(--surface)" stroke="var(--border-strong)" stroke-width="1.3"/>
+<text x="500" y="317" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">Power / thermal</text>
+<text x="500" y="331" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">M12</text>
+<rect x="546" y="286" width="204" height="88" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="560" y="302" font-size="8.5" fill="var(--text-primary)" font-weight="700">Coupling channel</text>
+<line x1="560" y1="313" x2="586" y2="313" stroke="var(--accent-2)" stroke-width="2" stroke-dasharray="8 0"/>
+<text x="592" y="316" font-size="7.6" fill="var(--text-secondary)">dynamic (mechanical)</text>
+<line x1="560" y1="326" x2="586" y2="326" stroke="var(--info)" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="592" y="329" font-size="7.6" fill="var(--text-secondary)">resource contention</text>
+<line x1="560" y1="339" x2="586" y2="339" stroke="var(--warn)" stroke-width="2" stroke-dasharray="2 4"/>
+<text x="592" y="342" font-size="7.6" fill="var(--text-secondary)">shared power / thermal</text>
+<line x1="560" y1="352" x2="586" y2="352" stroke="var(--accent)" stroke-width="2" stroke-dasharray="1 4"/>
+<text x="592" y="355" font-size="7.6" fill="var(--text-secondary)">timing / jitter</text>
+<text x="20" y="28" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Emergent coupling: behavior no single module owns</text>
+<text x="20" y="44" font-size="8.3" fill="var(--text-muted)">Integration is a distinct engineering activity because composition creates these couplings; integrate early and continuously (EI-13),</text>
+<text x="20" y="56" font-size="8.3" fill="var(--text-muted)">using the twin to make the surprises cheap. Interface drift (Sec. 6.2) can appear along any shared edge.</text>
+</svg></div><figcaption><span class="fid">F-M13-7</span>Emergent coupling map (resource / timing / dynamic). Integration reveals cross-subsystem behavior no module owns: dynamic coupling (arm swing vs base stability on a slope; fluid compliance vs placement stiffness), resource contention (shared compute), shared power/thermal, and timing jitter, plus interface drift. This is why integration is a distinct activity and why to integrate early and continuously (EI-13), using the twin to make surprises cheap. Section 6.6.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The simulation-first fidelity ladder: rungs from cheap and approximate (kinematic geometry) up through dynamic, contact and fluid, sensor-in-the-loop, and hardware-in-the-loop to expensive and faithful prototype and field; match fidelity to the decision, find where fidelity is binding, and validate each rung against reality before trusting it." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">The simulation-first fidelity ladder (CEC-06)</text>
+<rect x="60" y="250" width="360" height="24" rx="5" fill="var(--info)" fill-opacity="0.12" stroke="var(--info)" stroke-width="1"/>
+<text x="68" y="266" font-size="8" fill="var(--text-secondary)" font-weight="700">kinematic</text>
+<text x="188" y="266" font-size="6.6" fill="var(--text-muted)">geometry / reach</text>
+<rect x="82" y="218" width="360" height="24" rx="5" fill="var(--info)" fill-opacity="0.12" stroke="var(--info)" stroke-width="1"/>
+<text x="90" y="234" font-size="8" fill="var(--text-secondary)" font-weight="700">dynamic</text>
+<text x="210" y="234" font-size="6.6" fill="var(--text-muted)">masses, forces, stability</text>
+<rect x="104" y="186" width="360" height="24" rx="5" fill="var(--accent-2)" fill-opacity="0.22" stroke="var(--accent-2)" stroke-width="1.6"/>
+<text x="112" y="202" font-size="8" fill="var(--accent-2)" font-weight="700">contact / fluid</text>
+<text x="232" y="202" font-size="6.6" fill="var(--text-muted)">grasp contact, bruise/slip, fluid (CR-03 rung)</text>
+<rect x="126" y="154" width="360" height="24" rx="5" fill="var(--info)" fill-opacity="0.12" stroke="var(--info)" stroke-width="1"/>
+<text x="134" y="170" font-size="8" fill="var(--text-secondary)" font-weight="700">sensor-in-the-loop</text>
+<text x="254" y="170" font-size="6.6" fill="var(--text-muted)">real perception on rendered / played-back data</text>
+<rect x="148" y="122" width="360" height="24" rx="5" fill="var(--info)" fill-opacity="0.12" stroke="var(--info)" stroke-width="1"/>
+<text x="156" y="138" font-size="8" fill="var(--text-secondary)" font-weight="700">hardware-in-the-loop</text>
+<text x="276" y="138" font-size="6.6" fill="var(--text-muted)">real edge / actuators against the sim</text>
+<rect x="170" y="90" width="360" height="24" rx="5" fill="var(--info)" fill-opacity="0.12" stroke="var(--info)" stroke-width="1"/>
+<text x="178" y="106" font-size="8" fill="var(--text-secondary)" font-weight="700">prototype / field</text>
+<text x="298" y="106" font-size="6.6" fill="var(--text-muted)">the real machine in the field</text>
+<line x1="30" y1="274" x2="30" y2="90" stroke="var(--text-muted)" stroke-width="1" marker-end="url(#a)"/>
+<text x="22" y="179.6" text-anchor="middle" font-size="7.4" fill="var(--text-muted)" transform="rotate(-90 22 179.6)">cheap/approximate -> expensive/faithful</text>
+<rect x="470" y="56" width="272" height="150" rx="9" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="484" y="76" font-size="8.6" fill="var(--text-primary)" font-weight="700">The discipline (three parts):</text>
+<text x="484" y="96" font-size="7.4" fill="var(--accent)" font-weight="700">1. Match fidelity to the decision.</text>
+<text x="484" y="107" font-size="6.8" fill="var(--text-muted)">reach needs kinematic; will-not-bruise</text>
+<text x="484" y="117" font-size="6.8" fill="var(--text-muted)">needs contact/fluid. Over/under-trust wastes.</text>
+<text x="484" y="136" font-size="7.4" fill="var(--warn-text)" font-weight="700">2. Find where fidelity is binding.</text>
+<text x="484" y="147" font-size="6.8" fill="var(--text-muted)">the decisions whose outcome changes across</text>
+<text x="484" y="157" font-size="6.8" fill="var(--text-muted)">levels: put investment and validation there.</text>
+<text x="484" y="176" font-size="7.4" fill="var(--danger-text)" font-weight="700">3. Validate each rung vs reality.</text>
+<text x="484" y="187" font-size="6.8" fill="var(--text-muted)">every level has a reality gap; a rung is</text>
+<text x="484" y="197" font-size="6.8" fill="var(--text-muted)">trusted only after it is validated.</text>
+<text x="20" y="300" font-size="7.8" fill="var(--text-muted)">Trustworthiness is earned per rung, not assumed. Once validated, the twin is the evidence source that verification (M14) and the safety case (M15) draw on. Section 6.4.</text>
+</svg></div><figcaption><span class="fid">F-M13-3</span>The simulation-first fidelity ladder. A twin exists at multiple fidelity rungs from cheap/approximate (kinematic) up through dynamic, contact/fluid (CR-03), sensor-in-the-loop, and hardware-in-the-loop to expensive/faithful prototype/field. The discipline: match fidelity to the decision, find where fidelity is binding (decisions whose outcome changes across levels), and validate each rung against reality before trusting it. Trustworthiness is earned per rung (CEC-06). Section 6.4.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Fidelity-decision sensitivity: some decisions stabilize at a low fidelity rung (reach settles at the kinematic level and does not change higher up) while others keep changing until a high rung (grasp-will-not-bruise settles only at the contact/fluid level); the rung where a decision stabilizes is where fidelity investment and validation must go." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Where fidelity is binding: decision sensitivity</text>
+<line x1="140" y1="66" x2="140" y2="220" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="140.0" y="234" font-size="6.4" fill="var(--text-muted)" text-anchor="middle">kinematic</text>
+<line x1="242" y1="66" x2="242" y2="220" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="242.0" y="234" font-size="6.4" fill="var(--text-muted)" text-anchor="middle">dynamic</text>
+<line x1="344" y1="66" x2="344" y2="220" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="344.0" y="234" font-size="6.4" fill="var(--text-muted)" text-anchor="middle">contact/fluid</text>
+<line x1="446" y1="66" x2="446" y2="220" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="446.0" y="234" font-size="6.4" fill="var(--text-muted)" text-anchor="middle">sensor-in-loop</text>
+<line x1="548" y1="66" x2="548" y2="220" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="548.0" y="234" font-size="6.4" fill="var(--text-muted)" text-anchor="middle">HIL</text>
+<line x1="650" y1="66" x2="650" y2="220" stroke="var(--grid-line)" stroke-width="1"/>
+<text x="650.0" y="234" font-size="6.4" fill="var(--text-muted)" text-anchor="middle">field</text>
+<polyline points="140,97 242,97 344,97 446,97 548,97 650,97" fill="none" stroke="var(--accent)" stroke-width="2"/>
+<text x="144.0" y="90.8" font-size="6.8" fill="var(--accent)">reach: stable at kinematic</text>
+<circle cx="140" cy="97" r="4" fill="var(--accent)"/>
+<polyline points="140,189 242,166 344,125 446,123 548,123 650,123" fill="none" stroke="var(--accent-2)" stroke-width="2"/>
+<circle cx="344" cy="125" r="5" fill="var(--accent-2)"/>
+<text x="350.0" y="126.52" font-size="6.8" fill="var(--accent-2)">grasp-no-bruise: binds at contact/fluid (CR-03)</text>
+<text x="144.0" y="183.2" font-size="6.4" fill="var(--text-muted)">outcome still changing at low fidelity (over-trust risk)</text>
+<line x1="140" y1="62" x2="140" y2="220" stroke="var(--border-strong)" stroke-width="1.4"/>
+<line x1="140" y1="220" x2="650" y2="220" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="132" y="143.0" text-anchor="middle" font-size="7.6" fill="var(--text-muted)" transform="rotate(-90 132 143.0)">decision outcome</text>
+<text x="395.0" y="248" font-size="8" fill="var(--text-muted)" text-anchor="middle">fidelity rung (cheap -> faithful)  -></text>
+<rect x="668" y="70" width="76" height="90" rx="7" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="676" y="86" font-size="6.6" fill="var(--text-secondary)" font-weight="700">binding rung</text>
+<text x="676" y="98" font-size="6" fill="var(--text-muted)">= where the</text>
+<text x="676" y="107" font-size="6" fill="var(--text-muted)">outcome stops</text>
+<text x="676" y="116" font-size="6" fill="var(--text-muted)">changing.</text>
+<text x="676" y="132" font-size="6" fill="var(--text-muted)">put validation</text>
+<text x="676" y="141" font-size="6" fill="var(--text-muted)">and investment</text>
+<text x="676" y="150" font-size="6" fill="var(--text-muted)">there.</text>
+<text x="20" y="256" font-size="7.8" fill="var(--text-muted)">Match fidelity to the decision: low fidelity for a fidelity-sensitive decision is over-trust; high fidelity for an insensitive one wastes effort. Section 6.4.</text>
+</svg></div><figcaption><span class="fid">F-M13-4</span>Fidelity-decision sensitivity. Some decisions stabilize at a low fidelity rung (reach settles at kinematic) while others keep changing until a high rung (grasp-will-not-bruise settles only at contact/fluid, CR-03). The rung where a decision stabilizes is the binding rung, where fidelity investment and validation must go. Low fidelity for a sensitive decision is over-trust; high fidelity for an insensitive one wastes effort. Section 6.4.</figcaption></figure></section>
+<section class="section"><h2 id="sec-7-mathematics"><span class="secnum">7</span><span class="sectitle">Mathematics</span></h2><p>Rigor tier for M13: <strong>L2</strong>. Central results: fidelity-decision sensitivity, per-rung validation, and system-level budget composition.</p>
+<h3>7.1 Fidelity-decision sensitivity</h3>
+<p>A decision <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi></mrow><annotation encoding="application/x-tex">D</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span></span></span></span> is <strong>fidelity-sensitive</strong> if its outcome changes across fidelity levels <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi></mrow><annotation encoding="application/x-tex">f</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span></span></span></span>: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∂</mi><mi>D</mi><mi mathvariant="normal">/</mi><mi mathvariant="normal">∂</mi><mi>f</mi><mo mathvariant="normal">≠</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\partial D/\partial f \neq 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord" style="margin-right:0.05556em;">∂</span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="mord">/</span><span class="mord" style="margin-right:0.05556em;">∂</span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel"><span class="mrel"><span class="mord vbox"><span class="thinbox"><span class="rlap"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="inner"><span class="mord"><span class="mrel"></span></span></span><span class="fix"></span></span></span></span></span><span class="mrel">=</span></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span>. The <strong>required fidelity</strong> is the lowest level at which <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi></mrow><annotation encoding="application/x-tex">D</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span></span></span></span> stabilizes (further fidelity does not change the decision). <em>Use:</em> decide which rung a question needs, reach stabilizes at kinematic fidelity; grasp-bruise does not stabilize until contact/fluid fidelity (CR-03).</p>
+<h3>7.2 Per-rung validation and system budget composition</h3>
+<p>Per-rung reality gap: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>g</mi><mi>f</mi></msub><mo>=</mo><mi mathvariant="normal">∣</mi><mtext> </mtext><msub><mtext>twin</mtext><mi>f</mi></msub><mo>−</mo><mtext>real</mtext><mtext> </mtext><mi mathvariant="normal">∣</mi></mrow><annotation encoding="application/x-tex">g_f = |\,\text{twin}_f - \text{real}\,|</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7167em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10764em;">f</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord">∣</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord text"><span class="mord">twin</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10764em;">f</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">real</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">∣</span></span></span></span>; the rung is accepted if <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>g</mi><mi>f</mi></msub><mo>≤</mo><msub><mtext>tol</mtext><mi>f</mi></msub></mrow><annotation encoding="application/x-tex">g_f \le \text{tol}_f</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9221em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10764em;">f</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord text"><span class="mord">tol</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10764em;">f</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span>. System placement budget assembled: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>σ</mi><mtext>place</mtext></msub><mo>=</mo><msqrt><mrow><msub><mo>∑</mo><mi>i</mi></msub><msubsup><mi>σ</mi><mi>i</mi><mn>2</mn></msubsup></mrow></msqrt></mrow><annotation encoding="application/x-tex">\sigma_\text{place}=\sqrt{\sum_i \sigma_i^2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7167em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">place</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.24em;vertical-align:-0.3069em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9331em;"><span class="svg-align" style="top:-3.2em;"><span class="pstrut" style="height:3.2em;"></span><span class="mord" style="padding-left:1em;"><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.162em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7959em;"><span style="top:-2.4231em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.0448em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2769em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.8931em;"><span class="pstrut" style="height:3.2em;"></span><span class="hide-tail" style="min-width:1.02em;height:1.28em;"><svg xmlns="http://www.w3.org/2000/svg" width='400em' height='1.28em' viewBox='0 0 400000 1296' preserveAspectRatio='xMinYMin slice'><path d='M263,681c0.7,0,18,39.7,52,119
+c34,79.3,68.167,158.7,102.5,238c34.3,79.3,51.8,119.3,52.5,120
+c340,-704.7,510.7,-1060.3,512,-1067
+l0 -0
+c4.7,-7.3,11,-11,19,-11
+H40000v40H1012.3
+s-271.3,567,-271.3,567c-38.7,80.7,-84,175,-136,283c-52,108,-89.167,185.3,-111.5,232
+c-22.3,46.7,-33.8,70.3,-34.5,71c-4.7,4.7,-12.3,7,-23,7s-12,-1,-12,-1
+s-109,-253,-109,-253c-72.7,-168,-109.3,-252,-110,-252c-10.7,8,-22,16.7,-34,26
+c-22,17.3,-33.3,26,-34,26s-26,-26,-26,-26s76,-59,76,-59s76,-60,76,-60z
+M1001 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3069em;"><span></span></span></span></span></span></span></span></span> over <em>all</em> real contributors (perception, calibration, sync, estimation, mechanism, navigation-lateral), tested <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><msub><mi>σ</mi><mtext>place</mtext></msub><mo>≤</mo><mi>c</mi></mrow><annotation encoding="application/x-tex">3\sigma_\text{place}\le c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9305em;vertical-align:-0.2861em;"></span><span class="mord">3</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">place</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">c</span></span></span></span> (CEC-02/CEC-03). System cycle time: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>T</mi><mtext>cycle</mtext></msub><mo>=</mo><mo>∑</mo></mrow><annotation encoding="application/x-tex">T_\text{cycle}=\sum</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">cycle</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span></span></span></span> stage times with shared-resource effects, tested <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>≤</mo><mi>d</mi><mi mathvariant="normal">/</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">\le d/v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span></span></span></span> (CEC-01). <em>Use:</em> verify the composed budgets hold and detect emergent overruns.</p>
+<h3>7.3 Integration order and surprise localization</h3>
+<p>Incremental integration adds subsystems one interface at a time; if a metric breaks when subsystem <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span> is added, the interaction is localized to <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span>'s interfaces, an <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span> debug path versus the <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span> interaction search of big-bang integration. <em>Use:</em> justify incremental/continuous integration (EI-13). <strong>Grad (L3):</strong> analyze how many pairwise interactions incremental testing exposes vs. big-bang, and where dynamic (not just interface) coupling still hides.</p>
+</section>
+<section class="section"><h2 id="sec-8-engineering-principles"><span class="secnum">8</span><span class="sectitle">Engineering Principles</span></h2><ol>
+<li><strong>Integrate incrementally and early</strong> (EI-13): localize the surprise; the twin makes it cheap.</li>
+<li><strong>Verify interfaces explicitly</strong>, interface drift is a silent integration killer.</li>
+<li><strong>Match fidelity to the decision</strong> (CEC-06): neither over-trust low fidelity nor over-invest high.</li>
+<li><strong>Validate every rung against reality</strong>, an unvalidated twin is a confident liar.</li>
+<li><strong>Compose the budgets, don't assume them</strong> (CEC-01/CEC-03/M12): verify they hold together.</li>
+<li><strong>Hunt emergence</strong>, resource, timing, and dynamic coupling live between the modules.</li>
+<li><strong>A validated twin is evidence; an unvalidated one is a guess</strong>, earn the trust before you cite it (-&gt;M14/M15).</li>
+</ol>
+</section>
+<section class="section"><h2 id="sec-9-system-requirements"><span class="secnum">9</span><span class="sectitle">System Requirements</span></h2><p>Derived from the integration mission; apply/compose all anchors and close CR-03. IDs continue; [-&gt;Doc B] formalizes. Targets [VERIFY@PUB].</p>
+<div class="twrap"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Type</th>
+<th>Requirement (abbreviated)</th>
+<th>Verification method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SR-V-01</td>
+<td>Verification</td>
+<td>The integrated machine shall execute the end-to-end harvest mission meeting all budgets (cycle-time CEC-01, placement CEC-03, power/thermal M12) <em>composed</em>.</td>
+<td>Twin + HIL + prototype</td>
+</tr>
+<tr>
+<td>SR-V-02</td>
+<td>Verification</td>
+<td>Each twin fidelity rung used for a decision shall be validated against real data to its acceptance tolerance (CEC-06).</td>
+<td>Per-rung validation</td>
+</tr>
+<tr>
+<td>SR-V-03</td>
+<td>Verification</td>
+<td>The contact/fluid rung (CR-03) shall be integrated and validated so system grasp results (bruise/slip/window) are trustworthy.</td>
+<td>Contact validation (M9 bench)</td>
+</tr>
+<tr>
+<td>SR-F-19</td>
+<td>Functional</td>
+<td>Integration shall be incremental with explicit interface verification.</td>
+<td>Review + test</td>
+</tr>
+<tr>
+<td>SR-V-04</td>
+<td>Verification</td>
+<td>Emergent/cross-subsystem behavior (resource, timing, dynamic coupling) shall be tested at the system level.</td>
+<td>Integrated test campaign</td>
+</tr>
+<tr>
+<td>SR-I-18</td>
+<td>Interface</td>
+<td>The validated twin shall serve as the evidence source for V&amp;V (M14) and the safety case (M15).</td>
+<td>Review (-&gt;Doc G)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Traceability: SR-V-01 -&gt; CEC-01/CEC-03/M12; <strong>SR-V-02/03 -&gt; CEC-06/CEC-05, closes CR-03</strong>; SR-F-19 -&gt; EI-13; SR-V-04 -&gt; EI-13; SR-I-18 -&gt; M14/M15.</p>
+</section>
+<section class="section"><h2 id="sec-10-design-decisions"><span class="secnum">10</span><span class="sectitle">Design Decisions</span></h2><ul>
+<li><strong>DD-76 Incremental/continuous integration in the twin first.</strong> <em>Rationale:</em> Section 6.1/Section 7.3, EI-13; localize surprises cheaply. <em>Serves:</em> SR-F-19, SR-V-04.</li>
+<li><strong>DD-77 The digital twin as integration bench and evidence source.</strong> <em>Rationale:</em> Section 6.3; simulation-first realized at system scale. <em>Serves:</em> SR-I-18.</li>
+<li><strong>DD-78 Fidelity ladder with per-rung validation gates</strong> (CEC-06). <em>Rationale:</em> Section 6.4/Section 7.1 to 7.2; earn trust per decision. <em>Serves:</em> SR-V-02.</li>
+<li><strong>DD-79 Integrate and validate the contact/fluid rung</strong> (closes CR-03). <em>Rationale:</em> Section 6.7; trustworthy grasp results. <em>Serves:</em> SR-V-03.</li>
+<li><strong>DD-80 System-level composed-budget verification.</strong> <em>Rationale:</em> Section 6.5/Section 7.2; budgets must hold together. <em>Serves:</em> SR-V-01.</li>
+<li><strong>DD-81 Emergent-behavior test campaign</strong> (resource/timing/dynamic coupling). <em>Rationale:</em> Section 6.6; hunt what no module owned. <em>Serves:</em> SR-V-04.</li>
+<li><strong>DD-82 HIL before prototype commitment.</strong> <em>Rationale:</em> the lifecycle ladder; real edge/actuators against the twin before steel. <em>Serves:</em> SR-V-01.</li>
+</ul>
+</section>
+<section class="section"><h2 id="sec-11-trade-studies"><span class="secnum">11</span><span class="sectitle">Trade Studies</span></h2><h3>11.1 TS-25: Twin fidelity allocation</h3>
+<p><strong>Alternatives:</strong> (A) <strong>uniform high fidelity everywhere</strong>; (B) <strong>uniform low fidelity</strong>; (C) <strong>matched fidelity (high where decisions are sensitive, low elsewhere)</strong>; (D) <strong>HIL-only (skip high-fidelity sim, go to hardware)</strong>. Scored 1 to 5 (weights illustrative; ratified in -&gt;Doc B/Doc G).</p>
+<div class="twrap"><table>
+<thead>
+<tr>
+<th>Criterion (weight)</th>
+<th style="text-align:center">A: Uniform high</th>
+<th style="text-align:center">B: Uniform low</th>
+<th style="text-align:center">C: Matched</th>
+<th style="text-align:center">D: HIL-only</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Decision coverage / trustworthiness (0.28)</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">4</td>
+</tr>
+<tr>
+<td>Cost / development effort (0.24)</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">2</td>
+</tr>
+<tr>
+<td>Validation burden (0.20)</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">3</td>
+</tr>
+<tr>
+<td>Speed of iteration (0.16)</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">2</td>
+</tr>
+<tr>
+<td>Safety of exploring failures (0.12)</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">2</td>
+</tr>
+<tr>
+<td><strong>Weighted total</strong></td>
+<td style="text-align:center"><strong>3.10</strong></td>
+<td style="text-align:center"><strong>3.72</strong></td>
+<td style="text-align:center"><strong>4.40</strong></td>
+<td style="text-align:center"><strong>2.80</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Selected: C (matched fidelity, the Fidelity Ladder).</strong> Build high fidelity where decisions are fidelity-sensitive (contact/fluid grasp, CR-03; dynamic stability) and low fidelity where they are not (reach, coverage), validating each rung used. This is CEC-06 as a design decision: it maximizes trustworthy decision coverage per unit of fidelity effort. Uniform high fidelity is unaffordable and mostly wasted; uniform low over-trusts; HIL-only forfeits the cheap, safe early exploration that is the point of simulation-first. Recorded weakness: &quot;matched&quot; requires <em>knowing</em> which decisions are fidelity-sensitive, itself a judgment that can be wrong, so the fidelity allocation is revisited as integration reveals surprises (EI-13).</p>
+<h3>11.2 TS-26: Integration strategy (summary)</h3>
+<p><strong>Alternatives:</strong> big-bang, <strong>incremental/continuous</strong>, subsystem-freeze-then-integrate. <strong>Criteria:</strong> surprise localization, debug cost, schedule risk, coverage. <strong>Outcome:</strong> <strong>incremental/continuous integration in the twin</strong>, add one interface at a time, verify, proceed; localize each surprise to the subsystem that introduced it (Section 7.3, EI-13). Big-bang is rejected (interactions are unlocalizable); continuous is preferred over freeze-then-integrate because it catches interface drift early.</p>
+<h3>11.3 Explicit Core Engineering Concept evaluation <em>(standing requirement)</em></h3>
+<p>This is the scheduled evaluation of the watchlist candidate, and it is assessed against the standing bar, <em>promote only genuinely enduring, cross-module analytical tools.</em></p>
+<ul>
+<li><strong>The Simulation-First Fidelity Ladder.</strong> <em>Verdict: promoted from watchlist to full CEC, <strong>CEC-06</strong>, designated here at mastery.</em> It qualifies on all three tests: <strong>(1) Recurrence</strong>, it is used in <em>every</em> module's Simulation/Twin activities (M3 to M12), not occasionally; matching fidelity to a decision and validating the twin is the operative judgment behind every &quot;verify in the twin&quot; the course has written. <strong>(2) Analytical, not procedural</strong>, it is a <em>tool for reasoning</em> (fidelity-decision sensitivity, per-rung reality gap, where fidelity is binding), distinct from the simulation-first <em>lifecycle sequence</em>, which is process. <strong>(3) Distinct from existing anchors</strong>, CEC-05 transfers <em>learned</em> behaviors (domain randomization); CEC-06 governs the fidelity/validation of <em>any</em> model-based decision, physical or learned. M13 is the genuine mastery point because system integration is where twin fidelity must be managed across all rungs at once and CR-03 is closed. <em>This is the first new CEC since CEC-05 (M7); the five intervening modules (M8 to M12) each correctly declined, which is exactly why this designation is credible rather than inflationary.</em></li>
+<li><strong>System integration / the digital twin (as artifacts).</strong> <em>Verdict: not separate CECs.</em> The twin is the <em>environment</em>; integration is the <em>activity</em>; the enduring analytical <em>tool</em> they embody is the Fidelity Ladder (CEC-06). Captured in the integration thread.</li>
+<li><strong>EI-13 (Integrate Early and Often)</strong> is added as this module's Engineering Insight, reinforcing CEC-06 (the twin makes early integration cheap) without duplicating it. <em>(One new CEC + one new EI, the CEC by scheduled, justified promotion.)</em></li>
+</ul>
+<blockquote class="callout note">
+<p><strong>Cross-module synthesis note (lightweight).</strong> The course now has two sim-truth anchors that together make simulation-first rigorous: <strong>CEC-05</strong> answers &quot;will this <em>learned behavior</em> transfer to reality?&quot; and <strong>CEC-06</strong> answers &quot;can I trust this <em>simulation</em> for this <em>decision</em> at all?&quot; Every twin result the curriculum cites, a reach, a stability margin, a grasp force, a timing bound, a thermal margin, is a CEC-06 claim, trustworthy only to the fidelity of a validated rung; the learned ones are additionally CEC-05 claims. The two anchors are why a simulation-first program can be evidence-based rather than hopeful.</p>
+</blockquote>
+<blockquote class="callout hook">
+<p><strong>Simulation-first hook.</strong> This module <em>is</em> the simulation-first hook made explicit: the whole machine is integrated and verified in the twin across the fidelity ladder, CR-03's contact rung is validated against the M9 bench, and only then does HIL and prototype bring-up proceed, the validated twin becoming the evidence source for M14/M15.</p>
+</blockquote>
+</section>
+<section class="section"><h2 id="sec-12-simulation-activities"><span class="secnum">12</span><span class="sectitle">Simulation Activities</span></h2><p>M13 exercises <strong>the whole ladder</strong>, Sim -&gt; Twin -&gt; SIL -&gt; HIL, with the twin as the system-integration bench.</p>
+<p><strong>SA-1, Incremental integration.</strong> Compose subsystems two-at-a-time in the twin, verifying each interface and interaction before adding the next (Section 6.1 to 6.2, EI-13); run the full harvest cycle once integrated. <em>Outcome:</em> an integrated machine in sim with each surprise localized.</p>
+<p><strong>SA-2, Fidelity-ladder study.</strong> For three decisions (reach, stability, grasp-bruise), find the fidelity level at which each stabilizes (Section 7.1, CEC-06); confirm grasp-bruise needs the contact/fluid rung (CR-03). <em>Outcome:</em> fidelity matched to decisions.</p>
+<p><strong>SA-3, Composed-budget verification.</strong> Assemble the system placement budget (all contributors) and end-to-end cycle time with shared resources; test against the capture tolerance and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi mathvariant="normal">/</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">d/v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span></span></span></span> (Section 6.5, Section 7.2). <em>Outcome:</em> budgets verified together; any emergent overrun exposed.</p>
+<p><strong>SA-4, Emergence hunt.</strong> Stress the integrated system (compute/power contention M6/M11/M12; arm-swing on a slope M8/M9/M10) and observe cross-subsystem behavior (Section 6.6). <em>Outcome:</em> emergent effects found in sim, cheaply (EI-13).</p>
+</section>
+<section class="section"><h2 id="sec-13-digital-twin-activities"><span class="secnum">13</span><span class="sectitle">Digital Twin Activities</span></h2><p><strong>DTA-1, System-twin &amp; fidelity-ladder spec (deliverable to Doc G).</strong> Specify the integrated system twin, its fidelity rungs (kinematic-&gt;dynamic-&gt;contact/fluid-&gt;sensor-in-loop-&gt;HIL), and the validation gate for each rung used (CEC-06). <em>Outcome:</em> SR-I-18/SR-V-02; the validated evidence environment.</p>
+<p><strong>DTA-2, Close CR-03 (contact rung validation).</strong> Integrate the M9 fluid/contact model into the system twin and validate its whole-mission grasp predictions against the M9 bench to the acceptance tolerance (Section 6.7, SR-V-03). <em>Outcome:</em> trustworthy grasp results; CR-03 closed at system level.</p>
+<p><strong>DTA-3, Evidence-source packaging.</strong> Specify how validated twin results become traceable evidence for V&amp;V (M14) and the safety case (M15), tagged with the fidelity rung and validation status. <em>Outcome:</em> the twin as a citable evidence source, not a guess.</p>
+</section>
+<section class="section"><h2 id="sec-14-hardware-activities"><span class="secnum">14</span><span class="sectitle">Hardware Activities</span></h2><p><em>(Tiered: HIL and bring-up protocols at specification level.)</em></p>
+<p><strong>HA-1, HIL integration.</strong> Specify running the real edge (M6) and (real or emulated) actuators against the system twin, verifying end-to-end timing/resource behavior under realistic load (SR-V-01). <em>Deliverable:</em> HIL integration evidence.</p>
+<p><strong>HA-2, Prototype bring-up plan.</strong> Specify the incremental hardware bring-up order (power/safety first per M12/M11, then sensing, then motion, then grasp), with a go/no-go gate per step and the twin as the reference. <em>Deliverable:</em> a bring-up procedure (the first real-hardware step of the lifecycle).</p>
+</section>
+<section class="section"><h2 id="sec-15-software-activities"><span class="secnum">15</span><span class="sectitle">Software Activities</span></h2><p><strong>SWA-1, Integration harness &amp; config management.</strong> Specify the launch/config that composes all nodes (M11) against the twin, with versioned interface definitions and a check that deployed interfaces match the agreed contracts (guards against interface drift). <em>Outcome:</em> reproducible system integration.</p>
+<p><strong>SWA-2, System regression suite.</strong> Specify an end-to-end regression (full mission, all budgets, emergence stress) that every integrated change must pass, with the fidelity rung recorded per check. <em>Outcome:</em> continuous system V&amp;V (hand-off to M14).</p>
+</section>
+<section class="section"><h2 id="sec-16-ros-2-integration"><span class="secnum">16</span><span class="sectitle">ROS 2 Integration</span></h2><p>M13 brings up the full node graph (M11) against the system twin and then on HIL hardware, the point where the real-time architecture, the safety monitor, and every subsystem node run <em>together</em>. It verifies that the composed graph meets end-to-end timing (CEC-01) with shared compute/power (M11/M12) under realistic load, and that the safety architecture behaves correctly in the integrated system (not just in isolation). Interface/config management (SWA-1) guards against the drift that integration exposes. This is where &quot;the software integration&quot; (M11's mastery) meets &quot;the whole machine&quot; (this module's).</p>
+</section>
+<section class="section"><h2 id="sec-17-ai-integration"><span class="secnum">17</span><span class="sectitle">AI Integration</span></h2><p>The twin is where every learned component meets reality-in-simulation and then reality:</p>
+<ul>
+<li><strong>The twin as the system training/validation environment</strong> (CEC-05), perception (M4), the grasp policy (M7/M9), row-following (M10) are trained/validated in the integrated twin, and their sim-to-real transfer is gated by real validation.</li>
+<li><strong>Fidelity governs learned trust too (CEC-06).</strong> A policy validated only on a low-fidelity rung is over-trusted exactly as a physical result would be, the contact rung (CR-03) is where the grasp policy's <em>sim</em> success becomes a trustworthy claim.</li>
+<li><strong>Emergence includes the learned loops.</strong> Integration checks that the learned components, running together with control and under resource contention (M11/M12), still meet their bounds (EI-07) and timing, a system-level check no module made alone.</li>
+</ul>
+<p>The two sim-truth anchors (CEC-05 transfer, CEC-06 fidelity) together make the machine's AI evidence-based.</p>
+</section>
+<section class="section"><h2 id="sec-18-edge-computing-integration"><span class="secnum">18</span><span class="sectitle">Edge Computing Integration</span></h2><p>Integration is where the edge device's resource sharing becomes real: perception, control, navigation, and safety all run on it at once (M6/M11), drawing power and heat (M12). This module verifies, in HIL, under realistic load, that the composed system meets its timing (CEC-01) and power/thermal (M12) budgets <em>together</em>, catching the resource contention that no subsystem predicted alone (a prime emergent effect, EI-13). The no-cloud boundary (CEC-04) means all of this must close on the device; the twin/HIL is how it is verified before the field.</p>
+</section>
+<section class="section"><h2 id="sec-19-fluid-power-integration"><span class="secnum">19</span><span class="sectitle">Fluid Power Integration</span></h2><p>The fluid grasp (M9) meets its hardest test here: the <strong>contact/fluid fidelity rung is the binding one</strong> for the machine's central function, and this module integrates and validates it into the system twin to <strong>close CR-03</strong>. Two points: (1) the whole-mission grasp result (bruise/slip/window across a field of fruit, through lift and swing on a moving platform) is only trustworthy once the contact rung is validated against the M9 bench (SR-V-03), this is where a grasp &quot;success&quot; in sim earns the right to be believed; (2) integration exposes fluid-power couplings no module owned, the pump's power/thermal draw under a full mission (M12), the compliance &lt;-&gt; stability interaction on a moving platform (M9/M10), the grasp-loop timing under system resource contention (M11). Closing CR-03 at the system level is what lets the twin be an evidence source for the grasp in M14/M15.</p>
+</section>
+<section class="section spec"><h2 id="sec-20-interactive-html-components"><span class="secnum">20</span><span class="sectitle">Interactive HTML Components</span></h2><ul>
+<li><strong>W-M13-1, Integration Assembler.</strong> Add subsystems one at a time to a machine diagram; each addition runs an interface check and surfaces any emergent metric change, incremental integration made tangible (EI-13). <em>Goal:</em> Section 6.1 to 6.2.</li>
+<li><strong>W-M13-2, Fidelity-Ladder Explorer.</strong> Pick a decision (reach / stability / grasp-bruise); a slider climbs the fidelity rungs and shows where the decision stabilizes and where it flips, the fidelity-sensitivity idea (CEC-06). <em>Goal:</em> Section 6.4/Section 7.1.</li>
+<li><strong>W-M13-3, Composed-Budget Dashboard.</strong> Toggle subsystems on/off and watch the composed placement 3σ, end-to-end cycle time, and power/thermal move against their limits, budgets holding or emergently breaking (Section 6.5). <em>Goal:</em> system-level budgeting.</li>
+<li><strong>W-M13-4, Reality-Gap / Validation Gate.</strong> For each rung, compare twin prediction vs. (mock) real data against the acceptance tolerance; show CR-03's contact rung passing only after validation (CEC-06). <em>Goal:</em> earn the trust.</li>
+</ul>
+</section>
+<section class="section spec"><h2 id="sec-21-cad-illustrations"><span class="secnum">21</span><span class="sectitle">CAD Illustrations</span></h2><ul>
+<li><strong>CAD-M13-1</strong> The integrated machine: all subsystems on the platform with interfaces annotated (the assembled Signal-to-Action Spine).</li>
+<li><strong>CAD-M13-2</strong> The fidelity ladder as a diagram: rungs from kinematic to field, each with its decision class and validation gate.</li>
+<li><strong>CAD-M13-3</strong> The digital-twin &lt;-&gt; real-machine correspondence with per-rung reality gaps.
+Format per -&gt;Doc J (SVG system/architecture diagrams).</li>
+</ul>
+</section>
+<section class="section spec"><h2 id="sec-22-required-figures"><span class="secnum">22</span><span class="sectitle">Required Figures</span></h2><div class="twrap"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Figure</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F-M13-1</td>
+<td>The integrated machine (all subsystems, interfaces)</td>
+<td>Section 6.1</td>
+</tr>
+<tr>
+<td>F-M13-2</td>
+<td>Incremental vs. big-bang integration (surprise localization)</td>
+<td>Section 6.1/Section 7.3 (EI-13)</td>
+</tr>
+<tr>
+<td>F-M13-3</td>
+<td><strong>The Simulation-First Fidelity Ladder (rungs, decisions, validation gates)</strong></td>
+<td>Section 6.4 (central, CEC-06)</td>
+</tr>
+<tr>
+<td>F-M13-4</td>
+<td>Fidelity-decision sensitivity (where a decision stabilizes)</td>
+<td>Section 7.1</td>
+</tr>
+<tr>
+<td>F-M13-5</td>
+<td>Composed system budgets (placement, cycle-time, power) vs. limits</td>
+<td>Section 6.5/Section 7.2</td>
+</tr>
+<tr>
+<td>F-M13-6</td>
+<td>Twin&lt;-&gt;real correspondence &amp; per-rung reality gap (CR-03 closed)</td>
+<td>Section 6.7</td>
+</tr>
+<tr>
+<td>F-M13-7</td>
+<td>Emergent coupling map (resource/timing/dynamic)</td>
+<td>Section 6.6</td>
+</tr>
+</tbody>
+</table></div>
+</section>
+<section class="section spec"><h2 id="sec-23-required-animations"><span class="secnum">23</span><span class="sectitle">Required Animations</span></h2><ul>
+<li><strong>AN-M13-1</strong> Subsystems added one at a time; on a certain addition an emergent overrun appears and is localized to that interface, incremental integration catching the surprise (EI-13).</li>
+<li><strong>AN-M13-2</strong> Climbing the fidelity ladder for a grasp: at low fidelity it &quot;succeeds,&quot; at contact fidelity it bruises, the fidelity-sensitivity of the decision and why CR-03 matters (CEC-06).</li>
+<li><strong>AN-M13-3</strong> The twin prediction and real data converging as a rung is validated, the acceptance gate turning green.</li>
+</ul>
+</section>
+<section class="section lab"><h2 id="sec-24-laboratory"><span class="secnum">24</span><span class="sectitle">Laboratory</span></h2><p><strong>Lab M13, Integrating the Machine and Climbing the Fidelity Ladder</strong></p>
+<ul>
+<li><strong>Objectives.</strong> (1) Integrate the subsystems incrementally in the twin and verify interfaces; (2) run the end-to-end mission and verify composed budgets; (3) apply the fidelity ladder, match fidelity to three decisions and validate the binding rung; (4) close CR-03 by validating the contact rung; (5) hunt emergent behavior.</li>
+<li><strong>Equipment.</strong> The full digital twin (all fidelity rungs) + SIL/HIL harness; all subsystem models (M1 to M12); the M9 contact/bench validation data; notebook. <strong>Safety:</strong> SIL/HIL; any prototype bring-up follows the power/safety-first sequence (M12/M11).</li>
+<li><strong>Procedure.</strong>
+<ol>
+<li>Compose subsystems two-at-a-time; verify each interface; run the full harvest cycle once integrated (Section 6.1 to 6.2, SA-1).</li>
+<li>Assemble the system placement budget and end-to-end cycle time with shared resources; test against the capture tolerance and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi mathvariant="normal">/</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">d/v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span></span></span></span> (Section 6.5, Section 7.2, SR-V-01); note any emergent overrun.</li>
+<li>For reach, stability, and grasp-bruise, find the fidelity level at which each stabilizes (Section 7.1); validate the binding rung against real/bench data (CEC-06, SR-V-02).</li>
+<li>Validate the contact/fluid rung against the M9 bench; confirm whole-mission grasp results are trustworthy (close CR-03, SR-V-03).</li>
+<li>Stress the integrated system (contention, arm-swing on slope) and document any emergent behavior (Section 6.6, SR-V-04, EI-13).</li>
+</ol>
+</li>
+<li><strong>Data collection.</strong> Integration log with interface checks; composed-budget results; fidelity-sensitivity per decision; contact-rung validation (twin vs. bench); emergent-behavior findings.</li>
+<li><strong>Analysis.</strong> Do the composed budgets hold, or did integration reveal an overrun? Which decisions are fidelity-sensitive? Is the contact rung validated (CR-03 closed)? What emergent behavior appeared, and which subsystems coupled?</li>
+<li><strong>Discussion.</strong> Why is an unvalidated twin a &quot;confident liar&quot;? Why match fidelity to the decision (CEC-06)? Why integrate incrementally (EI-13)? What can the validated twin now be trusted to prove (-&gt;M14/M15)?</li>
+<li><strong>Deliverables.</strong> A 5 to 6 page report: integration log, composed-budget verification, fidelity-ladder study, CR-03 contact-rung validation, emergent-behavior findings.</li>
+<li><strong>Rubric (100 pts).</strong> Incremental integration &amp; interfaces (16); composed-budget verification (18); fidelity-ladder application (22, CEC-06); CR-03 contact-rung validation (22); emergent-behavior hunt (12, EI-13); communication (10). <em>Graduate band adds:</em> the interaction-count analysis of incremental vs. big-bang (Section 7.3 grad) and a cited source.</li>
+<li><strong>Expected results.</strong> An integrated machine that runs the full mission; composed budgets that mostly hold but reveal at least one emergent tightness (contention or coupling); a clear demonstration that grasp-bruise is fidelity-sensitive (needs the contact rung) while reach is not; a validated contact rung closing CR-03; and at least one genuine integration surprise, the empirical case for EI-13 and for building the twin.</li>
+</ul>
+</section>
+<section class="section hw"><h2 id="sec-25-homework"><span class="secnum">25</span><span class="sectitle">Homework</span></h2><p>Tiered: all do 1 to 4; graduate add 5 to 6.</p>
+<ol>
+<li><strong>Fidelity sensitivity.</strong> For three given decisions, state the lowest fidelity rung at which each stabilizes and justify; identify which is fidelity-sensitive to the contact rung.</li>
+<li><strong>Composed budget.</strong> Given per-subsystem placement contributions and stage times, assemble the system placement 3σ and cycle time; test against the capture tolerance and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi mathvariant="normal">/</mi><mi>v</mi></mrow><annotation encoding="application/x-tex">d/v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span></span></span></span>; identify any emergent overrun.</li>
+<li><strong>Rung validation.</strong> Given twin predictions and real data for a rung, compute the reality gap and decide accept/retune against a tolerance (CEC-06).</li>
+<li><strong>Integration strategy.</strong> Explain how incremental integration localizes a surprise that big-bang would not; give a SIM2FIELD example of an emergent coupling.</li>
+<li><strong>(Grad) Interaction analysis.</strong> Compare the interactions exposed by incremental vs. big-bang integration; discuss which dynamic couplings remain hidden even under incremental interface testing and how to surface them.</li>
+<li><strong>(Grad) Evidence argument.</strong> Argue how a validated twin can serve as verification evidence for a requirement; state precisely what must be true (fidelity rung, validation, tolerance) for the evidence to be admissible (-&gt;M14/M15).</li>
+</ol>
+</section>
+<section class="section quiz"><h2 id="sec-26-quiz"><span class="secnum">26</span><span class="sectitle">Quiz</span></h2><ol>
+<li><strong>(MC)</strong> Integration failures are dangerous mainly because: (a) subsystems are weak; (b) each subsystem passes alone but the machine fails together; (c) the twin is slow; (d) budgets are large.</li>
+<li><strong>(MC)</strong> The right twin fidelity for a decision is: (a) always the highest; (b) the lowest at which the decision stabilizes (validated); (c) always the lowest; (d) irrelevant.</li>
+<li><strong>(MC)</strong> CEC-06 (Fidelity Ladder) differs from CEC-05 (Sim-to-Real Pipeline) in that CEC-06: (a) is only for learning; (b) governs fidelity/validation of any model-based decision, not just learned transfer; (c) skips validation; (d) is a process, not a tool.</li>
+<li><strong>(MC)</strong> An unvalidated twin is best described as: (a) trustworthy; (b) a confident liar; (c) high-fidelity; (d) evidence.</li>
+<li><strong>(Short)</strong> State EI-13 and one SIM2FIELD example.</li>
+<li><strong>(Short)</strong> Name the fidelity rungs and which is binding for &quot;will the grasp bruise?&quot;</li>
+<li><strong>(Design)</strong> Why must the contact rung be validated to close CR-03?</li>
+<li><strong>(Design)</strong> Why integrate incrementally rather than big-bang?</li>
+<li><strong>(Critical thinking)</strong> How can composed budgets break even when each allocation was met?</li>
+<li><strong>(Critical thinking)</strong> Why are CEC-05 and CEC-06 both needed for a simulation-first program?</li>
+</ol>
+<details class="answers"><summary>Answer key (instructor)</summary><ol class="keylist"><li><span class="qn">1.</span> b</li><li><span class="qn">2.</span> b</li><li><span class="qn">3.</span> b</li><li><span class="qn">4.</span> b</li><li><span class="qn">5.</span> Integrate early and often; the surprises live between the modules, e.g., arm-swing on a slope eroding stability, a coupling no single module modeled, found by integrating in the twin.</li><li><span class="qn">6.</span> Kinematic -&gt; dynamic -&gt; contact/fluid -&gt; sensor-in-loop -&gt; HIL -&gt; prototype/field; the contact/fluid rung (CR-03) is binding for grasp-bruise.</li><li><span class="qn">7.</span> Grasp results (bruise/slip/window) are fidelity-sensitive to contact physics; only a validated contact rung makes system grasp results trustworthy as evidence.</li><li><span class="qn">8.</span> It localizes each surprise to the subsystem/interface just added, an O(n) debug path vs. O(n²) interaction search.</li><li><span class="qn">9.</span> Shared resources (compute/power) and dynamic coupling create emergent effects the per-subsystem allocations didn't capture.</li><li><span class="qn">10.</span> CEC-05 answers &quot;will this learned behavior transfer?&quot;; CEC-06 answers &quot;can I trust this simulation for this decision at all?&quot;, together they make sim results evidence, not hope.</li></ol></details></section>
+<section class="section challenge"><h2 id="sec-27-challenge-problems"><span class="secnum">27</span><span class="sectitle">Challenge Problems</span></h2><ul>
+<li><strong>CP-M13-A, The system verification argument.</strong> For the end-to-end harvest mission, construct the argument that the integrated machine meets its top requirements, citing which twin rung (validated to what tolerance) supports each claim and where hardware evidence is still required. (Directly builds M14's V&amp;V case.)</li>
+<li><strong>CP-M13-B, Fidelity allocation under budget.</strong> Given a fixed fidelity-development budget, allocate it across the rungs to maximize trustworthy decision coverage; identify which decisions you must leave to HIL/hardware because sim fidelity is infeasible. (Operationalizes CEC-06.)</li>
+<li><strong>CP-M13-C, Emergent-coupling case study.</strong> Pick one cross-subsystem coupling (arm-swing&lt;-&gt;stability, compliance&lt;-&gt;placement, or compute&lt;-&gt;timing) and design the integrated test that would reveal it, the metric that would flag it, and the design change if it fails. (Feeds M14/M15.)</li>
+</ul>
+</section>
+<section class="section"><h2 id="sec-engineering-design-review" class="unnum">Engineering Design Review</h2><p><em>Not graded. The questions a review board would ask; argue with evidence.</em></p>
+<ol>
+<li><strong>Assumptions.</strong> Your integration verifies budgets &quot;compose.&quot; What are you assuming about independence of the contributors (placement terms, loop timings, loads)? Where might they be correlated so the composed budget is worse than the RSS/sum suggests?</li>
+<li><strong>Tradeoffs.</strong> You matched fidelity to decisions rather than building uniform high fidelity. Defend that to a reviewer who wants &quot;the most realistic twin possible.&quot; How do you know a rung is high-enough fidelity for a decision, and what if your sensitivity judgment is wrong?</li>
+<li><strong>Risk.</strong> You closed CR-03 by validating the contact rung against a bench. A reviewer notes the bench is not the field (variable fruit, dust, wear). How far does bench validation transfer to field grasp trustworthiness, and what residual gap remains (CEC-05/CEC-06)?</li>
+<li><strong>Verification.</strong> You will cite the validated twin as evidence in M14/M15. What makes a twin result <em>admissible</em> evidence versus an optimistic simulation? State the fidelity/validation/tolerance criteria a reviewer should demand.</li>
+<li><strong>Subsystem interaction.</strong> Integration revealed emergent behavior. Pick the most consequential coupling you found; who owns it (no single module did), and how is the fix verified not to break another subsystem's budget?</li>
+<li><strong>Simulation-first honesty.</strong> The whole course bet on simulation-first. Where is that bet weakest, which decisions can the twin <em>not</em> yet be trusted to make, forcing hardware, and does your plan acknowledge those honestly rather than over-claiming twin coverage?</li>
+</ol>
+</section>
+<section class="section instructor"><details class="instructor-wrap"><summary>28. Instructor Notes (instructor / author material, not part of the student reading)</summary><ul>
+<li><strong>Timing.</strong> Section 6.3 to 6.4 (the twin and the Fidelity Ladder) and Section 6.5 to 6.7 (composed budgets, emergence, closing CR-03) are the core (~3.5 h); the CEC-06 designation (Section 11.3) and EI-13 are the peaks. Trade studies (Section 11) and the integration/fidelity activities (Section 12, Section 13) form an interactive block (~1.5 h). Lab M13 is a 3 h session and is the course's integrative climax.</li>
+<li><strong>Common misconceptions.</strong> (1) &quot;Higher fidelity is always better&quot;, match fidelity to the decision (CEC-06). (2) &quot;The twin is truth&quot;, an unvalidated twin is a confident liar. (3) &quot;Integration is assembly&quot;, it is where emergence appears (EI-13). (4) Conflating CEC-05 and CEC-06, transfer of learning vs. fidelity of any decision.</li>
+<li><strong>On the CEC-06 designation.</strong> This is the first new CEC since M7, and the restraint of M8 to M12 is <em>why</em> it is credible. Teach the three tests (recurrence, analytical-not-procedural, distinct-from-CEC-05) explicitly; students should be able to argue the promotion, not just accept it. Emphasize the paired synthesis note: CEC-05 (will learning transfer?) + CEC-06 (can I trust this sim decision?) are the twin pillars of simulation-first rigor.</li>
+<li><strong>On EI-13.</strong> Teach it as the reason integration is a distinct discipline: the surprises are between the modules, and the twin makes finding them cheap.</li>
+<li><strong>Where to push graduate students.</strong> The interaction analysis (HW5), the evidence-admissibility argument (HW6, CP-M13-A), the fidelity-allocation optimization (CP-M13-B).</li>
+<li><strong>Thread to keep visible.</strong> Close by naming hand-offs: the integrated machine + validated twin evidence source -&gt; M14 (V&amp;V) and M15 (safety case); the bring-up plan -&gt; prototype; the whole system -&gt; M17 (capstone).</li>
+</ul>
+</details></section>
+<section class="section"><h2 id="sec-29-research-frontiers"><span class="secnum">29</span><span class="sectitle">Research Frontiers</span></h2><ul>
+<li><strong>Landmark grounding.</strong> Systems-engineering integration and verification references; digital-twin references (definition, roles, validation); model-validation and verification-and-validation (V&amp;V) references. <em>(Consult current editions; entries in the reference set, not reproduced here.)</em></li>
+<li><strong>Recent advances (survey current literature [VERIFY@PUB]).</strong> Digital twins for robotics with validated fidelity and uncertainty quantification; differentiable/identified contact and fluid models for high-fidelity twins (closing CR-03-type gaps); credibility assessment and V&amp;V frameworks for simulation-based evidence; continuous integration/continuous verification for robotic systems; sim-to-real and real-to-sim co-calibration.</li>
+<li><strong>Open problems.</strong> Quantifying and certifying twin fidelity for a given decision; validated high-fidelity contact/fluid simulation for delicate manipulation; admissible simulation-based evidence for safety cases; detecting emergent behavior before deployment.</li>
+<li><strong>Suggested thesis directions.</strong> (1) A fidelity-aware digital twin that reports, per decision, whether it is trustworthy and to what validated tolerance. (2) A validated differentiable contact/fluid twin that closes the grasp reality gap and provides admissible grasp evidence. (3) Automated emergent-behavior discovery through incremental integrated stress testing.</li>
+</ul>
+</section>
+<section class="section"><h2 id="sec-30-references"><span class="secnum">30</span><span class="sectitle">References</span></h2><p><em>Cited by role; consult current editions. No copyrighted text is reproduced. Full entries in <code>references/bibliography.md</code> [-&gt;Doc H].</em></p>
+<ul>
+<li>Systems-engineering integration / V&amp;V references, incremental integration, interface verification (Section 6.1 to 6.2, Section 6.5).</li>
+<li>Digital-twin references, definition, roles, validation, evidence (Section 6.3 to 6.4; CEC-06).</li>
+<li>Model-validation / credibility references, per-rung reality gap, acceptance, admissible evidence (Section 6.4, Section 7.2).</li>
+<li>Sim-to-real / real-to-sim co-calibration references, closing fidelity gaps (Section 6.7; CR-03/CEC-05).</li>
+<li>SIM2FIELD governing documents, <code>PHASE-0-FOUNDATION.md</code>, <code>PHASE-1-CURRICULUM-ARCHITECTURE.md</code>, <code>curriculum/_core-concepts.md</code>, <strong>Modules 1 to 12</strong>, and (forthcoming) Doc B, Doc F, Doc G.</li>
+</ul>
+</section>
+<section class="section instructor"><details class="instructor-wrap"><summary>Concise quality summary (honest self-assessment) (instructor / author material, not part of the student reading)</summary><p><strong>Strengths.</strong> This integration keystone composes the whole machine and masters the <strong>digital twin</strong> as the integration environment and evidence source, the point where the course's simulation-first bet is cashed at system scale. Its central analytical contribution is the <strong>designation of CEC-06 (the Simulation-First Fidelity Ladder)</strong> at its genuine mastery point: matching fidelity to the decision, finding where fidelity is binding, and validating each rung against reality. The promotion is credible precisely because it follows five modules (M8 to M12) that each correctly <em>declined</em> a CEC, it is a scheduled, well-tested watchlist candidate, argued against three explicit tests (recurrence, analytical-not-procedural, distinct-from-CEC-05), and paired with CEC-05 as the twin pillars of simulation-first rigor. The module <strong>closes CR-03</strong> at the system level by integrating and validating the contact/fluid rung, verifies the course's budgets <strong>composed</strong> (placement, cycle-time, power/thermal), and hunts the <strong>emergent behavior</strong> that no module owned, captured in its Engineering Insight <strong>EI-13 (Integrate Early and Often)</strong>. All 30 sections present; the Engineering Design Review is included and (in Q6) turns the simulation-first bet's honesty on itself; one lightweight synthesis note (CEC-05 + CEC-06); consistency with all frozen modules maintained.</p>
+<p><strong>Known weaknesses / items for your review.</strong></p>
+<ol>
+<li><strong>New CEC designation, flagged for your confirmation.</strong> CEC-06 is the first new anchor since M7. I judged it qualifies at the scheduled evaluation point (it is the operative tool behind every &quot;verify in the twin&quot; the course has written) and brings the set to 6 CECs, within the ~6 to 10 target. If you'd prefer it remain an Engineering Insight / methodology rather than a CEC, that is a reversible change, I flag the promotion rather than treat it as automatic.</li>
+<li><strong>CR-03 is closed against a bench, not the field.</strong> The contact rung is validated to bench data; field-representative grasp trustworthiness (variable fruit, dust, wear) carries a residual gap (CEC-05/CEC-06), honestly noted.</li>
+<li><strong>Composed-budget independence is assumed.</strong> The RSS/sum composition assumes contributors are roughly independent; correlated errors or couplings could make the true system budget worse, surfaced in the Design Review, to be pinned down in M14.</li>
+<li><strong>Twin-as-evidence is specified, not yet exercised.</strong> The validated twin becomes the evidence source for M14/M15; its admissibility criteria are stated here but applied there. Much rides on Doc G (twin fidelity) being authored.</li>
+</ol>
+<p>I have not scored this against the 9.5 bar, that judgment is yours. Items 2 to 4 close chiefly by authoring Doc G and by reaching M14/M15; item 1 is a decision for you.</p>
+<p><strong>END OF MODULE 13, STOP. Awaiting your review before freezing Module 13 or proceeding to Module 14.</strong></p>
+</details></section>
+    <footer>Rendered from <b>MODULE-13.md</b> by Module Rendering Pipeline v1.3. Author / production edition. The module is the single source of truth.<br>
+    Includes production specifications, figure placeholders, governance and instructor notes, and the answer key.<br>
+    SIM2FIELD / Autonomous Watermelon Harvesting Robotics</footer>
+  </div></main>
+</div>
+<script>
+(function(){var links=[].slice.call(document.querySelectorAll('.toc a'));var map={};
+ links.forEach(function(a){map[a.getAttribute('href').slice(1)]=a;});
+ if(!('IntersectionObserver' in window))return;
+ var io=new IntersectionObserver(function(es){es.forEach(function(e){var id=e.target.id;
+   if(e.isIntersecting&&map[id]){links.forEach(function(l){l.classList.remove('active');});map[id].classList.add('active');map[id].scrollIntoView({block:'nearest'});}});},
+   {rootMargin:'-12% 0px -78% 0px'});
+ document.querySelectorAll('.section h2[id]').forEach(function(h){io.observe(h);});})();
+</script>
+</body></html>

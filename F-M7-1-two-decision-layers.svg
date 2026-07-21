@@ -1,0 +1,21 @@
+<svg viewBox="0 0 760 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two decision layers: a discrete auditable task layer (the mission FSM choosing which fruit and whether to attempt) sits above a continuous, possibly learned action layer (the grasp policy choosing how to grasp), separated so the sequencing logic can be verified independently of the opaque policy." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Two decision layers in Decide</text>
+<rect x="40" y="48" width="680" height="66" rx="9" fill="var(--surface)" stroke="var(--info)" stroke-width="1.5"/>
+<text x="56" y="68" font-size="10" fill="var(--info)" font-weight="700">TASK LAYER  (mission FSM)</text>
+<text x="56" y="84" font-size="7.6" fill="var(--text-secondary)">which fruit, what order, whether to attempt</text>
+<text x="56" y="98" font-size="7.4" fill="var(--text-muted)">discrete, auditable logic - verifiable</text>
+<rect x="540" y="58" width="168" height="46" rx="6" fill="var(--surface-2)" stroke="var(--info)" stroke-opacity="0.5"/>
+<text x="624" y="76" font-size="7" fill="var(--info)" font-weight="anc=middle">rate: event / low</text>
+<text x="624" y="90" font-size="7" fill="var(--info)" font-weight="anc=middle">verifiable: yes</text>
+<line x1="380" y1="114" x2="380" y2="140" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#a)"/>
+<text x="388" y="131" font-size="7.2" fill="var(--text-muted)">chosen fruit -> attempt</text>
+<rect x="40" y="142" width="680" height="66" rx="9" fill="var(--surface)" stroke="var(--accent-2)" stroke-width="1.5"/>
+<text x="56" y="162" font-size="10" fill="var(--accent-2)" font-weight="700">ACTION LAYER  (grasp policy)</text>
+<text x="56" y="178" font-size="7.6" fill="var(--text-secondary)">how to grasp a chosen fruit (approach, contact, force)</text>
+<text x="56" y="192" font-size="7.4" fill="var(--text-muted)">continuous, possibly learned policy - opaque</text>
+<rect x="540" y="152" width="168" height="46" rx="6" fill="var(--surface-2)" stroke="var(--accent-2)" stroke-opacity="0.5"/>
+<text x="624" y="170" font-size="7" fill="var(--accent-2)" font-weight="anc=middle">rate: continuous</text>
+<text x="624" y="184" font-size="7" fill="var(--accent-2)" font-weight="anc=middle">verifiable: hard</text>
+<text x="20" y="232" font-size="8" fill="var(--text-muted)">Separated by rate and verifiability: keeping them distinct lets the machine verify the sequencing logic independently of the opaque grasp policy. Section 6.1.</text>
+</svg>

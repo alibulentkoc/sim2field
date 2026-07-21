@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0e120d">
+<title>The No-Cloud Edge Boundary - Worked Example (M6 / CEC-04)</title>
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<style>
+  /* ================= THEME DEFINITION - the ONLY place raw color values live ================= */
+  :root{
+    color-scheme: dark;
+    --bg:#0e120d; --surface:#161c14; --surface-2:#0b0e0a; --surface-3:#12160f;
+    --border:#2b3527; --border-strong:#3a4633; --grid-line:#1c231a;
+    --text-primary:#eef2e6; --text-secondary:#c8cfbe; --text-muted:#adb4a2;
+    --text-lede:#c9d0bf; --text-cons:#d4dbc9; --text-on-accent:#0e120d;
+    --accent:#9bcf3b; --accent-dim:#86ba35; --accent-strong:#6f9a2c;
+    --danger:#f0556a; --danger-text:#f697a4; --danger-dim:#b93b4c;
+    --warn:#e0a03b; --info:#6fb0d9; --accent-2:#b98bd9; --marker:#ffffff;
+    /* latency-stage palette */
+    --stage-detect:var(--info); --stage-localize:var(--accent); --stage-decide:#c9e06a;
+    --stage-control:var(--warn); --stage-network:var(--danger);
+    --tint-tail:rgba(240,85,106,.5);
+    /* tints */
+    --tint-accent:rgba(155,207,59,.07); --tint-accent-soft:rgba(155,207,59,.05); --tint-hero:rgba(155,207,59,.06);
+    --tint-danger:rgba(240,85,106,.08); --tint-warn:rgba(224,160,59,.08);
+    --status-ok-text:#d0d7c6; --status-warn-text:#eed9b4; --status-danger-text:#f3ccd2;
+    --font-sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --font-display:'Space Grotesk',var(--font-sans);
+  }
+  /* ========================================================================================== */
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{background:var(--bg); color:var(--text-primary); -webkit-text-size-adjust:100%; text-size-adjust:100%; scroll-behavior:smooth}
+  body{background:var(--bg); color:var(--text-primary); font-family:var(--font-sans);
+    line-height:1.7; -webkit-font-smoothing:antialiased; padding:0 0 6rem; letter-spacing:.002em}
+  .wrap{max-width:820px; margin:0 auto; padding:0 1.6rem; background:var(--bg); color:var(--text-primary)}
+  code,.mono,.num{font-family:var(--font-mono); font-variant-numeric:tabular-nums}
+  a{color:var(--accent)}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+  .katex{font-size:1.06em}
+  .katex-display{margin:0}
+  .eq{background:var(--surface-3); color:var(--text-primary); border:1px solid var(--border); border-radius:10px;
+    padding:1.15rem 1.3rem; margin:1.15rem 0; overflow-x:auto; overflow-y:hidden}
+  .eq .katex-display{margin:0}
+
+  header{background:var(--bg); color:var(--text-primary); border-bottom:1px solid var(--border); padding:3.6rem 0 2.6rem; margin-bottom:2.6rem}
+  .eyebrow{font-family:var(--font-mono); font-size:.73rem; font-weight:500; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--accent); margin-bottom:1.15rem; display:flex; gap:.85rem; flex-wrap:wrap}
+  .eyebrow span{color:var(--text-muted)}
+  h1{font-family:var(--font-display); font-weight:600; font-size:clamp(2rem,5vw,3rem);
+    line-height:1.05; letter-spacing:-.021em; margin-bottom:1.05rem; color:var(--text-primary)}
+  h1 em{font-style:normal; color:var(--accent)}
+  .lede{font-size:1.08rem; color:var(--text-lede); max-width:64ch}
+
+  .hero{position:relative; margin:2.4rem 0 .6rem; padding:2.2rem 1.6rem 1.9rem; isolation:isolate}
+  .hero-bg{position:absolute; inset:0; width:100%; height:100%; z-index:-1}
+  .hero-inner{position:relative; text-align:center}
+  .hero-tab{display:inline-block; font-family:var(--font-mono); font-size:.66rem; font-weight:500; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--accent); background:var(--bg); padding:.28rem .7rem;
+    border:1px solid var(--accent-strong); border-radius:5px; margin-bottom:1.2rem}
+  .hero-eq{margin:.4rem 0 1rem}
+  .hero-eq .katex{font-size:1.3em}
+  .hero-sub{font-size:.92rem; color:var(--text-muted); max-width:54ch; margin:0 auto}
+
+  section{margin-top:3.4rem}
+  .kicker{font-family:var(--font-mono); font-size:.71rem; font-weight:500; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--accent-dim); margin-bottom:.7rem}
+  h2{font-family:var(--font-display); font-weight:600; font-size:1.55rem; letter-spacing:-.012em; margin-bottom:1rem; color:var(--text-primary)}
+  p{margin-bottom:1.05rem; color:var(--text-secondary)} strong{color:var(--text-primary); font-weight:600}
+  .rind-t{color:var(--accent)} .flesh-t{color:var(--danger-text)} .amber-t{color:var(--warn)} .water-t{color:var(--info)}
+  .note{font-size:.86rem; color:var(--text-muted)}
+
+  .dstep{margin:2rem 0; padding-left:1.5rem; border-left:2px solid var(--border); position:relative}
+  .dstep::before{content:attr(data-n); position:absolute; left:-.9rem; top:-.1rem;
+    font-family:var(--font-mono); font-size:.7rem; font-weight:600; color:var(--text-on-accent);
+    background:var(--accent-strong); width:1.6rem; height:1.6rem; border-radius:50%; display:grid; place-items:center}
+  .d-state{font-family:var(--font-display); font-weight:500; font-size:1.12rem; color:var(--text-primary); margin-bottom:.2rem; line-height:1.4}
+  .d-exp{color:var(--text-secondary); margin:.9rem 0}
+  .d-cons{display:flex; gap:.7rem; align-items:flex-start; margin-top:.9rem; padding:.75rem .95rem;
+    background:var(--tint-accent-soft); border:1px solid var(--accent-strong); border-radius:8px}
+  .d-cons .lab{font-family:var(--font-mono); font-size:.63rem; font-weight:500; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--accent); flex:none; margin-top:.18rem}
+  .d-cons p{margin:0; color:var(--text-cons); font-size:.94rem}
+
+  .instrument{background:var(--surface); color:var(--text-secondary); border:1px solid var(--border); border-radius:14px; padding:1.7rem; margin-top:1.3rem}
+  .inst-head{display:flex; justify-content:space-between; align-items:baseline; gap:1rem; flex-wrap:wrap; margin-bottom:1.3rem}
+  .inst-title{font-family:var(--font-display); font-weight:600; font-size:1.05rem; color:var(--text-primary)}
+  .reset{font-family:var(--font-mono); font-size:.75rem; font-weight:500; color:var(--accent); background:transparent;
+    border:1px solid var(--accent-strong); border-radius:6px; padding:.5rem .85rem; cursor:pointer; transition:.15s}
+  .reset:hover{background:var(--accent-strong); color:var(--text-on-accent)}
+  .noscript-note{background:var(--tint-warn); color:var(--status-warn-text); border:1px solid var(--warn); border-radius:8px;
+    padding:.8rem 1rem; font-size:.86rem; margin-bottom:1rem}
+
+  .controls{display:flex; gap:1.4rem; flex-wrap:wrap; margin-bottom:1.3rem}
+  .ctl-group{display:flex; flex-direction:column; gap:.4rem}
+  .ctl-group .lbl{font-family:var(--font-mono); font-size:.68rem; font-weight:500; letter-spacing:.05em; color:var(--text-muted)}
+  .seg{display:inline-flex; border:1px solid var(--border); border-radius:8px; overflow:hidden}
+  .seg button{font-family:var(--font-mono); font-size:.8rem; padding:.5rem .85rem; background:transparent; color:var(--text-secondary); border:none; cursor:pointer; transition:.15s}
+  .seg button+button{border-left:1px solid var(--border)}
+  .seg button.on{background:var(--accent-strong); color:var(--text-on-accent); font-weight:600}
+  .seg button.on.warn{background:var(--danger-dim); color:var(--marker)}
+  .seg button:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+  .barwrap{margin:1rem 0 .4rem}
+  .barlab{display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:.66rem; font-weight:500; color:var(--text-muted); margin-bottom:.4rem}
+  .track{position:relative; height:52px; background:var(--surface-2); border:1px solid var(--border); border-radius:8px; display:flex; overflow:visible}
+  .lseg{height:100%; position:relative; transition:width .35s cubic-bezier(.4,0,.2,1); min-width:0;
+    display:flex; align-items:center; justify-content:center; border-right:1px solid var(--surface-2)}
+  .lseg span{font-family:var(--font-mono); font-size:.64rem; color:var(--text-on-accent); font-weight:600; white-space:nowrap; opacity:0}
+  .lseg.wide span{opacity:1}
+  .lseg.tail{background:repeating-linear-gradient(45deg,var(--tint-tail),var(--tint-tail) 7px,transparent 7px,transparent 14px)}
+  .marker-line{position:absolute; top:-4px; bottom:-4px; width:2px; z-index:5}
+  .marker-line .tag{position:absolute; top:-18px; transform:translateX(-50%); font-family:var(--font-mono); font-size:.62rem; font-weight:500; white-space:nowrap}
+  .m-budget{background:var(--accent-strong)} .m-budget .tag{color:var(--accent)}
+  .m-ctrl{background:var(--warn)} .m-ctrl .tag{color:var(--warn)}
+  .readbar{display:grid; grid-template-columns:repeat(4,1fr); gap:.7rem; margin:1.3rem 0 .3rem}
+  .ro{background:var(--surface-2); color:var(--text-secondary); border:1px solid var(--border); border-radius:8px; padding:.7rem .8rem}
+  .ro .lab{font-family:var(--font-mono); font-size:.6rem; font-weight:500; letter-spacing:.05em; text-transform:uppercase; color:var(--text-muted); margin-bottom:.3rem}
+  .ro .val{font-family:var(--font-mono); font-size:1.1rem; font-weight:600; color:var(--text-primary)}
+  .ro .val small{font-size:.58rem; color:var(--text-muted); font-weight:400}
+  .ro .val.bad{color:var(--danger-text)} .ro .val.ok{color:var(--accent)}
+  .status{padding:.9rem 1rem; border-radius:8px; border:1px solid; font-family:var(--font-mono); font-size:.74rem; font-weight:500; line-height:1.55; margin-top:1rem}
+  .status.ok{border-color:var(--accent-strong); background:var(--tint-accent); color:var(--status-ok-text)}
+  .status.warn{border-color:var(--warn); background:var(--tint-warn); color:var(--status-warn-text)}
+  .status.bad{border-color:var(--danger-dim); background:var(--tint-danger); color:var(--status-danger-text)}
+  .status b{color:var(--text-primary)}
+  .legend{display:flex; gap:1rem; flex-wrap:wrap; font-family:var(--font-mono); font-size:.66rem; font-weight:500; color:var(--text-muted); margin-top:.9rem}
+  .legend i{width:14px; height:10px; border-radius:2px; display:inline-block; vertical-align:middle; margin-right:.35rem}
+
+  .insight{border:1px solid var(--accent-strong); border-radius:12px; padding:1.4rem 1.6rem; margin-top:1.6rem;
+    background:linear-gradient(180deg,var(--tint-hero),transparent)}
+  .insight .tag{font-family:var(--font-mono); font-size:.72rem; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin-bottom:.55rem}
+  .insight p{color:var(--text-cons); margin-bottom:0} .insight strong{color:var(--accent)}
+  .takeaway{border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:12px; padding:1.5rem 1.7rem; background:var(--surface)}
+  .tk-list{list-style:none}
+  .tk-list li{display:flex; gap:.85rem; align-items:flex-start; padding:.6rem 0; color:var(--text-secondary); border-bottom:1px solid var(--border)}
+  .tk-list li:last-child{border-bottom:none; padding-top:.95rem}
+  .tk-mark{font-family:var(--font-mono); color:var(--text-muted); flex:none; margin-top:.1rem}
+  .tk-mark.tk-hot{color:var(--accent)} .tk-list strong{color:var(--text-primary)}
+  footer{margin-top:4rem; padding-top:1.6rem; border-top:1px solid var(--border);
+    font-family:var(--font-mono); font-size:.74rem; color:var(--text-muted); line-height:1.85}
+
+  @media(max-width:640px){ .readbar{grid-template-columns:1fr 1fr} }
+  @media(prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <header>
+    <div class="eyebrow">Worked Example <span>/</span> Module 6 <span>/</span> CEC-04 <span>/</span> The No-Cloud Edge Boundary</div>
+    <h1>The cloud isn't slow. It's <em>unbounded</em> - and that's worse.</h1>
+    <p class="lede">A harvester's control loop must close in a guaranteed 20 milliseconds, worst case. Not on average - worst case, every time, or the grasp acts on stale information. That single requirement decides where the computer lives. Here is the latency budget, worked on the target device, and the reason the cloud is on the wrong side of a hard line.</p>
+
+    <div class="hero">
+      <svg class="hero-bg" viewBox="0 0 800 230" preserveAspectRatio="none" role="presentation" aria-hidden="true" focusable="false">
+        <defs>
+          <pattern id="grid" width="26" height="26" patternUnits="userSpaceOnUse">
+            <path d="M26 0H0V26" fill="none" style="stroke:var(--grid-line)" stroke-width="1" vector-effect="non-scaling-stroke"/>
+          </pattern>
+        </defs>
+        <rect x="6" y="6" width="788" height="218" rx="12" style="fill:var(--surface-3)"/>
+        <rect x="6" y="6" width="788" height="218" rx="12" fill="url(#grid)" opacity="0.5"/>
+        <rect x="6" y="6" width="788" height="218" rx="12" fill="none" style="stroke:var(--border)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M20 6V22 M6 20H22" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M780 6V22 M778 20H794" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M20 224V208 M6 210H22" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M780 224V208 M778 210H794" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+      </svg>
+      <div class="hero-inner">
+        <div class="hero-tab">Governing relation</div>
+        <div class="hero-eq" role="math" aria-label="T compute equals t detect plus t localize plus t decide plus t control, less than or equal to T budget">\[ T_{\mathrm{compute}} = t_{\mathrm{detect}} + t_{\mathrm{localize}} + t_{\mathrm{decide}} + t_{\mathrm{control}} \;\le\; T_{\mathrm{budget}} \]</div>
+        <div class="hero-sub">Every stage must fit inside the compute share of the cycle - measured on the target, with a bounded worst case.</div>
+      </div>
+    </div>
+  </header>
+
+  <section id="derivation" aria-labelledby="deriv-h">
+    <div class="kicker">Full derivation - closing the budget on the target</div>
+    <h2 id="deriv-h">How the budget is closed</h2>
+    <p>Perception and control share a slice of the cycle time (CEC-01). The compute job is to fit every stage inside it - measured on the actual device, not estimated. We follow Module 6 Sec. 7 exactly.</p>
+
+    <div class="dstep" data-n="1">
+      <div class="d-state">Sum the per-stage latencies and hold them under the compute share of the cycle.</div>
+      <div class="eq">\[ T_{\mathrm{compute}} = t_{\mathrm{detect}} + t_{\mathrm{localize}} + t_{\mathrm{decide}} + t_{\mathrm{control}} \;\le\; T_{\mathrm{budget}} \]</div>
+      <p class="d-exp">The ratified budgets (Doc B Sec. 5.5): end-to-end sense-to-act \(\le 300\ \mathrm{ms}\), and the inner <strong class="amber-t">control loop \(\le 20\ \mathrm{ms}\) worst-case</strong>. Populate the stages with <strong>measured</strong> latencies on the target device (EI-06), find the dominant stage (EI-05), optimize it, and re-measure.</p>
+      <div class="d-cons"><span class="lab">Consequence</span><p>The budget is closed <strong>on the device</strong>, stage by stage - an average that fits is not a budget that closes.</p></div>
+    </div>
+
+    <div class="dstep" data-n="2">
+      <div class="d-state">Detection dominates - and its latency is a precision-allocation choice.</div>
+      <p class="d-exp">The neural-network detect stage dominates the budget. The levers to fit it: <strong>quantize</strong> the model (INT8 vs FP16 vs FP32 - trading a little recall for large latency and power savings, EI-04), move to a faster accelerator, reduce input resolution, or - last resort - loosen the cycle-time budget by staging slower. Quantization is a precision-allocation problem with the same shape as the error budget (CEC-03): spend precision where it changes the outcome.</p>
+      <div class="d-cons"><span class="lab">Consequence</span><p>Optimize the <strong>dominant stage</strong> first (EI-05), and cut latency, power, and heat together rather than chasing a cheap stage.</p></div>
+    </div>
+
+    <div class="dstep" data-n="3">
+      <div class="d-state">A network has no bounded worst case, so the cloud cannot be in the loop.</div>
+      <div class="eq">\[ t_{\mathrm{control}} \le 20\ \mathrm{ms}\ \text{(worst-case)} \qquad\text{but}\qquad t_{\mathrm{RTT}}^{\mathrm{worst}} = \text{unbounded} \]</div>
+      <p class="d-exp">A cloud round-trip adds network latency that is <strong>variable and, at the tail, unbounded</strong> - no network guarantees a worst case. Even on a good link the round-trip alone dwarfs the 20 ms control deadline, and the worst case cannot be certified at all (SR-P-35 demands a <em>bounded</em> worst case).</p>
+      <div class="d-cons"><span class="lab">Consequence</span><p>The perception-to-control path stays <strong class="rind-t">on the robot, with no cloud in the control loop</strong> (CEC-04). The cloud may still do offline work - training, fleet analytics - just never inside the real-time loop.</p></div>
+    </div>
+  </section>
+
+  <section id="instrument" aria-labelledby="inst-h">
+    <div class="kicker">The budget, live - move the computer</div>
+    <h2 id="inst-h">Put the computer on the edge, or in the cloud</h2>
+    <p>Switch the compute location and watch the latency budget. On the <span class="rind-t">edge</span>, tune the model precision to fit. In the <span class="flesh-t">cloud</span>, watch the network round-trip blow the control deadline - and note the hatched <span class="flesh-t">tail</span>: the worst case has no ceiling.</p>
+    <p class="note">The per-stage latencies and power figures below are <strong>illustrative</strong> - representative numbers chosen to show the budget structure, not measured values. By EI-06, the real numbers must be measured on your own target device; that is the point of the whole exercise.</p>
+
+    <div class="instrument">
+      <div class="inst-head">
+        <div class="inst-title">Sense-to-act latency budget</div>
+        <button class="reset" id="resetBtn" type="button">Reset</button>
+      </div>
+
+      <noscript><p class="noscript-note">This interactive latency budget requires JavaScript. The full worked result is in the derivation above: on-device compute closes the budget with a bounded worst case (control loop &lt;= 20 ms, sense-to-act &lt;= 300 ms, power &lt;= 60 W); a cloud round-trip is variable and unbounded at the tail, so it cannot be in the real-time control loop (CEC-04).</p></noscript>
+
+      <div class="controls">
+        <div class="ctl-group">
+          <span class="lbl" id="locLbl">compute location</span>
+          <div class="seg" id="locSeg" role="group" aria-labelledby="locLbl">
+            <button data-loc="edge" class="on" type="button" aria-pressed="true">Edge (on-robot)</button>
+            <button data-loc="cloud" type="button" aria-pressed="false">Cloud</button>
+          </div>
+        </div>
+        <div class="ctl-group" id="edgeCtl">
+          <span class="lbl" id="precLbl">model precision (detect stage)</span>
+          <div class="seg" id="precSeg" role="group" aria-labelledby="precLbl">
+            <button data-prec="int8" class="on" type="button" aria-pressed="true">INT8</button>
+            <button data-prec="fp16" type="button" aria-pressed="false">FP16</button>
+            <button data-prec="fp32" type="button" aria-pressed="false">FP32</button>
+          </div>
+        </div>
+        <div class="ctl-group" id="netCtl" style="display:none">
+          <span class="lbl" id="netLbl">network condition</span>
+          <div class="seg" id="netSeg" role="group" aria-labelledby="netLbl">
+            <button data-net="good" class="on" type="button" aria-pressed="true">Good</button>
+            <button data-net="typical" type="button" aria-pressed="false">Typical</button>
+            <button data-net="congested" type="button" aria-pressed="false">Congested</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="barwrap">
+        <div class="barlab"><span>sense-to-act latency (ms)</span><span id="scaleLab">scale 0 - 300 ms</span></div>
+        <div class="track" id="track" role="img" aria-label="Stacked sense-to-act latency budget with markers at the 20 ms control deadline and 300 ms end-to-end budget"></div>
+      </div>
+
+      <div class="readbar">
+        <div class="ro"><div class="lab">total latency</div><div class="val"><span id="roTotal">100</span> <small>ms</small></div></div>
+        <div class="ro"><div class="lab">control loop</div><div class="val"><span id="roCtrl">10</span> <small>ms / 20</small></div></div>
+        <div class="ro"><div class="lab">compute power</div><div class="val"><span id="roPow">40</span> <small>W / 60</small></div></div>
+        <div class="ro"><div class="lab">recall</div><div class="val"><span id="roRecall">0.90</span></div></div>
+      </div>
+
+      <div class="status ok" id="status" aria-live="polite"></div>
+      <div class="legend">
+        <span><i style="background:var(--stage-detect)"></i>detect</span>
+        <span><i style="background:var(--stage-localize)"></i>localize</span>
+        <span><i style="background:var(--stage-decide)"></i>decide</span>
+        <span><i style="background:var(--stage-control)"></i>control</span>
+        <span><i style="background:var(--stage-network)"></i>network</span>
+        <span><i style="background:repeating-linear-gradient(45deg,var(--tint-tail),var(--tint-tail) 3px,transparent 3px,transparent 6px)"></i>unbounded tail</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="ei06" aria-labelledby="ei-h">
+    <div class="kicker">Engineering Insight EI-06 - measure on the target</div>
+    <h2 id="ei-h">The only latency that counts is on the device</h2>
+    <div class="insight">
+      <div class="tag">EI-06 - Measure on the Target</div>
+      <p><strong>Latency, power, and accuracy are properties of the model on the actual hardware - not of the model in the abstract.</strong> A network that is fast on a workstation can miss the budget on the edge device; a layer that looks cheap can be memory-bound and dominate. Measure each stage on the target, find the dominant one, optimize it, and re-measure - never optimize a stage you have not measured. The no-cloud boundary (CEC-04) is the same discipline taken to its conclusion: the target is the robot, and the only latency that counts is the one you can guarantee there.</p>
+    </div>
+  </section>
+
+  <section id="takeaway" aria-labelledby="tk-h">
+    <div class="kicker">Engineering takeaway - what to do next</div>
+    <h2 id="tk-h">Where the next effort belongs</h2>
+    <div class="takeaway">
+      <ul class="tk-list">
+        <li><span class="tk-mark" aria-hidden="true">-&gt;</span> Do not argue edge-vs-cloud on <strong>average</strong> latency. The control loop needs a <strong>bounded worst case</strong> (\(\le 20\ \mathrm{ms}\)), and a network has none - that alone settles it. Keep the perception-to-control path on the robot.</li>
+        <li><span class="tk-mark tk-hot" aria-hidden="true">-&gt;</span> On the edge, spend effort on the <strong class="rind-t">dominant stage (detection)</strong> - quantize first (INT8 buys large latency and power savings for a little recall), and only reach for a bigger accelerator if that still misses the budget.</li>
+        <li><span class="tk-mark" aria-hidden="true">-&gt;</span> Watch the <strong>power ceiling</strong>, not just latency: FP32 may fit the time budget yet exceed the thermal/power budget (M12). Right-sizing the model cuts latency, power, and heat together.</li>
+        <li><span class="tk-mark" aria-hidden="true">-&gt;</span> <strong>Decision:</strong> keep the real-time loop <strong class="rind-t">on-device</strong> and use the cloud only for offline work (training, fleet analytics). Then tune precision on the target until the dominant stage fits, re-measuring after each change.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    SIM2FIELD / Autonomous Watermelon Harvesting Robotics<br>
+    Worked example for Module 6 (Edge Computing, Optimization and Deployment) - realizes CEC-04 (no-cloud edge boundary) and EI-06<br>
+    Values ratified in Doc B Sec. 5.5 (control &lt;= 20 ms, sense-to-act &lt;= 300 ms, compute &lt;= 60 W) - method harvested from Module 6 Sec. 7 (frozen Rev 1.0)<br>
+    Production Phase asset - configuration-controlled
+  </footer>
+</main>
+
+<script>
+/* Interactive enhancement only. All engineering content above is static and
+   readable with JavaScript disabled. Vanilla JS, no external dependencies.
+   Colors come from semantic tokens (var(--...)), never raw hex. */
+(function(){
+  "use strict";
+  const SCALE=300;
+  const BUDGET=300, CTRL=20, POW_MAX=60;
+  const EDGE={
+    int8:{detect:70, power:40, recall:0.90},
+    fp16:{detect:130, power:52, recall:0.92},
+    fp32:{detect:240, power:62, recall:0.93}
+  };
+  const LOCAL={localize:15, decide:5, control:10};
+  const NET={
+    good:{rtt:90, tail:230},
+    typical:{rtt:160, tail:380},
+    congested:{rtt:340, tail:650}
+  };
+  const CLOUD_INFER=25;
+
+  let state={loc:'edge', prec:'int8', net:'good'};
+
+  const track=document.getElementById('track');
+  if(!track) return;
+  function pct(ms){ return Math.min(100, ms/SCALE*100); }
+
+  function seg(ms,color,label,cls){
+    const w=pct(ms);
+    return `<div class="lseg ${cls||''} ${w>7?'wide':''}" style="width:${w}%;background:${color}"><span>${label}</span></div>`;
+  }
+
+  function render(){
+    let segs='', total=0, ctrlLoop, power, recall, tailMs=0;
+
+    if(state.loc==='edge'){
+      const e=EDGE[state.prec];
+      segs = seg(e.detect,'var(--stage-detect)','detect '+e.detect)
+        + seg(LOCAL.localize,'var(--stage-localize)','loc '+LOCAL.localize)
+        + seg(LOCAL.decide,'var(--stage-decide)','dec '+LOCAL.decide)
+        + seg(LOCAL.control,'var(--stage-control)','ctrl '+LOCAL.control);
+      total = e.detect+LOCAL.localize+LOCAL.decide+LOCAL.control;
+      ctrlLoop = LOCAL.control;
+      power = e.power; recall = e.recall;
+    } else {
+      const n=NET[state.net];
+      segs = seg(n.rtt,'var(--stage-network)','network '+n.rtt)
+        + seg(CLOUD_INFER,'var(--stage-detect)','infer '+CLOUD_INFER)
+        + seg(LOCAL.localize,'var(--stage-localize)','loc '+LOCAL.localize)
+        + seg(LOCAL.decide,'var(--stage-decide)','dec '+LOCAL.decide)
+        + seg(LOCAL.control,'var(--stage-control)','ctrl '+LOCAL.control);
+      const tailExtra = n.tail - n.rtt;
+      segs += seg(tailExtra,'transparent','','tail');
+      total = n.rtt+CLOUD_INFER+LOCAL.localize+LOCAL.decide+LOCAL.control;
+      tailMs = n.tail+CLOUD_INFER+LOCAL.localize+LOCAL.decide+LOCAL.control;
+      ctrlLoop = n.rtt+CLOUD_INFER+LOCAL.control;
+      power = 18; recall = 0.93;
+    }
+
+    track.innerHTML = segs +
+      `<div class="marker-line m-budget" style="left:${pct(BUDGET)}%"><span class="tag">budget 300</span></div>`+
+      `<div class="marker-line m-ctrl" style="left:${pct(CTRL)}%"><span class="tag">ctrl 20</span></div>`;
+
+    const $=id=>document.getElementById(id);
+    $('roTotal').textContent=total;
+    $('roCtrl').textContent=ctrlLoop;
+    $('roCtrl').className='val '+(ctrlLoop<=CTRL?'ok':'bad');
+    $('roPow').textContent=power;
+    $('roPow').className='val '+(power<=POW_MAX?'ok':'bad');
+    $('roRecall').textContent=recall.toFixed(2);
+
+    $('edgeCtl').style.display = state.loc==='edge'?'':'none';
+    $('netCtl').style.display = state.loc==='cloud'?'':'none';
+
+    const st=$('status');
+    if(state.loc==='cloud'){
+      st.className='status bad';
+      st.innerHTML=`<b>Control loop cannot close over the network.</b> The round-trip alone is ${NET[state.net].rtt} ms - the control loop now takes ${ctrlLoop} ms against a ${CTRL} ms deadline, and the worst case runs to the hatched tail (~${tailMs} ms) with <b>no ceiling</b>. A network cannot guarantee a bounded worst case, so it cannot be in the real-time loop. This is CEC-04.`;
+    } else if(power>POW_MAX){
+      st.className='status warn';
+      st.innerHTML=`<b>Latency fits, power does not.</b> FP32 detection lands total at ${total} ms (under 300), but draws ${power} W against the ${POW_MAX} W ceiling (M12 thermal). Quantize down: INT8 keeps recall at 0.90 while cutting latency, power, and heat together.`;
+    } else {
+      st.className='status ok';
+      st.innerHTML=`<b>Budget closes, worst case bounded.</b> Total ${total} ms (&lt;= 300), control loop ${ctrlLoop} ms (&lt;= 20), power ${power} W (&lt;= 60), recall ${recall.toFixed(2)}. On-device compute makes every one of these a guarantee, not an average.`;
+    }
+  }
+
+  function setPressed(sel){ document.querySelectorAll(sel+' button').forEach(b=>b.setAttribute('aria-pressed', b.classList.contains('on'))); }
+
+  document.getElementById('locSeg').addEventListener('click',e=>{
+    if(e.target.tagName!=='BUTTON') return;
+    state.loc=e.target.dataset.loc;
+    document.querySelectorAll('#locSeg button').forEach(b=>{
+      const on=b===e.target; b.classList.toggle('on',on); b.classList.toggle('warn',on&&b.dataset.loc==='cloud');
+    });
+    setPressed('#locSeg'); render();
+  });
+  document.getElementById('precSeg').addEventListener('click',e=>{
+    if(e.target.tagName!=='BUTTON') return;
+    state.prec=e.target.dataset.prec;
+    document.querySelectorAll('#precSeg button').forEach(b=>b.classList.toggle('on',b===e.target));
+    setPressed('#precSeg'); render();
+  });
+  document.getElementById('netSeg').addEventListener('click',e=>{
+    if(e.target.tagName!=='BUTTON') return;
+    state.net=e.target.dataset.net;
+    document.querySelectorAll('#netSeg button').forEach(b=>b.classList.toggle('on',b===e.target));
+    setPressed('#netSeg'); render();
+  });
+  document.getElementById('resetBtn').addEventListener('click',()=>{
+    state={loc:'edge',prec:'int8',net:'good'};
+    document.querySelectorAll('#locSeg button').forEach(b=>{b.classList.toggle('on',b.dataset.loc==='edge'); b.classList.remove('warn');});
+    document.querySelectorAll('#precSeg button').forEach(b=>b.classList.toggle('on',b.dataset.prec==='int8'));
+    document.querySelectorAll('#netSeg button').forEach(b=>b.classList.toggle('on',b.dataset.net==='good'));
+    setPressed('#locSeg'); setPressed('#precSeg'); setPressed('#netSeg'); render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<svg viewBox="0 0 760 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Compliance widens the grip-force window from the top: because the bruising force scales inversely with the square of the effective contact modulus, a compliant gripper raises the bruise ceiling far above the slip floor, turning a narrow or empty rigid-gripper window into a workable one, which is why fluid-powered compliant gripping is central." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Compliance widens the grip-force window</text>
+<text x="150" y="70" text-anchor="middle" font-size="8.4" fill="var(--text-primary)" font-weight="700">rigid (high E*)</text>
+<line x1="150" y1="90" x2="150" y2="230" stroke="var(--border-strong)" stroke-width="1.2"/>
+<rect x="136" y="143" width="28" height="10" fill="var(--warn)" fill-opacity="0.25" stroke="var(--warn)"/>
+<line x1="128" y1="153" x2="172" y2="153" stroke="var(--info)" stroke-width="1.6"/>
+<text x="176" y="156" font-size="6.6" fill="var(--info)">F_slip</text>
+<line x1="128" y1="143" x2="172" y2="143" stroke="var(--danger)" stroke-width="1.6"/>
+<text x="176" y="146" font-size="6.6" fill="var(--danger-text)">F_bruise</text>
+<text x="150" y="151" text-anchor="middle" font-size="6.6" fill="var(--warn)" font-weight="700">window</text>
+<text x="370" y="70" text-anchor="middle" font-size="8.4" fill="var(--text-primary)" font-weight="700">compliant (low E*)</text>
+<line x1="370" y1="90" x2="370" y2="230" stroke="var(--border-strong)" stroke-width="1.2"/>
+<rect x="356" y="101" width="28" height="52" fill="var(--accent)" fill-opacity="0.25" stroke="var(--accent)"/>
+<line x1="348" y1="153" x2="392" y2="153" stroke="var(--info)" stroke-width="1.6"/>
+<text x="396" y="156" font-size="6.6" fill="var(--info)">F_slip</text>
+<line x1="348" y1="101" x2="392" y2="101" stroke="var(--danger)" stroke-width="1.6"/>
+<text x="396" y="104" font-size="6.6" fill="var(--danger-text)">F_bruise</text>
+<text x="370" y="130" text-anchor="middle" font-size="6.6" fill="var(--accent)" font-weight="700">window</text>
+<line x1="392" y1="150" x2="392" y2="108" stroke="var(--accent)" stroke-width="1.6" stroke-dasharray="4 2" marker-end="url(#a)"/>
+<text x="400" y="130" font-size="6.8" fill="var(--accent)">compliance raises</text>
+<text x="400" y="140" font-size="6.8" fill="var(--accent)">F_bruise</text>
+<rect x="500" y="90" width="242" height="120" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="514" y="110" font-size="9" fill="var(--accent)" font-weight="700">F_bruise &#8733; (E*)^-2</text>
+<text x="514" y="128" font-size="7" fill="var(--text-muted)">E* = effective contact modulus</text>
+<text x="514" y="142" font-size="7" fill="var(--text-secondary)">softer contact (lower E*)</text>
+<text x="514" y="153" font-size="7" fill="var(--text-secondary)"> -> higher bruise ceiling</text>
+<text x="514" y="167" font-size="7" fill="var(--text-secondary)"> -> wider window from the top</text>
+<text x="514" y="186" font-size="6.8" fill="var(--text-muted)">A narrow or empty rigid window</text>
+<text x="514" y="197" font-size="6.8" fill="var(--text-muted)">becomes workable when compliant.</text>
+<text x="20" y="246" font-size="7.8" fill="var(--text-muted)">The window F_slip &lt;= F_grip &lt;= F_bruise can be narrow or empty; compliance is the lever that opens it, which is why fluid-powered compliant</text>
+<text x="20" y="258" font-size="7.8" fill="var(--text-muted)">gripping is central to this machine (CEC-02). Section 7.4.</text>
+</svg>

@@ -1,0 +1,28 @@
+<svg viewBox="0 0 760 275" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Stability under compliance and latency: control latency erodes phase margin, so the compliant force loop is stable only for crossover bandwidth below a limit that falls as latency rises; too aggressive and the loop oscillates through the fluid, too slow and force lags the motion, and more compliance both lowers the achievable bandwidth and increases tolerance to latency-induced force error." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Stability under compliance + latency</text>
+<polygon points="146.0,230 146.0,74.2 200.0,128.3 267.5,164.4 357.5,187.4 470.0,202.1 560.0,208.7 560.0,230" fill="var(--accent)" fill-opacity="0.08"/>
+<polyline points="146.0,74.2 200.0,128.3 267.5,164.4 357.5,187.4 470.0,202.1 560.0,208.7" fill="none" stroke="var(--danger)" stroke-width="2.2"/>
+<text x="299.0" y="139.8" font-size="7.4" fill="var(--danger-text)" font-weight="700">&#969;_c ~ 1/(k &#964;_d)</text>
+<text x="357.5" y="208.68" font-size="7" fill="var(--accent)">STABLE (bandwidth below the limit)</text>
+<text x="164.0" y="95.52000000000001" font-size="7" fill="var(--danger-text)">too aggressive</text>
+<text x="164.0" y="108.64" font-size="6.4" fill="var(--danger-text)">-> oscillates through the fluid</text>
+<circle cx="312.5" cy="220.2" r="4" fill="var(--warn)"/>
+<text x="326.0" y="223.16" font-size="6.6" fill="var(--warn-text)">too slow -> force lags the motion</text>
+<circle cx="267.5" cy="180.8" r="5.5" fill="var(--accent)"/>
+<text x="274.5" y="180.8" font-size="6.8" fill="var(--accent)">chosen from measured latency (EI-06)</text>
+<line x1="110" y1="62" x2="110" y2="230" stroke="var(--border-strong)" stroke-width="1.4"/>
+<line x1="110" y1="230" x2="560" y2="230" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="102" y="148.0" text-anchor="middle" font-size="8" fill="var(--text-muted)" transform="rotate(-90 102 148.0)">loop bandwidth &#969;_c</text>
+<text x="335.0" y="258" font-size="8" fill="var(--text-muted)" text-anchor="middle">control + compute latency &#964;_d (from M6)  -></text>
+<rect x="580" y="66" width="162" height="150" rx="8" fill="var(--surface-2)" stroke="var(--accent-2)" stroke-opacity="0.6"/>
+<text x="592" y="84" font-size="7.8" fill="var(--accent-2)" font-weight="700">Compliance both:</text>
+<text x="592" y="104" font-size="6.8" fill="var(--text-secondary)">- constrains: lowers the</text>
+<text x="592" y="114" font-size="6.8" fill="var(--text-muted)">  achievable bandwidth</text>
+<text x="592" y="134" font-size="6.8" fill="var(--text-secondary)">- protects: raises tolerance</text>
+<text x="592" y="144" font-size="6.8" fill="var(--text-muted)">  to latency-induced force error</text>
+<text x="592" y="168" font-size="6.6" fill="var(--text-muted)">the same softness that</text>
+<text x="592" y="178" font-size="6.6" fill="var(--text-muted)">limits the loop makes its</text>
+<text x="592" y="188" font-size="6.6" fill="var(--text-muted)">errors gentle (EI-09).</text>
+<text x="20" y="256" font-size="7.8" fill="var(--text-muted)">Delay erodes phase margin: choose bandwidth and gain from the measured edge latency, not a guess. Section 7.4.</text>
+</svg>

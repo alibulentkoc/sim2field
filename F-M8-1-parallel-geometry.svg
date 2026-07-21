@@ -1,0 +1,24 @@
+<svg viewBox="0 0 760 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The rail-mounted parallel manipulator positions the gripper point G with two cylinders anchored at B1 and B2 on the rail, each of length equal to the distance from G to its anchor; inverse kinematics is the direct distance computation and forward kinematics is the two-circle intersection." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">The rail-mounted parallel manipulator</text>
+<line x1="120" y1="190" x2="640" y2="190" stroke="var(--border-strong)" stroke-width="3"/>
+<text x="120" y="206" font-size="7.4" fill="var(--text-muted)">rail (rover track width sets B1-B2 separation)</text>
+<line x1="210" y1="190" x2="360" y2="86" stroke="var(--info)" stroke-width="2"/>
+<circle cx="210" cy="190" r="6" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.6"/>
+<text x="210" y="220" font-size="8" fill="var(--accent)" font-weight="700" text-anchor="middle">B1</text>
+<line x1="470" y1="190" x2="360" y2="86" stroke="var(--info)" stroke-width="2"/>
+<circle cx="470" cy="190" r="6" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.6"/>
+<text x="470" y="220" font-size="8" fill="var(--accent)" font-weight="700" text-anchor="middle">B2</text>
+<text x="269.0" y="138.0" font-size="8" fill="var(--info)" font-weight="700">L1</text>
+<text x="423.0" y="138.0" font-size="8" fill="var(--info)" font-weight="700">L2</text>
+<circle cx="360" cy="86" r="7" fill="var(--accent-2)"/>
+<text x="370" y="88" font-size="9" fill="var(--accent-2)" font-weight="700">G (gripper point)</text>
+<rect x="470" y="60" width="272" height="86" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="484" y="80" font-size="8.4" fill="var(--text-secondary)">Inverse kinematics (direct):</text>
+<text x="484" y="96" font-size="9" fill="var(--accent)" font-weight="700">L_i = || G - B_i ||</text>
+<text x="484" y="114" font-size="7.6" fill="var(--text-secondary)">Forward kinematics: intersection of</text>
+<text x="484" y="125" font-size="7.6" fill="var(--text-secondary)">two circles (two solutions; branch</text>
+<text x="484" y="136" font-size="7.6" fill="var(--text-secondary)">fixed by the assembly).</text>
+<text x="20" y="240" font-size="7.8" fill="var(--text-muted)">Parallel arrangement is stiff and light: actuators carry load in tension/compression, not bending, which matters for precision and for the</text>
+<text x="20" y="252" font-size="7.8" fill="var(--text-muted)">5 to 10 kg payload. The base-anchor separation is bounded by the rover track width (the coupling TS-1 flagged). Section 6.2.</text>
+</svg>

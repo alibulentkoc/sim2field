@@ -1,0 +1,35 @@
+<svg viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Detection metrics: a predicted box matches a ground-truth box when their intersection-over-union exceeds a threshold; the four outcomes true positive, false positive, false negative, true negative define precision (TP over TP plus FP) and recall (TP over TP plus FN)." font-family="'IBM Plex Mono',monospace">
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">1. Match by IoU</text>
+<rect x="112" y="104" width="82" height="74" fill="var(--accent)" fill-opacity="0.30"/>
+<rect x="44" y="58" width="150" height="120" fill="none" stroke="var(--accent)" stroke-width="2"/>
+<rect x="112" y="104" width="150" height="120" fill="none" stroke="var(--info)" stroke-width="2" stroke-dasharray="5 3"/>
+<text x="48" y="54" font-size="8.5" fill="var(--accent)" font-weight="700">ground truth</text>
+<text x="262" y="237" text-anchor="end" font-size="8.5" fill="var(--info)" font-weight="700">predicted box</text>
+<text x="153.0" y="144.0" text-anchor="middle" font-size="8" fill="var(--text-primary)">overlap</text>
+<text x="20" y="222" font-size="10" fill="var(--text-secondary)">IoU = area(intersection) / area(union)</text>
+<text x="20" y="238" font-size="9" fill="var(--text-muted)">a detection counts only if IoU &#8805; threshold</text>
+<line x1="300" y1="30" x2="300" y2="300" stroke="var(--border)" stroke-width="1"/>
+<text x="330" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">2. Four outcomes</text>
+<text x="535.0" y="44" text-anchor="middle" font-size="8.5" fill="var(--text-muted)">actual: ripe fruit</text>
+<text x="665.0" y="44" text-anchor="middle" font-size="8.5" fill="var(--text-muted)">actual: background</text>
+<text x="462" y="88.0" text-anchor="end" font-size="8.5" fill="var(--text-muted)">predict: detect</text>
+<text x="462" y="154.0" text-anchor="end" font-size="8.5" fill="var(--text-muted)">predict: reject</text>
+<rect x="470" y="52" width="130" height="66" fill="var(--accent)" fill-opacity="0.14" stroke="var(--accent)"/>
+<text x="535.0" y="82" text-anchor="middle" font-size="17" fill="var(--accent)" font-weight="700">TP</text>
+<text x="535.0" y="100" text-anchor="middle" font-size="8" fill="var(--text-muted)">hit</text>
+<rect x="600" y="52" width="130" height="66" fill="var(--warn)" fill-opacity="0.14" stroke="var(--warn)"/>
+<text x="665.0" y="82" text-anchor="middle" font-size="17" fill="var(--warn)" font-weight="700">FP</text>
+<text x="665.0" y="100" text-anchor="middle" font-size="8" fill="var(--text-muted)">false alarm</text>
+<rect x="470" y="118" width="130" height="66" fill="var(--danger)" fill-opacity="0.14" stroke="var(--danger)"/>
+<text x="535.0" y="148" text-anchor="middle" font-size="17" fill="var(--danger)" font-weight="700">FN</text>
+<text x="535.0" y="166" text-anchor="middle" font-size="8" fill="var(--text-muted)">miss</text>
+<rect x="600" y="118" width="130" height="66" fill="var(--text-muted)" fill-opacity="0.14" stroke="var(--text-muted)"/>
+<text x="665.0" y="148" text-anchor="middle" font-size="17" fill="var(--text-muted)" font-weight="700">TN</text>
+<text x="665.0" y="166" text-anchor="middle" font-size="8" fill="var(--text-muted)">correct reject</text>
+<text x="330" y="214" font-size="11" fill="var(--accent)" font-weight="700">Precision = TP / (TP + FP)</text>
+<text x="330" y="230" font-size="8" fill="var(--text-muted)">of what you picked, how much was ripe fruit (the detect row)</text>
+<text x="330" y="252" font-size="11" fill="var(--info)" font-weight="700">Recall = TP / (TP + FN)</text>
+<text x="330" y="268" font-size="8" fill="var(--text-muted)">of the ripe fruit present, how much you found (the fruit column)</text>
+<text x="330" y="290" font-size="10" fill="var(--text-secondary)" font-weight="700">F1 = 2 P R / (P + R)</text>
+<text x="470" y="290" font-size="8" fill="var(--text-muted)">sweeping the confidence threshold traces the PR curve</text>
+</svg>

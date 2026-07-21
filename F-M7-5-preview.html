@@ -1,0 +1,41 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="color-scheme" content="dark"><title>F-M7-5 preview - Propose-then-bound</title><style>:root{--bg:#0e120d;--surface:#161c14;--surface-2:#0b0e0a;--surface-3:#12160f;--border:#2b3527;--border-strong:#3a4633;--text-primary:#eef2e6;--text-secondary:#c8cfbe;--text-muted:#adb4a2;--accent:#9bcf3b;--info:#6fb0d9;--danger:#f0556a;--danger-text:#f697a4;--accent-2:#b98bd9}
+body{margin:0;background:var(--bg);color:var(--text-primary);font-family:'IBM Plex Mono',ui-monospace,monospace;padding:2rem}
+.figure{max-width:860px;margin:0 auto;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.figbody{padding:1rem 1.1rem;background:var(--surface-3);overflow-x:auto} .figbody svg{display:block;width:100%;height:auto;min-width:640px}
+figcaption{padding:.7rem 1rem;font-size:.82rem;color:var(--text-muted);border-top:1px solid var(--border)} .fid{font-size:.64rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-right:.5rem}</style></head>
+<body><figure class="figure"><div class="figbody"><svg viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Propose-then-bound: the learned policy emits a proposal that is projected onto the safe set (the intersection of the grip-force window, reach limits, keep-out, and confidence gates), or replaced by a deterministic fallback; the worst-case executed action is bounded by the safe set regardless of the policy." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="p7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker><marker id="pj" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/></marker></defs>
+<text x="40" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Action bounding as projection</text>
+<rect x="40" y="42" width="392" height="300" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="48" y="58" font-size="8" fill="var(--text-muted)">action space (force, compliance, motion)</text>
+<polygon points="120,120 320,104 388,196 330,300 150,308 78,212" fill="var(--accent)" fill-opacity="0.13" stroke="var(--accent)" stroke-width="1.6"/>
+<text x="210" y="210" text-anchor="middle" font-size="13" fill="var(--accent)" font-weight="700">safe set  S</text>
+<text x="210" y="226" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">window and reach and keep-out and gates</text>
+<line x1="406" y1="96" x2="356" y2="147" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#pj)" stroke-dasharray="5 3"/>
+<circle cx="406" cy="96" r="5" fill="var(--danger)"/>
+<text x="400" y="90" text-anchor="end" font-size="8.5" fill="var(--danger-text)" font-weight="700">proposal a_pi</text>
+<text x="400" y="102" text-anchor="end" font-size="7.5" fill="var(--text-muted)">(from policy, unsafe)</text>
+<circle cx="352" cy="150" r="5" fill="var(--accent)"/>
+<text x="360" y="153" font-size="8.5" fill="var(--accent)" font-weight="700">proj_S(a_pi) = a_exec</text>
+<circle cx="160" cy="268" r="4.5" fill="var(--info)"/>
+<text x="170" y="271" font-size="8" fill="var(--info)">fallback: fixed-compliance grasp</text>
+<rect x="470" y="50" width="272" height="44" rx="9" fill="var(--surface)" stroke="var(--accent-2)" stroke-width="1.4"/>
+<text x="484" y="69" font-size="10.5" fill="var(--accent-2)" font-weight="700">LEARNED POLICY</text>
+<text x="484" y="85" font-size="8.3" fill="var(--text-muted)">output is a proposal, never a direct command</text>
+<line x1="606" y1="94" x2="606" y2="112" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#p7)"/>
+<text x="612" y="107" font-size="7.5" fill="var(--text-muted)">a_pi</text>
+<rect x="470" y="114" width="272" height="84" rx="9" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="484" y="133" font-size="10.5" fill="var(--accent)" font-weight="700">BOUNDING LAYER (deterministic, verified)</text>
+<text x="484" y="149" font-size="8.3" fill="var(--text-muted)">clip to safe set S (window, reach, keep-out)</text>
+<text x="484" y="162" font-size="8.3" fill="var(--text-muted)">check pose covariance and ripeness confidence</text>
+<text x="484" y="175" font-size="8.3" fill="var(--text-muted)">reject and fall back if checks fail or S empty</text>
+<line x1="606" y1="198" x2="606" y2="216" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#p7)"/>
+<rect x="470" y="218" width="272" height="34" rx="9" fill="var(--surface)" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="484" y="237" font-size="10.5" fill="var(--text-primary)" font-weight="700">EXECUTED ACTION  a_exec</text>
+<text x="470" y="278" font-size="9" fill="var(--text-secondary)">a_exec = proj_S(a_pi) if S nonempty and checks pass;</text>
+<text x="522" y="291" font-size="9" fill="var(--text-secondary)">otherwise a_exec = a_fallback</text>
+<rect x="470" y="302" width="272" height="52" rx="8" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.5"/>
+<text x="482" y="319" font-size="8.5" fill="var(--accent)" font-weight="700">EI-07: a learned policy is a proposal, not an authority.</text>
+<text x="482" y="333" font-size="8" fill="var(--text-muted)">The bounding layer is verifiable, so the system is verifiable</text>
+<text x="482" y="345" font-size="8" fill="var(--text-muted)">though the policy is not. Worst case is bounded by S.</text>
+</svg></div><figcaption><span class="fid">F-M7-5</span>Propose-then-bound (EI-07). The learned policy's proposal is projected onto the safe set, or replaced by a deterministic fallback when confidence checks fail. Because the bounding layer is deterministic and verifiable, the system is verifiable even though the policy is not, and the worst-case action is bounded by S. Module 7, Sections 6.5 and 7.4.</figcaption></figure></body></html>

@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark"><meta name="theme-color" content="#0e120d">
+<title>Module 7: Decision-Making &amp; Grasp-Policy Framework (SIM2FIELD)</title>
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<style>:root{
+  color-scheme:dark;
+  --bg:#0e120d; --surface:#161c14; --surface-2:#0b0e0a; --surface-3:#12160f;
+  --border:#2b3527; --border-strong:#3a4633; --grid-line:#1c231a;
+  --text-primary:#eef2e6; --text-secondary:#c8cfbe; --text-muted:#adb4a2;
+  --text-lede:#c9d0bf; --text-cons:#d4dbc9; --text-on-accent:#0e120d;
+  --accent:#9bcf3b; --accent-dim:#86ba35; --accent-strong:#6f9a2c;
+  --danger:#f0556a; --danger-text:#f697a4; --danger-dim:#b93b4c;
+  --warn:#e0a03b; --warn-text:#eed9b4; --info:#6fb0d9; --info-text:#bfe0f2; --accent-2:#b98bd9; --marker:#ffffff;
+  --tint-accent:rgba(155,207,59,.07); --tint-accent-soft:rgba(155,207,59,.05); --tint-hero:rgba(155,207,59,.06);
+  --tint-danger:rgba(240,85,106,.07); --tint-warn:rgba(224,160,59,.08); --tint-info:rgba(111,176,217,.08); --tint-gov:rgba(185,139,217,.07);
+  --font-sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --font-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --font-display:'Space Grotesk',var(--font-sans);
+  --rail:300px; --topbar:54px; --measure:54rem;
+
+  /* mission-FSM stage palette (used by inlined worked-example fragments) */
+  --stage-drive:#7fb0a0; --stage-stage:#6fb0d9; --stage-align:#9bcf3b; --stage-grab:#c9e06a;
+  --stage-lift:#b98bd9; --stage-swing:#f0556a; --stage-lower:#e0a03b; --stage-release:#d98b8b;
+  --status-ok-text:#d0d7c6; --status-warn-text:#eed9b4; --status-danger-text:#f3ccd2;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);color:var(--text-primary);-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text-primary);font-family:var(--font-sans);line-height:1.72;-webkit-font-smoothing:antialiased;letter-spacing:.002em}
+a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+code,.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.skip{position:absolute;left:-999px;top:0;background:var(--accent);color:var(--text-on-accent);padding:.5rem .8rem;border-radius:6px;z-index:60}
+.skip:focus{left:.5rem;top:.5rem}
+.katex{font-size:1.04em}
+
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar);z-index:40;background:var(--surface-2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem;padding:0 1.1rem}
+.topbar .mk{font-family:var(--font-display);font-weight:600;font-size:1rem;letter-spacing:-.01em}
+.topbar .cx{flex:1;min-width:0;font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar .src{flex:none;font-family:var(--font-mono);font-size:.66rem;color:var(--accent);border:1px solid var(--accent-strong);border-radius:6px;padding:.3rem .6rem}
+body.ed-author .topbar{border-bottom-color:var(--accent-2)}
+body.ed-author .topbar .src{color:var(--accent-2);border-color:var(--accent-2)}
+
+.book{display:grid;grid-template-columns:var(--rail) 1fr;padding-top:var(--topbar)}
+.rail{position:sticky;top:var(--topbar);align-self:start;height:calc(100vh - var(--topbar));overflow-y:auto;background:var(--surface);border-right:1px solid var(--border);padding:1.3rem 1rem 3rem}
+.rail h2{font-family:var(--font-mono);font-size:.64rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-dim);margin:0 .4rem .7rem}
+.toc{list-style:none} .toc li{margin:.05rem 0}
+.toc a{display:flex;gap:.5rem;align-items:baseline;color:var(--text-secondary);font-size:.83rem;line-height:1.35;padding:.32rem .5rem;border-radius:7px;border-left:2px solid transparent}
+.toc a:hover{background:var(--surface-3);text-decoration:none;color:var(--text-primary)}
+.toc a.active{background:var(--tint-accent);border-left-color:var(--accent);color:var(--text-primary)}
+.toc .tn{font-family:var(--font-mono);font-size:.68rem;color:var(--text-muted);flex:none;min-width:1.3em}
+.toc a.active .tn{color:var(--accent)}
+.toc .tt{margin-left:auto;font-family:var(--font-mono);font-size:.54rem;letter-spacing:.05em;text-transform:uppercase;padding:.05rem .3rem;border-radius:4px;border:1px solid var(--border);color:var(--text-muted)}
+.toc .tt.instr{color:var(--accent-2);border-color:var(--accent-2)} .toc .tt.spec{color:var(--warn);border-color:var(--warn)}
+
+.main{min-width:0;background:var(--bg)}
+.inner{max-width:var(--measure);margin:0 auto;padding:2.4rem 2rem 7rem}
+
+/* ---------- MISSION OPENING ---------- */
+.mission{margin-bottom:.5rem}
+.mission-hero{padding:1.2rem 0 2.4rem;border-bottom:1px solid var(--border)}
+.mission-hero .eyebrow{font-family:var(--font-mono);font-size:.72rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:1.4rem}
+.mission-hero .hook{font-family:var(--font-display);font-weight:600;font-size:clamp(1.7rem,3.6vw,2.55rem);line-height:1.12;letter-spacing:-.018em;color:var(--text-primary);max-width:22em;margin-bottom:1.3rem}
+.mission-hero h1{font-family:var(--font-display);font-weight:500;font-size:1.12rem;color:var(--text-secondary);letter-spacing:-.008em;margin-bottom:.7rem}
+.mission-hero .slim{font-family:var(--font-mono);font-size:.74rem;color:var(--text-muted);letter-spacing:.02em}
+.movement{padding:2.1rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:190px 1fr;gap:1.6rem}
+.movement .mv-label{font-family:var(--font-mono);font-size:.7rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-dim);padding-top:.25rem}
+.movement .mv-label::before{content:"";display:block;width:30px;height:2px;background:var(--accent-strong);margin-bottom:.75rem}
+.movement .mv-body p{color:var(--text-secondary);font-size:1.02rem;margin:0 0 .9rem}
+.movement .mv-body p:last-child{margin-bottom:0}
+.movement .mv-body strong{color:var(--text-primary);font-weight:600}
+.movement .mv-body em{color:var(--text-cons)}
+.movement.objectives .mv-body ul{list-style:none;margin:0}
+.movement.objectives .mv-body li{position:relative;padding-left:1.5rem;margin:.5rem 0;color:var(--text-secondary)}
+.movement.objectives .mv-body li::before{content:"\2192";position:absolute;left:0;color:var(--accent);font-family:var(--font-mono)}
+.movement.objectives .mv-body strong{color:var(--text-primary)}
+.chapter-start{display:flex;align-items:center;gap:1rem;margin:2.8rem 0 .3rem}
+.chapter-start::before,.chapter-start::after{content:"";height:1px;background:var(--border);flex:1}
+.chapter-start span{font-family:var(--font-mono);font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;color:var(--accent-dim)}
+
+/* ---------- PROSE ---------- */
+.section{margin-top:3.2rem}
+.section h2{font-family:var(--font-display);font-weight:600;font-size:1.6rem;letter-spacing:-.012em;line-height:1.15;margin-bottom:1rem;scroll-margin-top:calc(var(--topbar) + 1rem);display:flex;gap:.7rem;align-items:baseline;border-top:1px solid var(--border);padding-top:1.7rem}
+.section h2.unnum{display:block}
+.section h2 .secnum{font-family:var(--font-mono);font-size:.9rem;font-weight:600;color:var(--accent);flex:none}
+.section h3{font-family:var(--font-display);font-weight:600;font-size:1.14rem;color:var(--text-primary);margin:1.6rem 0 .5rem}
+.section p{margin:0 0 1rem;color:var(--text-secondary)}
+.section strong{color:var(--text-primary);font-weight:600}
+.section em{color:var(--text-cons)}
+.section ul,.section ol{margin:0 0 1.1rem 1.3rem;color:var(--text-secondary)}
+.section li{margin:.35rem 0} .section li::marker{color:var(--accent-dim)}
+.section code{background:var(--surface-3);border:1px solid var(--border);border-radius:4px;padding:.05rem .35rem;font-size:.88em;color:var(--text-cons)}
+.section pre{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem;overflow-x:auto;margin:0 0 1.1rem}
+.section pre code{background:none;border:none;padding:0;color:var(--text-secondary);font-size:.82rem;line-height:1.6}
+hr{border:none;border-top:1px solid var(--border);margin:2rem 0}
+
+.eqwrap{background:var(--surface-3);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem;margin:0 0 1.15rem;overflow-x:auto}
+.eqwrap .katex-display{margin:0}
+
+.twrap{overflow-x:auto;margin:0 0 1.2rem;border:1px solid var(--border);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:.86rem}
+th,td{text-align:left;padding:.6rem .8rem;border-bottom:1px solid var(--border);vertical-align:top}
+thead th{font-family:var(--font-mono);font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);font-weight:500;background:var(--surface-3)}
+tbody tr:last-child td{border-bottom:none} td strong{color:var(--accent)}
+
+.callout{border-radius:12px;padding:1.1rem 1.35rem;margin:0 0 1.3rem;border:1px solid var(--border);background:var(--surface)}
+.callout p{margin:0 0 .6rem;color:var(--text-cons)} .callout p:last-child{margin-bottom:0}
+.callout.cec{border-color:var(--accent-strong);background:linear-gradient(180deg,var(--tint-hero),transparent)}
+.callout.cec h3{color:var(--accent);margin:.1rem 0 .5rem;font-size:1.05rem} .callout.cec strong{color:var(--accent)}
+.callout.industry{border-color:var(--info);background:var(--tint-info)}
+.callout.industry h3{color:var(--info-text);font-size:1rem;margin:.1rem 0 .6rem} .callout.industry strong{color:var(--info-text)}
+.callout.hook{border-color:var(--accent-strong);background:var(--tint-accent-soft)}
+.callout.note{border-left:3px solid var(--border-strong);background:var(--surface-3)}
+.callout.gov{border-color:var(--accent-2);background:var(--tint-gov)}
+.section.failure ul{list-style:none;margin-left:0}
+.section.failure ul li{padding:.55rem 0;border-bottom:1px solid var(--border)}
+.section.failure li::before{content:"\2020";color:var(--danger-text);font-family:var(--font-mono);margin-right:.6rem}
+
+.figure{margin:0 0 1.4rem;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.figure.diagram .ascii{margin:0;border:none;border-radius:0;background:var(--surface-3)}
+.figure.diagram .ascii code{color:var(--accent-dim);font-size:.8rem}
+.figure .figbody{padding:1rem 1.1rem;background:var(--surface-3);overflow-x:auto}
+.figure .figbody svg{display:block;width:100%;height:auto;min-width:520px}
+.figure figcaption{padding:.7rem 1rem;font-size:.82rem;color:var(--text-muted);border-top:1px solid var(--border)}
+.figure .fid{font-family:var(--font-mono);font-size:.64rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-right:.5rem}
+.figure.slot{border-style:dashed;border-color:var(--border-strong)}
+.figure.slot .slotbox{display:flex;flex-direction:column;gap:.3rem;padding:1.6rem 1.4rem;background:repeating-linear-gradient(135deg,var(--surface-3),var(--surface-3) 10px,transparent 10px,transparent 20px);border:none}
+.figure.slot .slit{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--warn-text)}
+.figure.slot b{color:var(--text-primary);font-size:.95rem} .figure.slot .desc{color:var(--text-muted);font-size:.84rem}
+
+.widget-embed{margin:1.6rem 0;border:0;background:transparent;overflow:visible}
+.we-head{display:flex;align-items:baseline;gap:.7rem;flex-wrap:wrap;padding:0 .2rem .6rem;background:transparent}
+.we-head .wid{font-family:var(--font-mono);font-size:.62rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-on-accent);background:var(--accent-strong);padding:.15rem .5rem;border-radius:5px}
+.we-head .wid.live{background:var(--accent)}
+.we-head b{font-family:var(--font-display);font-weight:600;color:var(--text-primary);font-size:1rem}
+.we-open{margin-left:auto;font-family:var(--font-mono);font-size:.72rem;color:var(--accent)}
+.we-cap{margin:.65rem 0 0;padding:0 .2rem;font-size:.8rem;color:var(--text-muted)}
+
+.answers,.instructor-wrap{border:1px solid var(--border-strong);border-radius:10px;background:var(--surface-3);margin:1.2rem 0}
+.answers summary,.instructor-wrap summary{cursor:pointer;padding:.8rem 1.1rem;font-family:var(--font-mono);font-size:.78rem;color:var(--accent-2);list-style:none}
+.answers summary::-webkit-details-marker,.instructor-wrap summary::-webkit-details-marker{display:none}
+.answers summary::before,.instructor-wrap summary::before{content:"\25B8 ";color:var(--accent-2)}
+.answers[open] summary::before,.instructor-wrap[open] summary::before{content:"\25BE "}
+.answers .keylist{margin:.2rem 1.4rem 1rem;color:var(--text-secondary);font-size:.88rem}
+.answers .keylist .qn{font-family:var(--font-mono);color:var(--accent);margin-right:.3rem}
+.instructor-wrap{margin-top:2.4rem}
+.instructor-wrap > :not(summary){padding:0 1.2rem} .instructor-wrap > :last-child{padding-bottom:1rem}
+.instructor-wrap p,.instructor-wrap li{color:var(--text-muted)}
+.cover-meta{font-family:var(--font-mono);font-size:.8rem;color:var(--text-muted);line-height:1.9}
+.cover-meta strong{color:var(--text-secondary);font-weight:600} .cover-meta p{margin:.1rem 0}
+.section.instructor{margin-top:2.6rem}
+
+footer{max-width:var(--measure);margin:0 auto;padding:2.5rem 2rem;border-top:1px solid var(--border);font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);line-height:1.85}
+
+@media(max-width:900px){:root{--rail:0px}.book{grid-template-columns:1fr}.rail{display:none}.inner{padding:1.6rem 1.2rem 5rem}}
+@media(max-width:720px){.movement{grid-template-columns:1fr;gap:.5rem}.movement .mv-label::before{margin-bottom:.4rem}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style></head>
+<body class="ed-student">
+<a class="skip" href="#main">Skip to chapter</a>
+<div class="topbar"><span class="mk">SIM2FIELD</span>
+  <span class="cx">Digital textbook / Student edition</span>
+  <span class="src">source: MODULE-07.md</span></div>
+<div class="book">
+  <nav class="rail" aria-label="Chapter contents"><h2>Chapter contents</h2><ul class="toc"><li><a href="#sec-2-learning-objectives"><span class="tn">2</span>Learning Objectives</a></li><li><a href="#sec-3-student-outcomes"><span class="tn">3</span>Student Outcomes</a></li><li><a href="#sec-4-engineering-motivation"><span class="tn">4</span>Engineering Motivation</a></li><li><a href="#sec-engineering-failure-cases-decision-and-p">Engineering Failure Cases (decision-and-policy-specific)</a></li><li><a href="#sec-5-background-knowledge"><span class="tn">5</span>Background Knowledge</a></li><li><a href="#sec-6-theory"><span class="tn">6</span>Theory</a></li><li><a href="#sec-7-mathematics"><span class="tn">7</span>Mathematics</a></li><li><a href="#sec-8-engineering-principles"><span class="tn">8</span>Engineering Principles</a></li><li><a href="#sec-9-system-requirements"><span class="tn">9</span>System Requirements</a></li><li><a href="#sec-10-design-decisions"><span class="tn">10</span>Design Decisions</a></li><li><a href="#sec-11-trade-studies"><span class="tn">11</span>Trade Studies</a></li><li><a href="#sec-12-simulation-activities"><span class="tn">12</span>Simulation Activities</a></li><li><a href="#sec-13-digital-twin-activities"><span class="tn">13</span>Digital Twin Activities</a></li><li><a href="#sec-14-hardware-activities"><span class="tn">14</span>Hardware Activities</a></li><li><a href="#sec-15-software-activities"><span class="tn">15</span>Software Activities</a></li><li><a href="#sec-16-ros-2-integration"><span class="tn">16</span>ROS 2 Integration</a></li><li><a href="#sec-17-ai-integration"><span class="tn">17</span>AI Integration</a></li><li><a href="#sec-18-edge-computing-integration"><span class="tn">18</span>Edge Computing Integration</a></li><li><a href="#sec-19-fluid-power-integration"><span class="tn">19</span>Fluid Power Integration</a></li><li><a href="#sec-24-laboratory"><span class="tn">24</span>Laboratory</a></li><li><a href="#sec-25-homework"><span class="tn">25</span>Homework</a></li><li><a href="#sec-26-quiz"><span class="tn">26</span>Quiz</a></li><li><a href="#sec-27-challenge-problems"><span class="tn">27</span>Challenge Problems</a></li><li><a href="#sec-engineering-design-review">Engineering Design Review</a></li><li><a href="#sec-29-research-frontiers"><span class="tn">29</span>Research Frontiers</a></li><li><a href="#sec-30-references"><span class="tn">30</span>References</a></li></ul></nav>
+  <main class="main" id="main"><div class="inner">
+    <header class="mission">
+    <div class="mission-hero">
+      <div class="eyebrow">Module 7 / Mission briefing</div>
+      
+      <h1>Decision-Making &amp; Grasp-Policy Framework</h1>
+      <div class="slim">Part III, Decide  /  5 to 6 contact hours + a 2 to 3 hour laboratory + homework</div>
+    </div>
+    <section class="movement"><div class="mv-label">Mission</div><div class="mv-body"><p>The machine must now decide and plan to act, the hinge of the whole system. This module builds two coupled decision layers. The first is task decision-making: given a field of candidate fruit, which to attempt, in what order, and whether to attempt at all, under the uncertainty M5 hands over. The second is the grasp policy: how to approach and grasp a specific fruit, a problem hard enough, given variable shape and occlusion, that it is best framed as a learned policy.</p>
+</div></section><section class="movement"><div class="mv-label">Previous milestone</div><div class="mv-body"><p>Perception has done its work: the machine knows where the ripe fruit are, how sure it is of each, and what each looks like.</p>
+</div></section><section class="movement"><div class="mv-label">Engineering problem</div><div class="mv-body"><p>Framing the grasp as learning raises the defining engineering tension of applied AI: a learned policy is powerful but opaque, and this one commands force on a fragile fruit and motion near people.</p>
+</div></section><section class="movement"><div class="mv-label">Design tension</div><div class="mv-body"><p>The resolution, this module's Engineering Insight, is to treat the policy's output as a proposal, not an authority: wrap it in verified guards (the Grip-Force Window, reach limits, uncertainty thresholds) and a deterministic fallback, so the worst a bad decision can do is bounded. That principle is what makes learning deployable on a real machine.</p>
+</div></section><section class="movement"><div class="mv-label">What this module resolves</div><div class="mv-body"><p>The module also masters the discipline that makes learned control possible here at all. Real grasp experiments are slow, expensive, and can destroy fruit; the digital twin supplies massive, safe, cheap experience. But a policy trained in a clean simulator fails in the messy field unless the training deliberately randomizes the conditions the policy must survive and the result is validated on real data. This train-in-simulation, transfer-to-field discipline, introduced for perception data in Module 4, reaches full form here for a control policy, and because it recurs across the curriculum as a design tool, this module elevates it to CEC-05, the Sim-to-Real Pipeline. Consistent with the introduce-&gt;master split, M7 frames the policy, its training, and its bounds; M9 masters the physical fluid-powered control that carries it out.</p>
+</div></section>
+    
+    
+    <div class="chapter-start"><span>The chapter</span></div>
+  </header>
+    <section class="section"><h2 id="sec-2-learning-objectives"><span class="secnum">2</span><span class="sectitle">Learning Objectives</span></h2><ul>
+<li><strong>LO-M7.1</strong> Design the mission/task decision logic (a state machine) that sequences the harvest and gates attempts under uncertainty., <em>Bloom: Create</em></li>
+<li><strong>LO-M7.2</strong> Formulate grasping as a decision policy (MDP: states, actions, reward) with a reward tied to the Grip-Force Window (CEC-02)., <em>Bloom: Apply (with Create)</em></li>
+<li><strong>LO-M7.3</strong> Compare learned (RL/imitation), analytic, and hybrid grasp strategies and justify a choice., <em>Bloom: Evaluate</em></li>
+<li><strong>LO-M7.4</strong> Design a sim-to-real training pipeline with domain randomization and a real-validation gate (CEC-05)., <em>Bloom: Create</em></li>
+<li><strong>LO-M7.5</strong> Bound a learned policy with verified guards and a deterministic fallback (EI-07)., <em>Bloom: Analyze (with Create)</em></li>
+<li><strong>LO-M7.6</strong> Use pose covariance (CEC-03) and ripeness confidence (EI-04) as decision inputs, not just point values., <em>Bloom: Apply (with Evaluate)</em></li>
+<li><strong>LO-M7.7</strong> Specify the twin's role as the policy training environment and reality-gap instrument., <em>Bloom: Create</em></li>
+</ul>
+<p>Maps to course objectives <strong>LO4</strong> (primary), <strong>LO3/LO7</strong> (reinforcing), and ABET <strong>SO1, SO2, SO6</strong>. [-&gt;Doc I]</p>
+</section>
+<section class="section"><h2 id="sec-3-student-outcomes"><span class="secnum">3</span><span class="sectitle">Student Outcomes</span></h2><p>A student who has mastered this module can, without prompting:</p>
+<ol>
+<li>Design a harvest decision FSM with uncertainty- and ripeness-aware gating and sequencing., <em>Bloom: Create</em></li>
+<li>Write an MDP for grasping with a safety-bounded reward., <em>Bloom: Apply</em></li>
+<li>Choose and defend a grasp strategy (learned/analytic/hybrid) for variable fruit., <em>Bloom: Evaluate</em></li>
+<li>Design a domain-randomized sim-to-real pipeline with a real-validation acceptance gate., <em>Bloom: Create</em></li>
+<li>Wrap a policy in verified bounds and a deterministic fallback and argue the resulting system is verifiable., <em>Bloom: Analyze</em></li>
+<li>Feed covariance and confidence into decisions and explain the consequence of ignoring them., <em>Bloom: Evaluate</em></li>
+</ol>
+</section>
+<section class="section"><h2 id="sec-4-engineering-motivation"><span class="secnum">4</span><span class="sectitle">Engineering Motivation</span></h2><p>Between a perfect perception system and a successful harvest lies a decision, and decisions are where good information is squandered or used. Module 5 handed over not a point but a distribution, a fruit pose with covariance, and Module 4 a ripeness with a confidence. A decision layer that collapses these to point values throws away exactly the information that separates a safe attempt from a reckless one. The motivation begins here: <strong>decide with the uncertainty, not despite it.</strong></p>
+<p>The grasp itself is the hardest action the machine performs. A watermelon's shape varies, its exact surface is uncertain, it is partly occluded, and the grasp must land inside the narrow Grip-Force Window (CEC-02) at a position known only to within a covariance (CEC-03). Hand-coding a grasp for every case is brittle; the problem invites learning. But learning introduces its own hazard: a policy is a function fit to data, occasionally and unpredictably wrong outside that data, and here a wrong action bruises fruit or endangers a bystander. The naïve response, &quot;train a better policy&quot;, never fully closes the risk, because you cannot verify an opaque policy the way you verify a controller.</p>
+<p>The engineering resolution, and the reason this module exists as a <em>framework</em> module, is architectural: <strong>let the policy propose and let verified logic dispose.</strong> The policy suggests an approach and a force; a verified envelope clips that suggestion to the physically safe set and substitutes a deterministic fallback when the suggestion is out of bounds or the situation is too uncertain. This bounds the consequence of any learning failure and makes the <em>system</em> verifiable even though the <em>policy</em> is not, the central judgment of deploying AI in a physical loop. And because training such a policy on real fruit is impractical, the module masters the sim-to-real pipeline that lets the machine learn safely in a twin and transfer to the field.</p>
+</section>
+<section class="section failure"><h2 id="sec-engineering-failure-cases-decision-and-p" class="unnum">Engineering Failure Cases (decision-and-policy-specific)</h2><p>Sharpening Module 1's classes at the decision layer:</p>
+<ul>
+<li><strong>Uncertainty-blind decision.</strong> The decision layer treats an uncertain pose as certain and attempts a grasp that localization never supported; slip or bruise follows. <em>Motivates</em> covariance-aware gating/sequencing (Section 6.2) and CEC-03 use.</li>
+<li><strong>Unbounded learned action.</strong> The policy proposes a force or motion outside the safe set and it is executed; fruit or bystander harmed. <em>Motivates</em> the verified bounding layer and fallback (Section 6.5, EI-07).</li>
+<li><strong>Reality-gap collapse.</strong> A policy trained in a clean simulator meets field physics it never saw and fails. <em>Motivates</em> domain randomization and real validation (Section 6.4, CEC-05).</li>
+<li><strong>Reward hacking / mis-specification.</strong> A learned policy optimizes the letter of a reward (e.g., &quot;grip firmly&quot;) while violating its intent (bruising); <em>motivates</em> reward design tied to the Grip-Force Window and honest evaluation (Section 6.3, Section 7.3).</li>
+<li><strong>Decision-throughput conflict.</strong> Over-deliberating each fruit blows the cycle-time budget (CEC-01). <em>Motivates</em> bounded-time decision logic (Section 6.2).</li>
+</ul>
+<p>Each is prevented by a design choice in this module.</p>
+</section>
+<section class="section"><h2 id="sec-5-background-knowledge"><span class="secnum">5</span><span class="sectitle">Background Knowledge</span></h2><p><strong>Assumed (from prerequisites):</strong> probability and expectation (for MDPs, reward, randomization); the M2 Grip-Force Window (CEC-02) and its capture tolerance; the M4 ripeness confidence and operating-point judgment (EI-04); the M5 pose-with-covariance (CEC-03) and occlusion gate; the M6 edge substrate and no-cloud boundary (CEC-04). No prior RL is assumed; it is built from a defined baseline.</p>
+<p><strong>Introduced here, used later:</strong> the vocabulary of decision and policy learning, <em>task/mission FSM, decision under uncertainty, MDP (state/action/reward/policy/return), reinforcement learning, imitation/behavioral cloning, reward design, domain randomization, reality gap, sim-to-real transfer, action bounding/projection, deterministic fallback</em>. Treated at applied (L2) depth with an L3 grad extension; full RL theory is referenced [-&gt;Doc H].</p>
+<p><strong>Where this sits in the dependency graph.</strong> M7 hard-depends on M4/M5 (decision inputs), M2 (the safety bound), and M6 (runtime substrate). It <strong>masters</strong> the decision/behavior thread and <strong>the sim-to-real pipeline (designated here as CEC-05)</strong>; it <strong>introduces</strong> the grasp-policy thread (physical mastery deferred to M9). It hands forward: the grasp proposal (approach + force/compliance targets) and its verified bounds to <strong>M9</strong> (which builds the fluid-powered controller that executes them); the mission FSM and behavior node to <strong>M11</strong>; and the safety-envelope requirements to <strong>M15</strong>.</p>
+</section>
+<section class="section"><h2 id="sec-6-theory"><span class="secnum">6</span><span class="sectitle">Theory</span></h2><h3>6.1 Two decision layers</h3>
+<p>The Decide stage has a <strong>task layer</strong> (which fruit, what order, whether to attempt, the mission FSM) and an <strong>action layer</strong> (how to grasp a chosen fruit, the grasp policy). They are separated because they operate at different rates and verifiabilities: the task layer is discrete, auditable logic; the action layer is a continuous, possibly learned policy. Keeping them distinct lets the machine verify the sequencing logic independently of the opaque grasp policy.</p>
+<h3>6.2 Task decision-making under uncertainty</h3>
+<p>The mission FSM sequences <code>DRIVE -&gt; STAGE -&gt; ALIGN -&gt; GRAB -&gt; LIFT -&gt; SWING -&gt; LOWER -&gt; RELEASE</code> and, crucially, decides <strong>whether</strong> to attempt each candidate. Inputs are the M4 ripeness confidence and the M5 pose covariance: a low-confidence or high-covariance target is <strong>gated out</strong> (deferred or skipped) rather than risked, the occlusion/uncertainty gate (M5) elevated to a decision. Among admitted targets, sequencing balances value (ripeness), reachability (M8 preview), uncertainty, and cycle cost (CEC-01). This is decision-making that <em>uses</em> the distributions perception provides.</p>
+<h3>6.3 Framing the grasp as a policy (MDP)</h3>
+<p>Grasping is modeled as a <strong>Markov Decision Process</strong>: a <strong>state</strong> (fruit pose+covariance, mask/shape, ripeness, gripper state), an <strong>action</strong> (approach direction, contact placement, force/compliance targets), a <strong>reward</strong>, and a <strong>policy</strong> π mapping states to actions. The reward is where engineering judgment lives: it rewards a secure, unbruised grasp <em>inside the Grip-Force Window</em> (CEC-02) and penalizes slip, bruise, and miss. A poorly designed reward is <em>hacked</em>, the policy satisfies its letter while violating its intent, so the reward is tied explicitly to the physical window, not a proxy.</p>
+<h3>6.4 Learning the policy, and the sim-to-real pipeline</h3>
+<p>Two learning modes combine: <strong>imitation learning</strong> (behavioral cloning from demonstrations) bootstraps a safe initial policy; <strong>reinforcement learning</strong> refines it against the reward. Neither can be trained on real fruit at scale, too slow, too destructive. The policy is therefore trained in the <strong>digital twin</strong>, which supplies massive, safe, cheap episodes. The hazard is the <strong>reality gap</strong>: a policy that overfits the simulator's exact physics fails in the field. The remedy is <strong>domain randomization</strong>, training across a deliberately randomized distribution of contact parameters, fruit properties, sensor noise, and lighting so the policy learns to be <em>robust</em> rather than tuned to one simulator. Transfer is then <strong>validated on real data</strong> before the policy is trusted. This <strong>train-in-sim -&gt; randomize -&gt; transfer -&gt; validate</strong> loop is the Sim-to-Real Pipeline, mastered here (Section 11.3, CEC-05).</p>
+<h3>6.5 Bounding the learner</h3>
+<p>A learned policy's output is a <strong>proposal</strong>, never a direct command. It passes through a <strong>verified bounding layer</strong> that:</p>
+<ul>
+<li><strong>clips</strong> the proposed force/compliance to the Grip-Force Window (CEC-02) and the proposed motion to reach/joint limits (M8) and keep-out zones (M15);</li>
+<li><strong>checks</strong> the decision's inputs, if pose covariance (CEC-03) or ripeness confidence (EI-04) is too poor, the proposal is rejected;</li>
+<li><strong>falls back</strong> to a deterministic behavior (a conservative fixed-compliance grasp, a re-approach, or a skip) when the proposal is rejected or the policy is unavailable.</li>
+</ul>
+<p>Because the bounding layer is deterministic and verifiable, the <em>system</em> is verifiable even though the policy is not. This is the architectural expression of this module's Engineering Insight (EI-07) and the system-level AI rule carried since Module 1.</p>
+<h3>6.6 The introduce-&gt;master split</h3>
+<p>M7 delivers the <em>framework</em>: the decision logic, the MDP and reward, the training pipeline, the bounds, and the fallback. It does <strong>not</strong> build the physical force controller, that is M9, where fluid-powered compliance and AI-assisted force regulation execute the bounded proposal on real hardware. Separating the two lets the policy be designed against the <em>physics requirement</em> (the window) before the actuator exists.</p>
+<figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The mission finite state machine sequences drive, stage, align, grab, lift, swing, lower, release, and before grabbing a gate uses ripeness confidence and pose covariance to decide whether to attempt: risky targets are deferred or skipped, safe ones proceed, and release loops to the next candidate." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker><marker id="p" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/></marker><marker id="x" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--danger)"/></marker></defs>
+<rect x="52" y="88" width="100" height="38" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="102.0" y="112" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">DRIVE</text>
+<rect x="164" y="88" width="100" height="38" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="214.0" y="112" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">STAGE</text>
+<rect x="276" y="88" width="100" height="38" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="326.0" y="112" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">ALIGN</text>
+<polygon points="430,80 466,107 430,134 394,107" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.6"/>
+<text x="430" y="105" text-anchor="middle" font-size="7.6" fill="var(--warn-text)" font-weight="700">attempt?</text>
+<text x="430" y="115" text-anchor="middle" font-size="6.2" fill="var(--text-muted)">gate</text>
+<rect x="536" y="88" width="100" height="38" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="586.0" y="112" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">GRAB</text>
+<rect x="536" y="214" width="100" height="38" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="586.0" y="238" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">LIFT</text>
+<rect x="400" y="214" width="100" height="38" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="450.0" y="238" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">SWING</text>
+<rect x="276" y="214" width="100" height="38" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="326.0" y="238" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">LOWER</text>
+<rect x="152" y="214" width="100" height="38" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="202.0" y="238" text-anchor="middle" font-size="9.5" fill="var(--text-primary)" font-weight="700">RELEASE</text>
+<line x1="152" y1="107" x2="164" y2="107" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#a)"/>
+<line x1="264" y1="107" x2="276" y2="107" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#a)"/>
+<line x1="376" y1="107" x2="394" y2="107" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#a)"/>
+<line x1="466" y1="107" x2="536" y2="107" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#p)"/>
+<text x="500" y="100" text-anchor="middle" font-size="6.6" fill="var(--accent)">pass</text>
+<line x1="586" y1="126" x2="586" y2="214" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#a)"/>
+<line x1="536" y1="233" x2="500" y2="233" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#a)"/>
+<line x1="400" y1="233" x2="376" y2="233" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#a)"/>
+<line x1="276" y1="233" x2="252" y2="233" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#a)"/>
+<path d="M152,233 L110,233 L110,126" fill="none" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#a)"/>
+<text x="96" y="180" font-size="6.6" fill="var(--text-muted)">next candidate</text>
+<path d="M430,134 L430,170 L102,170 L102,128" fill="none" stroke="var(--danger)" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#x)"/>
+<text x="250" y="164" text-anchor="middle" font-size="7" fill="var(--danger-text)">gated out: defer / skip (low ripeness conf. OR high pose covariance)</text>
+<rect x="330" y="26" width="94" height="30" rx="6" fill="var(--surface)" stroke="var(--info)" stroke-width="1.2"/>
+<text x="377" y="45" text-anchor="middle" font-size="7.6" fill="var(--info)">ripeness conf. (M4)</text>
+<rect x="436" y="26" width="94" height="30" rx="6" fill="var(--surface)" stroke="var(--info)" stroke-width="1.2"/>
+<text x="483" y="45" text-anchor="middle" font-size="7.6" fill="var(--info)">pose cov. (M5)</text>
+<line x1="390" y1="56" x2="422" y2="83" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#a)"/>
+<line x1="470" y1="56" x2="438" y2="83" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#a)"/>
+<text x="20" y="272" font-size="8.3" fill="var(--text-secondary)">Among admitted targets, sequencing balances value (ripeness), reachability (M8 preview), uncertainty, and cycle cost (CEC-01).</text>
+<text x="20" y="286" font-size="8.3" fill="var(--text-muted)">The task layer is discrete, auditable logic, kept separate from the learned grasp policy so the sequencing can be verified independently.</text>
+<text x="20" y="300" font-size="8.3" fill="var(--text-muted)">This is decision-making that USES the distributions perception provides: the occlusion/uncertainty gate (M5) elevated to a decision.</text>
+</svg></div><figcaption><span class="fid">F-M7-2</span>Mission FSM with uncertainty/ripeness gating. The mission FSM sequences DRIVE, STAGE, ALIGN, GRAB, LIFT, SWING, LOWER, RELEASE, and before grabbing a gate uses M4 ripeness confidence and M5 pose covariance to decide whether to attempt: low-confidence or high-covariance targets are deferred or skipped, safe ones proceed, release loops to the next candidate. The task layer is discrete, auditable logic kept separate from the learned grasp policy. Section 6.2.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Propose-then-bound: the learned policy emits a proposal that is projected onto the safe set (the intersection of the grip-force window, reach limits, keep-out, and confidence gates), or replaced by a deterministic fallback; the worst-case executed action is bounded by the safe set regardless of the policy." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="p7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker><marker id="pj" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/></marker></defs>
+<text x="40" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Action bounding as projection</text>
+<rect x="40" y="42" width="392" height="300" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="48" y="58" font-size="8" fill="var(--text-muted)">action space (force, compliance, motion)</text>
+<polygon points="120,120 320,104 388,196 330,300 150,308 78,212" fill="var(--accent)" fill-opacity="0.13" stroke="var(--accent)" stroke-width="1.6"/>
+<text x="210" y="210" text-anchor="middle" font-size="13" fill="var(--accent)" font-weight="700">safe set  S</text>
+<text x="210" y="226" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">window and reach and keep-out and gates</text>
+<line x1="406" y1="96" x2="356" y2="147" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#pj)" stroke-dasharray="5 3"/>
+<circle cx="406" cy="96" r="5" fill="var(--danger)"/>
+<text x="400" y="90" text-anchor="end" font-size="8.5" fill="var(--danger-text)" font-weight="700">proposal a_pi</text>
+<text x="400" y="102" text-anchor="end" font-size="7.5" fill="var(--text-muted)">(from policy, unsafe)</text>
+<circle cx="352" cy="150" r="5" fill="var(--accent)"/>
+<text x="360" y="153" font-size="8.5" fill="var(--accent)" font-weight="700">proj_S(a_pi) = a_exec</text>
+<circle cx="160" cy="268" r="4.5" fill="var(--info)"/>
+<text x="170" y="271" font-size="8" fill="var(--info)">fallback: fixed-compliance grasp</text>
+<rect x="470" y="50" width="272" height="44" rx="9" fill="var(--surface)" stroke="var(--accent-2)" stroke-width="1.4"/>
+<text x="484" y="69" font-size="10.5" fill="var(--accent-2)" font-weight="700">LEARNED POLICY</text>
+<text x="484" y="85" font-size="8.3" fill="var(--text-muted)">output is a proposal, never a direct command</text>
+<line x1="606" y1="94" x2="606" y2="112" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#p7)"/>
+<text x="612" y="107" font-size="7.5" fill="var(--text-muted)">a_pi</text>
+<rect x="470" y="114" width="272" height="84" rx="9" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="484" y="133" font-size="10.5" fill="var(--accent)" font-weight="700">BOUNDING LAYER (deterministic, verified)</text>
+<text x="484" y="149" font-size="8.3" fill="var(--text-muted)">clip to safe set S (window, reach, keep-out)</text>
+<text x="484" y="162" font-size="8.3" fill="var(--text-muted)">check pose covariance and ripeness confidence</text>
+<text x="484" y="175" font-size="8.3" fill="var(--text-muted)">reject and fall back if checks fail or S empty</text>
+<line x1="606" y1="198" x2="606" y2="216" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#p7)"/>
+<rect x="470" y="218" width="272" height="34" rx="9" fill="var(--surface)" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="484" y="237" font-size="10.5" fill="var(--text-primary)" font-weight="700">EXECUTED ACTION  a_exec</text>
+<text x="470" y="278" font-size="9" fill="var(--text-secondary)">a_exec = proj_S(a_pi) if S nonempty and checks pass;</text>
+<text x="522" y="291" font-size="9" fill="var(--text-secondary)">otherwise a_exec = a_fallback</text>
+<rect x="470" y="302" width="272" height="52" rx="8" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.5"/>
+<text x="482" y="319" font-size="8.5" fill="var(--accent)" font-weight="700">EI-07: a learned policy is a proposal, not an authority.</text>
+<text x="482" y="333" font-size="8" fill="var(--text-muted)">The bounding layer is verifiable, so the system is verifiable</text>
+<text x="482" y="345" font-size="8" fill="var(--text-muted)">though the policy is not. Worst case is bounded by S.</text>
+</svg></div><figcaption><span class="fid">F-M7-5</span>Propose-then-bound: projection onto the safe set. The learned policy emits a proposal, projected onto the safe set (window, reach, keep-out, gates) or replaced by a deterministic fallback. The bounding layer is verifiable, so the system is verifiable though the policy is not; worst case is bounded by S. EI-07, Sections 6.5 and 7.4.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two decision layers: a discrete auditable task layer (the mission FSM choosing which fruit and whether to attempt) sits above a continuous, possibly learned action layer (the grasp policy choosing how to grasp), separated so the sequencing logic can be verified independently of the opaque policy." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Two decision layers in Decide</text>
+<rect x="40" y="48" width="680" height="66" rx="9" fill="var(--surface)" stroke="var(--info)" stroke-width="1.5"/>
+<text x="56" y="68" font-size="10" fill="var(--info)" font-weight="700">TASK LAYER  (mission FSM)</text>
+<text x="56" y="84" font-size="7.6" fill="var(--text-secondary)">which fruit, what order, whether to attempt</text>
+<text x="56" y="98" font-size="7.4" fill="var(--text-muted)">discrete, auditable logic - verifiable</text>
+<rect x="540" y="58" width="168" height="46" rx="6" fill="var(--surface-2)" stroke="var(--info)" stroke-opacity="0.5"/>
+<text x="624" y="76" font-size="7" fill="var(--info)" font-weight="anc=middle">rate: event / low</text>
+<text x="624" y="90" font-size="7" fill="var(--info)" font-weight="anc=middle">verifiable: yes</text>
+<line x1="380" y1="114" x2="380" y2="140" stroke="var(--border-strong)" stroke-width="1.5" marker-end="url(#a)"/>
+<text x="388" y="131" font-size="7.2" fill="var(--text-muted)">chosen fruit -> attempt</text>
+<rect x="40" y="142" width="680" height="66" rx="9" fill="var(--surface)" stroke="var(--accent-2)" stroke-width="1.5"/>
+<text x="56" y="162" font-size="10" fill="var(--accent-2)" font-weight="700">ACTION LAYER  (grasp policy)</text>
+<text x="56" y="178" font-size="7.6" fill="var(--text-secondary)">how to grasp a chosen fruit (approach, contact, force)</text>
+<text x="56" y="192" font-size="7.4" fill="var(--text-muted)">continuous, possibly learned policy - opaque</text>
+<rect x="540" y="152" width="168" height="46" rx="6" fill="var(--surface-2)" stroke="var(--accent-2)" stroke-opacity="0.5"/>
+<text x="624" y="170" font-size="7" fill="var(--accent-2)" font-weight="anc=middle">rate: continuous</text>
+<text x="624" y="184" font-size="7" fill="var(--accent-2)" font-weight="anc=middle">verifiable: hard</text>
+<text x="20" y="232" font-size="8" fill="var(--text-muted)">Separated by rate and verifiability: keeping them distinct lets the machine verify the sequencing logic independently of the opaque grasp policy. Section 6.1.</text>
+</svg></div><figcaption><span class="fid">F-M7-1</span>Two decision layers. The Decide stage has a discrete, auditable task layer (the mission FSM: which fruit, what order, whether to attempt) above a continuous, possibly learned action layer (the grasp policy: how to grasp). They are separated by rate and verifiability so the sequencing logic can be verified independently of the opaque grasp policy. Section 6.1.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The grasp as a Markov decision process: a state (fruit pose and covariance, mask, ripeness, gripper) feeds a policy that chooses an action (approach, contact, force and compliance targets); the environment returns a reward that adds success inside the grip-force window and subtracts slip, bruise, and miss, tying the objective to the physical window rather than a proxy." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">The grasp as a Markov decision process</text>
+<rect x="40" y="60" width="150" height="74" rx="8" fill="var(--surface)" stroke="var(--info)" stroke-width="1.4"/>
+<text x="115" y="78" font-size="9" fill="var(--info)" font-weight="700" text-anchor="middle">STATE s</text>
+<text x="115" y="92" font-size="6.6" fill="var(--text-muted)" font-weight="anc=middle">fruit pose + covariance</text>
+<text x="115" y="103" font-size="6.6" fill="var(--text-muted)" font-weight="anc=middle">mask / shape, ripeness</text>
+<text x="115" y="114" font-size="6.6" fill="var(--text-muted)" font-weight="anc=middle">gripper state</text>
+<rect x="300" y="60" width="150" height="74" rx="8" fill="var(--surface)" stroke="var(--accent-2)" stroke-width="1.4"/>
+<text x="375" y="78" font-size="9" fill="var(--accent-2)" font-weight="700" text-anchor="middle">POLICY &#960;</text>
+<text x="375" y="94" font-size="6.6" fill="var(--text-muted)" font-weight="anc=middle">&#960;(a|s): s -> a</text>
+<text x="375" y="108" font-size="6.6" fill="var(--text-muted)" font-weight="anc=middle">maximizes E[G],</text>
+<text x="375" y="119" font-size="6.6" fill="var(--text-muted)" font-weight="anc=middle">G = sum &#947;^t R_t</text>
+<rect x="560" y="60" width="160" height="74" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>
+<text x="640" y="78" font-size="9" fill="var(--accent)" font-weight="700" text-anchor="middle">ACTION a</text>
+<text x="640" y="94" font-size="6.6" fill="var(--text-muted)" font-weight="anc=middle">approach direction</text>
+<text x="640" y="105" font-size="6.6" fill="var(--text-muted)" font-weight="anc=middle">contact placement</text>
+<text x="640" y="116" font-size="6.6" fill="var(--text-muted)" font-weight="anc=middle">force / compliance</text>
+<line x1="190" y1="97" x2="298" y2="97" stroke="var(--border-strong)" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="450" y1="97" x2="558" y2="97" stroke="var(--border-strong)" stroke-width="1.4" marker-end="url(#a)"/>
+<rect x="300" y="176" width="160" height="30" rx="7" fill="var(--surface-2)" stroke="var(--warn)" stroke-opacity="0.6"/>
+<text x="380" y="195" font-size="8" fill="var(--warn-text)" font-weight="700" text-anchor="middle">ENVIRONMENT / twin</text>
+<path d="M 640,134 L 640,191 L 462,191" fill="none" stroke="var(--border-strong)" stroke-width="1.3" marker-end="url(#a)"/>
+<path d="M 298,191 L 115,191 L 115,136" fill="none" stroke="var(--border-strong)" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="500" y="187" font-size="7" fill="var(--text-muted)">reward R(s,a) + next state</text>
+<rect x="40" y="222" width="680" height="52" rx="8" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.5"/>
+<text x="52" y="240" font-size="8.4" fill="var(--accent)" font-weight="700">R = +R_success . 1[grasp inside the Grip-Force Window (CEC-02)]</text>
+<text x="52" y="254" font-size="8" fill="var(--text-secondary)">    - &#955;_slip 1[slip]  - &#955;_bruise 1[bruise]  - &#955;_miss 1[miss]</text>
+<text x="52" y="268" font-size="7" fill="var(--text-muted)">The reward is tied explicitly to the physical window, not a proxy, so the policy cannot be reward-hacked. Sections 6.3 and 7.2.</text>
+</svg></div><figcaption><span class="fid">F-M7-3</span>The grasp as a Markov decision process. Grasping is an MDP: a state (fruit pose+covariance, mask, ripeness, gripper) feeds a policy pi that chooses an action (approach, contact, force/compliance); the environment returns a reward R that adds success inside the Grip-Force Window (CEC-02) and subtracts slip, bruise, and miss, and the policy maximizes the discounted return. The reward is tied to the physical window, not a proxy, so it cannot be reward-hacked. Sections 6.3 and 7.2.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The sim-to-real pipeline trains the grasp policy in the digital twin (imitation learning bootstraps, reinforcement learning refines), randomizes across a distribution of contact, fruit, sensor, and lighting parameters so the policy is robust rather than tuned to one simulator, transfers to the machine, and validates against real data; the reality gap is measured and closed by widening the randomization." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">The sim-to-real pipeline (CEC-05)</text>
+<rect x="30" y="76" width="168" height="66" rx="8" fill="var(--surface)" stroke="var(--info)" stroke-width="1.5"/>
+<text x="114.0" y="96" font-size="8.6" fill="var(--info)" font-weight="700" text-anchor="middle">TRAIN IN SIM</text>
+<text x="114.0" y="114" font-size="6.6" fill="var(--text-secondary)" text-anchor="middle">imitation + RL in the twin</text>
+<text x="114.0" y="128" font-size="6.2" fill="var(--text-muted)" text-anchor="middle">massive, safe, cheap episodes</text>
+<line x1="198" y1="109" x2="210" y2="109" stroke="var(--border-strong)" stroke-width="1.4" marker-end="url(#a)"/>
+<rect x="210" y="76" width="168" height="66" rx="8" fill="var(--surface)" stroke="var(--accent-2)" stroke-width="1.5"/>
+<text x="294.0" y="96" font-size="8.6" fill="var(--accent-2)" font-weight="700" text-anchor="middle">RANDOMIZE</text>
+<text x="294.0" y="114" font-size="6.6" fill="var(--text-secondary)" text-anchor="middle">domain randomization over p(&#958;)</text>
+<text x="294.0" y="128" font-size="6.2" fill="var(--text-muted)" text-anchor="middle">contact, friction, mass, noise, light</text>
+<line x1="378" y1="109" x2="390" y2="109" stroke="var(--border-strong)" stroke-width="1.4" marker-end="url(#a)"/>
+<rect x="390" y="76" width="168" height="66" rx="8" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.5"/>
+<text x="474.0" y="96" font-size="8.6" fill="var(--accent)" font-weight="700" text-anchor="middle">TRANSFER</text>
+<text x="474.0" y="114" font-size="6.6" fill="var(--text-secondary)" text-anchor="middle">deploy to the machine</text>
+<line x1="558" y1="109" x2="570" y2="109" stroke="var(--border-strong)" stroke-width="1.4" marker-end="url(#a)"/>
+<rect x="570" y="76" width="168" height="66" rx="8" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.5"/>
+<text x="654.0" y="96" font-size="8.6" fill="var(--warn)" font-weight="700" text-anchor="middle">VALIDATE</text>
+<text x="654.0" y="114" font-size="6.6" fill="var(--text-secondary)" text-anchor="middle">against real data</text>
+<text x="654.0" y="128" font-size="6.2" fill="var(--text-muted)" text-anchor="middle">measure the reality gap</text>
+<path d="M 654.0,142 L 654.0,172 L 294.0,172 L 294.0,142" fill="none" stroke="var(--danger)" stroke-width="1.4" stroke-dasharray="4 2" marker-end="url(#a)"/>
+<text x="474.0" y="182" font-size="7" fill="var(--danger-text)" font-weight="anc=middle">if the gap is too large, widen / retune p(&#958;) and repeat</text>
+<rect x="30" y="196" width="712" height="26" rx="7" fill="var(--surface-2)" stroke="var(--accent)" stroke-opacity="0.5"/>
+<text x="44" y="213" font-size="7.8" fill="var(--accent)" font-weight="700">&#960;* = argmax_&#960;  E over &#958;~p(&#958;) [ E_&#960;[G | &#958;] ]   -   optimal in expectation across a broad p(&#958;) -> robust to the real &#958;.</text>
+<text x="20" y="244" font-size="7.8" fill="var(--text-muted)">Neither imitation nor RL can be trained on real fruit at scale (too slow, too destructive), so training is in the twin. Never trust a policy that has</text>
+<text x="20" y="256" font-size="7.8" fill="var(--text-muted)">only seen the simulator; the reality gap is measured by validating real vs sim and closed by widening the randomization. Sections 6.4 and 7.3.</text>
+</svg></div><figcaption><span class="fid">F-M7-4</span>The sim-to-real pipeline. Train the grasp policy in the digital twin (imitation learning bootstraps, RL refines), randomize across a distribution p(xi) of contact, fruit, sensor, and lighting parameters so it is robust, transfer to the machine, and validate against real data. The objective maximizes expected return over p(xi). The reality gap is measured by validating real vs sim and closed by widening p(xi); never trust a policy that has only seen the simulator (CEC-05). Sections 6.4 and 7.3.</figcaption></figure></section>
+<section class="section"><h2 id="sec-7-mathematics"><span class="secnum">7</span><span class="sectitle">Mathematics</span></h2><p>Rigor tier for M7: <strong>L2 to L3</strong>. Central results: the safety-bounded grasp MDP and the domain-randomization (robust-transfer) formulation.</p>
+<h3>7.1 Value-based pick sequencing</h3>
+<p>Assign each admitted fruit a value <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>V</mi><mi>i</mi></msub><mo>=</mo><mstyle displaystyle="true" scriptlevel="0"><mfrac><mrow><msub><mi>w</mi><mi>r</mi></msub><mtext> </mtext><msub><mi>r</mi><mi>i</mi></msub><mtext> </mtext><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><msub><mi>u</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow><msub><mi>c</mi><mi>i</mi></msub></mfrac></mstyle></mrow><annotation encoding="application/x-tex">V_i = \dfrac{w_r\,r_i\,(1-u_i)}{c_i}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.263em;vertical-align:-0.836em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.02778em;">r</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">u</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.836em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span> with ripeness <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">r_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>, normalized uncertainty <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>u</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">u_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">u</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> (from covariance, CEC-03), cycle cost <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>c</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">c_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>, weight <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mi>r</mi></msub></mrow><annotation encoding="application/x-tex">w_r</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.02778em;">r</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>. Sequence by descending <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>V</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">V_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> subject to reachability and the cycle-time budget (CEC-01). <em>Use:</em> uncertainty- and value-aware ordering, bounded in decision time.</p>
+<h3>7.2 The grasp MDP and return</h3>
+<p>State <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span>, action <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span></span></span></span>, policy <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>π</mi><mo stretchy="false">(</mo><mi>a</mi><mi mathvariant="normal">∣</mi><mi>s</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\pi(a|s)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">π</span><span class="mopen">(</span><span class="mord mathnormal">a</span><span class="mord">∣</span><span class="mord mathnormal">s</span><span class="mclose">)</span></span></span></span>, reward <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo stretchy="false">(</mo><mi>s</mi><mo separator="true">,</mo><mi>a</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">R(s,a)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mopen">(</span><span class="mord mathnormal">s</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">a</span><span class="mclose">)</span></span></span></span>, discounted return <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>G</mi><mo>=</mo><msub><mo>∑</mo><mi>t</mi></msub><msup><mi>γ</mi><mi>t</mi></msup><msub><mi>R</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">G=\sum_t \gamma^t R_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">G</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0933em;vertical-align:-0.2997em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1308em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05556em;">γ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7936em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0077em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>; the policy maximizes <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="double-struck">E</mi><mi>π</mi></msub><mo stretchy="false">[</mo><mi>G</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">\mathbb E_\pi[G]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathbb">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">π</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">[</span><span class="mord mathnormal">G</span><span class="mclose">]</span></span></span></span>. Reward (schematic): <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo>=</mo><mo>+</mo><msub><mi>R</mi><mtext>success</mtext></msub><mo>⋅</mo><mn mathvariant="double-struck">1</mn><mo stretchy="false">[</mo><mtext>grasp inside window</mtext><mo stretchy="false">]</mo><mo>−</mo><msub><mi>λ</mi><mtext>slip</mtext></msub><mn mathvariant="double-struck">1</mn><mo stretchy="false">[</mo><mtext>slip</mtext><mo stretchy="false">]</mo><mo>−</mo><msub><mi>λ</mi><mtext>bruise</mtext></msub><mn mathvariant="double-struck">1</mn><mo stretchy="false">[</mo><mtext>bruise</mtext><mo stretchy="false">]</mo><mo>−</mo><msub><mi>λ</mi><mtext>miss</mtext></msub><mn mathvariant="double-struck">1</mn><mo stretchy="false">[</mo><mtext>miss</mtext><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">R = +R_\text{success}\cdot\mathbb{1}[\text{grasp inside window}] - \lambda_\text{slip}\mathbb{1}[\text{slip}] - \lambda_\text{bruise}\mathbb{1}[\text{bruise}] - \lambda_\text{miss}\mathbb{1}[\text{miss}]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord">+</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0077em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">success</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mopen">[</span><span class="mord text"><span class="mord">grasp inside window</span></span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal">λ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">slip</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mord">1</span><span class="mopen">[</span><span class="mord text"><span class="mord">slip</span></span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">λ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">bruise</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">1</span><span class="mopen">[</span><span class="mord text"><span class="mord">bruise</span></span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">λ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3175em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">miss</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">1</span><span class="mopen">[</span><span class="mord text"><span class="mord">miss</span></span><span class="mclose">]</span></span></span></span>, with the window membership from CEC-02. <em>Use:</em> frames learning with a mission-tied, safety-aware objective.</p>
+<h3>7.3 Domain randomization as robust transfer (central)</h3>
+<p>Let simulator parameters <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ξ</mi></mrow><annotation encoding="application/x-tex">\xi</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.04601em;">ξ</span></span></span></span> (contact stiffness, friction, mass, sensor noise, lighting) be drawn from a randomization distribution <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false">(</mo><mi>ξ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">p(\xi)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">p</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.04601em;">ξ</span><span class="mclose">)</span></span></span></span>. Train the policy to maximize <em>expected</em> return over that distribution:
+<div class="eqwrap"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msup><mi>π</mi><mo>∗</mo></msup><mo>=</mo><mi>arg</mi><mo>⁡</mo><munder><mrow><mi>max</mi><mo>⁡</mo></mrow><mi>π</mi></munder><mtext> </mtext><msub><mi mathvariant="double-struck">E</mi><mrow><mi>ξ</mi><mo>∼</mo><mi>p</mi><mo stretchy="false">(</mo><mi>ξ</mi><mo stretchy="false">)</mo></mrow></msub><mo fence="false" stretchy="true" minsize="1.2em" maxsize="1.2em">[</mo><msub><mi mathvariant="double-struck">E</mi><mi>π</mi></msub><mo stretchy="false">[</mo><mi>G</mi><mo>∣</mo><mi>ξ</mi><mo stretchy="false">]</mo><mo fence="false" stretchy="true" minsize="1.2em" maxsize="1.2em">]</mo><mi mathvariant="normal">.</mi></mrow><annotation encoding="application/x-tex">\pi^\ast=\arg\max_\pi\ \mathbb E_{\xi\sim p(\xi)}\big[\mathbb E_\pi[G\mid \xi]\big].</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7387em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">π</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7387em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.55em;vertical-align:-0.7em;"></span><span class="mop">ar<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.4306em;"><span style="top:-2.4em;margin-left:0em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">π</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span><span class="mop">max</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7em;"><span></span></span></span></span></span><span class="mspace"> </span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathbb">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.5198em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.04601em;">ξ</span><span class="mrel mtight">∼</span><span class="mord mathnormal mtight">p</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight" style="margin-right:0.04601em;">ξ</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3552em;"><span></span></span></span></span></span></span><span class="mord"><span class="delimsizing size1">[</span></span><span class="mord"><span class="mord mathbb">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">π</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">[</span><span class="mord mathnormal">G</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∣</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.2em;vertical-align:-0.35em;"></span><span class="mord mathnormal" style="margin-right:0.04601em;">ξ</span><span class="mclose">]</span><span class="mord"><span class="delimsizing size1">]</span></span><span class="mord">.</span></span></span></span></span></div>
+A policy optimal in expectation across a broad <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false">(</mo><mi>ξ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">p(\xi)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">p</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.04601em;">ξ</span><span class="mclose">)</span></span></span></span> is robust to the specific real-world <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ξ</mi></mrow><annotation encoding="application/x-tex">\xi</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.04601em;">ξ</span></span></span></span> it later meets, the mathematical statement of why randomization transfers. The <strong>reality gap</strong> is the distribution shift between <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false">(</mo><mi>ξ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">p(\xi)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">p</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.04601em;">ξ</span><span class="mclose">)</span></span></span></span> and the field; it is <em>measured</em> by validating real performance against sim performance, and <em>closed</em> by widening/retuning <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false">(</mo><mi>ξ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">p(\xi)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">p</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.04601em;">ξ</span><span class="mclose">)</span></span></span></span> until the gap is acceptable. <strong>Grad (L3):</strong> relate to robust/distributionally-robust optimization; discuss why too-wide randomization degrades peak performance (the robustness-optimality tradeoff).</p>
+<h3>7.4 Action bounding as projection</h3>
+<p>Given a proposed action <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>π</mi></msub></mrow><annotation encoding="application/x-tex">a_\pi</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">π</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>, the executed action is the projection onto the safe set <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">S</mi></mrow><annotation encoding="application/x-tex">\mathcal S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathcal" style="margin-right:0.075em;">S</span></span></span></span> (the intersection of the Grip-Force Window, reach limits, keep-out, and uncertainty gates): <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mtext>exec</mtext></msub><mo>=</mo><msub><mi mathvariant="normal">Π</mi><mi mathvariant="script">S</mi></msub><mo stretchy="false">(</mo><msub><mi>a</mi><mi>π</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">a_\text{exec}=\Pi_{\mathcal S}(a_\pi)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">exec</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord">Π</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathcal mtight" style="margin-right:0.075em;">S</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">π</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span> if <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">S</mi><mo mathvariant="normal">≠</mo><mi mathvariant="normal">∅</mi></mrow><annotation encoding="application/x-tex">\mathcal S\neq\varnothing</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathcal" style="margin-right:0.075em;">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel"><span class="mrel"><span class="mord vbox"><span class="thinbox"><span class="rlap"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="inner"><span class="mord"><span class="mrel"></span></span></span><span class="fix"></span></span></span></span></span><span class="mrel">=</span></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6633em;vertical-align:-0.0817em;"></span><span class="mord amsrm">∅</span></span></span></span> and the situation passes the confidence checks; otherwise <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mtext>exec</mtext></msub><mo>=</mo><msub><mi>a</mi><mtext>fallback</mtext></msub></mrow><annotation encoding="application/x-tex">a_\text{exec}=a_\text{fallback}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">exec</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">fallback</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>. <em>Use:</em> the formal statement of &quot;propose, then bound&quot; (EI-07). The worst-case executed action is bounded by <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">S</mi></mrow><annotation encoding="application/x-tex">\mathcal S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathcal" style="margin-right:0.075em;">S</span></span></span></span> regardless of the policy.</p>
+<figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 255" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Value-based pick sequencing assigns each admitted fruit a value equal to a ripeness-and-confidence weighted term over its cycle cost, then sequences by descending value subject to reachability and the cycle-time budget, an uncertainty- and value-aware ordering bounded in decision time." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Value-based pick sequencing</text>
+<rect x="470" y="52" width="272" height="60" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="484" y="74" font-size="10" fill="var(--accent)" font-weight="700">V_i = w_r r_i (1 - u_i) / c_i</text>
+<text x="484" y="90" font-size="6.6" fill="var(--text-muted)">r_i ripeness, u_i uncertainty (covariance, CEC-03),</text>
+<text x="484" y="101" font-size="6.6" fill="var(--text-muted)">c_i cycle cost, w_r weight</text>
+<text x="30" y="66" font-size="8" fill="var(--text-secondary)" font-weight="700">admitted fruit -> sequence by descending V_i:</text>
+<rect x="30" y="80" width="308" height="24" rx="4" fill="var(--accent-2)" fill-opacity="0.5" stroke="var(--accent-2)"/>
+<text x="38" y="96" font-size="7.4" fill="var(--text-on-accent)" font-weight="700">1. fruit A</text>
+<text x="345.8" y="96" font-size="6.8" fill="var(--accent-2)">V=0.81  (r=0.9, u=0.1, c=1.0)</text>
+<rect x="30" y="114" width="243" height="24" rx="4" fill="var(--accent-2)" fill-opacity="0.5" stroke="var(--accent-2)"/>
+<text x="38" y="130" font-size="7.4" fill="var(--text-on-accent)" font-weight="700">2. fruit C</text>
+<text x="281.20000000000005" y="130" font-size="6.8" fill="var(--accent-2)">V=0.64  (r=0.95, u=0.05, c=1.4)</text>
+<rect x="30" y="148" width="201" height="24" rx="4" fill="var(--accent-2)" fill-opacity="0.5" stroke="var(--accent-2)"/>
+<text x="38" y="164" font-size="7.4" fill="var(--text-on-accent)" font-weight="700">3. fruit B</text>
+<text x="239.4" y="164" font-size="6.8" fill="var(--accent-2)">V=0.53  (r=0.7, u=0.4, c=0.8)</text>
+<rect x="30" y="182" width="201" height="24" rx="4" fill="var(--accent-2)" fill-opacity="0.5" stroke="var(--accent-2)"/>
+<text x="38" y="198" font-size="7.4" fill="var(--text-on-accent)" font-weight="700">4. fruit D</text>
+<text x="239.4" y="198" font-size="6.8" fill="var(--accent-2)">V=0.53  (r=0.6, u=0.2, c=0.9)</text>
+<text x="20" y="232" font-size="7.8" fill="var(--text-muted)">Sequence by descending V_i subject to reachability and the cycle-time budget (CEC-01): riper, more certain, cheaper-to-reach fruit go first.</text>
+<text x="20" y="244" font-size="7.8" fill="var(--text-muted)">Uncertainty- and value-aware ordering, bounded in decision time. Illustrative values. Section 7.1.</text>
+</svg></div><figcaption><span class="fid">F-M7-7</span>Value-based pick sequencing. Each admitted fruit is assigned a value V_i = w_r r_i (1 - u_i) / c_i with ripeness r_i, normalized uncertainty u_i (from covariance, CEC-03), and cycle cost c_i, then sequenced by descending V_i subject to reachability and the cycle-time budget (CEC-01): riper, more certain, cheaper-to-reach fruit go first. Uncertainty- and value-aware ordering, bounded in decision time. Section 7.1.</figcaption></figure><figure class="figure fig-real"><div class="figbody"><svg viewBox="0 0 760 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Domain randomization and the reality gap: training over a randomization distribution of simulator parameters makes the policy robust to the real value it later meets, but a too-narrow distribution overfits the simulator and leaves a large reality gap, while a too-wide distribution degrades peak performance, the robustness-optimality tradeoff." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Domain randomization and the reality gap</text>
+<line x1="90" y1="210" x2="560" y2="210" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="325.0" y="232" font-size="7.6" fill="var(--text-muted)" text-anchor="middle">simulator parameter &#958; (contact, friction, mass, noise, lighting)  -></text>
+<polyline points="90.0,210.0 97.8,210.0 105.7,210.0 113.5,210.0 121.3,210.0 129.2,210.0 137.0,209.9 144.8,209.7 152.7,209.3 160.5,208.3 168.3,206.4 176.2,203.0 184.0,197.5 191.8,189.6 199.7,179.6 207.5,168.7 215.3,158.8 223.2,152.0 231.0,150.0 238.8,153.4 246.7,161.1 254.5,171.5 262.3,182.3 270.2,191.8 278.0,199.1 285.8,204.0 293.7,207.0 301.5,208.6 309.3,209.4 317.2,209.8 325.0,209.9 332.8,210.0 340.7,210.0 348.5,210.0 356.3,210.0 364.2,210.0 372.0,210.0 379.8,210.0 387.7,210.0 395.5,210.0 403.3,210.0 411.2,210.0 419.0,210.0 426.8,210.0 434.7,210.0 442.5,210.0 450.3,210.0 458.2,210.0 466.0,210.0 473.8,210.0 481.7,210.0 489.5,210.0 497.3,210.0 505.2,210.0 513.0,210.0 520.8,210.0 528.7,210.0 536.5,210.0 544.3,210.0 552.2,210.0 560.0,210.0" fill="none" stroke="var(--danger)" stroke-width="1.8"/>
+<text x="230" y="140" font-size="6.8" fill="var(--danger-text)" font-weight="anc=middle">narrow p(&#958;): overfits sim</text>
+<polyline points="90.0,202.2 97.8,200.6 105.7,198.9 113.5,196.9 121.3,194.6 129.2,192.1 137.0,189.3 144.8,186.3 152.7,183.0 160.5,179.4 168.3,175.6 176.2,171.5 184.0,167.3 191.8,162.9 199.7,158.5 207.5,154.0 215.3,149.5 223.2,145.1 231.0,140.9 238.8,136.8 246.7,133.1 254.5,129.8 262.3,126.8 270.2,124.3 278.0,122.4 285.8,121.0 293.7,120.2 301.5,120.0 309.3,120.4 317.2,121.5 325.0,123.1 332.8,125.2 340.7,127.9 348.5,131.0 356.3,134.5 364.2,138.4 372.0,142.5 379.8,146.8 387.7,151.2 395.5,155.7 403.3,160.2 411.2,164.6 419.0,168.9 426.8,173.1 434.7,177.0 442.5,180.8 450.3,184.3 458.2,187.5 466.0,190.4 473.8,193.1 481.7,195.5 489.5,197.7 497.3,199.6 505.2,201.3 513.0,202.7 520.8,204.0 528.7,205.0 536.5,205.9 544.3,206.7 552.2,207.3 560.0,207.9" fill="none" stroke="var(--accent)" stroke-width="1.8"/>
+<text x="360" y="110" font-size="6.8" fill="var(--accent)" font-weight="anc=middle">wide p(&#958;): robust</text>
+<line x1="430" y1="202" x2="430" y2="90" stroke="var(--info)" stroke-width="1.6"/>
+<text x="430" y="84" font-size="6.8" fill="var(--info)" font-weight="700" text-anchor="middle">real field &#958;</text>
+<path d="M 256,180 L 424,180" stroke="var(--danger)" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#a)"/>
+<text x="343.0" y="176" font-size="6.4" fill="var(--danger-text)" text-anchor="middle">reality gap (distribution shift)</text>
+<rect x="588" y="66" width="154" height="150" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="598" y="84" font-size="7.2" fill="var(--text-primary)" font-weight="700">robustness-optimality</text>
+<text x="598" y="94" font-size="7.2" fill="var(--text-primary)" font-weight="700">tradeoff:</text>
+<text x="598" y="112" font-size="6.6" fill="var(--text-muted)">too narrow -> big gap</text>
+<text x="598" y="126" font-size="6.6" fill="var(--text-muted)">too wide -> lower peak</text>
+<text x="598" y="140" font-size="6.6" fill="var(--text-muted)">performance</text>
+<text x="598" y="160" font-size="6.6" fill="var(--accent)">widen p(&#958;) until the</text>
+<text x="598" y="170" font-size="6.6" fill="var(--accent)">measured gap is</text>
+<text x="598" y="180" font-size="6.6" fill="var(--accent)">acceptable</text>
+<text x="598" y="200" font-size="6.2" fill="var(--text-muted)">pi* = argmax E over</text>
+<text x="598" y="209" font-size="6.2" fill="var(--text-muted)">p(&#958;) of return</text>
+<text x="20" y="244" font-size="7.8" fill="var(--text-muted)">A policy optimal in expectation across a broad p(&#958;) is robust to the specific real &#958; it meets. The reality gap is measured by validating real vs sim</text>
+<text x="20" y="256" font-size="7.8" fill="var(--text-muted)">performance and closed by widening or retuning p(&#958;). Complements the sim-to-real pipeline figure. Section 7.3.</text>
+</svg></div><figcaption><span class="fid">F-M7-6</span>Domain randomization and the reality gap. Training over a randomization distribution p(xi) of simulator parameters makes the policy robust to the real value it later meets, but a too-narrow distribution overfits the simulator and leaves a large reality gap while a too-wide distribution degrades peak performance (the robustness-optimality tradeoff). The gap is measured by validating real vs sim and closed by widening p(xi); complements the sim-to-real pipeline figure. Section 7.3.</figcaption></figure></section>
+<section class="section"><h2 id="sec-8-engineering-principles"><span class="secnum">8</span><span class="sectitle">Engineering Principles</span></h2><ol>
+<li><strong>Decide with the distribution.</strong> Use covariance (CEC-03) and confidence (EI-04); gate what you cannot support.</li>
+<li><strong>Separate task logic from action policy</strong> so the auditable part stays auditable.</li>
+<li><strong>Tie the reward to the physics</strong> (the Grip-Force Window), or the policy will hack a proxy.</li>
+<li><strong>A learned policy is a proposal, not an authority</strong> (EI-07): bound it and give it a deterministic fallback.</li>
+<li><strong>Train in sim, randomize, transfer, validate</strong> (CEC-05); never trust a policy that has only seen the simulator.</li>
+<li><strong>Bounded decision time</strong>, deliberation spends the cycle-time budget (CEC-01).</li>
+<li><strong>Design the policy against the requirement, not the actuator</strong> (introduce-&gt;master); the window exists before the gripper does.</li>
+</ol>
+</section>
+<section class="section"><h2 id="sec-9-system-requirements"><span class="secnum">9</span><span class="sectitle">System Requirements</span></h2><p>Derived from the decision mission; frame the grasp policy. IDs continue; [-&gt;Doc B] formalizes. Targets [VERIFY@PUB].</p>
+<div class="twrap"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Type</th>
+<th>Requirement (abbreviated)</th>
+<th>Verification method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SR-F-10</td>
+<td>Functional</td>
+<td>The task layer shall gate grasp attempts on pose covariance (CEC-03) and ripeness confidence (EI-04) thresholds.</td>
+<td>Test</td>
+</tr>
+<tr>
+<td>SR-F-11</td>
+<td>Functional</td>
+<td>The grasp policy shall output approach + force/compliance targets as a <strong>proposal</strong> to a verified bounding layer.</td>
+<td>Review + test</td>
+</tr>
+<tr>
+<td>SR-P-23</td>
+<td>Performance</td>
+<td>Every executed grasp action shall lie within the safe set (Grip-Force Window CEC-02 ∩ reach ∩ keep-out); out-of-bounds proposals shall be clipped or replaced by fallback.</td>
+<td>Analysis + test</td>
+</tr>
+<tr>
+<td>SR-F-12</td>
+<td>Functional</td>
+<td>A deterministic fallback grasp/behavior shall exist for rejected proposals or policy unavailability.</td>
+<td>Test</td>
+</tr>
+<tr>
+<td>SR-D-02</td>
+<td>Data</td>
+<td>The policy shall be trained with domain randomization and its sim-to-real transfer validated on real data before deployment (CEC-05).</td>
+<td>Sim + real validation</td>
+</tr>
+<tr>
+<td>SR-P-24</td>
+<td>Performance</td>
+<td>Decision + policy-inference latency shall fit the decision share of the cycle-time budget (CEC-01) on the edge (CEC-04).</td>
+<td>Benchmark</td>
+</tr>
+<tr>
+<td>SR-I-10</td>
+<td>Interface</td>
+<td>The twin shall serve as the policy training environment and reality-gap instrument.</td>
+<td>Review (-&gt;Doc G)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Traceability: SR-F-10 -&gt; CEC-03/EI-04; <strong>SR-F-11/SR-P-23/SR-F-12 -&gt; M9 (executes the bounded proposal); EI-07</strong>; SR-D-02 -&gt; CEC-05; SR-P-24 -&gt; CEC-01/CEC-04/M6; SR-I-10 -&gt; twin/M13.</p>
+</section>
+<section class="section"><h2 id="sec-10-design-decisions"><span class="secnum">10</span><span class="sectitle">Design Decisions</span></h2><ul>
+<li><strong>DD-35 Mission FSM for task sequencing</strong> with uncertainty/ripeness gating. <em>Rationale:</em> Section 6.2; auditable discrete logic. <em>Serves:</em> SR-F-10.</li>
+<li><strong>DD-36 Value-based pick ordering</strong> (Section 7.1). <em>Rationale:</em> maximize harvested value within the cycle budget. <em>Serves:</em> SR-F-10, CEC-01.</li>
+<li><strong>DD-37 Learned grasp policy as proposer</strong> (imitation-bootstrapped RL). <em>Rationale:</em> Section 6.4; handles variable fruit better than hand-coding. <em>Serves:</em> SR-F-11.</li>
+<li><strong>DD-38 Verified bounding layer + deterministic fallback.</strong> <em>Rationale:</em> Section 6.5, EI-07; make the system verifiable despite an opaque policy. <em>Serves:</em> SR-P-23, SR-F-12.</li>
+<li><strong>DD-39 Train-in-sim with domain randomization, validate on real</strong> (CEC-05). <em>Rationale:</em> Section 6.4; safe, cheap, transferable learning. <em>Serves:</em> SR-D-02.</li>
+<li><strong>DD-40 Policy inference on the edge; training off-robot</strong> (CEC-04). <em>Rationale:</em> runtime/development boundary. <em>Serves:</em> SR-P-24.</li>
+<li><strong>DD-41 Reward tied to the Grip-Force Window</strong> (Section 6.3). <em>Rationale:</em> prevent reward hacking; align learning with the physics. <em>Serves:</em> SR-P-23.</li>
+</ul>
+</section>
+<section class="section"><h2 id="sec-11-trade-studies"><span class="secnum">11</span><span class="sectitle">Trade Studies</span></h2><h3>11.1 TS-13: Grasp strategy</h3>
+<p><strong>Alternatives:</strong> (A) <strong>analytic/hand-coded grasp planning</strong>; (B) <strong>pure learned policy</strong>; (C) <strong>hybrid: learned proposer + verified bounds</strong>; (D) <strong>teleoperation</strong>. Scored 1 to 5 (weights illustrative; ratified in -&gt;Doc B).</p>
+<div class="twrap"><table>
+<thead>
+<tr>
+<th>Criterion (weight)</th>
+<th style="text-align:center">A: Analytic</th>
+<th style="text-align:center">B: Pure learned</th>
+<th style="text-align:center">C: Hybrid</th>
+<th style="text-align:center">D: Teleop</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Performance on variable/occluded fruit (0.26)</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">3</td>
+</tr>
+<tr>
+<td>Verifiability / safety (0.24)</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">3</td>
+</tr>
+<tr>
+<td>Robustness (reality gap, edge cases) (0.18)</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">4</td>
+</tr>
+<tr>
+<td>Data/effort to develop (0.14)</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">2</td>
+</tr>
+<tr>
+<td>Autonomy / no-network (CEC-04) (0.10)</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">1</td>
+</tr>
+<tr>
+<td>Cycle-time fit (0.08)</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">2</td>
+</tr>
+<tr>
+<td><strong>Weighted total</strong></td>
+<td style="text-align:center"><strong>3.94</strong></td>
+<td style="text-align:center"><strong>3.58</strong></td>
+<td style="text-align:center"><strong>4.62</strong></td>
+<td style="text-align:center"><strong>2.82</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Selected: C (hybrid, learned proposer + verified bounds).</strong> It captures the learned policy's strength on variable fruit while retaining the analytic layer's verifiability and safety, the direct embodiment of EI-07. Teleoperation is defeated by the no-network constraint (CEC-04); pure learning is defeated on verifiability. Recorded weakness: the hybrid's guarantees are only as good as the bounding layer's models (window, reach, keep-out), which must themselves be verified (M9/M15).</p>
+<h3>11.2 TS-14: Learning approach (summary)</h3>
+<p><strong>Alternatives:</strong> pure RL, pure imitation, <strong>imitation-bootstrapped RL</strong>. <strong>Criteria:</strong> sample efficiency, training safety, peak performance, reality-gap robustness. <strong>Outcome:</strong> <strong>imitation-bootstrapped RL in sim</strong>, imitation gives a safe, competent start; RL refines against the reward; both under domain randomization. Real fruit is used only for validation (SR-D-02), never bulk training.</p>
+<h3>11.3 Explicit Core Engineering Concept evaluation <em>(standing requirement)</em></h3>
+<ul>
+<li><strong>The Sim-to-Real Pipeline (train-in-sim, randomize, transfer, validate).</strong> <em>Verdict: promoted from watchlist to full CEC, <strong>CEC-05</strong>, designated here at mastery.</em> It was <em>introduced</em> for perception data in M4; here it reaches full form for a <strong>control policy</strong>, the complete train-&gt;randomize-&gt;transfer-&gt;validate loop, and it recurs as a design tool in M9 (grasp control developed this way), M13 (system twin), and M14 (validation). It meets the recurrence and mastery tests. M7 is the genuine mastery point because this is where the pipeline is used to produce a <em>deployable bounded controller</em>, not merely a dataset. Register and Knowledge-Architecture links updated.</li>
+<li><strong>Reinforcement/imitation learning.</strong> <em>Verdict: not a separate CEC.</em> A mastered <em>technique</em> within the policy, captured in the Knowledge-Architecture decision thread, not the anchor set (Design Rule; keep anchors few).</li>
+<li><strong>EI-07 (Bound the Learner)</strong> is added as this module's Engineering Insight, reinforcing CEC-02, CEC-04, and CEC-05. <em>(One new CEC, one new EI, within discipline.)</em></li>
+</ul>
+<blockquote class="callout hook">
+<p><strong>Simulation-first hook.</strong> The policy is trained and bounded entirely in the twin (CEC-05); the twin is also the reality-gap instrument (SR-I-10). Nothing about grasping is trusted from simulation alone, real validation is a gate (SR-D-02), the CEC-05 discipline in action.</p>
+</blockquote>
+</section>
+<section class="section"><h2 id="sec-12-simulation-activities"><span class="secnum">12</span><span class="sectitle">Simulation Activities</span></h2><p>M7 runs at <strong>Simulation (policy training) + SIL</strong>. The twin is the policy's training environment and the reality-gap instrument, the concrete realization of CEC-05.</p>
+<p><strong>SA-1, Task-FSM in the loop.</strong> Run the mission FSM on twin scenes; observe uncertainty/ripeness gating (SR-F-10) admit or defer candidates and value-based sequencing order them. <em>Outcome:</em> decision logic exercised against realistic candidate fields.</p>
+<p><strong>SA-2, Train the grasp policy.</strong> Bootstrap by imitation, then refine by RL against the window-tied reward (Section 6.3, Section 7.2), all in the twin under domain randomization. <em>Outcome:</em> a bounded grasp policy without a single real fruit harmed.</p>
+<p><strong>SA-3, Domain-randomization sweep.</strong> Vary the randomization distribution <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false">(</mo><mi>ξ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">p(\xi)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">p</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.04601em;">ξ</span><span class="mclose">)</span></span></span></span> (contact, friction, mass, sensor noise) and observe robustness vs. peak performance (Section 7.3). <em>Outcome:</em> students feel the robustness-optimality tradeoff and choose <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false">(</mo><mi>ξ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">p(\xi)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">p</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.04601em;">ξ</span><span class="mclose">)</span></span></span></span>.</p>
+<p><strong>SA-4, Bounding &amp; fallback test.</strong> Inject adversarial/out-of-bounds policy proposals; confirm the bounding layer clips to the safe set or invokes the fallback (Section 7.4, EI-07). <em>Outcome:</em> the &quot;propose, then bound&quot; architecture verified in SIL.</p>
+</section>
+<section class="section"><h2 id="sec-13-digital-twin-activities"><span class="secnum">13</span><span class="sectitle">Digital Twin Activities</span></h2><p><strong>DTA-1, Training-environment specification (deliverable to Doc G).</strong> Specify the twin as an RL/imitation environment: state/action/reward interfaces, the randomization distribution, and episode protocols. <em>Outcome:</em> SR-I-10; the reproducible training environment.</p>
+<p><strong>DTA-2, Reality-gap instrument.</strong> Specify how sim policy performance is compared to real validation performance, the acceptance gate for transfer, and how <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false">(</mo><mi>ξ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">p(\xi)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">p</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.04601em;">ξ</span><span class="mclose">)</span></span></span></span> is retuned when the gap is too large (CEC-05). <em>Outcome:</em> an honest transfer-validation protocol (SR-D-02).</p>
+<p><strong>DTA-3, Bounded-policy regression suite.</strong> A fixed twin scenario set (including edge cases and out-of-bounds situations) that every policy version must pass with its bounds and fallback intact. <em>Outcome:</em> continuous verification of the bounded system (hand-off to M14).</p>
+</section>
+<section class="section"><h2 id="sec-14-hardware-activities"><span class="secnum">14</span><span class="sectitle">Hardware Activities</span></h2><p><em>(Tiered: validation and demonstration protocols at specification level; real fruit used only for validation.)</em></p>
+<p><strong>HA-1, Real grasp-validation protocol.</strong> Specify a limited real-fruit protocol to <em>validate</em> (not train) the transferred policy: success/slip/bruise rates against the sim prediction, measuring the reality gap (CEC-05, SR-D-02). <em>Deliverable:</em> a transfer-validation dataset and gap estimate.</p>
+<p><strong>HA-2, Fallback demonstration.</strong> Specify a bench demonstration that the deterministic fallback safely handles rejected proposals and policy dropout (SR-F-12). <em>Deliverable:</em> a fallback-behavior verification record.</p>
+</section>
+<section class="section"><h2 id="sec-15-software-activities"><span class="secnum">15</span><span class="sectitle">Software Activities</span></h2><p><strong>SWA-1, Decision/behavior node &amp; bounding layer.</strong> Specify the behavior node (mission FSM + sequencing) and the verified bounding layer (clip-to-safe-set + fallback) as separate, independently testable components. <em>Outcome:</em> the auditable-logic/opaque-policy separation realized in software (M11 realizes as nodes).</p>
+<p><strong>SWA-2, Policy artifact &amp; versioning.</strong> Specify how a trained, validated, bounded policy is versioned and deployed (development-time) to the edge (CEC-04), with the fallback always present. <em>Outcome:</em> safe policy lifecycle (Doc E).</p>
+</section>
+<section class="section"><h2 id="sec-16-ros-2-integration"><span class="secnum">16</span><span class="sectitle">ROS 2 Integration</span></h2><p>The Decide stage becomes two nodes with a deliberate trust boundary: a <strong>behavior/decision node</strong> (mission FSM, gating, sequencing, auditable) and a <strong>grasp-policy node</strong> (the learned proposer), with the <strong>verified bounding layer</strong> between the policy and the actuators. The bounding layer subscribes to the policy proposal, the pose covariance (M5), and the limits, and publishes a <em>bounded</em> grasp command to the manipulator/gripper controllers (M8/M9); it is the software location where EI-07 is enforced. The independent <strong>safety monitor</strong> (M11/M15) sits further out still. M11 masters the node graph and real-time execution; M7 fixes the interfaces and the trust boundary.</p>
+</section>
+<section class="section"><h2 id="sec-17-ai-integration"><span class="secnum">17</span><span class="sectitle">AI Integration</span></h2><p>This module frames two of the machine's five AI threads, the <strong>learned grasp policy</strong> and the <strong>sim-to-real pipeline (CEC-05)</strong>, and states the rule that governs all learned components:</p>
+<ul>
+<li><strong>Policy learning.</strong> Imitation-bootstrapped RL in the twin, reward tied to the Grip-Force Window (CEC-02); the policy is a <em>proposer</em>.</li>
+<li><strong>Sim-to-real (CEC-05).</strong> Domain randomization for transfer; real validation as an acceptance gate; the reality gap measured and closed, never assumed away.</li>
+<li><strong>The bounding rule (EI-07).</strong> Every learned output is clipped to a verified safe set with a deterministic fallback, the system-level AI rule carried since Module 1, here given its architectural form. Learning informs the loop; verified logic bounds it.</li>
+</ul>
+<p>Development (training, randomization) is off-robot; runtime (bounded inference + fallback) is on-robot (CEC-04).</p>
+</section>
+<section class="section"><h2 id="sec-18-edge-computing-integration"><span class="secnum">18</span><span class="sectitle">Edge Computing Integration</span></h2><p>Policy inference and decision logic run <strong>on-robot</strong> (CEC-04) within the decision share of the cycle-time budget (CEC-01); training and domain randomization are development-time and off-robot. Two constraints fixed here: (1) the deployed policy must be optimized to meet its latency share on the edge device (M6), a learned policy too large to run in time is as useless as a slow detector (EI-04/EI-06 recur); (2) the bounding layer and fallback are lightweight, deterministic, and always resident, so safety never depends on the policy's compute finishing in time, a late or failed policy yields the fallback, not an unbounded action.</p>
+</section>
+<section class="section"><h2 id="sec-19-fluid-power-integration"><span class="secnum">19</span><span class="sectitle">Fluid Power Integration</span></h2><p>M7 produces the <strong>grasp proposal the fluid-powered gripper will execute</strong>, approach, and <strong>force/compliance targets</strong>, but stops at the framework boundary. The policy's action space is defined in terms the fluid system understands: a target grip force (or fluid pressure proxy) and a target compliance, both <strong>bounded by the Grip-Force Window (CEC-02)</strong> before they ever reach an actuator. This is the deliberate introduce-&gt;master seam: M7 specifies <em>what</em> force/compliance the grasp should aim for and guarantees it is in-window; <strong>M9 masters</strong> <em>how</em> the fluid circuit, valves, actuator, and AI-assisted controller achieve and regulate it on real hardware. Framing the policy's output as in-window force/compliance targets means M9 inherits a safe, well-posed control objective rather than an unbounded command.</p>
+</section>
+<section class="section lab"><h2 id="sec-24-laboratory"><span class="secnum">24</span><span class="sectitle">Laboratory</span></h2><p><strong>Lab M7, Framing and Bounding the Grasp Policy</strong></p>
+<ul>
+<li><strong>Objectives.</strong> (1) Design the harvest decision FSM with uncertainty/ripeness gating and value sequencing; (2) formulate the grasp MDP and a window-tied reward; (3) train a policy in the twin under domain randomization; (4) build the verified bounding layer + fallback; (5) measure the reality gap via limited real validation.</li>
+<li><strong>Equipment.</strong> The digital twin as RL/imitation environment; a policy-training toolkit [VERIFY@PUB]; a provided real validation set (or limited real-fruit demo); notebook. <strong>Safety:</strong> training is simulated; any real-fruit validation follows lab safety and uses the fallback-guarded system.</li>
+<li><strong>Procedure.</strong>
+<ol>
+<li>Implement the mission FSM; set covariance/confidence gates (SR-F-10) and the value function (Section 7.1); test admission/sequencing on twin candidate fields.</li>
+<li>Define the grasp MDP and reward tied to the Grip-Force Window (Section 6.3); identify one reward-hacking failure and fix it.</li>
+<li>Train (imitation -&gt; RL) in the twin under a chosen <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false">(</mo><mi>ξ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">p(\xi)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">p</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.04601em;">ξ</span><span class="mclose">)</span></span></span></span>; sweep <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false">(</mo><mi>ξ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">p(\xi)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">p</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.04601em;">ξ</span><span class="mclose">)</span></span></span></span> and record robustness vs. peak performance (Section 7.3).</li>
+<li>Implement the bounding layer (clip to window ∩ reach) and the deterministic fallback; test with adversarial proposals (SA-4), confirm no out-of-bounds action executes (SR-P-23).</li>
+<li>Validate transfer on the real set; compute the reality gap (success/slip/bruise sim vs. real); decide accept/retune (CEC-05, SR-D-02).</li>
+</ol>
+</li>
+<li><strong>Data collection.</strong> Gating/sequencing results; reward and hacking fix; randomization sweep; bounding-layer test log; reality-gap table.</li>
+<li><strong>Analysis.</strong> How do gate thresholds trade yield vs. risk? How wide should <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false">(</mo><mi>ξ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">p(\xi)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">p</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.04601em;">ξ</span><span class="mclose">)</span></span></span></span> be? Did any proposal escape the bounds? How large is the reality gap, and does it pass the acceptance gate?</li>
+<li><strong>Discussion.</strong> Why is the bounded system verifiable when the policy is not (EI-07)? Why validate on real data before trusting the policy (CEC-05)? How does decision latency interact with the cycle-time budget (CEC-01)?</li>
+<li><strong>Deliverables.</strong> A 4 to 6 page report: decision FSM, MDP/reward, randomization study, bounding-layer verification, reality-gap validation.</li>
+<li><strong>Rubric (100 pts).</strong> Decision FSM &amp; gating (16); MDP/reward design incl. hacking fix (18); training &amp; randomization study (18); bounding layer &amp; fallback verification (22, EI-07); reality-gap validation (16, CEC-05); communication (10). <em>Graduate band adds:</em> the robust-optimization view of domain randomization (Section 7.3 grad) and a cited source.</li>
+<li><strong>Expected results.</strong> Gating that trades a little yield for much less risk; a reward that must be repaired to prevent hacking; a randomization width that improves transfer up to a point then erodes peak performance; a bounding layer that provably admits no out-of-bounds action; a measurable reality gap that the validation gate either accepts or sends back for retuning.</li>
+</ul>
+</section>
+<section class="section hw"><h2 id="sec-25-homework"><span class="secnum">25</span><span class="sectitle">Homework</span></h2><p>Tiered: all do 1 to 4; graduate add 5 to 6.</p>
+<ol>
+<li><strong>Decision gating.</strong> Given candidate fruit with ripeness confidence and pose covariance, apply thresholds to admit/defer and sequence by the value function; justify the thresholds in yield/risk terms.</li>
+<li><strong>Reward design.</strong> Write a grasp reward tied to the Grip-Force Window; then show a reward-hacking exploit of a naïve alternative and how the window-tied version prevents it.</li>
+<li><strong>Bounding &amp; fallback.</strong> Given a policy proposal and a safe set (window ∩ reach), compute the executed action by projection; specify the fallback for the empty-set / low-confidence case.</li>
+<li><strong>Sim-to-real.</strong> Explain, with the robust-transfer formulation, why domain randomization transfers; name one failure mode of too-narrow and one of too-wide randomization.</li>
+<li><strong>(Grad) Robust optimization.</strong> Cast domain randomization as maximizing expected (or worst-case) return over <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false">(</mo><mi>ξ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">p(\xi)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">p</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.04601em;">ξ</span><span class="mclose">)</span></span></span></span>; discuss the robustness-optimality tradeoff and how you would choose <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo stretchy="false">(</mo><mi>ξ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">p(\xi)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">p</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.04601em;">ξ</span><span class="mclose">)</span></span></span></span>.</li>
+<li><strong>(Grad) Verifiable learned system.</strong> Argue how a bounded learned policy can satisfy a safety requirement that the policy alone cannot be verified to meet; identify what must be verified instead (the bounds, fallback, and their models).</li>
+</ol>
+</section>
+<section class="section quiz"><h2 id="sec-26-quiz"><span class="secnum">26</span><span class="sectitle">Quiz</span></h2><ol>
+<li><strong>(MC)</strong> A learned grasp policy's output should be treated as: (a) a direct command; (b) a proposal to a verified bounding layer; (c) ground truth; (d) a measurement.</li>
+<li><strong>(MC)</strong> Domain randomization transfers because the policy is trained to: (a) memorize one simulator; (b) maximize return across a distribution of randomized conditions; (c) ignore physics; (d) use less data.</li>
+<li><strong>(MC)</strong> The grasp reward is tied to the Grip-Force Window primarily to: (a) speed training; (b) prevent reward hacking / align learning with safe physics; (c) reduce compute; (d) improve perception.</li>
+<li><strong>(MC)</strong> A high pose covariance should cause the task layer to: (a) grasp faster; (b) gate/defer the attempt; (c) increase force; (d) ignore it.</li>
+<li><strong>(Short)</strong> State EI-07 and how it makes a learned system verifiable.</li>
+<li><strong>(Short)</strong> Name the four stages of the Sim-to-Real Pipeline (CEC-05).</li>
+<li><strong>(Design)</strong> Where in the architecture is EI-07 enforced, and what two things does that layer do?</li>
+<li><strong>(Design)</strong> Why is the grasp policy <em>introduced</em> here but <em>mastered</em> in M9?</li>
+<li><strong>(Critical thinking)</strong> Why validate a transferred policy on real data before trusting it, even after heavy randomization?</li>
+<li><strong>(Critical thinking)</strong> Why keep task logic separate from the grasp policy?</li>
+</ol>
+</section>
+<section class="section challenge"><h2 id="sec-27-challenge-problems"><span class="secnum">27</span><span class="sectitle">Challenge Problems</span></h2><ul>
+<li><strong>CP-M7-A, End-to-end risk-aware decision.</strong> Combine ripeness confidence (EI-04), pose covariance (CEC-03), and the Grip-Force Window (CEC-02) into a per-fruit success probability, and design a decision policy that maximizes expected harvested value under the cycle-time budget (CEC-01), including when to skip. (Bridges four anchors.)</li>
+<li><strong>CP-M7-B, Design the bounding layer as a safety case.</strong> Specify the verified bounding layer and fallback as a safety argument: what must be true (window model, reach model, uncertainty gate, fallback correctness) for &quot;no out-of-bounds action executes&quot; to hold, and how each is verified. (Feeds M15.)</li>
+<li><strong>CP-M7-C, Close a reality gap.</strong> Given sim-vs-real grasp results showing a gap, propose a domain-randomization and validation plan to close it to an acceptance threshold; specify what real data you need and how you would know the gap is closed. (Formalizes CEC-05.)</li>
+</ul>
+</section>
+<section class="section"><h2 id="sec-engineering-design-review" class="unnum">Engineering Design Review</h2><p><em>Not graded. The questions a review board would ask; argue with evidence.</em></p>
+<ol>
+<li><strong>Assumptions.</strong> Your policy is trained in the twin under a chosen randomization distribution. What are you <em>assuming</em> the twin captures well enough for transfer (contact physics, occlusion, lighting), and where is that assumption weakest? How would a wrong assumption show up only in the field (CEC-05)?</li>
+<li><strong>Tradeoffs.</strong> You chose a hybrid learned-proposer-plus-verified-bounds design over both pure analytic and pure learned. Defend it to a reviewer who says the bounding layer just re-implements the hard part analytically. What does the learned component actually buy, and how would you show it?</li>
+<li><strong>Risk.</strong> Suppose the grasp policy proposes a plausible-but-wrong action in a situation absent from training. Trace what happens through your architecture. Is the worst-case outcome bounded, and by what (EI-07)? What residual risk remains?</li>
+<li><strong>Verification.</strong> You cannot verify the policy directly. Convince the board the <em>system</em> is safe anyway. Precisely what do you verify instead, and what evidence (bounding-layer proofs, fallback tests, real validation) do you bring?</li>
+<li><strong>Subsystem interaction.</strong> The decision layer consumes M5's covariance and M4's confidence and emits an in-window force/compliance target to M9. If M5 becomes over-confident (under-reports covariance), how does that propagate through your gates and bounds, and who is responsible for catching it?</li>
+<li><strong>Reward.</strong> Your reward is tied to the Grip-Force Window. A reviewer worries the policy will still find a loophole (e.g., succeeding in sim by exploiting a contact-model artifact). How do you detect reward hacking, and how does real validation (CEC-05) guard against it?</li>
+</ol>
+</section>
+<section class="section"><h2 id="sec-29-research-frontiers"><span class="secnum">29</span><span class="sectitle">Research Frontiers</span></h2><ul>
+<li><strong>Landmark grounding.</strong> Foundational references in reinforcement learning and imitation learning; the robot-grasping literature (analytic and learned grasp synthesis); the sim-to-real and domain-randomization literature. <em>(Consult current editions; entries in the reference set, not reproduced here.)</em></li>
+<li><strong>Recent advances (survey current literature [VERIFY@PUB]).</strong> Sim-to-real transfer with structured/automatic domain randomization and system identification; safe reinforcement learning and shielded/constrained policies (verified bounds around learned control); offline RL and learning from demonstrations for manipulation; foundation/robot-policy models for few-shot grasping; uncertainty-aware policies that defer under low confidence.</li>
+<li><strong>Open problems.</strong> Provable safety guarantees for learned manipulation policies; reliable, automatic reality-gap closure; reward specification that resists hacking for contact-rich tasks; sample-efficient transfer for deformable/fragile-object grasping.</li>
+<li><strong>Suggested thesis directions.</strong> (1) A shielded grasp policy with a formally verified bounding layer tied to a physical grip-force model. (2) Automatic domain-randomization tuning driven by measured reality-gap feedback. (3) An uncertainty-aware harvest decision policy that provably respects the placement and grip-force budgets.</li>
+</ul>
+</section>
+<section class="section"><h2 id="sec-30-references"><span class="secnum">30</span><span class="sectitle">References</span></h2><p><em>Cited by role; consult current editions. No copyrighted text is reproduced. Full entries in <code>references/bibliography.md</code> [-&gt;Doc H].</em></p>
+<ul>
+<li>Reinforcement-learning and imitation-learning references, MDPs, policy learning, behavioral cloning (Section 6.3 to 6.4).</li>
+<li>Robot-grasping literature (analytic and learned grasp synthesis), grasp planning and policies (Section 6.3).</li>
+<li>Sim-to-real / domain-randomization references, transfer and the reality gap (Section 6.4, Section 7.3; CEC-05).</li>
+<li>Safe / constrained / shielded RL literature, bounding learned control (Section 6.5; EI-07).</li>
+<li>SIM2FIELD governing documents, <code>PHASE-0-FOUNDATION.md</code>, <code>PHASE-1-CURRICULUM-ARCHITECTURE.md</code>, <code>curriculum/_core-concepts.md</code>, <strong>Modules 1 to 6</strong>, and (forthcoming) Doc B, Doc E, Doc G.</li>
+</ul>
+</section>
+    <footer>Rendered from <b>MODULE-07.md</b> by Module Rendering Pipeline v1.3. Student edition. The module is the single source of truth.<br>
+    Finished media only; production specifications and author notes live in the author edition.<br>
+    SIM2FIELD / Autonomous Watermelon Harvesting Robotics</footer>
+  </div></main>
+</div>
+<script>
+(function(){var links=[].slice.call(document.querySelectorAll('.toc a'));var map={};
+ links.forEach(function(a){map[a.getAttribute('href').slice(1)]=a;});
+ if(!('IntersectionObserver' in window))return;
+ var io=new IntersectionObserver(function(es){es.forEach(function(e){var id=e.target.id;
+   if(e.isIntersecting&&map[id]){links.forEach(function(l){l.classList.remove('active');});map[id].classList.add('active');map[id].scrollIntoView({block:'nearest'});}});},
+   {rootMargin:'-12% 0px -78% 0px'});
+ document.querySelectorAll('.section h2[id]').forEach(function(h){io.observe(h);});})();
+</script>
+</body></html>

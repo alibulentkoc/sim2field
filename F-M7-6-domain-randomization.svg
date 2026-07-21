@@ -1,0 +1,27 @@
+<svg viewBox="0 0 760 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Domain randomization and the reality gap: training over a randomization distribution of simulator parameters makes the policy robust to the real value it later meets, but a too-narrow distribution overfits the simulator and leaves a large reality gap, while a too-wide distribution degrades peak performance, the robustness-optimality tradeoff." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Domain randomization and the reality gap</text>
+<line x1="90" y1="210" x2="560" y2="210" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="325.0" y="232" font-size="7.6" fill="var(--text-muted)" text-anchor="middle">simulator parameter &#958; (contact, friction, mass, noise, lighting)  -></text>
+<polyline points="90.0,210.0 97.8,210.0 105.7,210.0 113.5,210.0 121.3,210.0 129.2,210.0 137.0,209.9 144.8,209.7 152.7,209.3 160.5,208.3 168.3,206.4 176.2,203.0 184.0,197.5 191.8,189.6 199.7,179.6 207.5,168.7 215.3,158.8 223.2,152.0 231.0,150.0 238.8,153.4 246.7,161.1 254.5,171.5 262.3,182.3 270.2,191.8 278.0,199.1 285.8,204.0 293.7,207.0 301.5,208.6 309.3,209.4 317.2,209.8 325.0,209.9 332.8,210.0 340.7,210.0 348.5,210.0 356.3,210.0 364.2,210.0 372.0,210.0 379.8,210.0 387.7,210.0 395.5,210.0 403.3,210.0 411.2,210.0 419.0,210.0 426.8,210.0 434.7,210.0 442.5,210.0 450.3,210.0 458.2,210.0 466.0,210.0 473.8,210.0 481.7,210.0 489.5,210.0 497.3,210.0 505.2,210.0 513.0,210.0 520.8,210.0 528.7,210.0 536.5,210.0 544.3,210.0 552.2,210.0 560.0,210.0" fill="none" stroke="var(--danger)" stroke-width="1.8"/>
+<text x="230" y="140" font-size="6.8" fill="var(--danger-text)" font-weight="anc=middle">narrow p(&#958;): overfits sim</text>
+<polyline points="90.0,202.2 97.8,200.6 105.7,198.9 113.5,196.9 121.3,194.6 129.2,192.1 137.0,189.3 144.8,186.3 152.7,183.0 160.5,179.4 168.3,175.6 176.2,171.5 184.0,167.3 191.8,162.9 199.7,158.5 207.5,154.0 215.3,149.5 223.2,145.1 231.0,140.9 238.8,136.8 246.7,133.1 254.5,129.8 262.3,126.8 270.2,124.3 278.0,122.4 285.8,121.0 293.7,120.2 301.5,120.0 309.3,120.4 317.2,121.5 325.0,123.1 332.8,125.2 340.7,127.9 348.5,131.0 356.3,134.5 364.2,138.4 372.0,142.5 379.8,146.8 387.7,151.2 395.5,155.7 403.3,160.2 411.2,164.6 419.0,168.9 426.8,173.1 434.7,177.0 442.5,180.8 450.3,184.3 458.2,187.5 466.0,190.4 473.8,193.1 481.7,195.5 489.5,197.7 497.3,199.6 505.2,201.3 513.0,202.7 520.8,204.0 528.7,205.0 536.5,205.9 544.3,206.7 552.2,207.3 560.0,207.9" fill="none" stroke="var(--accent)" stroke-width="1.8"/>
+<text x="360" y="110" font-size="6.8" fill="var(--accent)" font-weight="anc=middle">wide p(&#958;): robust</text>
+<line x1="430" y1="202" x2="430" y2="90" stroke="var(--info)" stroke-width="1.6"/>
+<text x="430" y="84" font-size="6.8" fill="var(--info)" font-weight="700" text-anchor="middle">real field &#958;</text>
+<path d="M 256,180 L 424,180" stroke="var(--danger)" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#a)"/>
+<text x="343.0" y="176" font-size="6.4" fill="var(--danger-text)" text-anchor="middle">reality gap (distribution shift)</text>
+<rect x="588" y="66" width="154" height="150" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="598" y="84" font-size="7.2" fill="var(--text-primary)" font-weight="700">robustness-optimality</text>
+<text x="598" y="94" font-size="7.2" fill="var(--text-primary)" font-weight="700">tradeoff:</text>
+<text x="598" y="112" font-size="6.6" fill="var(--text-muted)">too narrow -> big gap</text>
+<text x="598" y="126" font-size="6.6" fill="var(--text-muted)">too wide -> lower peak</text>
+<text x="598" y="140" font-size="6.6" fill="var(--text-muted)">performance</text>
+<text x="598" y="160" font-size="6.6" fill="var(--accent)">widen p(&#958;) until the</text>
+<text x="598" y="170" font-size="6.6" fill="var(--accent)">measured gap is</text>
+<text x="598" y="180" font-size="6.6" fill="var(--accent)">acceptable</text>
+<text x="598" y="200" font-size="6.2" fill="var(--text-muted)">pi* = argmax E over</text>
+<text x="598" y="209" font-size="6.2" fill="var(--text-muted)">p(&#958;) of return</text>
+<text x="20" y="244" font-size="7.8" fill="var(--text-muted)">A policy optimal in expectation across a broad p(&#958;) is robust to the specific real &#958; it meets. The reality gap is measured by validating real vs sim</text>
+<text x="20" y="256" font-size="7.8" fill="var(--text-muted)">performance and closed by widening or retuning p(&#958;). Complements the sim-to-real pipeline figure. Section 7.3.</text>
+</svg>

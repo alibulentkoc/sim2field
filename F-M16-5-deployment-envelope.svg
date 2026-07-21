@@ -1,0 +1,38 @@
+<svg viewBox="0 0 760 255" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The deployment envelope defines the farm profile the machine is for, its field-size range, terrain, crop uniformity, labor cost, and harvest window, and the machine is designed and priced to that target's economics rather than to an average farm that exists nowhere; economics vary across farms, so a machine that pencils out on one may not on another." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">The deployment / market envelope</text>
+<text x="30" y="73" font-size="7.4" fill="var(--text-secondary)" font-weight="700">field size</text>
+<line x1="190" y1="70" x2="560" y2="70" stroke="var(--border-strong)" stroke-width="5" stroke-linecap="round" opacity="0.5"/>
+<text x="186" y="73" font-size="6" fill="var(--text-muted)" text-anchor="end">small plots</text>
+<text x="566" y="73" font-size="6" fill="var(--text-muted)">large fields</text>
+<rect x="394" y="65" width="130" height="10" rx="3" fill="var(--accent)" fill-opacity="0.4" stroke="var(--accent)"/>
+<text x="622" y="73" font-size="6.2" fill="var(--accent)">mid-to-large</text>
+<text x="30" y="101" font-size="7.4" fill="var(--text-secondary)" font-weight="700">terrain / slope</text>
+<line x1="190" y1="98" x2="560" y2="98" stroke="var(--border-strong)" stroke-width="5" stroke-linecap="round" opacity="0.5"/>
+<text x="186" y="101" font-size="6" fill="var(--text-muted)" text-anchor="end">steep, rough</text>
+<text x="566" y="101" font-size="6" fill="var(--text-muted)">flat, smooth</text>
+<rect x="394" y="93" width="130" height="10" rx="3" fill="var(--accent)" fill-opacity="0.4" stroke="var(--accent)"/>
+<text x="622" y="101" font-size="6.2" fill="var(--accent)">gentle (M10 limit)</text>
+<text x="30" y="129" font-size="7.4" fill="var(--text-secondary)" font-weight="700">crop uniformity</text>
+<line x1="190" y1="126" x2="560" y2="126" stroke="var(--border-strong)" stroke-width="5" stroke-linecap="round" opacity="0.5"/>
+<text x="186" y="129" font-size="6" fill="var(--text-muted)" text-anchor="end">mixed, irregular</text>
+<text x="566" y="129" font-size="6" fill="var(--text-muted)">uniform rows</text>
+<rect x="394" y="121" width="130" height="10" rx="3" fill="var(--accent)" fill-opacity="0.4" stroke="var(--accent)"/>
+<text x="622" y="129" font-size="6.2" fill="var(--accent)">uniform</text>
+<text x="30" y="157" font-size="7.4" fill="var(--text-secondary)" font-weight="700">labor cost</text>
+<line x1="190" y1="154" x2="560" y2="154" stroke="var(--border-strong)" stroke-width="5" stroke-linecap="round" opacity="0.5"/>
+<text x="186" y="157" font-size="6" fill="var(--text-muted)" text-anchor="end">cheap labor</text>
+<text x="566" y="157" font-size="6" fill="var(--text-muted)">scarce/costly</text>
+<rect x="394" y="149" width="130" height="10" rx="3" fill="var(--accent)" fill-opacity="0.4" stroke="var(--accent)"/>
+<text x="622" y="157" font-size="6.2" fill="var(--accent)">high labor cost</text>
+<text x="30" y="185" font-size="7.4" fill="var(--text-secondary)" font-weight="700">harvest window</text>
+<line x1="190" y1="182" x2="560" y2="182" stroke="var(--border-strong)" stroke-width="5" stroke-linecap="round" opacity="0.5"/>
+<text x="186" y="185" font-size="6" fill="var(--text-muted)" text-anchor="end">long, relaxed</text>
+<text x="566" y="185" font-size="6" fill="var(--text-muted)">short, tight</text>
+<rect x="394" y="177" width="130" height="10" rx="3" fill="var(--accent)" fill-opacity="0.4" stroke="var(--accent)"/>
+<text x="622" y="185" font-size="6.2" fill="var(--accent)">tight window</text>
+<text x="252" y="56" font-size="6.4" fill="var(--accent)">target profile (design + price here)</text>
+<text x="20" y="224" font-size="7.8" fill="var(--text-muted)">Economics are not uniform across farms. Define the deployment envelope, the farm profile the machine is for, and design/price to ITS economics,</text>
+<text x="20" y="236" font-size="7.8" fill="var(--text-muted)">not an average farm that exists nowhere (EI-10 applied to the market). Break-even is evaluated against this envelope. Section 6.5.</text>
+<text x="20" y="248" font-size="7.4" fill="var(--text-muted)">Illustrative target ranges.</text>
+</svg>

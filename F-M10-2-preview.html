@@ -1,0 +1,50 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="color-scheme" content="dark"><title>F-M10-2 preview - Motion strategies</title><style>:root{--bg:#0e120d;--surface:#161c14;--surface-2:#0b0e0a;--surface-3:#12160f;--border:#2b3527;--border-strong:#3a4633;--text-primary:#eef2e6;--text-secondary:#c8cfbe;--text-muted:#adb4a2;--accent:#9bcf3b;--warn:#e0a03b;--accent-2:#b98bd9}
+body{margin:0;background:var(--bg);color:var(--text-primary);font-family:'IBM Plex Mono',ui-monospace,monospace;padding:2rem}
+.figure{max-width:840px;margin:0 auto;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.figbody{padding:1rem 1.1rem;background:var(--surface-3);overflow-x:auto} .figbody svg{display:block;width:100%;height:auto;min-width:640px}
+figcaption{padding:.7rem 1rem;font-size:.82rem;color:var(--text-muted);border-top:1px solid var(--border)} .fid{font-size:.64rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-right:.5rem}</style></head>
+<body><figure class="figure"><div class="figbody"><svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three motion strategies over the same wall-clock time: stop-and-pick completes the fewest fruit but is most stable, index is a middle ground, and continuous drive-over completes the most but demands the arm track the motion and stresses the cycle-time budget hardest." font-family="'IBM Plex Mono',monospace">
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Motion strategies vs cycle time (same duration)</text>
+<text x="20" y="79" font-size="8.6" fill="var(--text-primary)" font-weight="700">stop-and-pick</text>
+<text x="600" y="73" font-size="8" fill="var(--accent-2)" font-weight="700">2 fruit</text>
+<text x="600" y="85" font-size="6.8" fill="var(--text-muted)">stability: high</text>
+<text x="600" y="95" font-size="6.8" fill="var(--text-muted)">arm: simple</text>
+<text x="600" y="105" font-size="6.8" fill="var(--text-muted)">speed: slowest</text>
+<rect x="168.0" y="64" width="126.6" height="22" fill="var(--accent)" fill-opacity="0.5" stroke="var(--accent)" stroke-width="0.8"/>
+<rect x="294.6" y="64" width="84.4" height="22" fill="var(--warn)" fill-opacity="0.55" stroke="var(--warn)" stroke-width="0.8"/>
+<circle cx="336.8" cy="75" r="4" fill="var(--accent-2)"/>
+<rect x="379.0" y="64" width="126.6" height="22" fill="var(--accent)" fill-opacity="0.5" stroke="var(--accent)" stroke-width="0.8"/>
+<rect x="505.6" y="64" width="84.4" height="22" fill="var(--warn)" fill-opacity="0.55" stroke="var(--warn)" stroke-width="0.8"/>
+<circle cx="547.8" cy="75" r="4" fill="var(--accent-2)"/>
+<text x="20" y="139" font-size="8.6" fill="var(--text-primary)" font-weight="700">index (move-stop-move)</text>
+<text x="600" y="133" font-size="8" fill="var(--accent-2)" font-weight="700">3 fruit</text>
+<text x="600" y="145" font-size="6.8" fill="var(--text-muted)">stability: medium</text>
+<text x="600" y="155" font-size="6.8" fill="var(--text-muted)">arm: simple</text>
+<text x="600" y="165" font-size="6.8" fill="var(--text-muted)">speed: medium</text>
+<rect x="168.0" y="124" width="98.3" height="22" fill="var(--accent)" fill-opacity="0.5" stroke="var(--accent)" stroke-width="0.8"/>
+<rect x="266.3" y="124" width="42.2" height="22" fill="var(--warn)" fill-opacity="0.55" stroke="var(--warn)" stroke-width="0.8"/>
+<circle cx="287.4" cy="135" r="4" fill="var(--accent-2)"/>
+<rect x="308.5" y="124" width="98.3" height="22" fill="var(--accent)" fill-opacity="0.5" stroke="var(--accent)" stroke-width="0.8"/>
+<rect x="406.9" y="124" width="42.2" height="22" fill="var(--warn)" fill-opacity="0.55" stroke="var(--warn)" stroke-width="0.8"/>
+<circle cx="428.0" cy="135" r="4" fill="var(--accent-2)"/>
+<rect x="449.1" y="124" width="98.3" height="22" fill="var(--accent)" fill-opacity="0.5" stroke="var(--accent)" stroke-width="0.8"/>
+<rect x="547.4" y="124" width="42.2" height="22" fill="var(--warn)" fill-opacity="0.55" stroke="var(--warn)" stroke-width="0.8"/>
+<circle cx="568.5" cy="135" r="4" fill="var(--accent-2)"/>
+<text x="20" y="199" font-size="8.6" fill="var(--text-primary)" font-weight="700">continuous drive-over</text>
+<text x="600" y="193" font-size="8" fill="var(--accent-2)" font-weight="700">4 fruit</text>
+<text x="600" y="205" font-size="6.8" fill="var(--text-muted)">stability: lower</text>
+<text x="600" y="215" font-size="6.8" fill="var(--text-muted)">arm: must track motion</text>
+<text x="600" y="225" font-size="6.8" fill="var(--text-muted)">speed: fastest</text>
+<rect x="168.0" y="184" width="422.0" height="22" fill="var(--accent)" fill-opacity="0.5" stroke="var(--accent)" stroke-width="0.8"/>
+<circle cx="220.8" cy="195" r="4" fill="var(--accent-2)"/>
+<circle cx="326.2" cy="195" r="4" fill="var(--accent-2)"/>
+<circle cx="431.8" cy="195" r="4" fill="var(--accent-2)"/>
+<circle cx="537.2" cy="195" r="4" fill="var(--accent-2)"/>
+<text x="172" y="219" font-size="6.6" fill="var(--text-muted)">pick on the move (arm compensates rover motion)</text>
+<rect x="168" y="222" width="12" height="9" fill="var(--accent)" fill-opacity="0.5"/><text x="184" y="230" font-size="7" fill="var(--text-secondary)">drive</text>
+<rect x="238" y="222" width="12" height="9" fill="var(--warn)" fill-opacity="0.55"/><text x="254" y="230" font-size="7" fill="var(--text-secondary)">stop</text>
+<circle cx="308" cy="226" r="4" fill="var(--accent-2)"/><text x="316" y="230" font-size="7" fill="var(--text-secondary)">pick</text>
+<text x="20" y="256" font-size="8.2" fill="var(--text-secondary)">Fruit arrive at interval T_arrival = d/v. Continuous is feasible only if T_cycle &lt;= d/v (CEC-01); the single-arm cycle makes this tight,</text>
+<text x="20" y="269" font-size="8.2" fill="var(--text-muted)">so many designs index or stop-and-pick unless multiple end-effectors or generous spacing allow continuous.</text>
+<text x="20" y="282" font-size="8.2" fill="var(--text-muted)">Drive speed is set by the pick cycle, not by how fast the terrain allows, a direct application of CEC-01 to the platform.</text>
+</svg></div><figcaption><span class="fid">F-M10-2</span>Motion strategies vs cycle time. Over the same duration, stop-and-pick completes the fewest fruit but is most stable, index is a middle ground, and continuous completes the most but demands the arm track the motion and stresses the cycle-time budget hardest. Continuous is feasible only if the cycle fits the arrival interval. Third Module 10 figure. Module 10, Section 6.2.</figcaption></figure></body></html>

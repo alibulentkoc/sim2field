@@ -1,0 +1,26 @@
+<svg viewBox="0 0 760 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Endurance and coverage fall as temperature rises: battery usable energy derates with temperature while thermal throttling raises average power draw, so both endurance (usable energy over average power) and the coverage it buys drop at the hot edge of the envelope, which is why the battery is sized to a real shift at the envelope temperature, not nominal." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Endurance / coverage vs temperature</text>
+<polyline points="110.0,77.5 222.5,86.2 335.0,103.4 425.0,126.5 492.5,149.5 560.0,166.8" fill="none" stroke="var(--accent)" stroke-width="2.4"/>
+<text x="155.0" y="71.51999999999998" font-size="7" fill="var(--accent)">endurance / coverage</text>
+<line x1="178" y1="66" x2="178" y2="210" stroke="var(--info)" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="177.5" y="68.88" font-size="6.6" fill="var(--info)" text-anchor="middle">nominal (cool)</text>
+<circle cx="177.5" cy="83.3" r="4" fill="var(--info)"/>
+<line x1="515" y1="66" x2="515" y2="210" stroke="var(--danger)" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="515.0" y="68.88" font-size="6.6" fill="var(--danger-text)" text-anchor="middle">envelope edge (45C)</text>
+<circle cx="515.0" cy="156.7" r="4" fill="var(--danger)"/>
+<text x="389.0" y="138.0" font-size="6.6" fill="var(--danger-text)">design here, not at nominal</text>
+<line x1="110" y1="62" x2="110" y2="210" stroke="var(--border-strong)" stroke-width="1.4"/>
+<line x1="110" y1="210" x2="560" y2="210" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="102" y="138.0" text-anchor="middle" font-size="8" fill="var(--text-muted)" transform="rotate(-90 102 138.0)">endurance t, coverage</text>
+<text x="335.0" y="238" font-size="8" fill="var(--text-muted)" text-anchor="middle">ambient temperature  -></text>
+<rect x="588" y="70" width="154" height="120" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="598" y="88" font-size="6.6" fill="var(--accent)">E_install =</text>
+<text x="598" y="100" font-size="6.4" fill="var(--text-muted)">E_shift/(DoD f_temp f_sag)</text>
+<text x="598" y="110" font-size="6.4" fill="var(--text-muted)">x (1+margin)</text>
+<text x="598" y="128" font-size="6.6" fill="var(--accent)">t = E_usable / Pbar</text>
+<text x="598" y="146" font-size="6.6" fill="var(--accent)">coverage ~ t v_eff swath</text>
+<text x="598" y="166" font-size="6.2" fill="var(--text-muted)">f_temp derates capacity;</text>
+<text x="598" y="176" font-size="6.2" fill="var(--text-muted)">throttling raises Pbar</text>
+<text x="20" y="242" font-size="7.8" fill="var(--text-muted)">Size the battery to a real shift at the envelope's temperature, not nominal (EI-12/EI-10). Coverage feeds cost-per-acre (M16). Illustrative curve. Section 7.2.</text>
+</svg>

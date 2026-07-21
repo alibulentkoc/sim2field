@@ -1,0 +1,27 @@
+<svg viewBox="0 0 760 265" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Safety reaction time versus time-to-harm, seen through the monitor rate: the detection latency is roughly one monitor period plus processing, so a faster monitor shrinks it; the total of detection plus actuator reaction must stay below the time for harm, which sets a minimum monitor rate, and the physical bounds act at physics speed to buy margin." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Safety reaction time vs time-to-harm (monitor rate)</text>
+<polyline points="146.0,77.5 200.0,130.8 267.5,155.3 357.5,169.7 470.0,178.3 560.0,181.2" fill="none" stroke="var(--info)" stroke-width="1.8" stroke-dasharray="4 3"/>
+<text x="335.0" y="171.68" font-size="6.8" fill="var(--info)">L_detect ~ 1/rate + processing</text>
+<polyline points="146.0,60.2 200.0,113.5 267.5,138.0 357.5,152.4 470.0,161.0 560.0,163.9" fill="none" stroke="var(--accent)" stroke-width="2.2"/>
+<text x="299.0" y="140.0" font-size="6.8" fill="var(--accent)">L_detect + L_react (total)</text>
+<line x1="110" y1="150" x2="560" y2="150" stroke="var(--danger)" stroke-width="1.6" stroke-dasharray="5 3"/>
+<text x="560" y="145.52" font-size="7" fill="var(--danger-text)" font-weight="end" text-anchor="end">T_harm</text>
+<line x1="268" y1="66" x2="268" y2="210" stroke="var(--warn)" stroke-width="1.2" stroke-dasharray="3 3"/>
+<text x="267.5" y="68.88" font-size="6.8" fill="var(--warn-text)" text-anchor="middle">min monitor rate</text>
+<text x="357.5" y="80.4" font-size="6.6" fill="var(--accent)">feasible (total &lt; T_harm)</text>
+<line x1="110" y1="62" x2="110" y2="210" stroke="var(--border-strong)" stroke-width="1.4"/>
+<line x1="110" y1="210" x2="560" y2="210" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="102" y="138.0" text-anchor="middle" font-size="8" fill="var(--text-muted)" transform="rotate(-90 102 138.0)">reaction time</text>
+<text x="335.0" y="238" font-size="8" fill="var(--text-muted)" text-anchor="middle">safety-monitor rate  -></text>
+<rect x="588" y="70" width="154" height="96" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="598" y="88" font-size="7" fill="var(--danger-text)" font-weight="700">L_detect + L_react</text>
+<text x="598" y="99" font-size="7" fill="var(--danger-text)" font-weight="700">&lt;= T_harm</text>
+<text x="598" y="116" font-size="6.4" fill="var(--text-muted)">faster monitor -> smaller</text>
+<text x="598" y="126" font-size="6.4" fill="var(--text-muted)">L_detect -> more margin</text>
+<text x="598" y="144" font-size="6.4" fill="var(--accent)">physical bounds (relief,</text>
+<text x="598" y="154" font-size="6.4" fill="var(--accent)">compliance) act at</text>
+<text x="598" y="164" font-size="6.4" fill="var(--accent)">physics speed: extra margin</text>
+<text x="20" y="246" font-size="7.8" fill="var(--text-muted)">The monitor's rate sets its detection latency; size the rate and the actuator's safe-stop time so the worst-case total beats T_harm. Complements the</text>
+<text x="20" y="258" font-size="7.8" fill="var(--text-muted)">reaction-time-margin timeline (M15). Section 7.4.</text>
+</svg>

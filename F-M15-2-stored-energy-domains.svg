@@ -1,0 +1,26 @@
+<svg viewBox="0 0 760 265" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The machine stores energy in two domains, pressurized fluid and the battery, each a hazard on its own (burst or sudden release; arc or fire) and capable of a combined fault where one energizes or breaches the other; the safety case treats them together as a common-cause concern rather than as two separate problems." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Two stored-energy domains</text>
+<rect x="30" y="60" width="330" height="120" rx="10" fill="var(--surface)" stroke="var(--info)" stroke-width="1.6"/>
+<text x="46" y="80" font-size="9.5" fill="var(--info)" font-weight="700">PRESSURIZED FLUID (M9)</text>
+<text x="46" y="98" font-size="7.2" fill="var(--danger-text)">hazard: burst, sudden release</text>
+<text x="46" y="118" font-size="7.4" fill="var(--text-secondary)" font-weight="700">mitigation:</text>
+<text x="46" y="132" font-size="7" fill="var(--text-muted)">- relief / bleed-down</text>
+<text x="46" y="145" font-size="7" fill="var(--text-muted)">- burst-rated components</text>
+<text x="46" y="158" font-size="7" fill="var(--text-muted)">- guarding + lockout</text>
+<rect x="400" y="60" width="330" height="120" rx="10" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.6"/>
+<text x="416" y="80" font-size="9.5" fill="var(--warn-text)" font-weight="700">BATTERY / ELECTRICAL (M12)</text>
+<text x="416" y="98" font-size="7.2" fill="var(--danger-text)">hazard: arc, fire, thermal runaway</text>
+<text x="416" y="118" font-size="7.4" fill="var(--text-secondary)" font-weight="700">mitigation:</text>
+<text x="416" y="132" font-size="7" fill="var(--text-muted)">- fusing, isolation</text>
+<text x="416" y="145" font-size="7" fill="var(--text-muted)">- thermal management, safe-shutdown</text>
+<text x="416" y="158" font-size="7" fill="var(--text-muted)">- guarding + lockout</text>
+<line x1="360" y1="120" x2="400" y2="120" stroke="var(--danger)" stroke-width="1.8" stroke-dasharray="4 2"/>
+<rect x="300" y="192" width="160" height="30" rx="7" fill="var(--danger)" fill-opacity="0.10" stroke="var(--danger)"/>
+<text x="380" y="206" font-size="7.4" fill="var(--danger-text)" font-weight="700" text-anchor="middle">COMBINED FAULT</text>
+<text x="380" y="217" font-size="6.2" fill="var(--text-muted)" text-anchor="middle">electrical energizes a valve; collision breaches both</text>
+<line x1="195" y1="180" x2="330" y2="192" stroke="var(--danger)" stroke-width="1" stroke-dasharray="2 2"/>
+<line x1="565" y1="180" x2="430" y2="192" stroke="var(--danger)" stroke-width="1" stroke-dasharray="2 2"/>
+<text x="20" y="248" font-size="7.8" fill="var(--text-muted)">The safety case treats the two domains together, not as separate problems: a fault could involve both, so their interaction is a common-cause-failure</text>
+<text x="20" y="260" font-size="7.8" fill="var(--text-muted)">concern that a naive independent-layer product would miss (M15 residual-risk analysis). Section 6.3.</text>
+</svg>

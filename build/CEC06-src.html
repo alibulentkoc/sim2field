@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0e120d">
+<title>The Fidelity Ladder - Worked Example (CEC-06)</title>
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<style>
+  /* ================= THEME DEFINITION - the ONLY place raw color values live ================= */
+  :root{
+    color-scheme: dark;
+    --bg:#0e120d; --surface:#161c14; --surface-2:#0b0e0a; --surface-3:#12160f;
+    --border:#2b3527; --border-strong:#3a4633; --grid-line:#1c231a;
+    --text-primary:#eef2e6; --text-secondary:#c8cfbe; --text-muted:#adb4a2;
+    --text-lede:#c9d0bf; --text-cons:#d4dbc9; --text-on-accent:#0e120d;
+    --accent:#9bcf3b; --accent-dim:#86ba35; --accent-strong:#6f9a2c;
+    --danger:#f0556a; --danger-text:#f697a4; --danger-dim:#b93b4c;
+    --warn:#e0a03b; --info:#6fb0d9; --accent-2:#b98bd9; --marker:#ffffff;
+    /* tints */
+    --tint-accent:rgba(155,207,59,.07); --tint-accent-soft:rgba(155,207,59,.05); --tint-hero:rgba(155,207,59,.06);
+    --tint-evidence:rgba(155,207,59,.08); --tint-accent-16:rgba(155,207,59,.16);
+    --tint-warn:rgba(224,160,59,.08); --tint-warn-16:rgba(224,160,59,.16);
+    --tint-danger:rgba(240,85,106,.08); --tint-danger-09:rgba(240,85,106,.09); --tint-danger-10:rgba(240,85,106,.10);
+    --status-ok-text:#d0d7c6; --status-warn-text:#eed9b4; --status-danger-text:#f3ccd2;
+    --font-sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --font-display:'Space Grotesk',var(--font-sans);
+  }
+  /* ========================================================================================== */
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{background:var(--bg); color:var(--text-primary); -webkit-text-size-adjust:100%; text-size-adjust:100%; scroll-behavior:smooth}
+  body{background:var(--bg); color:var(--text-primary); font-family:var(--font-sans);
+    line-height:1.7; -webkit-font-smoothing:antialiased; padding:0 0 6rem; letter-spacing:.002em}
+  .wrap{max-width:820px; margin:0 auto; padding:0 1.6rem; background:var(--bg); color:var(--text-primary)}
+  code,.mono,.num{font-family:var(--font-mono); font-variant-numeric:tabular-nums}
+  a{color:var(--accent)}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+  .katex{font-size:1.06em}
+  .katex-display{margin:0}
+  .eq{background:var(--surface-3); color:var(--text-primary); border:1px solid var(--border); border-radius:10px;
+    padding:1.15rem 1.3rem; margin:1.15rem 0; overflow-x:auto; overflow-y:hidden}
+  .eq .katex-display{margin:0}
+
+  header{background:var(--bg); color:var(--text-primary); border-bottom:1px solid var(--border); padding:3.6rem 0 2.6rem; margin-bottom:2.6rem}
+  .eyebrow{font-family:var(--font-mono); font-size:.73rem; font-weight:500; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--accent); margin-bottom:1.15rem; display:flex; gap:.85rem; flex-wrap:wrap}
+  .eyebrow span{color:var(--text-muted)}
+  h1{font-family:var(--font-display); font-weight:600; font-size:clamp(2rem,5vw,3rem);
+    line-height:1.05; letter-spacing:-.021em; margin-bottom:1.05rem; color:var(--text-primary)}
+  h1 em{font-style:normal; color:var(--accent)}
+  .lede{font-size:1.08rem; color:var(--text-lede); max-width:64ch}
+
+  .hero{position:relative; margin:2.4rem 0 .6rem; padding:2.2rem 1.6rem 1.9rem; isolation:isolate}
+  .hero-bg{position:absolute; inset:0; width:100%; height:100%; z-index:-1}
+  .hero-inner{position:relative; text-align:center}
+  .hero-tab{display:inline-block; font-family:var(--font-mono); font-size:.66rem; font-weight:500; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--accent); background:var(--bg); padding:.28rem .7rem;
+    border:1px solid var(--accent-strong); border-radius:5px; margin-bottom:1.2rem}
+  .hero-eq{margin:.4rem 0 1rem}
+  .hero-eq .katex{font-size:1.24em}
+  .hero-sub{font-size:.92rem; color:var(--text-muted); max-width:56ch; margin:0 auto}
+
+  section{margin-top:3.4rem}
+  .kicker{font-family:var(--font-mono); font-size:.71rem; font-weight:500; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--accent-dim); margin-bottom:.7rem}
+  h2{font-family:var(--font-display); font-weight:600; font-size:1.55rem; letter-spacing:-.012em; margin-bottom:1rem; color:var(--text-primary)}
+  p{margin-bottom:1.05rem; color:var(--text-secondary)} strong{color:var(--text-primary); font-weight:600}
+  .rind-t{color:var(--accent)} .flesh-t{color:var(--danger-text)} .amber-t{color:var(--warn)} .water-t{color:var(--info)}
+
+  .dstep{margin:2rem 0; padding-left:1.5rem; border-left:2px solid var(--border); position:relative}
+  .dstep::before{content:attr(data-n); position:absolute; left:-.9rem; top:-.1rem;
+    font-family:var(--font-mono); font-size:.7rem; font-weight:600; color:var(--text-on-accent);
+    background:var(--accent-strong); width:1.6rem; height:1.6rem; border-radius:50%; display:grid; place-items:center}
+  .d-state{font-family:var(--font-display); font-weight:500; font-size:1.12rem; color:var(--text-primary); margin-bottom:.2rem; line-height:1.4}
+  .d-exp{color:var(--text-secondary); margin:.9rem 0}
+  .d-cons{display:flex; gap:.7rem; align-items:flex-start; margin-top:.9rem; padding:.75rem .95rem;
+    background:var(--tint-accent-soft); border:1px solid var(--accent-strong); border-radius:8px}
+  .d-cons .lab{font-family:var(--font-mono); font-size:.63rem; font-weight:500; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--accent); flex:none; margin-top:.18rem}
+  .d-cons p{margin:0; color:var(--text-cons); font-size:.94rem}
+
+  .instrument{background:var(--surface); color:var(--text-secondary); border:1px solid var(--border); border-radius:14px; padding:1.7rem; margin-top:1.3rem}
+  .inst-head{display:flex; justify-content:space-between; align-items:baseline; gap:1rem; flex-wrap:wrap; margin-bottom:1.3rem}
+  .inst-title{font-family:var(--font-display); font-weight:600; font-size:1.05rem; color:var(--text-primary)}
+  .reset{font-family:var(--font-mono); font-size:.75rem; font-weight:500; color:var(--accent); background:transparent;
+    border:1px solid var(--accent-strong); border-radius:6px; padding:.5rem .85rem; cursor:pointer; transition:.15s}
+  .reset:hover{background:var(--accent-strong); color:var(--text-on-accent)}
+  .noscript-note{background:var(--tint-warn); color:var(--status-warn-text); border:1px solid var(--warn); border-radius:8px;
+    padding:.8rem 1rem; font-size:.86rem; margin-bottom:1rem}
+
+  .lad-row{display:grid; grid-template-columns:1fr 300px; gap:1.6rem; align-items:start}
+  .ladder{display:flex; flex-direction:column-reverse; gap:.4rem}
+  .rung{display:flex; align-items:center; gap:.8rem; background:var(--surface-2); color:var(--text-secondary); border:1px solid var(--border);
+    border-radius:8px; padding:.6rem .8rem}
+  .rung .rid{font-family:var(--font-mono); font-weight:600; font-size:.9rem; color:var(--text-muted); width:26px; flex:none}
+  .rung .rbody{flex:1; min-width:0}
+  .rung .rname{font-family:var(--font-display); font-weight:600; font-size:.92rem; color:var(--text-primary)}
+  .rung .rwhat{font-family:var(--font-mono); font-size:.64rem; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .rung .rtag{font-family:var(--font-mono); font-size:.6rem; font-weight:500; padding:.15rem .45rem; border-radius:4px; flex:none}
+  .rung.validated{border-color:var(--accent-strong)}
+  .rung.validated .rid{color:var(--accent)}
+  .rung.unvalidated{opacity:.6; border-style:dashed}
+  .rung.required{outline:2px solid var(--info); outline-offset:-2px}
+  .rung.evidence{background:var(--tint-evidence)}
+  .rung.evidence.over{background:var(--tint-danger-10); outline:2px solid var(--danger); outline-offset:-2px}
+  .tag-val{background:var(--tint-accent-16); color:var(--accent)}
+  .tag-pend{background:var(--tint-warn-16); color:var(--warn)}
+
+  .ctl-group{margin-bottom:1rem}
+  .ctl-group .lbl{font-family:var(--font-mono); font-size:.66rem; font-weight:500; letter-spacing:.05em; text-transform:uppercase; color:var(--text-muted); margin-bottom:.4rem; display:block}
+  .claims{display:flex; flex-direction:column; gap:.35rem}
+  .claims button{text-align:left; font-family:var(--font-sans); font-size:.82rem; padding:.5rem .7rem;
+    background:var(--surface-2); color:var(--text-secondary); border:1px solid var(--border); border-radius:7px; cursor:pointer; transition:.15s}
+  .claims button:hover{border-color:var(--border-strong)}
+  .claims button.on{background:var(--accent-strong); color:var(--text-on-accent); font-weight:600; border-color:var(--accent)}
+  .claims button:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+  .evrow{display:flex; gap:.3rem; flex-wrap:wrap}
+  .evrow button{font-family:var(--font-mono); font-size:.78rem; padding:.4rem .6rem; background:var(--surface-2);
+    color:var(--text-secondary); border:1px solid var(--border); border-radius:6px; cursor:pointer; transition:.15s}
+  .evrow button:hover{border-color:var(--border-strong)}
+  .evrow button.on{background:var(--info); color:var(--text-on-accent); font-weight:600; border-color:var(--info)}
+  .evrow button:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+  .frontier{display:flex; align-items:center; gap:.6rem}
+  .frontier .fv{font-family:var(--font-mono); font-size:.82rem; color:var(--accent); font-weight:600; width:26px}
+  input[type=range]{-webkit-appearance:none; appearance:none; flex:1; height:5px; border-radius:3px; background:var(--border); outline-offset:4px; cursor:pointer}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:16px; height:16px; border-radius:50%; background:var(--accent); border:2px solid var(--bg); cursor:pointer}
+  input[type=range]::-moz-range-thumb{width:16px; height:16px; border-radius:50%; background:var(--accent); border:2px solid var(--bg); cursor:pointer}
+
+  .verdict{padding:1rem; border-radius:9px; border:1px solid; font-family:var(--font-mono); font-size:.8rem; font-weight:500; line-height:1.55; margin-top:1.3rem}
+  .verdict .vh{font-family:var(--font-display); font-weight:600; font-size:1rem; margin-bottom:.4rem}
+  .verdict.ok{border-color:var(--accent-strong); background:var(--tint-evidence)} .verdict.ok .vh{color:var(--accent)}
+  .verdict.over{border-color:var(--danger-dim); background:var(--tint-danger-09)} .verdict.over .vh{color:var(--danger-text)}
+  .verdict.pend{border-color:var(--warn); background:var(--tint-warn)} .verdict.pend .vh{color:var(--warn)}
+  .verdict.waste{border-color:var(--border); background:var(--surface-2)} .verdict.waste .vh{color:var(--text-muted)}
+  .verdict p{color:var(--text-cons); margin:0}
+
+  .insight{border:1px solid var(--accent-strong); border-radius:12px; padding:1.4rem 1.6rem; margin-top:1.6rem;
+    background:linear-gradient(180deg,var(--tint-hero),transparent)}
+  .insight .tag{font-family:var(--font-mono); font-size:.72rem; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin-bottom:.55rem}
+  .insight p{color:var(--text-cons); margin-bottom:0} .insight strong{color:var(--accent)}
+  .takeaway{border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:12px; padding:1.5rem 1.7rem; background:var(--surface)}
+  .tk-list{list-style:none}
+  .tk-list li{display:flex; gap:.85rem; align-items:flex-start; padding:.6rem 0; color:var(--text-secondary); border-bottom:1px solid var(--border)}
+  .tk-list li:last-child{border-bottom:none; padding-top:.95rem}
+  .tk-mark{font-family:var(--font-mono); color:var(--text-muted); flex:none; margin-top:.1rem}
+  .tk-mark.tk-hot{color:var(--accent)} .tk-list strong{color:var(--text-primary)}
+  footer{margin-top:4rem; padding-top:1.6rem; border-top:1px solid var(--border);
+    font-family:var(--font-mono); font-size:.74rem; color:var(--text-muted); line-height:1.85}
+
+  @media(max-width:660px){ .lad-row{grid-template-columns:1fr} }
+  @media(prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <header>
+    <div class="eyebrow">Foundational Concept <span>/</span> CEC-06 <span>/</span> Module 13 <span>/</span> The Fidelity Ladder</div>
+    <h1>A simulation is only <em>evidence</em> where it has been validated.</h1>
+    <p class="lede">Simulation-first development is fast and cheap - and dangerous, because a convincing simulation can be confidently wrong. What makes it rigorous rather than merely simulated is a ladder: match the fidelity of the model to the decision it must inform, and trust each rung only after validating it against reality. Here is that ladder, and the rule that governs when a result counts as proof.</p>
+
+    <div class="hero">
+      <svg class="hero-bg" viewBox="0 0 800 230" preserveAspectRatio="none" role="presentation" aria-hidden="true" focusable="false">
+        <defs>
+          <pattern id="grid" width="26" height="26" patternUnits="userSpaceOnUse">
+            <path d="M26 0H0V26" fill="none" style="stroke:var(--grid-line)" stroke-width="1" vector-effect="non-scaling-stroke"/>
+          </pattern>
+        </defs>
+        <rect x="6" y="6" width="788" height="218" rx="12" style="fill:var(--surface-3)"/>
+        <rect x="6" y="6" width="788" height="218" rx="12" fill="url(#grid)" opacity="0.5"/>
+        <rect x="6" y="6" width="788" height="218" rx="12" fill="none" style="stroke:var(--border)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M20 6V22 M6 20H22" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M780 6V22 M778 20H794" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M20 224V208 M6 210H22" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M780 224V208 M778 210H794" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+      </svg>
+      <div class="hero-inner">
+        <div class="hero-tab">Governing relation</div>
+        <div class="hero-eq" role="math" aria-label="A claim is admissible if and only if the evidence rung is at least the required rung and the evidence rung is validated">\[ \text{admissible} \iff \bigl(r_{\mathrm{ev}} \ge r_{\mathrm{req}}\bigr) \;\wedge\; \mathrm{validated}(r_{\mathrm{ev}}) \]</div>
+        <div class="hero-sub">A claim is evidence only when its rung is high enough for the decision - and has been validated against reality.</div>
+      </div>
+    </div>
+  </header>
+
+  <section id="ladder-s" aria-labelledby="lad-h">
+    <div class="kicker">The ladder - matching fidelity to the decision</div>
+    <h2 id="lad-h">Six rungs, each earning its claims</h2>
+    <p>Fidelity is not free, and more is not always better. Each rung of the ladder can support only certain claims; climbing higher costs effort but unlocks harder questions. The discipline (Module 13, Doc G) is to spend fidelity where the decision is <em>sensitive</em> to it - no lower, no higher.</p>
+  </section>
+
+  <section id="derivation" aria-labelledby="deriv-h">
+    <div class="kicker">Full derivation - when a result counts as proof</div>
+    <h2 id="deriv-h">The rule that governs admissible evidence</h2>
+
+    <div class="dstep" data-n="1">
+      <div class="d-state">Match the rung to the decision's sensitivity - no lower, no higher.</div>
+      <p class="d-exp">A reach question is purely geometric - the lowest rung answers it. A grasp-will-not-bruise question depends on contact mechanics that only appear high on the ladder. Using a low rung for a fidelity-sensitive decision is <strong class="flesh-t">over-trust</strong>; using a high rung for an insensitive one <strong class="amber-t">wastes effort</strong>.</p>
+      <div class="d-cons"><span class="lab">Consequence</span><p>Spend fidelity <strong>where the decision is sensitive</strong> to it - the binding rung, not the prettiest one.</p></div>
+    </div>
+
+    <div class="dstep" data-n="2">
+      <div class="d-state">A rung is admissible evidence only after it is validated against reality.</div>
+      <div class="eq">\[ \mathrm{admissible}(\text{claim}) = \bigl(r_{\mathrm{ev}} \ge r_{\mathrm{req}}\bigr) \;\wedge\; \mathrm{validated}(r_{\mathrm{ev}}) \]</div>
+      <p class="d-exp">A rung is admissible evidence only after it has been checked against reality to a stated tolerance (Doc G per-rung acceptance gates). An unvalidated rung - however detailed the simulation looks - is not evidence yet.</p>
+      <div class="d-cons"><span class="lab">Consequence</span><p>The ladder turns <strong>"the simulation says so" into "a validated rung says so"</strong> - a different, and much stronger, claim.</p></div>
+    </div>
+
+    <div class="dstep" data-n="3">
+      <div class="d-state">The field is the top rung: the fidelity-sensitive claims are field-mandatory.</div>
+      <p class="d-exp">The final, fidelity-sensitive claims - grasp-will-not-bruise, perception recall - are <strong>field-mandatory</strong>: interim sim rungs (R3, R4) give evidence, but the ground-truth claim rides R6, the real machine in the real field.</p>
+      <div class="d-cons"><span class="lab">Consequence</span><p>That is why the <strong>pilot is on the critical path</strong>, not an afterthought - R6 is where the decisive claims come home.</p></div>
+    </div>
+  </section>
+
+  <section id="instrument" aria-labelledby="inst-h">
+    <div class="kicker">The ladder, live - test a claim against a rung</div>
+    <h2 id="inst-h">Is your evidence admissible?</h2>
+    <p>Pick an engineering claim, then choose which rung you are citing as evidence. The instrument shows the <span class="water-t">rung the claim requires</span> and judges whether your evidence is admissible - or whether you are over-trusting a rung that is too low or not yet validated. Slide the validation frontier to see which rungs have been checked against reality.</p>
+
+    <div class="instrument">
+      <div class="inst-head">
+        <div class="inst-title">Fidelity ladder and evidence admissibility</div>
+        <button class="reset" id="resetBtn" type="button">Reset</button>
+      </div>
+
+      <noscript><p class="noscript-note">This interactive fidelity-ladder explorer requires JavaScript. The full worked result is in the derivation above: a claim is admissible evidence only when its evidence rung is at least the rung the decision requires AND that rung has been validated against reality; the fidelity-sensitive claims (grasp-bruise, perception recall) are field-mandatory and ride R6, the real machine in the real field.</p></noscript>
+
+      <div class="lad-row">
+        <div class="ladder" id="ladder" aria-label="Fidelity ladder, rungs R1 (bottom) to R6 (top)"></div>
+        <div>
+          <div class="ctl-group">
+            <span class="lbl" id="claimLbl">the claim you want to make</span>
+            <div class="claims" id="claims" role="group" aria-labelledby="claimLbl"></div>
+          </div>
+          <div class="ctl-group">
+            <span class="lbl" id="evLbl">rung you are citing as evidence</span>
+            <div class="evrow" id="evrow" role="group" aria-labelledby="evLbl"></div>
+          </div>
+          <div class="ctl-group">
+            <span class="lbl">validated through rung <span class="fv" id="frontVal">R5</span></span>
+            <div class="frontier">
+              <input type="range" id="frontier" min="1" max="6" step="1" value="5" aria-label="validation frontier: highest rung validated against reality">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="verdict ok" id="verdict" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section id="cec06" aria-labelledby="cec-h">
+    <div class="kicker">The concept - rigour, not just simulation</div>
+    <h2 id="cec-h">What makes simulation-first trustworthy</h2>
+    <div class="insight">
+      <div class="tag">CEC-06 - The Simulation-First Fidelity Ladder</div>
+      <p><strong>Match the fidelity of a model to the decision it must inform, find where fidelity is binding, and validate each rung against reality before trusting it.</strong> This is the tool that makes a simulation-first program rigorous rather than merely simulated. A twin that designs, trains, and verifies the machine is only allowed to serve as evidence - for V&amp;V, the safety case, the deployment argument - on rungs that have been validated to a stated tolerance. The failure it guards against is seductive: a detailed, beautiful simulation that has never been checked against a real melon, cited as proof that the grasp will not bruise. The ladder turns "the simulation says so" into "a validated rung says so," which is a different and much stronger claim.</p>
+    </div>
+  </section>
+
+  <section id="takeaway" aria-labelledby="tk-h">
+    <div class="kicker">Engineering takeaway - what to do next</div>
+    <h2 id="tk-h">How to use the ladder</h2>
+    <div class="takeaway">
+      <ul class="tk-list">
+        <li><span class="tk-mark" aria-hidden="true">-&gt;</span> For every claim, ask two questions before citing a simulation: <strong>is this rung high enough for the decision, and has it been validated?</strong> If either answer is no, the result is not yet evidence.</li>
+        <li><span class="tk-mark tk-hot" aria-hidden="true">-&gt;</span> Spend fidelity effort where the decision is <strong class="rind-t">sensitive</strong> to it. The contact/fluid rung (R3) is the binding one for grasp-will-not-bruise - validating it against real fruit is the highest-leverage twin work, and it is the same measurement Doc C and Doc E depend on.</li>
+        <li><span class="tk-mark" aria-hidden="true">-&gt;</span> Do not over-build low-stakes rungs: a reach question is settled at R1, and a photoreal contact simulation for it wastes effort that the binding rung needs.</li>
+        <li><span class="tk-mark" aria-hidden="true">-&gt;</span> <strong>Decision:</strong> treat the fidelity-sensitive, field-mandatory claims (grasp-bruise, perception recall) as <strong class="rind-t">on the critical path</strong> - they ride R6, so the pilot is not optional. Plan the validation campaign that climbs the ladder to them deliberately.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    SIM2FIELD / Autonomous Watermelon Harvesting Robotics<br>
+    Worked example for the Simulation-First Fidelity Ladder (CEC-06), Module 13 - the discipline that makes twin results admissible evidence<br>
+    Ladder and admissibility rules ratified in Doc G (six rungs R1-R6, per-rung validation tolerances) - frozen Rev 1.0<br>
+    Production Phase asset - configuration-controlled
+  </footer>
+</main>
+
+<script>
+/* Interactive enhancement only. All engineering content above is static and
+   readable with JavaScript disabled. Vanilla JS, no external dependencies.
+   Colors come from semantic tokens (var(--...)) via CSS classes, never raw hex. */
+(function(){
+  "use strict";
+  const RUNGS=[
+    {id:'R1', name:'Kinematic', what:'geometry, reach, FK/IK, singularity'},
+    {id:'R2', name:'Dynamic', what:'masses, inertias, forces, stability'},
+    {id:'R3', name:'Contact / Fluid', what:'contact mechanics, bruise/slip, fluid actuator'},
+    {id:'R4', name:'Sensor-in-loop', what:'virtual sensors on rendered data'},
+    {id:'R5', name:'Hardware-in-loop', what:'real edge/actuators vs the sim'},
+    {id:'R6', name:'Prototype / Field',what:'the real machine in the real field'}
+  ];
+  const CLAIMS=[
+    {k:'reach', label:'Arm can reach the fruit (workspace / singularity)', req:1, fieldFinal:false},
+    {k:'stab', label:'Machine stays stable (dynamic coupling)', req:2, fieldFinal:false},
+    {k:'bruise', label:'Grasp will not bruise the melon (window / slip)', req:3, fieldFinal:true},
+    {k:'recall', label:'Perception recall / localization is good enough', req:4, fieldFinal:true},
+    {k:'timing', label:'Real timing / power / thermal under load', req:5, fieldFinal:false}
+  ];
+
+  let state={claim:'bruise', evidence:3, frontier:5};
+
+  const ladder=document.getElementById('ladder');
+  const claimsBox=document.getElementById('claims');
+  const evrow=document.getElementById('evrow');
+  if(!ladder||!claimsBox||!evrow) return;
+
+  CLAIMS.forEach(c=>{
+    const b=document.createElement('button');
+    b.type='button'; b.textContent=c.label; b.dataset.k=c.k;
+    const on=c.k===state.claim; if(on) b.classList.add('on');
+    b.setAttribute('aria-pressed', on);
+    claimsBox.appendChild(b);
+  });
+  RUNGS.forEach((r,i)=>{
+    const b=document.createElement('button');
+    b.type='button'; b.textContent=r.id; b.dataset.ev=i+1;
+    const on=i+1===state.evidence; if(on) b.classList.add('on');
+    b.setAttribute('aria-pressed', on);
+    b.setAttribute('aria-label', r.id+' '+r.name);
+    evrow.appendChild(b);
+  });
+
+  function claimObj(){ return CLAIMS.find(c=>c.k===state.claim); }
+
+  function render(){
+    const c=claimObj();
+    const req=c.req, ev=state.evidence, front=state.frontier;
+    const validated = ev<=front;
+
+    ladder.innerHTML='';
+    RUNGS.forEach((r,idx)=>{
+      const level=idx+1;
+      const isVal=level<=front;
+      const isReq=level===req;
+      const isEv=level===ev;
+      const over = isEv && ev<req;
+      const div=document.createElement('div');
+      div.className='rung '+(isVal?'validated':'unvalidated')+(isReq?' required':'')+(isEv?(over?' evidence over':' evidence'):'');
+      div.innerHTML=
+        `<span class="rid">${r.id}</span>`+
+        `<span class="rbody"><span class="rname">${r.name}</span><br><span class="rwhat">${r.what}</span></span>`+
+        `<span class="rtag ${isVal?'tag-val':'tag-pend'}">${isVal?'validated':'pending'}</span>`;
+      ladder.appendChild(div);
+    });
+
+    const v=document.getElementById('verdict');
+    let cls,head,body;
+    if(ev<req){
+      cls='over'; head='Over-trust - inadmissible';
+      body=`You are citing ${RUNGS[ev-1].id} (${RUNGS[ev-1].name}) for a claim that needs at least ${RUNGS[req-1].id} (${RUNGS[req-1].name}). ${RUNGS[ev-1].id} cannot see the physics this decision depends on. A convincing low-rung simulation here is exactly the trap the ladder guards against.`;
+    } else if(!validated){
+      cls='pend'; head='Not yet validated - inadmissible';
+      body=`${RUNGS[ev-1].id} is high enough for this claim, but it has not been validated against reality yet (validation frontier is ${RUNGS[front-1].id}). Until ${RUNGS[ev-1].id} is checked to its tolerance, the result is a simulation, not evidence.`;
+    } else if(c.fieldFinal && ev===6){
+      cls='ok'; head='Admissible - definitive';
+      body=`${RUNGS[5].id} (real field) is the ground-truth rung, and it is validated. For a field-mandatory claim like this one, that is the strongest evidence there is: the real machine, on real fruit, in the real field. This is the claim's final home.`;
+    } else if(c.fieldFinal && ev<6){
+      cls='ok'; head='Admissible interim evidence';
+      body=`${RUNGS[ev-1].id} gives valid interim evidence for this claim. But the final claim is field-mandatory - the ground-truth grasp/perception result rides ${RUNGS[5].id} (real field). Treat ${RUNGS[ev-1].id} as strong support, not the last word.`;
+    } else if(ev>req+1){
+      cls='waste'; head='Admissible, but over-built';
+      body=`${RUNGS[ev-1].id} more than covers a claim that only needs ${RUNGS[req-1].id}. It is admissible, but the extra fidelity was effort the binding rungs may have needed more.`;
+    } else {
+      cls='ok'; head='Admissible evidence';
+      body=`${RUNGS[ev-1].id} is high enough for this claim and has been validated against reality. The result counts as evidence: a validated rung says so, not just the simulation.`;
+    }
+    v.className='verdict '+cls;
+    v.innerHTML=`<div class="vh">${head}</div><p>${body}</p>`;
+
+    document.getElementById('frontVal').textContent=RUNGS[front-1].id;
+    document.querySelectorAll('#evrow button').forEach(b=>{ const on=+b.dataset.ev===ev; b.classList.toggle('on',on); b.setAttribute('aria-pressed',on); });
+    document.querySelectorAll('#claims button').forEach(b=>{ const on=b.dataset.k===state.claim; b.classList.toggle('on',on); b.setAttribute('aria-pressed',on); });
+  }
+
+  claimsBox.addEventListener('click',e=>{
+    if(e.target.dataset.k){ state.claim=e.target.dataset.k;
+      state.evidence=claimObj().req; render(); }
+  });
+  evrow.addEventListener('click',e=>{
+    if(e.target.dataset.ev){ state.evidence=+e.target.dataset.ev; render(); }
+  });
+  document.getElementById('frontier').addEventListener('input',e=>{ state.frontier=+e.target.value; render(); });
+  document.getElementById('resetBtn').addEventListener('click',()=>{
+    state={claim:'bruise',evidence:3,frontier:5};
+    document.getElementById('frontier').value=5; render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

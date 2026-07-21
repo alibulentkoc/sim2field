@@ -1,0 +1,49 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="color-scheme" content="dark"><title>F-M15-3 preview - Defense in depth</title><style>:root{--bg:#0e120d;--surface:#161c14;--surface-2:#0b0e0a;--surface-3:#12160f;--border:#2b3527;--border-strong:#3a4633;--text-primary:#eef2e6;--text-secondary:#c8cfbe;--text-muted:#adb4a2;--accent:#9bcf3b;--info:#6fb0d9;--danger:#f0556a;--danger-text:#f697a4}
+body{margin:0;background:var(--bg);color:var(--text-primary);font-family:'IBM Plex Mono',ui-monospace,monospace;padding:2rem}
+.figure{max-width:880px;margin:0 auto;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.figbody{padding:1rem 1.1rem;background:var(--surface-3);overflow-x:auto} .figbody svg{display:block;width:100%;height:auto;min-width:700px}
+figcaption{padding:.7rem 1rem;font-size:.82rem;color:var(--text-muted);border-top:1px solid var(--border)} .fid{font-size:.64rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-right:.5rem}</style></head>
+<body><figure class="figure"><div class="figbody"><svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Defense in depth: four independent safety layers each block a hazard except through their residual gap, and because the gaps are misaligned no single failure reaches harm; a common-cause fault, however, can open a gap in every layer at once, which is what the safety case must rule out." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/></marker><marker id="r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--danger)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Defense in depth: no single failure defeats safety</text>
+<rect x="14" y="150" width="104" height="56" rx="8" fill="var(--surface)" stroke="var(--danger)" stroke-width="1.4"/>
+<text x="66" y="172" text-anchor="middle" font-size="8.5" fill="var(--danger-text)" font-weight="700">HAZARD</text>
+<text x="66" y="186" text-anchor="middle" font-size="7" fill="var(--text-muted)">over-force /</text>
+<text x="66" y="196" text-anchor="middle" font-size="7" fill="var(--text-muted)">unsafe motion</text>
+<rect x="180" y="70" width="64" height="256" rx="9" fill="var(--info)" fill-opacity="0.08" stroke="var(--info)" stroke-width="1.3"/>
+<circle cx="212" cy="132" r="13" fill="var(--surface-3)" stroke="var(--info)" stroke-width="1" stroke-dasharray="2 2"/>
+<text x="212" y="64" text-anchor="middle" font-size="8.5" fill="var(--info)" font-weight="700">Envelope limits</text>
+<text x="212" y="340" text-anchor="middle" font-size="7.3" fill="var(--text-secondary)">EI-10/12</text>
+<text x="212" y="351" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">refuse/degrade outside safe envelope</text>
+<rect x="312" y="70" width="64" height="256" rx="9" fill="var(--info)" fill-opacity="0.08" stroke="var(--info)" stroke-width="1.3"/>
+<circle cx="344" cy="250" r="13" fill="var(--surface-3)" stroke="var(--info)" stroke-width="1" stroke-dasharray="2 2"/>
+<text x="344" y="64" text-anchor="middle" font-size="8.5" fill="var(--info)" font-weight="700">Bounded learner</text>
+<text x="344" y="340" text-anchor="middle" font-size="7.3" fill="var(--text-secondary)">EI-07</text>
+<text x="344" y="351" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">clip to verified bounds + fallback</text>
+<rect x="444" y="70" width="64" height="256" rx="9" fill="var(--info)" fill-opacity="0.08" stroke="var(--info)" stroke-width="1.3"/>
+<circle cx="476" cy="166" r="13" fill="var(--surface-3)" stroke="var(--info)" stroke-width="1" stroke-dasharray="2 2"/>
+<text x="476" y="64" text-anchor="middle" font-size="8.5" fill="var(--info)" font-weight="700">Independent monitor</text>
+<text x="476" y="340" text-anchor="middle" font-size="7.3" fill="var(--text-secondary)">EI-11</text>
+<text x="476" y="351" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">stop/safe, software-independent</text>
+<rect x="576" y="70" width="64" height="256" rx="9" fill="var(--info)" fill-opacity="0.08" stroke="var(--info)" stroke-width="1.3"/>
+<circle cx="608" cy="288" r="13" fill="var(--surface-3)" stroke="var(--info)" stroke-width="1" stroke-dasharray="2 2"/>
+<text x="608" y="64" text-anchor="middle" font-size="8.5" fill="var(--info)" font-weight="700">Physical bounds</text>
+<text x="608" y="340" text-anchor="middle" font-size="7.3" fill="var(--text-secondary)">EI-09</text>
+<text x="608" y="351" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">relief + compliance, physics-speed</text>
+<line x1="118" y1="206" x2="182" y2="206" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#g)"/>
+<text x="150" y="222" text-anchor="middle" font-size="7.5" fill="var(--accent)">blocked</text>
+<text x="150" y="232" text-anchor="middle" font-size="7" fill="var(--text-muted)">(hits solid layer)</text>
+<text x="150" y="250" text-anchor="middle" font-size="9" fill="var(--accent)" font-weight="700">-&gt; SAFE</text>
+<line x1="118" y1="100" x2="712" y2="100" stroke="var(--danger)" stroke-width="2" stroke-dasharray="7 3" marker-end="url(#r)"/>
+<circle cx="212" cy="100" r="9" fill="var(--surface-3)" stroke="var(--danger)" stroke-width="1.6"/>
+<circle cx="344" cy="100" r="9" fill="var(--surface-3)" stroke="var(--danger)" stroke-width="1.6"/>
+<circle cx="476" cy="100" r="9" fill="var(--surface-3)" stroke="var(--danger)" stroke-width="1.6"/>
+<circle cx="608" cy="100" r="9" fill="var(--surface-3)" stroke="var(--danger)" stroke-width="1.6"/>
+<rect x="676" y="78" width="72" height="44" rx="8" fill="var(--danger)" fill-opacity="0.12" stroke="var(--danger)" stroke-width="1.4"/>
+<text x="712" y="98" text-anchor="middle" font-size="9" fill="var(--danger-text)" font-weight="700">HARM</text>
+<text x="712" y="111" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">reached</text>
+<text x="126" y="92" font-size="8" fill="var(--danger-text)" font-weight="700">common-cause fault: one root cause opens a gap in every layer at once</text>
+<text x="20" y="366" font-size="8.3" fill="var(--text-secondary)">Layers are independent, so misaligned residual gaps mean no single failure reaches harm. Independence is certified by tracing each layer's</text>
+<text x="20" y="378" font-size="8.3" fill="var(--text-muted)">inputs, clock, power, compute, and assumptions (Sec. 6.5); the minimal hardware controller breaks the last software dependency.</text>
+<text x="20" y="391" font-size="8.3" fill="var(--danger-text)">Common-cause failure (one fault disabling a function AND its guard) is the safety case's most important thing to rule out.</text>
+</svg></div><figcaption><span class="fid">F-M15-3</span>Defense in depth and the common-cause concern. Four independent layers each block the hazard except through a residual gap; because the gaps are misaligned, no single failure reaches harm. A common-cause fault can open a gap in every layer at once, which is exactly what the safety case must rule out. Module 15, Sections 6.4 and 6.5.</figcaption></figure></body></html>

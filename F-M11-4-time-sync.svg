@@ -1,0 +1,68 @@
+<svg viewBox="0 0 760 336" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Time synchronization and message age: on a moving rover a timing error becomes a position error equal to velocity times message age, feeding the sync term of the placement budget; a shared clock makes a fused pose refer to one instant and a QoS deadline bounds message age so the sync error stays within its allocation." font-family="'IBM Plex Mono',monospace">
+<text x="20" y="26" font-size="10" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">A timing error is a position error</text>
+<text x="20" y="42" font-size="7.6" fill="var(--text-muted)">on the moving rover (feeds &#963;_sync, CEC-03)</text>
+<line x1="40" y1="150" x2="360" y2="150" stroke="var(--border-strong)" stroke-width="1.4"/>
+<text x="360" y="164" text-anchor="end" font-size="7.2" fill="var(--text-muted)">rover travel  (velocity v) -&gt;</text>
+<circle cx="120" cy="150" r="6" fill="var(--info)"/>
+<text x="120" y="176" text-anchor="middle" font-size="7.2" fill="var(--info)">measured @ t-&#916;</text>
+<circle cx="228" cy="150" r="6" fill="var(--accent)"/>
+<text x="228" y="176" text-anchor="middle" font-size="7.2" fill="var(--accent)">true now @ t</text>
+<defs><marker id="m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--danger)"/></marker></defs>
+<line x1="120" y1="122" x2="228" y2="122" stroke="var(--danger)" stroke-width="1.6" marker-end="url(#m)"/>
+<text x="174" y="116" text-anchor="middle" font-size="8" fill="var(--danger-text)" font-weight="700">v &#183; &#916;</text>
+<text x="174" y="104" text-anchor="middle" font-size="6.8" fill="var(--text-muted)">position error</text>
+<line x1="120" y1="206" x2="228" y2="206" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="120" y1="202" x2="120" y2="210" stroke="var(--text-muted)"/><line x1="228" y1="202" x2="228" y2="210" stroke="var(--text-muted)"/>
+<text x="174" y="220" text-anchor="middle" font-size="7.2" fill="var(--text-muted)">message age &#916;</text>
+<text x="20" y="250" font-size="8" fill="var(--text-secondary)">position error = v &#183; (message age): stale data displaces</text>
+<text x="20" y="262" font-size="8" fill="var(--text-secondary)">the target. Slow or unsynced compute misplaces the grasp.</text>
+<line x1="384" y1="20" x2="384" y2="300" stroke="var(--border)" stroke-width="1"/>
+<text x="404" y="26" font-size="10" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Shared clock + bounded message age</text>
+<line x1="410" y1="64" x2="720" y2="64" stroke="var(--border-strong)" stroke-width="1"/>
+<text x="406" y="67" text-anchor="end" font-size="7" fill="var(--text-muted)">stereo</text>
+<line x1="430" y1="60" x2="430" y2="68" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="466" y1="60" x2="466" y2="68" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="502" y1="60" x2="502" y2="68" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="538" y1="60" x2="538" y2="68" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="574" y1="60" x2="574" y2="68" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="610" y1="60" x2="610" y2="68" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="646" y1="60" x2="646" y2="68" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="682" y1="60" x2="682" y2="68" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="718" y1="60" x2="718" y2="68" stroke="var(--text-muted)" stroke-width="1"/>
+<circle cx="598" cy="64" r="4.5" fill="var(--accent)"/>
+<line x1="410" y1="96" x2="720" y2="96" stroke="var(--border-strong)" stroke-width="1"/>
+<text x="406" y="99" text-anchor="end" font-size="7" fill="var(--text-muted)">IMU</text>
+<line x1="430" y1="92" x2="430" y2="100" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="466" y1="92" x2="466" y2="100" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="502" y1="92" x2="502" y2="100" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="538" y1="92" x2="538" y2="100" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="574" y1="92" x2="574" y2="100" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="610" y1="92" x2="610" y2="100" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="646" y1="92" x2="646" y2="100" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="682" y1="92" x2="682" y2="100" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="718" y1="92" x2="718" y2="100" stroke="var(--text-muted)" stroke-width="1"/>
+<circle cx="598" cy="96" r="4.5" fill="var(--accent)"/>
+<line x1="410" y1="128" x2="720" y2="128" stroke="var(--border-strong)" stroke-width="1"/>
+<text x="406" y="131" text-anchor="end" font-size="7" fill="var(--text-muted)">odometry</text>
+<line x1="430" y1="124" x2="430" y2="132" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="466" y1="124" x2="466" y2="132" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="502" y1="124" x2="502" y2="132" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="538" y1="124" x2="538" y2="132" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="574" y1="124" x2="574" y2="132" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="610" y1="124" x2="610" y2="132" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="646" y1="124" x2="646" y2="132" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="682" y1="124" x2="682" y2="132" stroke="var(--text-muted)" stroke-width="1"/>
+<line x1="718" y1="124" x2="718" y2="132" stroke="var(--text-muted)" stroke-width="1"/>
+<circle cx="598" cy="128" r="4.5" fill="var(--accent)"/>
+<line x1="598" y1="52" x2="598" y2="140" stroke="var(--accent)" stroke-width="1.4" stroke-dasharray="4 3"/>
+<text x="598" y="48" text-anchor="middle" font-size="7.4" fill="var(--accent)" font-weight="700">one fused instant</text>
+<rect x="410" y="150" width="120" height="18" rx="4" fill="var(--danger)" fill-opacity="0.10" stroke="var(--danger)" stroke-dasharray="3 2"/>
+<text x="470" y="162" text-anchor="middle" font-size="6.8" fill="var(--danger-text)">too old: dropped</text>
+<line x1="530" y1="146" x2="530" y2="172" stroke="var(--warn)" stroke-width="1.4"/>
+<text x="536" y="162" font-size="7" fill="var(--warn-text)">QoS deadline (max age)</text>
+<text x="404" y="196" font-size="7.8" fill="var(--text-secondary)">A shared clock makes the fused pose refer to one instant;</text>
+<text x="404" y="208" font-size="7.8" fill="var(--text-secondary)">a QoS deadline bounds message age (no stale-message use).</text>
+<text x="404" y="228" font-size="7.8" fill="var(--text-muted)">Bound period jitter &#916;T and end-to-end age so</text>
+<text x="404" y="240" font-size="7.8" fill="var(--text-muted)">3&#963;_sync stays within its placement allocation (CEC-03).</text>
+<text x="20" y="292" font-size="8.2" fill="var(--text-muted)">This connects scheduling quality to placement accuracy: a timing property with a mechanical consequence. Jitter also threatens control stability (M9).</text>
+</svg>

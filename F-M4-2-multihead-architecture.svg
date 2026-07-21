@@ -1,0 +1,35 @@
+<svg viewBox="0 0 760 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A shared convolutional backbone feeds three task-specific heads: detection locates each fruit, instance segmentation gives the per-fruit mask the grasp needs to size and place contact, and ripeness classification labels each instance from RGB and near-infrared cues; the backbone family (single-stage, two-stage, or transformer) is traded against the cycle-time budget and the edge device." font-family="'IBM Plex Mono',monospace">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--border-strong)"/></marker></defs>
+<text x="20" y="26" font-size="11" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">Multi-head detection architecture</text>
+<rect x="30" y="72" width="150" height="120" rx="9" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.6"/>
+<text x="105" y="96" font-size="9" fill="var(--accent)" font-weight="700" text-anchor="middle">BACKBONE</text>
+<text x="105" y="112" font-size="6.6" fill="var(--text-muted)" font-weight="anc=middle">shared conv features</text>
+<text x="105" y="124" font-size="6.6" fill="var(--text-muted)" font-weight="anc=middle">edges -> fruit-like</text>
+<text x="105" y="144" font-size="6.4" fill="var(--text-muted)" font-weight="anc=middle">weight sharing,</text>
+<text x="105" y="155" font-size="6.4" fill="var(--text-muted)" font-weight="anc=middle">translation-tolerant</text>
+<text x="105" y="176" font-size="6.4" fill="var(--text-muted)" font-weight="anc=middle">(pretrained, M4 6.4)</text>
+<rect x="300" y="72" width="290" height="34" rx="7" fill="var(--surface)" stroke="var(--info)" stroke-width="1.3"/>
+<text x="312" y="87" font-size="8" fill="var(--info)" font-weight="700">detection</text>
+<text x="312" y="99" font-size="6.4" fill="var(--text-muted)">bbox + confidence  -  is it there, and where</text>
+<line x1="180" y1="132" x2="298" y2="89" stroke="var(--border-strong)" stroke-width="1.2" marker-end="url(#a)"/>
+<rect x="300" y="114" width="290" height="34" rx="7" fill="var(--surface)" stroke="var(--accent-2)" stroke-width="1.3"/>
+<text x="312" y="129" font-size="8" fill="var(--accent-2)" font-weight="700">instance segmentation</text>
+<text x="312" y="141" font-size="6.4" fill="var(--text-muted)">per-fruit mask  -  extent/shape for grasp (CEC-02)</text>
+<line x1="180" y1="132" x2="298" y2="131" stroke="var(--border-strong)" stroke-width="1.2" marker-end="url(#a)"/>
+<rect x="300" y="156" width="290" height="34" rx="7" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.3"/>
+<text x="312" y="171" font-size="8" fill="var(--warn)" font-weight="700">ripeness classification</text>
+<text x="312" y="183" font-size="6.4" fill="var(--text-muted)">per-instance label  -  from RGB + NIR cues (M2/M3)</text>
+<line x1="180" y1="132" x2="298" y2="173" stroke="var(--border-strong)" stroke-width="1.2" marker-end="url(#a)"/>
+<text x="300" y="66" font-size="7" fill="var(--text-muted)">heads read the shared feature maps:</text>
+<rect x="608" y="72" width="134" height="120" rx="8" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="618" y="90" font-size="7.4" fill="var(--text-primary)" font-weight="700">Backbone family:</text>
+<text x="618" y="106" font-size="6.8" fill="var(--text-secondary)">single-stage</text>
+<text x="618" y="115" font-size="6.2" fill="var(--text-muted)">fast, edge (YOLO)</text>
+<text x="618" y="130" font-size="6.8" fill="var(--text-secondary)">two-stage</text>
+<text x="618" y="139" font-size="6.2" fill="var(--text-muted)">accurate, slower</text>
+<text x="618" y="154" font-size="6.8" fill="var(--text-secondary)">transformer</text>
+<text x="618" y="163" font-size="6.2" fill="var(--text-muted)">flexible, data/</text>
+<text x="618" y="182" font-size="6.2" fill="var(--text-muted)">compute-hungry</text>
+<text x="20" y="236" font-size="7.8" fill="var(--text-muted)">The architecture choice is a trade against the cycle-time budget (CEC-01) and the edge device (M6): single-stage predicts all outputs in one</text>
+<text x="20" y="248" font-size="7.8" fill="var(--text-muted)">pass (real-time); two-stage propose-then-refine is more accurate but slower; transformers are flexible but data- and compute-hungry. Section 6.3.</text>
+</svg>

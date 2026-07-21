@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0e120d">
+<title>SIM2FIELD - Course Preview (Production Baseline)</title>
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
+<style>
+  /* ============ SHARED DESIGN SYSTEM - the ONLY place raw color values live ============ */
+  :root{
+    color-scheme: dark;
+    --bg:#0e120d; --surface:#161c14; --surface-2:#0b0e0a; --surface-3:#12160f;
+    --border:#2b3527; --border-strong:#3a4633; --grid-line:#1c231a;
+    --text-primary:#eef2e6; --text-secondary:#c8cfbe; --text-muted:#adb4a2;
+    --text-lede:#c9d0bf; --text-cons:#d4dbc9; --text-on-accent:#0e120d;
+    --accent:#9bcf3b; --accent-dim:#86ba35; --accent-strong:#6f9a2c;
+    --danger:#f0556a; --danger-text:#f697a4; --danger-dim:#b93b4c;
+    --warn:#e0a03b; --info:#6fb0d9; --accent-2:#b98bd9; --marker:#ffffff;
+    --tint-accent:rgba(155,207,59,.07); --tint-accent-soft:rgba(155,207,59,.05);
+    --tint-hero:rgba(155,207,59,.06); --tint-danger:rgba(240,85,106,.08);
+    --tint-warn:rgba(224,160,59,.08); --tint-info:rgba(111,176,217,.08);
+    --font-sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --font-display:'Space Grotesk',var(--font-sans);
+    --rail:300px; --topbar:60px;
+  }
+  /* ==================================================================================== */
+
+  *{box-sizing:border-box; margin:0; padding:0}
+  html{background:var(--bg); color:var(--text-primary); -webkit-text-size-adjust:100%; text-size-adjust:100%}
+  body{background:var(--bg); color:var(--text-primary); font-family:var(--font-sans); line-height:1.6;
+    -webkit-font-smoothing:antialiased; letter-spacing:.002em}
+  code,.mono{font-family:var(--font-mono); font-variant-numeric:tabular-nums}
+  a{color:var(--accent); text-decoration:none}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+  button{font-family:inherit}
+
+  /* ---- Top bar ---- */
+  .topbar{position:fixed; top:0; left:0; right:0; height:var(--topbar); z-index:20;
+    background:var(--surface-2); color:var(--text-primary); border-bottom:1px solid var(--border);
+    display:flex; align-items:center; gap:1rem; padding:0 1.1rem}
+  .brand{display:flex; align-items:baseline; gap:.6rem; flex:none}
+  .brand .mark{font-family:var(--font-display); font-weight:600; font-size:1.02rem; letter-spacing:-.01em; color:var(--text-primary)}
+  .brand .tag{font-family:var(--font-mono); font-size:.62rem; letter-spacing:.16em; text-transform:uppercase; color:var(--accent)}
+  .now{flex:1; min-width:0; font-family:var(--font-mono); font-size:.78rem; color:var(--text-muted);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .now b{color:var(--text-secondary); font-weight:500}
+  .newtab{flex:none; font-family:var(--font-mono); font-size:.72rem; font-weight:500; color:var(--accent);
+    border:1px solid var(--accent-strong); border-radius:6px; padding:.4rem .7rem; transition:.15s}
+  .newtab:hover{background:var(--accent-strong); color:var(--text-on-accent)}
+  .newtab[aria-disabled="true"]{opacity:.4; pointer-events:none}
+
+  /* ---- Layout ---- */
+  .shell{display:grid; grid-template-columns:var(--rail) 1fr; min-height:100vh; padding-top:var(--topbar)}
+
+  /* ---- Nav rail ---- */
+  .rail{position:sticky; top:var(--topbar); align-self:start; height:calc(100vh - var(--topbar));
+    overflow-y:auto; background:var(--surface); border-right:1px solid var(--border); padding:1.1rem .8rem 3rem}
+  .rail .grp{margin-top:1.3rem}
+  .rail .grp:first-child{margin-top:.2rem}
+  .rail .grp h4{font-family:var(--font-mono); font-size:.62rem; font-weight:600; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--accent-dim); padding:0 .55rem; margin-bottom:.45rem}
+  .navitem{display:flex; align-items:center; gap:.5rem; width:100%; text-align:left;
+    background:transparent; color:var(--text-secondary); border:1px solid transparent; border-radius:8px;
+    padding:.5rem .55rem; cursor:pointer; transition:.14s; font-size:.9rem; line-height:1.3}
+  .navitem:hover{background:var(--surface-3); border-color:var(--border)}
+  .navitem[aria-current="true"]{background:var(--tint-accent); border-color:var(--accent-strong); color:var(--text-primary)}
+  .navitem .ni-body{flex:1; min-width:0}
+  .navitem .ni-title{display:block; font-weight:500}
+  .navitem .ni-sub{display:block; font-family:var(--font-mono); font-size:.64rem; color:var(--text-muted); margin-top:.1rem}
+  .navitem[aria-current="true"] .ni-sub{color:var(--accent-dim)}
+  .navitem .ext{flex:none; font-family:var(--font-mono); font-size:.72rem; color:var(--text-muted);
+    border:1px solid var(--border); border-radius:5px; padding:.05rem .3rem; transition:.14s}
+  .navitem .ext:hover{color:var(--accent); border-color:var(--accent-strong)}
+
+  /* ---- Main viewer ---- */
+  .main{position:relative; min-width:0; background:var(--bg)}
+  .frameWrap{display:none; height:calc(100vh - var(--topbar))}
+  .frameWrap.on{display:block}
+  iframe#frame{width:100%; height:100%; border:0; background:var(--bg)}
+
+  /* ---- Overview / design-system home ---- */
+  .overview{display:block; max-width:1000px; margin:0 auto; padding:2.4rem 2rem 6rem}
+  .overview.off{display:none}
+  .ov-hero{border:1px solid var(--border); border-radius:14px; padding:2rem 2.1rem;
+    background:linear-gradient(180deg,var(--tint-hero),transparent)}
+  .kick{font-family:var(--font-mono); font-size:.7rem; font-weight:500; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--accent-dim); margin-bottom:.7rem}
+  .ov-hero h1{font-family:var(--font-display); font-weight:600; font-size:clamp(1.7rem,3.6vw,2.5rem);
+    line-height:1.06; letter-spacing:-.02em; color:var(--text-primary); margin-bottom:.9rem}
+  .ov-hero h1 em{font-style:normal; color:var(--accent)}
+  .ov-hero p{color:var(--text-lede); max-width:70ch; font-size:1.03rem}
+  .chips{display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1.3rem}
+  .chip{font-family:var(--font-mono); font-size:.7rem; font-weight:500; color:var(--text-secondary);
+    background:var(--surface-3); border:1px solid var(--border); border-radius:20px; padding:.32rem .75rem}
+  .chip b{color:var(--accent); font-weight:600}
+
+  .metarow{display:flex; flex-wrap:wrap; gap:2rem; margin-top:1.6rem; padding-top:1.4rem; border-top:1px solid var(--border)}
+  .metric .n{font-family:var(--font-display); font-weight:600; font-size:1.7rem; color:var(--accent)}
+  .metric .l{font-family:var(--font-mono); font-size:.64rem; letter-spacing:.05em; text-transform:uppercase; color:var(--text-muted)}
+
+  section.ds{margin-top:3rem}
+  section.ds > h2{font-family:var(--font-display); font-weight:600; font-size:1.4rem; letter-spacing:-.01em;
+    color:var(--text-primary); margin-bottom:.4rem}
+  section.ds > .sub{color:var(--text-muted); font-size:.92rem; margin-bottom:1.3rem; max-width:70ch}
+
+  /* token swatches */
+  .swatches{display:grid; grid-template-columns:repeat(auto-fill,minmax(158px,1fr)); gap:.7rem}
+  .sw{border:1px solid var(--border); border-radius:9px; overflow:hidden; background:var(--surface)}
+  .sw .chipc{height:52px; border-bottom:1px solid var(--border)}
+  .sw .meta{padding:.5rem .6rem}
+  .sw .nm{font-family:var(--font-mono); font-size:.72rem; color:var(--text-secondary); word-break:break-all}
+  .sw .hx{font-family:var(--font-mono); font-size:.66rem; color:var(--text-muted); margin-top:.1rem}
+  .grpnote{font-family:var(--font-mono); font-size:.68rem; color:var(--text-muted); margin:1rem 0 .5rem}
+
+  /* typography samples */
+  .type{display:grid; gap:1rem}
+  .tspec{border:1px solid var(--border); border-radius:10px; padding:1.1rem 1.3rem; background:var(--surface)}
+  .tspec .lab{font-family:var(--font-mono); font-size:.64rem; letter-spacing:.06em; text-transform:uppercase; color:var(--text-muted); margin-bottom:.55rem}
+  .s-display{font-family:var(--font-display); font-weight:600; font-size:1.9rem; letter-spacing:-.02em; color:var(--text-primary)}
+  .s-sans{font-family:var(--font-sans); font-size:1.02rem; color:var(--text-secondary)}
+  .s-mono{font-family:var(--font-mono); font-size:.95rem; color:var(--text-secondary)}
+
+  /* component gallery */
+  .gallery{display:grid; grid-template-columns:1fr 1fr; gap:1rem}
+  .panel{border:1px solid var(--border); border-radius:12px; padding:1.3rem 1.4rem; background:var(--surface)}
+  .panel h3{font-family:var(--font-mono); font-size:.66rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--accent-dim); margin-bottom:.9rem}
+  .demo-h2{font-family:var(--font-display); font-weight:600; font-size:1.2rem; color:var(--text-primary); margin-bottom:.3rem}
+  .demo-kick{font-family:var(--font-mono); font-size:.66rem; letter-spacing:.18em; text-transform:uppercase; color:var(--accent-dim)}
+
+  .dstep{padding-left:1.4rem; border-left:2px solid var(--border); position:relative; margin-top:.4rem}
+  .dstep::before{content:"1"; position:absolute; left:-.85rem; top:-.1rem; font-family:var(--font-mono); font-size:.68rem;
+    font-weight:600; color:var(--text-on-accent); background:var(--accent-strong); width:1.5rem; height:1.5rem;
+    border-radius:50%; display:grid; place-items:center}
+  .dstate{font-family:var(--font-display); font-weight:500; font-size:1rem; color:var(--text-primary)}
+  .eqbox{background:var(--surface-3); border:1px solid var(--border); border-radius:9px; padding:.7rem .9rem; margin:.6rem 0;
+    font-family:var(--font-mono); font-size:.9rem; color:var(--text-primary); overflow-x:auto}
+  .eqbox .note{font-family:var(--font-mono); font-size:.6rem; color:var(--text-muted); display:block; margin-top:.3rem}
+  .dexp{color:var(--text-secondary); font-size:.9rem; margin:.5rem 0}
+  .dcons{display:flex; gap:.6rem; padding:.6rem .8rem; background:var(--tint-accent-soft); border:1px solid var(--accent-strong); border-radius:8px}
+  .dcons .lab{font-family:var(--font-mono); font-size:.6rem; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); flex:none; margin-top:.15rem}
+  .dcons p{color:var(--text-cons); font-size:.86rem; margin:0}
+
+  .statuses{display:grid; gap:.6rem}
+  .st{display:flex; gap:.6rem; align-items:flex-start; padding:.6rem .8rem; border-radius:8px; border:1px solid; font-size:.86rem}
+  .st .k{font-family:var(--font-mono); font-size:.6rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; flex:none; margin-top:.12rem}
+  .st.ok{background:var(--tint-accent); border-color:var(--accent-strong); color:var(--text-cons)} .st.ok .k{color:var(--accent)}
+  .st.warn{background:var(--tint-warn); border-color:var(--warn); color:var(--text-cons)} .st.warn .k{color:var(--warn)}
+  .st.danger{background:var(--tint-danger); border-color:var(--danger-dim); color:var(--text-cons)} .st.danger .k{color:var(--danger-text)}
+  .st.info{background:var(--tint-info); border-color:var(--info); color:var(--text-cons)} .st.info .k{color:var(--info)}
+
+  .badges{display:flex; flex-wrap:wrap; gap:.4rem; margin-bottom:.8rem}
+  .badge{font-family:var(--font-mono); font-size:.66rem; font-weight:500; border:1px solid var(--border); border-radius:5px; padding:.15rem .5rem; background:var(--surface-3)}
+  .badge.cec{color:var(--accent); border-color:var(--accent-strong)}
+  .badge.ei{color:var(--info); border-color:var(--info)}
+  .pills{display:flex; gap:.3rem; align-items:center}
+  .pill{font-family:var(--font-mono); font-size:.66rem; font-weight:600; width:1.5rem; height:1.5rem; border-radius:5px; display:grid; place-items:center}
+  .pill.done{background:var(--accent-strong); color:var(--text-on-accent)}
+  .pill.todo{background:transparent; color:var(--text-muted); border:1px dashed var(--border)}
+  .pill-count{font-family:var(--font-mono); font-size:.66rem; color:var(--text-muted); margin-left:.3rem}
+
+  .tk{display:flex; gap:.7rem; align-items:flex-start; padding:.5rem 0; border-bottom:1px solid var(--border); color:var(--text-secondary); font-size:.88rem}
+  .tk:last-child{border-bottom:none} .tk .m{font-family:var(--font-mono); color:var(--accent); flex:none}
+
+  /* interaction patterns */
+  .ipat{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:1rem}
+  .ip{border:1px solid var(--border); border-radius:11px; padding:1.2rem 1.3rem; background:var(--surface)}
+  .ip .lab{font-family:var(--font-mono); font-size:.64rem; letter-spacing:.05em; text-transform:uppercase; color:var(--text-muted); margin-bottom:.8rem}
+  .seg{display:inline-flex; border:1px solid var(--border); border-radius:8px; overflow:hidden}
+  .seg span{font-family:var(--font-mono); font-size:.76rem; padding:.5rem .8rem; background:var(--surface-2); color:var(--text-secondary)}
+  .seg span+span{border-left:1px solid var(--border)}
+  .seg span.on{background:var(--accent-strong); color:var(--text-on-accent); font-weight:600}
+  .range{-webkit-appearance:none; appearance:none; width:100%; height:6px; border-radius:4px; background:var(--surface-3); border:1px solid var(--border); outline:none}
+  .range::-webkit-slider-thumb{-webkit-appearance:none; appearance:none; width:18px; height:18px; border-radius:50%; background:var(--accent); border:2px solid var(--surface-2); cursor:pointer}
+  .range::-moz-range-thumb{width:18px; height:18px; border-radius:50%; background:var(--accent); border:2px solid var(--surface-2); cursor:pointer}
+  .toggle{display:inline-flex; align-items:center; gap:.6rem}
+  .switch{width:42px; height:23px; border-radius:20px; background:var(--accent-strong); position:relative; flex:none}
+  .switch::after{content:""; position:absolute; top:2px; left:21px; width:17px; height:17px; border-radius:50%; background:var(--marker)}
+  .switch.off{background:var(--surface-3); border:1px solid var(--border)}
+  .switch.off::after{left:3px; background:var(--text-muted)}
+  .ip .cap{font-family:var(--font-mono); font-size:.64rem; color:var(--text-muted); margin-top:.7rem}
+
+  /* asset inventory */
+  .invtable{width:100%; border-collapse:collapse; font-size:.86rem}
+  .invtable th,.invtable td{text-align:left; padding:.6rem .7rem; border-bottom:1px solid var(--border)}
+  .invtable th{font-family:var(--font-mono); font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; color:var(--text-muted); font-weight:500}
+  .invtable td{color:var(--text-secondary)}
+  .invtable .go{font-family:var(--font-mono); font-size:.72rem; font-weight:600; color:var(--accent); background:transparent; border:1px solid var(--accent-strong); border-radius:6px; padding:.28rem .6rem; cursor:pointer}
+  .invtable .go:hover{background:var(--accent-strong); color:var(--text-on-accent)}
+  .invtable .kd{font-family:var(--font-mono); font-size:.68rem; color:var(--text-muted)}
+
+  .foot{margin-top:3rem; padding-top:1.4rem; border-top:1px solid var(--border); font-family:var(--font-mono); font-size:.72rem; color:var(--text-muted); line-height:1.85}
+  .nsnote{background:var(--tint-warn); border:1px solid var(--warn); border-radius:8px; padding:.8rem 1rem; font-size:.85rem; color:var(--text-cons); margin-top:1rem}
+
+  @media(max-width:860px){
+    :root{--rail:0px}
+    .shell{grid-template-columns:1fr}
+    .rail{position:static; height:auto; border-right:none; border-bottom:1px solid var(--border);
+      display:flex; flex-wrap:wrap; gap:.4rem; padding:.8rem}
+    .rail .grp{margin-top:0; width:100%}
+    .rail .grp h4{padding:0}
+    .gallery{grid-template-columns:1fr}
+    .frameWrap.on{height:80vh}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><span class="mark">SIM2FIELD</span><span class="tag">Course Preview</span></div>
+  <div class="now" id="nowLabel"><b>Overview &amp; Design System</b> - production baseline, 12 assets</div>
+  <a class="newtab" id="newTab" href="#" target="_blank" rel="noopener" aria-disabled="true">open standalone &#8599;</a>
+</div>
+
+<div class="shell">
+  <!-- ================= NAV RAIL ================= -->
+  <nav class="rail" id="rail" aria-label="Course contents">
+    <div class="grp">
+      <h4>Overview</h4>
+      <button class="navitem" data-view="overview" aria-current="true">
+        <span class="ni-body"><span class="ni-title">Overview &amp; Design System</span><span class="ni-sub">identity - tokens - components</span></span>
+      </button>
+      <button class="navitem" data-file="index.html" data-title="Course Hub">
+        <span class="ni-body"><span class="ni-title">Course Hub</span><span class="ni-sub">student entry point</span></span>
+        <a class="ext" href="index.html" target="_blank" rel="noopener" title="Open standalone" aria-label="Open Course Hub standalone">&#8599;</a>
+      </button>
+    </div>
+
+    <div class="grp">
+      <h4>The integrating frame</h4>
+      <button class="navitem" data-file="CEC01-signal-to-action-spine-worked-example.html" data-title="CEC-01 - Signal-to-Action Spine">
+        <span class="ni-body"><span class="ni-title">Signal-to-Action Spine</span><span class="ni-sub">CEC-01 - Module 1</span></span>
+        <a class="ext" href="CEC01-signal-to-action-spine-worked-example.html" target="_blank" rel="noopener" title="Open standalone" aria-label="Open CEC-01 standalone">&#8599;</a>
+      </button>
+    </div>
+
+    <div class="grp">
+      <h4>The spine stations (perceive &#8594; act)</h4>
+      <button class="navitem" data-file="M4-detection-operating-point-worked-example.html" data-title="M4 - Detection Operating Point">
+        <span class="ni-body"><span class="ni-title">Detection Operating Point</span><span class="ni-sub">M4 - EI-04 - perceive</span></span>
+        <a class="ext" href="M4-detection-operating-point-worked-example.html" target="_blank" rel="noopener" title="Open standalone" aria-label="Open M4 standalone">&#8599;</a>
+      </button>
+      <button class="navitem" data-file="M5-placement-error-budget-worked-example.html" data-title="M5 - Placement Error Budget">
+        <span class="ni-body"><span class="ni-title">Placement Error Budget</span><span class="ni-sub">M5 - CEC-03 - localize</span></span>
+        <a class="ext" href="M5-placement-error-budget-worked-example.html" target="_blank" rel="noopener" title="Open standalone" aria-label="Open M5 standalone">&#8599;</a>
+      </button>
+      <button class="navitem" data-file="M8-kinematics-singularity-explorer.html" data-title="M8 - Kinematics &amp; Singularities">
+        <span class="ni-body"><span class="ni-title">Kinematics &amp; Singularities</span><span class="ni-sub">M8 - EI-08 - reach</span></span>
+        <a class="ext" href="M8-kinematics-singularity-explorer.html" target="_blank" rel="noopener" title="Open standalone" aria-label="Open M8 standalone">&#8599;</a>
+      </button>
+      <button class="navitem" data-file="M9-grip-force-window-worked-example.html" data-title="M9 - Grip-Force Window">
+        <span class="ni-body"><span class="ni-title">Grip-Force Window</span><span class="ni-sub">M9 - CEC-02 - act</span></span>
+        <a class="ext" href="M9-grip-force-window-worked-example.html" target="_blank" rel="noopener" title="Open standalone" aria-label="Open M9 standalone">&#8599;</a>
+      </button>
+    </div>
+
+    <div class="grp">
+      <h4>Boundaries &amp; pipeline</h4>
+      <button class="navitem" data-file="M6-edge-latency-boundary-worked-example.html" data-title="M6 - No-Cloud Edge Boundary">
+        <span class="ni-body"><span class="ni-title">No-Cloud Edge Boundary</span><span class="ni-sub">M6 - CEC-04 - EI-06</span></span>
+        <a class="ext" href="M6-edge-latency-boundary-worked-example.html" target="_blank" rel="noopener" title="Open standalone" aria-label="Open M6 standalone">&#8599;</a>
+      </button>
+      <button class="navitem" data-file="CEC05-sim-to-real-pipeline-worked-example.html" data-title="CEC-05 - Sim-to-Real Pipeline">
+        <span class="ni-body"><span class="ni-title">Sim-to-Real Pipeline</span><span class="ni-sub">CEC-05 - Module 7</span></span>
+        <a class="ext" href="CEC05-sim-to-real-pipeline-worked-example.html" target="_blank" rel="noopener" title="Open standalone" aria-label="Open CEC-05 standalone">&#8599;</a>
+      </button>
+      <button class="navitem" data-file="CEC06-fidelity-ladder-worked-example.html" data-title="CEC-06 - Fidelity Ladder">
+        <span class="ni-body"><span class="ni-title">Fidelity Ladder</span><span class="ni-sub">CEC-06 - Module 13</span></span>
+        <a class="ext" href="CEC06-fidelity-ladder-worked-example.html" target="_blank" rel="noopener" title="Open standalone" aria-label="Open CEC-06 standalone">&#8599;</a>
+      </button>
+    </div>
+
+    <div class="grp">
+      <h4>Cross-cutting method</h4>
+      <button class="navitem" data-file="EI05-dominant-term-through-line-worked-example.html" data-title="EI-05 - Dominant-Term Through-Line">
+        <span class="ni-body"><span class="ni-title">Dominant-Term Through-Line</span><span class="ni-sub">EI-05 - Modules 5/12/14/16</span></span>
+        <a class="ext" href="EI05-dominant-term-through-line-worked-example.html" target="_blank" rel="noopener" title="Open standalone" aria-label="Open EI-05 standalone">&#8599;</a>
+      </button>
+    </div>
+
+    <div class="grp">
+      <h4>Assessment</h4>
+      <button class="navitem" data-file="M5-placement-error-budget-homework.html" data-title="M5 Homework - Placement Error Budget">
+        <span class="ni-body"><span class="ni-title">Homework - Placement Error</span><span class="ni-sub">M5 - CEC-03 - EI-05</span></span>
+        <a class="ext" href="M5-placement-error-budget-homework.html" target="_blank" rel="noopener" title="Open standalone" aria-label="Open M5 homework standalone">&#8599;</a>
+      </button>
+      <button class="navitem" data-file="M9-grip-force-window-homework.html" data-title="M9 Homework - Grip-Force Window">
+        <span class="ni-body"><span class="ni-title">Homework - Grip-Force</span><span class="ni-sub">M9 - CEC-02 - EI-09</span></span>
+        <a class="ext" href="M9-grip-force-window-homework.html" target="_blank" rel="noopener" title="Open standalone" aria-label="Open M9 homework standalone">&#8599;</a>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ================= MAIN VIEWER ================= -->
+  <main class="main">
+    <!-- iframe viewer (shown when an asset is selected) -->
+    <div class="frameWrap" id="frameWrap">
+      <iframe id="frame" title="Selected course asset" src="about:blank"></iframe>
+    </div>
+
+    <!-- inline overview + design system (default) -->
+    <div class="overview" id="overview">
+      <div class="ov-hero">
+        <div class="kick">Production baseline - review build</div>
+        <h1>One machine that turns a <em>camera frame into a grasped fruit</em> - twelve instruments, one design language.</h1>
+        <p>This preview assembles the current production baseline as a single course. Every completed asset is embedded here unmodified; use the rail to walk them in instructional order, or review the shared design system below. Nothing in this shell alters the assets - it is a review surface for identity, consistency, instructional flow, and visual coherence.</p>
+        <div class="chips">
+          <span class="chip"><b>Self-hosted</b> fonts</span>
+          <span class="chip"><b>Pre-rendered</b> KaTeX</span>
+          <span class="chip"><b>Semantic</b> color tokens</span>
+          <span class="chip"><b>Browser-independent</b></span>
+          <span class="chip"><b>Accessible</b> (keyboard / ARIA)</span>
+          <span class="chip"><b>Drift-guarded</b> build</span>
+        </div>
+        <div class="metarow">
+          <div class="metric"><div class="n">12</div><div class="l">assets</div></div>
+          <div class="metric"><div class="n">6 / 6</div><div class="l">core concepts</div></div>
+          <div class="metric"><div class="n">4</div><div class="l">spine stations</div></div>
+          <div class="metric"><div class="n">2</div><div class="l">homework sets</div></div>
+          <div class="metric"><div class="n">12 / 12</div><div class="l">pass drift guard</div></div>
+        </div>
+        <noscript><div class="nsnote">This preview uses JavaScript to swap the embedded viewer. With JavaScript disabled, use the <b>&#8599;</b> link on each rail item to open that asset in a new tab - all twelve are fully functional on their own.</div></noscript>
+      </div>
+
+      <section class="ds">
+        <h2>Design identity</h2>
+        <p class="sub">A dark, instrument-panel aesthetic for precision agricultural robotics. The accent green reads as the crop and the "go" signal; danger red is the bruise bound; amber warns; blue carries data and edge/network context. Three typefaces separate roles: a geometric display face for headlines, a humanist sans for prose, and a monospace for every number, label, and equation so quantitative content stays legible and aligned.</p>
+      </section>
+
+      <section class="ds">
+        <h2>Color tokens</h2>
+        <p class="sub">The complete semantic palette. Every asset draws color only from these tokens - no raw values appear outside the theme block - which is what makes the suite recolorable and consistent. Per-asset palettes (FSM stages, category hues, fidelity-ladder cells) extend this set locally.</p>
+        <div class="grpnote">Surfaces &amp; lines</div>
+        <div class="swatches" id="sw-surface"></div>
+        <div class="grpnote">Text</div>
+        <div class="swatches" id="sw-text"></div>
+        <div class="grpnote">Semantic &amp; status</div>
+        <div class="swatches" id="sw-semantic"></div>
+      </section>
+
+      <section class="ds">
+        <h2>Typography</h2>
+        <p class="sub">Space Grotesk (display), Inter (body), IBM Plex Mono (data / labels / math) - all self-hosted, no external font requests.</p>
+        <div class="type">
+          <div class="tspec"><div class="lab">Display - Space Grotesk 600</div><div class="s-display">Gripping inside the window</div></div>
+          <div class="tspec"><div class="lab">Body - Inter 400</div><div class="s-sans">The placement error is the root-sum-square of independent per-source standard deviations; the design passes when the 3-sigma error stays within the capture tolerance.</div></div>
+          <div class="tspec"><div class="lab">Mono - IBM Plex Mono 500</div><div class="s-mono">F_slip = 250 N &#8901; F_bruise = 800 N &#8901; margin = 292 N</div></div>
+        </div>
+      </section>
+
+      <section class="ds">
+        <h2>Component patterns</h2>
+        <p class="sub">The recurring building blocks every worked example is assembled from. Shown here as a live style reference (equations render with KaTeX inside the assets themselves).</p>
+        <div class="gallery">
+          <div class="panel">
+            <h3>Section header</h3>
+            <div class="demo-kick">Full derivation</div>
+            <div class="demo-h2">The shape every budget shares</div>
+          </div>
+          <div class="panel">
+            <h3>Derivation step</h3>
+            <div class="dstep">
+              <div class="dstate">Each total is a combination of parts.</div>
+              <div class="eqbox">3&#963; = 3&#8730;(&#931; &#963;&#7522;&#178;) &#8804; c<span class="note">- KaTeX-rendered in the asset</span></div>
+              <p class="dexp">Parts add as variances; the total is set by the largest contributor.</p>
+              <div class="dcons"><span class="lab">Consequence</span><p>One habit governs the whole budget - attack the dominant term first.</p></div>
+            </div>
+          </div>
+          <div class="panel">
+            <h3>Status / verdict states</h3>
+            <div class="statuses">
+              <div class="st ok"><span class="k">Pass</span><span>36.74 mm within the 40 mm gate - margin 3.26 mm.</span></div>
+              <div class="st warn"><span class="k">Watch</span><span>Operating point near a bound; re-center recommended.</span></div>
+              <div class="st danger"><span class="k">Fail</span><span>Network worst case is unbounded - not merely slow.</span></div>
+              <div class="st info"><span class="k">Note</span><span>Control loop stays on the robot (no cloud in the loop).</span></div>
+            </div>
+          </div>
+          <div class="panel">
+            <h3>Badges, pills &amp; takeaway</h3>
+            <div class="badges"><span class="badge cec">CEC-03</span><span class="badge ei">EI-05</span></div>
+            <div class="pills" style="margin-bottom:.9rem">
+              <span class="pill done">D</span><span class="pill done">I</span><span class="pill done">F</span><span class="pill todo">H</span><span class="pill todo">L</span><span class="pill-count">3/5</span>
+            </div>
+            <div class="tk"><span class="m">&#8594;</span><span>Write the budget down and rank the terms before optimizing anything.</span></div>
+            <div class="tk"><span class="m">&#8594;</span><span>Spend effort on the dominant term until it is no longer dominant, then re-rank.</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="ds">
+        <h2>Interaction patterns</h2>
+        <p class="sub">Every instrument is manipulable. These controls are shown static here for reference - they are live inside each asset (sliders drive variance stacks and force gauges; toggles switch faults and edge/cloud modes; segmented controls apply moves across panels).</p>
+        <div class="ipat">
+          <div class="ip"><div class="lab">Segmented control</div>
+            <div class="seg"><span class="on">baseline</span><span>halve dominant</span><span>halve small</span></div>
+            <div class="cap">applies a move across all panels</div>
+          </div>
+          <div class="ip"><div class="lab">Slider</div>
+            <input class="range" type="range" min="0" max="100" value="62" aria-label="example parameter (static demo)">
+            <div class="cap">drag a &#963; source, threshold, or field weight</div>
+          </div>
+          <div class="ip"><div class="lab">Toggle</div>
+            <div class="toggle"><span class="switch"></span><span class="s-mono" style="font-size:.8rem">relief active</span></div>
+            <div class="toggle" style="margin-top:.6rem"><span class="switch off"></span><span class="s-mono" style="font-size:.8rem">software clip only</span></div>
+            <div class="cap">switch a fault, mode, or validation gate</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="ds">
+        <h2>Asset inventory</h2>
+        <p class="sub">All twelve, in instructional order. Open any one inline (button) or standalone (&#8599; in the rail).</p>
+        <table class="invtable">
+          <thead><tr><th>#</th><th>Asset</th><th>Kind</th><th>Concept</th><th></th></tr></thead>
+          <tbody id="invBody"></tbody>
+        </table>
+      </section>
+
+      <div class="foot">
+        SIM2FIELD - Autonomous Watermelon Harvesting Robotics<br>
+        Course preview - a non-destructive review shell over the frozen production baseline (Rev 1.2)<br>
+        The twelve assets are embedded unmodified; this shell adds navigation and a design-system reference only
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---- token swatches ----
+  var TOKENS={
+    surface:[["--bg","#0e120d"],["--surface","#161c14"],["--surface-2","#0b0e0a"],["--surface-3","#12160f"],
+             ["--border","#2b3527"],["--border-strong","#3a4633"],["--grid-line","#1c231a"]],
+    text:[["--text-primary","#eef2e6"],["--text-secondary","#c8cfbe"],["--text-muted","#adb4a2"],
+          ["--text-lede","#c9d0bf"],["--text-cons","#d4dbc9"],["--text-on-accent","#0e120d"]],
+    semantic:[["--accent","#9bcf3b"],["--accent-dim","#86ba35"],["--accent-strong","#6f9a2c"],
+              ["--danger","#f0556a"],["--danger-text","#f697a4"],["--danger-dim","#b93b4c"],
+              ["--warn","#e0a03b"],["--info","#6fb0d9"],["--accent-2","#b98bd9"],["--marker","#ffffff"]]}
+  ;
+  function swatches(id,list){
+    var host=document.getElementById(id); if(!host) return;
+    list.forEach(function(t){
+      var d=document.createElement("div"); d.className="sw";
+      d.innerHTML='<div class="chipc" style="background:var('+t[0]+')"></div>'+
+        '<div class="meta"><div class="nm">'+t[0]+'</div><div class="hx">'+t[1]+'</div></div>';
+      host.appendChild(d);
+    });
+  }
+  swatches("sw-surface",TOKENS.surface);
+  swatches("sw-text",TOKENS.text);
+  swatches("sw-semantic",TOKENS.semantic);
+
+  // ---- viewer switching ----
+  var rail=document.getElementById("rail"),
+      frame=document.getElementById("frame"),
+      frameWrap=document.getElementById("frameWrap"),
+      overview=document.getElementById("overview"),
+      nowLabel=document.getElementById("nowLabel"),
+      newTab=document.getElementById("newTab"),
+      items=Array.prototype.slice.call(rail.querySelectorAll(".navitem"));
+
+  function showOverview(){
+    frameWrap.classList.remove("on"); overview.classList.remove("off");
+    frame.src="about:blank";
+    nowLabel.innerHTML='<b>Overview &amp; Design System</b> - production baseline, 12 assets';
+    newTab.setAttribute("href","#"); newTab.setAttribute("aria-disabled","true");
+  }
+  function showAsset(file,title){
+    overview.classList.add("off"); frameWrap.classList.add("on");
+    if(frame.getAttribute("src")!==file) frame.src=file;
+    frame.title=title;
+    nowLabel.innerHTML='<b>'+title+'</b>';
+    newTab.setAttribute("href",file); newTab.removeAttribute("aria-disabled");
+    document.querySelector(".main").scrollTop=0;
+  }
+  function activate(btn){
+    items.forEach(function(b){ b.setAttribute("aria-current", b===btn ? "true":"false"); });
+  }
+
+  items.forEach(function(btn){
+    btn.addEventListener("click",function(e){
+      // let the standalone "open in new tab" link behave normally
+      if(e.target.closest(".ext")) return;
+      activate(btn);
+      if(btn.dataset.view==="overview"){ showOverview(); }
+      else { showAsset(btn.dataset.file, btn.dataset.title||btn.dataset.file); }
+    });
+  });
+
+  // ---- inventory table (built from the rail, so it always matches) ----
+  var META={
+    "index.html":["Course Hub","hub / dashboard","entry point"],
+    "CEC01-signal-to-action-spine-worked-example.html":["Signal-to-Action Spine","worked example","CEC-01"],
+    "M4-detection-operating-point-worked-example.html":["Detection Operating Point","worked example","M4 / EI-04"],
+    "M5-placement-error-budget-worked-example.html":["Placement Error Budget","worked example","M5 / CEC-03"],
+    "M8-kinematics-singularity-explorer.html":["Kinematics & Singularities","interactive explorer","M8 / EI-08"],
+    "M9-grip-force-window-worked-example.html":["Grip-Force Window","worked example","M9 / CEC-02"],
+    "M6-edge-latency-boundary-worked-example.html":["No-Cloud Edge Boundary","worked example","M6 / CEC-04"],
+    "CEC05-sim-to-real-pipeline-worked-example.html":["Sim-to-Real Pipeline","worked example","CEC-05"],
+    "CEC06-fidelity-ladder-worked-example.html":["Fidelity Ladder","worked example","CEC-06"],
+    "EI05-dominant-term-through-line-worked-example.html":["Dominant-Term Through-Line","worked example","EI-05"],
+    "M5-placement-error-budget-homework.html":["Homework - Placement Error","problem set","M5 / CEC-03"],
+    "M9-grip-force-window-homework.html":["Homework - Grip-Force","problem set","M9 / CEC-02"]
+  };
+  var invBody=document.getElementById("invBody"), n=0;
+  items.forEach(function(btn){
+    if(!btn.dataset.file) return;
+    var f=btn.dataset.file, m=META[f]||[f,"",""]; n++;
+    var tr=document.createElement("tr");
+    tr.innerHTML='<td class="kd">'+n+'</td><td>'+m[0]+'</td><td class="kd">'+m[1]+'</td><td class="kd">'+m[2]+'</td>'+
+                 '<td><button class="go" type="button" data-open="'+f+'" data-title="'+(btn.dataset.title||m[0])+'">view</button></td>';
+    invBody.appendChild(tr);
+  });
+  invBody.addEventListener("click",function(e){
+    var b=e.target.closest(".go"); if(!b) return;
+    var f=b.dataset.open, title=b.dataset.title;
+    var navBtn=items.filter(function(x){return x.dataset.file===f;})[0];
+    if(navBtn) activate(navBtn);
+    showAsset(f,title);
+    window.scrollTo({top:0,behavior:"smooth"});
+  });
+})();
+</script>
+</body>
+</html>

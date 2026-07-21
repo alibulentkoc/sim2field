@@ -1,0 +1,57 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="color-scheme" content="dark"><title>F-M10-3 preview - Support polygon on slope</title><style>:root{--bg:#0e120d;--surface:#161c14;--surface-2:#0b0e0a;--surface-3:#12160f;--border:#2b3527;--border-strong:#3a4633;--text-primary:#eef2e6;--text-secondary:#c8cfbe;--text-muted:#adb4a2;--accent:#9bcf3b;--accent-strong:#6f9a2c;--warn:#e0a03b;--danger-text:#f697a4}
+body{margin:0;background:var(--bg);color:var(--text-primary);font-family:'IBM Plex Mono',ui-monospace,monospace;padding:2rem}
+.figure{max-width:840px;margin:0 auto;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.figbody{padding:1rem 1.1rem;background:var(--surface-3);overflow-x:auto} .figbody svg{display:block;width:100%;height:auto;min-width:620px}
+figcaption{padding:.7rem 1rem;font-size:.82rem;color:var(--text-muted);border-top:1px solid var(--border)} .fid{font-size:.64rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-right:.5rem}</style></head>
+<body><figure class="figure"><div class="figbody"><svg viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Support polygon and centre of gravity on a side slope: the machine stays upright while the CoG projects inside the wheel footprint; tip-over impends as the projection reaches the downhill edge, and an arm swing shifts the CoG laterally, eroding the margin further." font-family="'IBM Plex Mono',monospace">
+<line x1="222" y1="195" x2="541" y2="312" stroke="var(--border-strong)" stroke-width="2.5"/>
+<line x1="231" y1="199" x2="222" y2="212" stroke="var(--border)" stroke-width="1"/>
+<line x1="250" y1="206" x2="241" y2="219" stroke="var(--border)" stroke-width="1"/>
+<line x1="269" y1="212" x2="260" y2="225" stroke="var(--border)" stroke-width="1"/>
+<line x1="287" y1="219" x2="278" y2="232" stroke="var(--border)" stroke-width="1"/>
+<line x1="306" y1="226" x2="297" y2="239" stroke="var(--border)" stroke-width="1"/>
+<line x1="325" y1="233" x2="316" y2="246" stroke="var(--border)" stroke-width="1"/>
+<line x1="344" y1="240" x2="335" y2="253" stroke="var(--border)" stroke-width="1"/>
+<line x1="363" y1="247" x2="354" y2="260" stroke="var(--border)" stroke-width="1"/>
+<line x1="381" y1="253" x2="372" y2="266" stroke="var(--border)" stroke-width="1"/>
+<line x1="400" y1="260" x2="391" y2="273" stroke="var(--border)" stroke-width="1"/>
+<line x1="419" y1="267" x2="410" y2="280" stroke="var(--border)" stroke-width="1"/>
+<line x1="438" y1="274" x2="429" y2="287" stroke="var(--border)" stroke-width="1"/>
+<line x1="457" y1="281" x2="448" y2="294" stroke="var(--border)" stroke-width="1"/>
+<line x1="475" y1="288" x2="466" y2="301" stroke="var(--border)" stroke-width="1"/>
+<line x1="494" y1="294" x2="485" y2="307" stroke="var(--border)" stroke-width="1"/>
+<line x1="287" y1="219" x2="407" y2="219" stroke="var(--text-muted)" stroke-width="1" stroke-dasharray="4 3"/>
+<path d="M 339,219 A 52 52 0 0 1 336,237" fill="none" stroke="var(--text-muted)" stroke-width="1"/>
+<text x="347" y="241" font-size="11" fill="var(--text-secondary)">&#952;</text>
+<polygon points="303,207 452,261 490,156 342,102" fill="var(--surface)" stroke="var(--text-secondary)" stroke-width="1.5"/>
+<circle cx="287" cy="219" r="10" fill="var(--surface-2)" stroke="var(--text-secondary)" stroke-width="1.8"/>
+<circle cx="457" cy="281" r="10" fill="var(--surface-2)" stroke="var(--danger-text)" stroke-width="1.8"/>
+<text x="283" y="245" text-anchor="middle" font-size="7.5" fill="var(--text-muted)">uphill</text>
+<text x="459" y="307" text-anchor="middle" font-size="7.5" fill="var(--danger-text)">downhill (tip edge)</text>
+<text x="372" y="246" text-anchor="middle" font-size="9" fill="var(--text-secondary)">track width w</text>
+<line x1="372" y1="250" x2="420" y2="118" stroke="var(--text-muted)" stroke-width="1" stroke-dasharray="3 3"/>
+<text x="380" y="184" font-size="9" fill="var(--text-muted)">h</text>
+<circle cx="420" cy="118" r="6.5" fill="var(--accent)"/>
+<text x="430" y="114" font-size="9.5" fill="var(--accent)" font-weight="700">CoG</text>
+<line x1="420" y1="118" x2="420" y2="267" stroke="var(--accent)" stroke-width="1.6" stroke-dasharray="5 3"/>
+<text x="426" y="193" font-size="8" fill="var(--accent)">gravity</text>
+<circle cx="420" cy="267" r="4" fill="var(--accent)"/>
+<line x1="420" y1="251" x2="457" y2="265" stroke="var(--accent-strong)" stroke-width="1.4"/>
+<text x="438" y="254" text-anchor="middle" font-size="8" fill="var(--accent-strong)">margin</text>
+<circle cx="466" cy="118" r="5" fill="var(--surface)" stroke="var(--warn)" stroke-width="1.6"/>
+<line x1="420" y1="118" x2="466" y2="118" stroke="var(--warn)" stroke-width="1.4" marker-end="url(#am)"/>
+<defs><marker id="am" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--warn)"/></marker></defs>
+<text x="474" y="114" font-size="8" fill="var(--warn)">arm swing shifts CoG by &#916;</text>
+<line x1="466" y1="118" x2="466" y2="284" stroke="var(--warn)" stroke-width="1.2" stroke-dasharray="4 3"/>
+<rect x="560" y="150" width="188" height="150" rx="9" fill="var(--surface-2)" stroke="var(--border)"/>
+<text x="572" y="170" font-size="9" fill="var(--text-primary)" font-weight="700">Side-slope stability</text>
+<text x="572" y="190" font-size="8.5" fill="var(--text-secondary)">tan &#952;_tip = (w/2) / h</text>
+<text x="572" y="207" font-size="8" fill="var(--text-muted)">margin(&#952;) =</text>
+<text x="580" y="220" font-size="8" fill="var(--text-muted)">(w/2)cos&#952; - h&#183;sin&#952;</text>
+<text x="572" y="240" font-size="8" fill="var(--text-muted)">wider w, lower h -&gt; higher tip angle</text>
+<text x="572" y="260" font-size="8.5" fill="var(--warn)">worst case: margin(&#952;) - &#916;</text>
+<text x="572" y="273" font-size="7.8" fill="var(--text-muted)">require margin - &#916; &#8805; safety margin</text>
+<text x="572" y="291" font-size="7.8" fill="var(--text-muted)">stability is a whole-machine property</text>
+<text x="20" y="352" font-size="8.8" fill="var(--text-secondary)">The machine stays upright while the CoG projects inside the support polygon (wheel footprint). Tip-over impends as the</text>
+<text x="20" y="365" font-size="8.8" fill="var(--text-muted)">projection reaches the downhill edge; a laterally swung payload erodes the margin, so base and arm cannot be designed apart.</text>
+</svg></div><figcaption><span class="fid">F-M10-3</span>Support polygon and CoG on a side slope. The machine stays upright while the CoG projects inside the wheel footprint; tip-over impends as the projection reaches the downhill edge. Wider track and lower CoG raise the tip angle, and a laterally swung payload erodes the margin, so base and arm must be designed together. Slope shown at 20 degrees for illustration. Module 10, Sections 6.3, 7.2, 7.3.</figcaption></figure></body></html>

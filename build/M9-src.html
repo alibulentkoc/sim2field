@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0e120d">
+<title>The Grip-Force Window - Worked Example (M9 / CEC-02)</title>
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<style>
+  /* ================= THEME DEFINITION - the ONLY place raw color values live ================= */
+  :root{
+    color-scheme: dark;
+    --bg:#0e120d; --surface:#161c14; --surface-2:#0b0e0a; --surface-3:#12160f;
+    --border:#2b3527; --border-strong:#3a4633; --grid-line:#1c231a;
+    --text-primary:#eef2e6; --text-secondary:#c8cfbe; --text-muted:#adb4a2;
+    --text-lede:#c9d0bf; --text-cons:#d4dbc9; --text-on-accent:#0e120d;
+    --accent:#9bcf3b; --accent-dim:#86ba35; --accent-strong:#6f9a2c;
+    --danger:#f0556a; --danger-text:#f697a4; --danger-dim:#b93b4c;
+    --warn:#e0a03b; --info:#6fb0d9; --accent-2:#b98bd9;
+    /* gauge semantic aliases */
+    --slip:var(--warn); --window:var(--accent); --bruise:var(--danger); --marker:#ffffff;
+    /* tints */
+    --tint-slip:rgba(224,160,59,.14);
+    --tint-window-a:rgba(155,207,59,.16); --tint-window-b:rgba(155,207,59,.09);
+    --tint-bruise:rgba(240,85,106,.16);
+    --tint-info:rgba(111,176,217,.08); --tint-info-14:rgba(111,176,217,.14);
+    --tint-accent:rgba(155,207,59,.07); --tint-accent-soft:rgba(155,207,59,.05);
+    --tint-danger:rgba(240,85,106,.08); --tint-hero:rgba(155,207,59,.06);
+    --glow:rgba(255,255,255,.4);
+    --status-ok-text:#d0d7c6; --status-info-text:#cfe0ec; --status-danger-text:#f3ccd2;
+    --font-sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --font-display:'Space Grotesk',var(--font-sans);
+  }
+  /* ========================================================================================== */
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{background:var(--bg); color:var(--text-primary); -webkit-text-size-adjust:100%; text-size-adjust:100%; scroll-behavior:smooth}
+  body{background:var(--bg); color:var(--text-primary); font-family:var(--font-sans);
+    line-height:1.7; -webkit-font-smoothing:antialiased; padding:0 0 6rem; letter-spacing:.002em}
+  .wrap{max-width:820px; margin:0 auto; padding:0 1.6rem; background:var(--bg); color:var(--text-primary)}
+  code,.mono,.num{font-family:var(--font-mono); font-variant-numeric:tabular-nums}
+  a{color:var(--accent)}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+  .katex{font-size:1.06em}
+  .katex-display{margin:0}
+  .eq{background:var(--surface-3); color:var(--text-primary); border:1px solid var(--border); border-radius:10px;
+    padding:1.15rem 1.3rem; margin:1.15rem 0; overflow-x:auto; overflow-y:hidden}
+  .eq .katex-display{margin:0}
+
+  header{background:var(--bg); color:var(--text-primary); border-bottom:1px solid var(--border); padding:3.6rem 0 2.6rem; margin-bottom:2.6rem}
+  .eyebrow{font-family:var(--font-mono); font-size:.73rem; font-weight:500; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--accent); margin-bottom:1.15rem; display:flex; gap:.85rem; flex-wrap:wrap}
+  .eyebrow span{color:var(--text-muted)}
+  h1{font-family:var(--font-display); font-weight:600; font-size:clamp(2rem,5vw,3rem);
+    line-height:1.05; letter-spacing:-.021em; margin-bottom:1.05rem; color:var(--text-primary)}
+  h1 em{font-style:normal; color:var(--accent)}
+  .lede{font-size:1.08rem; color:var(--text-lede); max-width:64ch}
+
+  .hero{position:relative; margin:2.4rem 0 .6rem; padding:2.2rem 1.6rem 1.9rem; isolation:isolate}
+  .hero-bg{position:absolute; inset:0; width:100%; height:100%; z-index:-1}
+  .hero-inner{position:relative; text-align:center}
+  .hero-tab{display:inline-block; font-family:var(--font-mono); font-size:.66rem; font-weight:500; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--accent); background:var(--bg); padding:.28rem .7rem;
+    border:1px solid var(--accent-strong); border-radius:5px; margin-bottom:1.2rem}
+  .hero-eq{margin:.4rem 0 1rem}
+  .hero-eq .katex{font-size:1.5em}
+  .hero-sub{font-size:.92rem; color:var(--text-muted); max-width:52ch; margin:0 auto}
+
+  section{margin-top:3.4rem}
+  .kicker{font-family:var(--font-mono); font-size:.71rem; font-weight:500; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--accent-dim); margin-bottom:.7rem}
+  h2{font-family:var(--font-display); font-weight:600; font-size:1.55rem; letter-spacing:-.012em; margin-bottom:1rem; color:var(--text-primary)}
+  p{margin-bottom:1.05rem; color:var(--text-secondary)} strong{color:var(--text-primary); font-weight:600}
+  .rind-t{color:var(--accent)} .flesh-t{color:var(--danger-text)} .amber-t{color:var(--warn)} .water-t{color:var(--info)}
+  .katex .c-warn{color:var(--warn)} .katex .c-accent{color:var(--accent)} .katex .c-danger-text{color:var(--danger-text)}
+
+  .dstep{margin:2rem 0; padding-left:1.5rem; border-left:2px solid var(--border); position:relative}
+  .dstep::before{content:attr(data-n); position:absolute; left:-.9rem; top:-.1rem;
+    font-family:var(--font-mono); font-size:.7rem; font-weight:600; color:var(--text-on-accent);
+    background:var(--accent-strong); width:1.6rem; height:1.6rem; border-radius:50%; display:grid; place-items:center}
+  .d-state{font-family:var(--font-display); font-weight:500; font-size:1.12rem; color:var(--text-primary); margin-bottom:.2rem; line-height:1.4}
+  .d-exp{color:var(--text-secondary); margin:.9rem 0}
+  .d-cons{display:flex; gap:.7rem; align-items:flex-start; margin-top:.9rem; padding:.75rem .95rem;
+    background:var(--tint-accent-soft); border:1px solid var(--accent-strong); border-radius:8px}
+  .d-cons .lab{font-family:var(--font-mono); font-size:.63rem; font-weight:500; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--accent); flex:none; margin-top:.18rem}
+  .d-cons p{margin:0; color:var(--text-cons); font-size:.94rem}
+
+  .instrument{background:var(--surface); color:var(--text-secondary); border:1px solid var(--border); border-radius:14px; padding:1.7rem; margin-top:1.3rem}
+  .inst-head{display:flex; justify-content:space-between; align-items:baseline; gap:1rem; flex-wrap:wrap; margin-bottom:1.3rem}
+  .inst-title{font-family:var(--font-display); font-weight:600; font-size:1.05rem; color:var(--text-primary)}
+  .reset{font-family:var(--font-mono); font-size:.75rem; font-weight:500; color:var(--accent); background:transparent;
+    border:1px solid var(--accent-strong); border-radius:6px; padding:.5rem .85rem; cursor:pointer; transition:.15s}
+  .reset:hover{background:var(--accent-strong); color:var(--text-on-accent)}
+  .noscript-note{background:var(--tint-danger); color:var(--status-danger-text); border:1px solid var(--warn); border-radius:8px;
+    padding:.8rem 1rem; font-size:.86rem; margin-bottom:1rem}
+
+  .gauge-row{display:grid; grid-template-columns:1fr 260px; gap:1.6rem; align-items:stretch}
+  .gauge{position:relative; height:340px; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; overflow:hidden}
+  .band{position:absolute; left:0; right:0}
+  .band.slip{background:repeating-linear-gradient(45deg,var(--tint-slip),var(--tint-slip) 8px,transparent 8px,transparent 16px)}
+  .band.window{background:linear-gradient(90deg,var(--tint-window-a),var(--tint-window-b))}
+  .band.bruise{background:repeating-linear-gradient(45deg,var(--tint-bruise),var(--tint-bruise) 8px,transparent 8px,transparent 16px)}
+  .bandlab{position:absolute; right:8px; font-family:var(--font-mono); font-size:.66rem; font-weight:500; transform:translateY(50%)}
+  .edge{position:absolute; left:0; right:0; border-top:1px dashed; font-family:var(--font-mono); font-size:.64rem; font-weight:500; padding-left:8px}
+  .edge .katex{font-size:.9em}
+  .edge.slip{border-color:var(--slip); color:var(--slip)}
+  .edge.bruise{border-color:var(--bruise); color:var(--bruise)}
+  .edge.relief{border-color:var(--marker); color:var(--marker); border-top-width:2px; border-top-style:solid}
+  .marker{position:absolute; left:0; right:0; height:0; transition:bottom .3s cubic-bezier(.4,0,.2,1)}
+  .marker .bar{position:absolute; left:0; right:0; height:3px; top:-1.5px}
+  .marker .tag{position:absolute; left:8px; top:-22px; font-family:var(--font-mono); font-size:.64rem; font-weight:500; padding:.1rem .4rem; border-radius:3px}
+  .marker.cmd .bar{background:var(--info); opacity:.55}
+  .marker.cmd .tag{color:var(--info); background:var(--tint-info-14); left:auto; right:8px}
+  .marker.exec .bar{background:var(--marker); box-shadow:0 0 8px var(--glow)}
+  .marker.exec .tag{color:var(--text-on-accent); background:var(--marker)}
+
+  .gauge-side{display:flex; flex-direction:column; gap:.8rem}
+  .ctl{background:var(--surface-2); color:var(--text-secondary); border:1px solid var(--border); border-radius:8px; padding:.85rem .95rem}
+  .ctl label{display:flex; justify-content:space-between; align-items:center; font-family:var(--font-mono); font-size:.72rem; font-weight:500; color:var(--text-muted); margin-bottom:.55rem; gap:.5rem}
+  .ctl label b{color:var(--text-primary)}
+  .ctl input[type=range]{-webkit-appearance:none; appearance:none; width:100%; height:4px; border-radius:3px; background:var(--border); outline-offset:4px; cursor:pointer}
+  .ctl input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:15px; height:15px; border-radius:50%; background:var(--accent); border:2px solid var(--bg); cursor:pointer}
+  .ctl input[type=range].water::-webkit-slider-thumb{background:var(--info)}
+  .ctl input[type=range]::-moz-range-thumb{width:15px; height:15px; border-radius:50%; background:var(--accent); border:2px solid var(--bg); cursor:pointer}
+  .ctl input[type=range].water::-moz-range-thumb{background:var(--info)}
+  .ctl.fault label{margin-bottom:0}
+  .toggle{font-family:var(--font-mono); font-size:.72rem; font-weight:600; cursor:pointer; padding:.32rem .7rem; border-radius:5px; background:var(--surface-2); border:1px solid var(--border); color:var(--text-muted)}
+  .toggle[aria-pressed="true"]{background:var(--danger-dim); border-color:var(--danger); color:var(--marker)}
+  .status{padding:.85rem .95rem; border-radius:8px; border:1px solid; font-family:var(--font-mono); font-size:.75rem; font-weight:500; line-height:1.5}
+  .status b{color:var(--text-primary)}
+  .status.ok{border-color:var(--accent-strong); background:var(--tint-accent); color:var(--status-ok-text)}
+  .status.clip{border-color:var(--info); background:var(--tint-info); color:var(--status-info-text)}
+  .status.relief{border-color:var(--danger-dim); background:var(--tint-danger); color:var(--status-danger-text)}
+
+  .readbar{display:grid; grid-template-columns:repeat(4,1fr); gap:.7rem; margin-top:1.3rem}
+  .ro{background:var(--surface-2); color:var(--text-secondary); border:1px solid var(--border); border-radius:9px; padding:.75rem .8rem}
+  .ro .lab{font-family:var(--font-mono); font-size:.6rem; font-weight:500; color:var(--text-muted); margin-bottom:.35rem; min-height:1.05em}
+  .ro .lab .katex{font-size:.92em}
+  .ro .val{font-family:var(--font-mono); font-size:1.15rem; font-weight:600; color:var(--text-primary)}
+  .ro .val small{font-size:.56rem; color:var(--text-muted); font-weight:400}
+
+  .insight{border:1px solid var(--accent-strong); border-radius:12px; padding:1.4rem 1.6rem; margin-top:1.6rem;
+    background:linear-gradient(180deg,var(--tint-hero),transparent)}
+  .insight .tag{font-family:var(--font-mono); font-size:.72rem; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin-bottom:.55rem}
+  .insight p{color:var(--text-cons); margin-bottom:0} .insight strong{color:var(--accent)}
+  .takeaway{border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:12px; padding:1.5rem 1.7rem; background:var(--surface)}
+  .tk-list{list-style:none}
+  .tk-list li{display:flex; gap:.85rem; align-items:flex-start; padding:.6rem 0; color:var(--text-secondary); border-bottom:1px solid var(--border)}
+  .tk-list li:last-child{border-bottom:none; padding-top:.95rem}
+  .tk-mark{font-family:var(--font-mono); color:var(--text-muted); flex:none; margin-top:.1rem}
+  .tk-mark.tk-hot{color:var(--accent)} .tk-list strong{color:var(--text-primary)}
+  footer{margin-top:4rem; padding-top:1.6rem; border-top:1px solid var(--border);
+    font-family:var(--font-mono); font-size:.74rem; color:var(--text-muted); line-height:1.85}
+
+  @media(max-width:640px){ .gauge-row{grid-template-columns:1fr} .readbar{grid-template-columns:1fr 1fr} .gauge{height:300px} }
+  @media(prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <header>
+    <div class="eyebrow">Worked Example <span>/</span> Module 9 <span>/</span> CEC-02 <span>/</span> The Grip-Force Window</div>
+    <h1>Hold it tight enough not to <em>slip</em>, gentle enough not to <em>bruise</em>.</h1>
+    <p class="lede">A watermelon has a window of acceptable grip force. Too little and it slips during the lift and swing; too much and the rind bruises - a harvested melon that earns nothing. This is that window, worked from pressure to force, and the two independent bounds that keep every grasp inside it.</p>
+
+    <div class="hero">
+      <svg class="hero-bg" viewBox="0 0 800 230" preserveAspectRatio="none" role="presentation" aria-hidden="true" focusable="false">
+        <defs>
+          <pattern id="grid" width="26" height="26" patternUnits="userSpaceOnUse">
+            <path d="M26 0H0V26" fill="none" style="stroke:var(--grid-line)" stroke-width="1" vector-effect="non-scaling-stroke"/>
+          </pattern>
+        </defs>
+        <rect x="6" y="6" width="788" height="218" rx="12" style="fill:var(--surface-3)"/>
+        <rect x="6" y="6" width="788" height="218" rx="12" fill="url(#grid)" opacity="0.5"/>
+        <rect x="6" y="6" width="788" height="218" rx="12" fill="none" style="stroke:var(--border)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M20 6V22 M6 20H22" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M780 6V22 M778 20H794" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M20 224V208 M6 210H22" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M780 224V208 M778 210H794" style="stroke:var(--accent-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+      </svg>
+      <div class="hero-inner">
+        <div class="hero-tab">Governing relation</div>
+        <div class="hero-eq" role="math" aria-label="F slip less than or equal to F grip less than or equal to F bruise">\[ \htmlClass{c-warn}{F_{\mathrm{slip}}} \;\le\; \htmlClass{c-accent}{F_{\mathrm{grip}}} \;\le\; \htmlClass{c-danger-text}{F_{\mathrm{bruise}}} \]</div>
+        <div class="hero-sub">The grip force must hold above slip and stay below bruise: the ratified window is [250 N, 800 N].</div>
+      </div>
+    </div>
+  </header>
+
+  <section id="derivation" aria-labelledby="deriv-h">
+    <div class="kicker">Full derivation / from gauge pressure to the window</div>
+    <h2 id="deriv-h">How the window is built</h2>
+    <p>The gripper is a fluid actuator: pressure becomes force through the piston area. We follow Module 9 Sec. 7 exactly, sizing the actuator to the window (Doc B Sec. 5.3) and then closing the two bounds that guarantee the grasp stays inside it.</p>
+
+    <div class="dstep" data-n="1">
+      <div class="d-state">Pressure becomes force through the piston area.</div>
+      <div class="eq">\[ F = P\,A \]</div>
+      <p class="d-exp">For the ratified window \([250\ \mathrm{N},\ 800\ \mathrm{N}]\) and a representative piston area \(A = 1.13\times10^{-3}\ \mathrm{m^2}\) (a ~38 mm bore), the required cylinder pressure range is:</p>
+      <div class="eq">\[ P_{\mathrm{slip}} = \frac{F_{\mathrm{slip}}}{A} = \frac{250}{1.13\times10^{-3}} \approx \htmlClass{c-warn}{221\ \mathrm{kPa}} \qquad P_{\mathrm{bruise}} = \frac{F_{\mathrm{bruise}}}{A} = \frac{800}{1.13\times10^{-3}} \approx \htmlClass{c-danger-text}{708\ \mathrm{kPa}} \]</div>
+      <div class="d-cons"><span class="lab">Consequence</span><p>The actuator is sized to the window: a <strong>487 kPa operating band</strong> in which the grip must be placed and held.</p></div>
+    </div>
+
+    <div class="dstep" data-n="2">
+      <div class="d-state">A fluid actuator is intrinsically compliant - and compliance widens the window.</div>
+      <div class="eq">\[ k_{\mathrm{fluid}} = \frac{A^{2}\beta}{V} \quad\left(\text{gas: } \beta \approx nP \;\Rightarrow\; k_{\mathrm{fluid}} \sim P/V\right) \]</div>
+      <p class="d-exp">A softer grip spreads contact over more area, lowering peak rind pressure for the same force - so it takes <em>more</em> force to reach the bruise threshold \(p_{\mathrm{br}} \approx 350\ \mathrm{kPa}\). Compliance doesn't just sit inside the window; it <strong class="rind-t">widens</strong> it. But it is in series with the structure, so it can only soften, never stiffen past it:</p>
+      <div class="eq">\[ k_{\mathrm{eff}} = \left(k_{\mathrm{struct}}^{-1} + k_{\mathrm{fluid}}^{-1}\right)^{-1} \]</div>
+      <div class="d-cons"><span class="lab">Consequence</span><p>The structure (M8) carries the stiffness floor for placement (\(\sigma_{\mathrm{mech}}\)); the fluid tunes softness for contact. That is the <strong>M8 to M9 negotiation</strong>.</p></div>
+    </div>
+
+    <div class="dstep" data-n="3">
+      <div class="d-state">Two independent bounds keep every grasp inside the window.</div>
+      <div class="eq">\[ \textbf{Software (EI-07):}\quad F_{\mathrm{exec}} = \mathrm{clip}\!\left(F_{\mathrm{AI}},\, F_{\mathrm{slip}},\, F_{\mathrm{bruise}}\right) \]</div>
+      <div class="eq">\[ \textbf{Hardware (EI-09):}\quad F_{\mathrm{physical}} \le P_{\mathrm{relief}}\,A = F_{\mathrm{bruise}} \quad\text{regardless of any command} \]</div>
+      <p class="d-exp">One bound is computed, one is physical. A software fault can defeat the clip; it <strong>cannot</strong> defeat the mechanical relief, which vents pressure at physics speed with no detection loop at all (EI-09).</p>
+      <div class="d-cons"><span class="lab">Consequence</span><p><strong>No single failure can bruise the fruit past the limit.</strong> This is the machine's central safety guarantee - and it is a mechanical part, not a line of code.</p></div>
+    </div>
+  </section>
+
+  <section id="instrument" aria-labelledby="inst-h">
+    <div class="kicker">The window, live / command a grip, watch the bounds act</div>
+    <h2 id="inst-h">The two bounds in action</h2>
+    <p>Command any grip force with the AI. Watch the software clip pull it into the window - and, if you push past the relief, watch the hardware bound cap the <strong>physical</strong> force no matter what was commanded. Then soften the grip and see the bruise ceiling rise: compliance widening the window.</p>
+
+    <div class="instrument">
+      <div class="inst-head">
+        <div class="inst-title">Grip-force window - force gauge</div>
+        <button class="reset" id="resetBtn" type="button">Reset</button>
+      </div>
+
+      <noscript><p class="noscript-note">This interactive force gauge requires JavaScript. The full worked result is in the derivation above: the window is [250 N, 800 N]; a software clip holds the AI command inside it, and an independent mechanical relief caps physical force at the 800 N bruise limit regardless of any command.</p></noscript>
+
+      <div class="gauge-row">
+        <div class="gauge" id="gauge" role="img" aria-label="Vertical force gauge showing the slip, window, and bruise bands with command and physical-force markers"></div>
+        <div class="gauge-side">
+          <div class="ctl">
+            <label>AI commanded force <b><span id="cmdRead">600</span> N</b></label>
+            <input type="range" class="water" id="cmd" min="0" max="1100" step="10" value="600" aria-label="AI commanded grip force, newtons">
+          </div>
+          <div class="ctl">
+            <label>Grip compliance (pad softness) <b><span id="compRead">med</span></b></label>
+            <input type="range" id="comp" min="0" max="100" step="1" value="50" aria-label="Grip compliance, pad softness">
+          </div>
+          <div class="ctl fault">
+            <label><span>Simulate software-clip fault</span>
+              <button id="faultBtn" class="toggle" type="button" aria-pressed="false">OFF</button></label>
+          </div>
+          <div class="status ok" id="status" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <div class="readbar">
+        <div class="ro"><div class="lab">\(F_{\mathrm{cmd}}\) commanded</div><div class="val"><span id="roCmd">600</span> <small>N</small></div></div>
+        <div class="ro"><div class="lab">\(F_{\mathrm{exec}}\) (clip)</div><div class="val"><span id="roExec">600</span> <small>N</small></div></div>
+        <div class="ro"><div class="lab">\(F_{\mathrm{physical}}\) (relief)</div><div class="val"><span id="roPhys">600</span> <small>N</small></div></div>
+        <div class="ro"><div class="lab">\(p_{\mathrm{peak}}\) rind press.</div><div class="val"><span id="roPress">150</span> <small>kPa / 350</small></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ei09" aria-labelledby="ei-h">
+    <div class="kicker">Engineering Insight EI-09 / let the physics regulate</div>
+    <h2 id="ei-h">The guarantee is a mechanical part</h2>
+    <div class="insight">
+      <div class="tag">EI-09 - Let the Physics Regulate</div>
+      <p><strong>Where a physical mechanism can enforce a safety bound, prefer it to a software check.</strong> The mechanical relief caps grip force below the bruise threshold at physics speed - no sensing, no computation, no latency, and no software fault that can disable it. The AI setpoint is clipped in software (EI-07) as the first line; the relief is the independent second line that holds even if the first fails. Two bounds, one computed and one physical, are what let an <em>opaque</em> learned policy be trusted on a <em>fragile</em> crop - the whole thesis of fluid-powered physical AI.</p>
+    </div>
+  </section>
+
+  <section id="takeaway" aria-labelledby="tk-h">
+    <div class="kicker">Engineering takeaway / what to do next</div>
+    <h2 id="tk-h">Where the next effort belongs</h2>
+    <div class="takeaway">
+      <ul class="tk-list">
+        <li><span class="tk-mark" aria-hidden="true">-&gt;</span> The window is wide (\([250,800]\ \mathrm{N}\)) <em>because</em> the grip is compliant. Do not spend effort making the force controller more precise than the window demands - the compliance already absorbs the error.</li>
+        <li><span class="tk-mark tk-hot" aria-hidden="true">-&gt;</span> The bruise ceiling depends on <span class="rind-t">contact compliance and pad geometry</span>, not on the force sensor. The highest-leverage improvement is a <strong>softer, better-conforming pad</strong> - it widens the window on the dangerous side.</li>
+        <li><span class="tk-mark" aria-hidden="true">-&gt;</span> Verify the <strong>mechanical relief</strong> physically, on the bench, across wear - it is the guarantee, and it must still cap force after a season (feeds the M14 durability test and the Doc E safety case).</li>
+        <li><span class="tk-mark" aria-hidden="true">-&gt;</span> <strong>Decision:</strong> the next effort belongs in <strong class="rind-t">gripper mechanics and the relief</strong> - the physical bounds - <strong>not in tightening the force loop</strong>. The real bruise threshold is a hardware measurement (Doc C Sec. 5 / Doc G R3 rung), and it is the number to go get.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    SIM2FIELD / Autonomous Watermelon Harvesting Robotics<br>
+    Worked example for Module 9 (Actuation, Fluid Power &amp; AI-Assisted Grasp-Force Control) / realizes CEC-02, the Grip-Force Window<br>
+    Values ratified in Doc B Sec. 5.3 / method harvested from Module 9 Sec. 7 / relations per Doc F Sec. 3 (frozen Rev 1.0)<br>
+    Production Phase asset - configuration-controlled
+  </footer>
+</main>
+
+<script id="ktx-data" type="application/json">{"eSlip":"F_{\\mathrm{slip}}","eBruise":"F_{\\mathrm{bruise}}"}</script>
+<script>
+/* Interactive enhancement only. All engineering content above is static and
+   readable with JavaScript disabled. Vanilla JS, no external dependencies.
+   Colors come from semantic tokens (var(--...)), never raw hex. */
+(function(){
+  "use strict";
+  var KTX = {};
+  try { KTX = JSON.parse(document.getElementById('ktx-data').textContent); } catch(e){}
+
+  const F_SLIP=250, F_BRUISE=800, F_MAX=1100; // N - ratified window (Doc B Sec. 5.3)
+  const F_RELIEF=800;                          // N - relief set at the ratified bruise limit (P_relief*A)
+  const P_BR=350;                              // kPa - rind bruise pressure (Doc B Sec. 4.1)
+  let state={cmd:600, comp:50, fault:false};
+
+  const gauge=document.getElementById('gauge');
+  const $=id=>document.getElementById(id);
+  if(!gauge) return;
+
+  gauge.innerHTML =
+    `<div class="band bruise" id="bBruise"></div>`+
+    `<div class="band window" id="bWindow"></div>`+
+    `<div class="band slip" id="bSlip"></div>`+
+    `<div class="edge slip" id="eSlip"></div>`+
+    `<div class="edge bruise" id="eBruise"></div>`+
+    `<div class="edge relief" id="eRelief"></div>`+
+    `<div class="bandlab" id="labSlip" style="color:var(--slip)">slip</div>`+
+    `<div class="bandlab" id="labWin" style="color:var(--window)">window</div>`+
+    `<div class="bandlab" id="labBru" style="color:var(--bruise)">bruise</div>`+
+    `<div class="marker cmd" id="mCmd"><div class="bar"></div><div class="tag" id="tCmd">AI cmd</div></div>`+
+    `<div class="marker exec" id="mExec"><div class="bar"></div><div class="tag" id="tExec">physical</div></div>`;
+
+  function pct(F){ return Math.max(0,Math.min(100, F/F_MAX*100)); }
+  function compLabel(c){ return c<25?'firm':c<50?'med-firm':c<75?'med':'soft'; }
+  function contactArea(c){ return (2e-3 + c/100*4e-3); } // m^2, grows with pad softness
+
+  $('bSlip').style.cssText = `bottom:0; height:${pct(F_SLIP)}%`;
+  $('bWindow').style.cssText = `bottom:${pct(F_SLIP)}%; height:${pct(F_BRUISE)-pct(F_SLIP)}%`;
+  $('bBruise').style.cssText = `bottom:${pct(F_BRUISE)}%; top:0`;
+  $('eSlip').style.bottom = pct(F_SLIP)+'%';    $('eSlip').innerHTML   = (KTX.eSlip||'F_slip')+` ${F_SLIP} N`;
+  $('eBruise').style.bottom = pct(F_BRUISE)+'%'; $('eBruise').innerHTML = (KTX.eBruise||'F_bruise')+` ${F_BRUISE} N`;
+  $('eRelief').style.bottom = pct(F_RELIEF)+'%'; $('eRelief').innerHTML = `relief cap ${F_RELIEF} N (hard)`;
+  $('labSlip').style.bottom = (pct(F_SLIP)/2)+'%';
+  $('labWin').style.bottom = ((pct(F_SLIP)+pct(F_BRUISE))/2)+'%';
+  $('labBru').style.bottom = ((pct(F_BRUISE)+100)/2)+'%';
+
+  function render(){
+    const clip = !state.fault;
+    const F_exec = clip ? Math.max(F_SLIP, Math.min(state.cmd, F_BRUISE)) : state.cmd;
+    const F_phys = Math.min(F_exec, F_RELIEF);
+    const pPeak = (F_phys / contactArea(state.comp))/1000;
+
+    $('mCmd').style.bottom = pct(state.cmd)+'%';
+    $('mExec').style.bottom = pct(F_phys)+'%';
+    $('tCmd').textContent = `AI cmd ${state.cmd} N`;
+    $('tExec').textContent = `physical ${F_phys.toFixed(0)} N`;
+
+    $('roCmd').textContent=state.cmd;
+    $('roExec').textContent = clip ? F_exec.toFixed(0) : 'bypassed';
+    $('roPhys').textContent=F_phys.toFixed(0);
+    $('roPress').textContent=pPeak.toFixed(0);
+    $('cmdRead').textContent=state.cmd; $('compRead').textContent=compLabel(state.comp);
+    $('roPress').parentElement.style.color = pPeak>P_BR ? 'var(--danger-text)' : '';
+
+    const st=$('status');
+    const bruised = pPeak > P_BR;
+    if(state.fault){
+      if(state.cmd > F_RELIEF){
+        st.className='status relief';
+        st.innerHTML=`<b>Clip disabled - relief holding.</b> With the software bound faulted, the command ${state.cmd} N passes straight through, but the <b>mechanical relief</b> vents at ${F_RELIEF} N: physical force capped at <b>${F_phys.toFixed(0)} N</b>. The independent hardware bound holds even with the software defeated - this is why the relief exists.`;
+      } else {
+        st.className= bruised ? 'status relief' : 'status clip';
+        st.innerHTML=`<b>Clip disabled.</b> Command ${state.cmd} N passes through unclipped (relief only fires above ${F_RELIEF} N). `+
+          (bruised? `Peak rind pressure <b>${pPeak.toFixed(0)} kPa</b> exceeds the ${P_BR} kPa bruise threshold - a firmer pad would have to soften to stay safe here.`
+                  : `Peak pressure ${pPeak.toFixed(0)} kPa is within the ${P_BR} kPa limit.`);
+      }
+    } else if(state.cmd > F_BRUISE){
+      st.className='status clip';
+      st.innerHTML=`<b>Software clip active.</b> Command ${state.cmd} N would bruise; the clip holds execution at <b>${F_BRUISE} N</b>, and the relief stands behind it as the independent backup.`;
+    } else if(state.cmd < F_SLIP){
+      st.className='status clip';
+      st.innerHTML=`<b>Software clip active.</b> Command ${state.cmd} N would let the melon slip; the clip raises execution to <b>${F_SLIP} N</b> so it holds through lift and swing.`;
+    } else {
+      st.className= bruised ? 'status relief' : 'status ok';
+      st.innerHTML= bruised
+        ? `<b>In the force window, but the pad is too firm.</b> ${state.cmd} N is inside [250, 800] N, yet peak rind pressure <b>${pPeak.toFixed(0)} kPa</b> exceeds ${P_BR} kPa. Soften the grip - compliance is what keeps contact pressure safe.`
+        : `<b>Inside the window.</b> ${state.cmd} N holds without slipping; peak rind pressure ${pPeak.toFixed(0)} kPa is safely under ${P_BR} kPa (compliance: ${compLabel(state.comp)}).`;
+    }
+  }
+
+  document.getElementById('cmd').addEventListener('input',e=>{ state.cmd=+e.target.value; render(); });
+  document.getElementById('comp').addEventListener('input',e=>{ state.comp=+e.target.value; render(); });
+  $('faultBtn').addEventListener('click',e=>{
+    state.fault=!state.fault;
+    e.target.setAttribute('aria-pressed', state.fault);
+    e.target.textContent = state.fault ? 'ON' : 'OFF';
+    render();
+  });
+  $('resetBtn').addEventListener('click',()=>{
+    state={cmd:600,comp:50,fault:false};
+    document.getElementById('cmd').value=600; document.getElementById('comp').value=50;
+    const fb=$('faultBtn'); fb.setAttribute('aria-pressed','false'); fb.textContent='OFF';
+    render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

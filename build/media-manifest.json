@@ -1,0 +1,2826 @@
+{
+ "01": {
+  "label": "SIM2FIELD, Autonomous Watermelon Harvesting Robotics",
+  "anchor7": {
+   "widget": {
+    "id": "W-M1-1",
+    "title": "The Signal-to-Action Spine",
+    "pgTitle": "Explore the cycle-time budget",
+    "file": "CEC01-signal-to-action-spine-worked-example.html",
+    "fragment": "CEC01-signal-to-action-spine-fragment.html",
+    "authorNote": "This is the one built widget of the three this section specifies; W-M1-2 (error-budget allocator) and W-M1-3 (subsystem-mapping overlay) remain specifications."
+   },
+   "figure": {
+    "id": "F-M1-5",
+    "title": "Cycle-time budget waterfall",
+    "desc": "The eight stage times drawn as a waterfall against the arrival interval: the visual form of the section 7.1 result.",
+    "fragment": "F-M1-5-cycle-time-budget-waterfall.svg"
+   }
+  },
+  "media": [
+   {
+    "kind": "widget",
+    "id": "W-M1-1",
+    "title": "Requirements Budget Calculator",
+    "status": "slot",
+    "desc": "Inputs: fruit spacing $d$, drive speed $v$, and the eight \u00a77.1 cycle-time terms. Outputs: $T_\\text{cycle}$, $T_\\text{arrival}=d/v$, feasibility verdict ($v \\le d/T_\\text{cycle}$), and a live waterfall bar. *Pedagogical goal:* let students feel the single-arm feasibility tension. *Pattern:* reuse the existing quiz-widget styling; pure in-page JS (no storage)."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M1-2",
+    "title": "Error-Budget Allocator",
+    "status": "slot",
+    "desc": "Inputs: capture tolerance $c$ and the four \u00a77.2 \u03c3-sources. Output: $\\sigma_\\text{total}$, $3\\sigma$ vs. $c$ pass/fail, and per-source allocation sliders that must keep $3\\sigma_\\text{total}\\le c$. *Goal:* internalize RSS allocation."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M1-3",
+    "title": "Subsystem-Mapping Overlay",
+    "status": "slot",
+    "desc": "The embedded twin with clickable hotspots that reveal each element's spine function and owning module. *Goal:* DTA-1 as an interactive figure."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M1-1",
+    "title": "",
+    "status": "slot",
+    "desc": "System context / drive-over stance: rover straddling a bed with the pick station and trailer called out (isometric)."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M1-2",
+    "title": "",
+    "status": "slot",
+    "desc": "Signal-to-action functional block rendered over the machine (annotated overlay, not a mechanical part)."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M1-3",
+    "title": "",
+    "status": "slot",
+    "desc": "Interface callout: Amiga mounting/rail interface (feeds HA-1 and ->Doc C)."
+   },
+   {
+    "kind": "figure",
+    "id": "F-M1-1",
+    "title": "Signal-to-action spine diagram",
+    "status": "slot",
+    "anchor": "Anchors \u00a76.4; reused course-wide"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M1-2",
+    "title": "ConOps narrative panel",
+    "status": "slot",
+    "anchor": "Visualizes \u00a76.3"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M1-3",
+    "title": "Functional decomposition tree",
+    "status": "slot",
+    "anchor": "\u00a76.4 formal tree"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M1-4",
+    "title": "Requirement traceability schematic (need -> req -> verification)",
+    "status": "slot",
+    "anchor": "\u00a76.5/\u00a79"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M1-5",
+    "title": "Cycle-time budget waterfall",
+    "status": "slot",
+    "anchor": "\u00a77.1 result"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M1-6",
+    "title": "Error-budget RSS diagram",
+    "status": "slot",
+    "anchor": "\u00a77.2"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M1-7",
+    "title": "TS-1 weighted decision matrix (styled)",
+    "status": "slot",
+    "anchor": "\u00a711.1"
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M1-1",
+    "title": "",
+    "status": "slot",
+    "desc": "The mission cycle (`DRIVE...RELEASE`) with the active spine function highlighted at each state, the moving version of F-M1-1/F-M1-3."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M1-2",
+    "title": "",
+    "status": "slot",
+    "desc": "Cycle-time-vs-arrival race: two timelines showing the machine keeping pace or falling behind as $v$ changes, the animated form of the \u00a77.1 result."
+   }
+  ],
+  "inlineFigures": [
+   {
+    "id": "F-M1-1",
+    "title": "The signal-to-action spine",
+    "desc": "The machine decomposed by function: Perceive hands a 3-D target to Decide, which hands a grasp command to Act, all bound by Integrate-to-Deploy. The course's anchor diagram (Section 6.4).",
+    "section": "6",
+    "fragment": "F-M1-1-signal-to-action-spine.svg"
+   },
+   {
+    "id": "F-M1-3",
+    "title": "Functional decomposition tree",
+    "desc": "The same decomposition as a hierarchy: the mission branches into Perceive, Decide, Act (primary flow) and Integrate, Deploy (binding), each with its subfunctions. Section 6.4.",
+    "section": "6",
+    "fragment": "F-M1-3-functional-decomposition-tree.svg"
+   },
+   {
+    "id": "F-M1-4",
+    "title": "Requirement traceability: need to requirement to verification",
+    "desc": "A need is refined into a verifiable requirement, proven by a verification method, and traced forward to the subsystem that implements it; every requirement is one of four types. Section 6.5 and Section 9.",
+    "section": "6",
+    "fragment": "F-M1-4-requirement-traceability.svg"
+   },
+   {
+    "id": "F-M1-2",
+    "title": "Concept of operations (ConOps)",
+    "desc": "The ConOps is the narrative of how the machine is used: a drive-over rover straddles a bed, detects mature fruit ahead, stages each to a fixed pick station, grasps it with a compliant fluid-powered end-effector, and transfers it to a trailer, all on-robot with a human supervising. Every later requirement traces to a sentence in the narrative, and decomposing it by function yields the signal-to-action spine (CEC-01). Sections 6.3 and 6.4.",
+    "section": "6",
+    "fragment": "F-M1-2-conops.svg"
+   },
+   {
+    "id": "F-M1-6",
+    "title": "Placement error budget: allocation by root-sum-square",
+    "desc": "The four independent error sources combine by RSS and pass the 3-sigma capture-tolerance gate; the tolerance c allocates a maximum error to each subsystem. Schematic of the section 7.2 result.",
+    "section": "7",
+    "fragment": "F-M1-6-error-budget-rss-allocation.svg"
+   },
+   {
+    "id": "F-M1-7",
+    "title": "TS-1: harvesting architecture decision matrix",
+    "desc": "Three architectures scored against six weighted criteria; the drive-over straddle wins (4.55), chiefly by keeping the perception sight-line clear and offloading the fore/aft DOF to the vehicle. Section 11.1.",
+    "section": "11",
+    "fragment": "F-M1-7-ts1-decision-matrix.svg"
+   }
+  ]
+ },
+ "02": {
+  "label": "SIM2FIELD, Autonomous Watermelon Harvesting Robotics",
+  "anchor7": {
+   "widget": null,
+   "figure": null
+  },
+  "media": [
+   {
+    "kind": "widget",
+    "id": "W-M2-1",
+    "title": "Grip-Force Window Calculator",
+    "status": "slot",
+    "desc": "Inputs: fruit mass (or percentile), $\\mu$, safety factor, pad $E^\\ast$, $R_\\text{eff}$, $p_\\text{br}$. Outputs: $F_\\text{slip}$, $F_\\text{bruise}$, the window bar, and a feasible/empty verdict; a \"soften the pad\" slider that visibly widens the window. *Goal:* let students feel the window and the compliance lever."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M2-2",
+    "title": "Hertzian Contact Visualizer",
+    "status": "slot",
+    "desc": "Slider on force and compliance -> animated contact patch and peak-pressure readout vs. $p_\\text{br}$ (green/red). *Goal:* \u00a77.2 made tactile."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M2-3",
+    "title": "Placement-Height / Impact-Energy Calculator",
+    "status": "slot",
+    "desc": "Inputs: mass, drop height, $E_\\text{br}$ -> impact energy vs. threshold and max safe height. *Goal:* justify DD-8."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M2-4",
+    "title": "Distribution Explorer",
+    "status": "slot",
+    "desc": "A fruit mass/size histogram with a percentile selector feeding W-M2-1, showing how the window's feasibility changes across the crop. *Goal:* \u00a77.5."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M2-1",
+    "title": "",
+    "status": "slot",
+    "desc": "Watermelon anatomical cross-section (rind/hypodermis/flesh, turgor) with load-path callouts."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M2-2",
+    "title": "",
+    "status": "slot",
+    "desc": "Contact-patch geometry: rigid pad vs. compliant/fluid-backed pad on the curved rind (same force, different patch/pressure)."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M2-3",
+    "title": "",
+    "status": "slot",
+    "desc": "Gripper conformance across the size distribution (small/median/large fruit in the same gripper)."
+   },
+   {
+    "kind": "figure",
+    "id": "F-M2-1",
+    "title": "Watermelon anatomy & load path",
+    "status": "slot",
+    "anchor": "\u00a76.1"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M2-2",
+    "title": "Quasi-static vs. impact damage modes",
+    "status": "slot",
+    "anchor": "\u00a76.2"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M2-3",
+    "title": "Hertzian contact: force/compliance -> peak pressure",
+    "status": "slot",
+    "anchor": "\u00a76.3/\u00a77.2"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M2-4",
+    "title": "**Grip-force window diagram** (slip vs. bruise bounds; empty-window case)",
+    "status": "slot",
+    "anchor": "\u00a77.4 (central)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M2-5",
+    "title": "Compliance widening the window ($F_\\text{bruise}$ vs. $E^\\ast$)",
+    "status": "slot",
+    "anchor": "\u00a77.2/\u00a719"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M2-6",
+    "title": "Impact energy vs. placement height",
+    "status": "slot",
+    "anchor": "\u00a77.4"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M2-7",
+    "title": "Fruit mass/size distribution & design percentiles",
+    "status": "slot",
+    "anchor": "\u00a77.5"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M2-8",
+    "title": "Ripeness cue catalog (cue <-> modality)",
+    "status": "slot",
+    "anchor": "\u00a76.4"
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M2-1",
+    "title": "",
+    "status": "slot",
+    "desc": "Contact patch and peak pressure evolving as grasp force rises and as the pad softens, the moving form of F-M2-3/F-M2-5."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M2-2",
+    "title": "",
+    "status": "slot",
+    "desc": "The grip-force window: a force dial moving between the slip floor and bruise ceiling, tripping each failure at the bounds; then the window widening as compliance increases."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M2-3",
+    "title": "",
+    "status": "slot",
+    "desc": "Drop vs. controlled-lower placement, with the impact-energy bruise flag on the hard drop only."
+   }
+  ],
+  "inlineFigures": [
+   {
+    "id": "F-M2-3",
+    "title": "Hertzian contact: peak pressure vs grip force",
+    "desc": "Peak contact pressure rises as force^(1/3) and modulus^(2/3); a stiff pad sits high and hits the bruise-pressure threshold at a small force, a compliant (fluid-backed) pad sits low and reaches it only at a much larger force. Compliance widens the safe-force window. Section 6.3 / 7.2.",
+    "section": "6",
+    "fragment": "F-M2-3-hertzian-peak-pressure.svg"
+   },
+   {
+    "id": "F-M2-8",
+    "title": "Ripeness cue catalog (cue to modality)",
+    "desc": "Five physical ripeness cues, each mapped to its matched sensing modality (optical, contextual, acoustic, spectral/NIR). Ripeness is multi-cue, so M4 learns from data and M5 fuses modalities. Section 6.4.",
+    "section": "6",
+    "fragment": "F-M2-8-ripeness-cue-catalog.svg"
+   },
+   {
+    "id": "F-M2-2",
+    "title": "Two damage modes: quasi-static vs impact",
+    "desc": "Two bruising modes: quasi-static grip damage, where sustained contact pressure exceeds the tissue failure pressure and the controlling variable is peak contact pressure (not total force), so contact area and compliance matter; and dynamic impact damage, where a drop delivers kinetic energy and the controlling variable is impact energy, which sets a maximum safe placement height and is why the mission lowers fruit rather than dropping it. Thresholds p_br and E_br. Section 6.2.",
+    "section": "6",
+    "fragment": "F-M2-2-damage-modes.svg"
+   },
+   {
+    "id": "F-M2-4",
+    "title": "The grip-force window (slip and bruise bounds)",
+    "desc": "A feasible grasp exists only between the anti-slip lower bound and the anti-bruise upper bound; compliance raises the bruise bound and friction/gentler motion lowers the slip bound, both widening the window. When slip exceeds bruise the window is empty and no grasp force succeeds. CEC-02, Section 7.4.",
+    "section": "7",
+    "fragment": "F-M2-4-grip-force-window.svg"
+   },
+   {
+    "id": "F-M2-6",
+    "title": "Impact energy vs placement height",
+    "desc": "Impact energy rises linearly with height and mass (E = m g h); a bruise-energy threshold sets a maximum safe height that is lower for heavier fruit, so the mission lowers fruit rather than dropping it (DD-8). Section 7.4, SR-P-07.",
+    "section": "7",
+    "fragment": "F-M2-6-impact-energy-vs-height.svg"
+   },
+   {
+    "id": "F-M2-5",
+    "title": "Compliance widens the grip-force window",
+    "desc": "Because F_bruise is proportional to (E*)^-2, a compliant gripper (lower effective contact modulus) raises the bruise ceiling far above the slip floor, turning a narrow or empty rigid-gripper window into a workable one. The window F_slip <= F_grip <= F_bruise can be narrow or empty; compliance is the lever that opens it, which is why fluid-powered compliant gripping is central (CEC-02). Section 7.4.",
+    "section": "7",
+    "fragment": "F-M2-5-compliance-window.svg"
+   }
+  ]
+ },
+ "03": {
+  "label": "SIM2FIELD, Autonomous Watermelon Harvesting Robotics",
+  "anchor7": {
+   "widget": null,
+   "figure": null
+  },
+  "media": [
+   {
+    "kind": "widget",
+    "id": "W-M3-1",
+    "title": "Stereo Depth-Error Explorer",
+    "status": "slot",
+    "desc": "Inputs: focal length $f$, baseline $b$, disparity noise $\\delta d$, range $Z$. Outputs: $\\delta Z(Z)$ curve, the $Z^2$ growth, and a baseline-sizing solver for a target $\\delta Z_\\text{req}$ at $Z_\\text{pick}$. *Goal:* make \u00a77.3 and DD-14 tangible."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M3-2",
+    "title": "FoV / Ground-Sampling Calculator",
+    "status": "slot",
+    "desc": "Inputs: sensor size, $f$, pixel count, working distance -> FoV, corridor width, GSD; flags when GSD is too coarse for detection. *Goal:* \u00a77.1."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M3-3",
+    "title": "Modality-vs-Sunlight Visualizer",
+    "status": "slot",
+    "desc": "A slider from shade to full sun showing each depth modality's usable region (stereo robust, structured-light/ToF failing). *Goal:* \u00a711.1 intuition."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M3-4",
+    "title": "Force-Sensor Range Checker",
+    "status": "slot",
+    "desc": "Overlays a candidate sensor's range/resolution on the Grip-Force Window (CEC-02) to confirm coverage. *Goal:* SR-F-05."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M3-1",
+    "title": "",
+    "status": "slot",
+    "desc": "Sensor placement on the machine: stereo/NIR camera pose over the pick corridor, GNSS/IMU location, gripper force/tactile/pressure sensors (annotated)."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M3-2",
+    "title": "",
+    "status": "slot",
+    "desc": "Stereo triangulation geometry ($f$, $b$, disparity -> $Z$) as a labeled optical diagram."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M3-3",
+    "title": "",
+    "status": "slot",
+    "desc": "Camera-frame <-> robot-frame (hand-eye) transform illustration for calibration."
+   },
+   {
+    "kind": "figure",
+    "id": "F-M3-1",
+    "title": "The sensing chain (property -> transduction -> signal -> information)",
+    "status": "slot",
+    "anchor": "\u00a76.1"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M3-2",
+    "title": "Thin-lens / FoV / GSD geometry",
+    "status": "slot",
+    "anchor": "\u00a76.2/\u00a77.1"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M3-3",
+    "title": "Stereo triangulation and disparity",
+    "status": "slot",
+    "anchor": "\u00a76.3/\u00a77.2"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M3-4",
+    "title": "**Depth error vs. range** ($\\delta Z\\propto Z^2/fb$) with baseline-sizing",
+    "status": "slot",
+    "anchor": "\u00a77.3 (central)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M3-5",
+    "title": "Modality robustness vs. sunlight (stereo/SL/LiDAR/ToF)",
+    "status": "slot",
+    "anchor": "\u00a711.1"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M3-6",
+    "title": "Ripeness cue <-> modality (RGB/NIR/acoustic)",
+    "status": "slot",
+    "anchor": "\u00a76.4/\u00a711.2"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M3-7",
+    "title": "Calibration frames (intrinsic/extrinsic/hand-eye/temporal)",
+    "status": "slot",
+    "anchor": "\u00a76.7"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M3-8",
+    "title": "Placement error budget with sensing terms populated",
+    "status": "slot",
+    "anchor": "\u00a77.5"
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M3-1",
+    "title": "",
+    "status": "slot",
+    "desc": "Depth error growing as the fruit recedes, then collapsing as it is staged close, the moving form of F-M3-4/DD-14."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M3-2",
+    "title": "",
+    "status": "slot",
+    "desc": "A scene sweeping from shade to full sun with each depth modality dropping out as light rises, F-M3-5."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M3-3",
+    "title": "",
+    "status": "slot",
+    "desc": "A miscalibrated hand-eye transform producing a placement miss, then corrected, DTA-2."
+   }
+  ],
+  "inlineFigures": [
+   {
+    "id": "F-M3-1",
+    "title": "The sensing chain and sensor characteristics",
+    "desc": "A sensor converts a physical property through a transduction mechanism into a signal from which information is extracted; every link degrades the signal. Each sensor is characterized by a fixed vocabulary that propagates into budgets: resolution, accuracy vs precision, noise and SNR, dynamic range (the sun/shade problem), bandwidth/latency (spends CEC-01, stales the target), field of view and range, and field robustness. Sensor selection matches characteristics to requirements, never choosing hardware before the requirement is quantified. Section 6.1.",
+    "section": "6",
+    "fragment": "F-M3-1-sensing-chain.svg"
+   },
+   {
+    "id": "F-M3-2",
+    "title": "Thin-lens model: field of view and ground sampling",
+    "desc": "The thin-lens model relates focal length f, sensor dimension s, and field of view by FoV = 2 arctan(s/2f). At working distance Z the imaged ground width is W = Z s/f, and with N pixels across, the ground sampling distance GSD = W/N (millimeters of fruit per pixel) is the spatial resolution the detector (M4) inherits. Choose f, sensor, and N so the pick corridor is covered at sufficient ground resolution while the fruit stays within the depth of field. Sections 6.2 and 7.1.",
+    "section": "6",
+    "fragment": "F-M3-2-thin-lens-gsd.svg"
+   },
+   {
+    "id": "F-M3-3",
+    "title": "Stereo triangulation and disparity",
+    "desc": "A world point projects into the left and right cameras separated by a baseline; the difference in its image position is the disparity, and by similar triangles depth Z = f b / d (focal length times baseline over disparity). Nearer points have larger disparity; depth uncertainty later grows as Z^2/(fb). Sections 6.3, 7.2, 7.3.",
+    "section": "6",
+    "fragment": "F-M3-3-stereo-triangulation.svg"
+   },
+   {
+    "id": "F-M3-4",
+    "title": "Stereo depth error vs range",
+    "desc": "Depth error grows as the square of range (dZ ~ Z^2/(f b) dd): doubling the standoff quadruples the error. A larger baseline lowers the curve, and staging each fruit to a close pick station (DD-2) shrinks Z where accuracy matters most. Section 7.3.",
+    "section": "7",
+    "fragment": "F-M3-4-depth-error-vs-range.svg"
+   },
+   {
+    "id": "F-M3-8",
+    "title": "Placement error budget: sensing terms populated",
+    "desc": "The independent contributors combine by root-sum-square: sigma_total = sqrt(sigma_Z^2 + sigma_cal^2 + sigma_he^2 + sigma_sync^2 + sigma_mech^2), with 3 sigma_total <= c. This module supplies the sensing terms (depth sigma_Z, calibration residual sigma_cal, hand-eye sigma_he, temporal-sync sigma_sync); M8 owns sigma_mech and M5 masters the estimation. c is the capture tolerance tied to the Grip-Force Window. EI-05: attack the dominant term (sigma_Z). Section 7.5.",
+    "section": "7",
+    "fragment": "F-M3-8-placement-budget-sensing.svg"
+   },
+   {
+    "id": "F-M3-5",
+    "title": "Modality robustness in direct sunlight",
+    "desc": "The decisive TS-5 criterion scored across four depth modalities: stereo 5, LiDAR 4, ToF 2, structured light 1. Sunlight robustness eliminates structured light and ToF as primaries; passive stereo is selected (weighted total 4.44). Section 11.1.",
+    "section": "11",
+    "fragment": "F-M3-5-modality-robustness-sunlight.svg"
+   }
+  ]
+ },
+ "04": {
+  "label": "SIM2FIELD, Autonomous Watermelon Harvesting Robotics",
+  "anchor7": {
+   "widget": null,
+   "figure": null
+  },
+  "media": [
+   {
+    "kind": "widget",
+    "id": "W-M4-1",
+    "title": "Operating-Point / Mission-Value Explorer",
+    "status": "slot",
+    "desc": "Sliders for the cost ratio $v_H/c_F$ and the confidence threshold $\\tau$; shows the PR curve, $U(\\tau)$, and the optimum $\\tau^\\ast$, EI-04 made interactive. *Goal:* internalize metric-from-consequence."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M4-2",
+    "title": "Precision/Recall/IoU Sandbox",
+    "status": "slot",
+    "desc": "Drag predicted vs. ground-truth boxes to see TP/FP/FN, IoU, precision, and recall update live. *Goal:* \u00a77.2 intuition."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M4-3",
+    "title": "Domain-Randomization Gallery",
+    "status": "slot",
+    "desc": "A twin scene re-rendered under randomized lighting/texture/pose to illustrate synthetic-data coverage and the sim-to-real idea. *Goal:* \u00a76.5/\u00a712."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M4-4",
+    "title": "Detection Overlay on the Twin",
+    "status": "slot",
+    "desc": "The embedded twin with live detection boxes/masks/ripeness overlaid on rendered fruit. *Goal:* Perceive-stage made visible."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M4-1",
+    "title": "",
+    "status": "slot",
+    "desc": "Perception data-flow: sensor suite (M3) -> backbone -> detection/segmentation/ripeness heads -> detected fruit (annotated block diagram, not mechanical)."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M4-2",
+    "title": "",
+    "status": "slot",
+    "desc": "Instance mask defining grasp extent on a fruit (links perception output to the gripper contact region, CEC-02)."
+   },
+   {
+    "kind": "figure",
+    "id": "F-M4-1",
+    "title": "CNN feature hierarchy (edges -> fruit)",
+    "status": "slot",
+    "anchor": "\u00a76.2"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M4-2",
+    "title": "Detection vs. instance segmentation vs. ripeness heads",
+    "status": "slot",
+    "anchor": "\u00a76.3"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M4-3",
+    "title": "Precision/Recall/IoU definitions (TP/FP/FN diagram)",
+    "status": "slot",
+    "anchor": "\u00a77.2"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M4-4",
+    "title": "**PR curve and the mission-value operating point $\\tau^\\ast$**",
+    "status": "slot",
+    "anchor": "\u00a77.4 (central)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M4-5",
+    "title": "Data strategy: real + synthetic + domain randomization",
+    "status": "slot",
+    "anchor": "\u00a76.5/\u00a711.2"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M4-6",
+    "title": "Sim-to-real: synthetic vs. real performance and the gap",
+    "status": "slot",
+    "anchor": "\u00a712"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M4-7",
+    "title": "Development vs. runtime AI boundary",
+    "status": "slot",
+    "anchor": "\u00a717"
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M4-1",
+    "title": "",
+    "status": "slot",
+    "desc": "The confidence threshold sliding along the PR curve while $U(\\tau)$ rises to its peak, EI-04 in motion."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M4-2",
+    "title": "",
+    "status": "slot",
+    "desc": "Domain randomization: one scene re-rendered under many conditions, then a model generalizing to a real frame."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M4-3",
+    "title": "",
+    "status": "slot",
+    "desc": "Detection/mask/ripeness overlays appearing on canopy fruit as the model runs."
+   }
+  ],
+  "inlineFigures": [
+   {
+    "id": "F-M4-1",
+    "title": "Convolutional feature hierarchy (edges to fruit)",
+    "desc": "Stacked convolutions build the image from low-level edges and texture through shapes and parts into fruit-like regions; weight sharing makes this efficient and translation-tolerant. This backbone of feature maps feeds task-specific heads for detection, segmentation, and ripeness. Learned hierarchical features succeed where no hand-set rule separates green fruit from green canopy. Sections 6.1 and 6.2.",
+    "section": "6",
+    "fragment": "F-M4-1-cnn-hierarchy.svg"
+   },
+   {
+    "id": "F-M4-2",
+    "title": "Multi-head detection architecture",
+    "desc": "A shared convolutional backbone feeds three heads: detection (bbox + confidence), instance segmentation (per-fruit mask for grasp sizing, CEC-02), and ripeness classification (per-instance label from RGB+NIR). The backbone family (single-stage fast/edge, two-stage accurate/slower, transformer flexible/hungry) is traded against the cycle-time budget (CEC-01) and the edge device (M6). Section 6.3.",
+    "section": "6",
+    "fragment": "F-M4-2-multihead-architecture.svg"
+   },
+   {
+    "id": "F-M4-5",
+    "title": "Data strategy: real + annotated + synthetic",
+    "desc": "A sound data strategy has three parts feeding one dataset that must cover the field's variability: real field capture, expensive annotation, and synthetic generation in the twin (free labels, manufactured rare/hazardous cases), with domain randomization combating the sim-to-real gap. The dataset is the product; if the union does not cover the field, the model inherits a blind spot. Section 6.5.",
+    "section": "6",
+    "fragment": "F-M4-5-data-strategy.svg"
+   },
+   {
+    "id": "F-M4-3",
+    "title": "Detection metrics: IoU match, and precision/recall",
+    "desc": "A predicted box matches a ground-truth box when IoU exceeds a threshold; the four outcomes (TP, FP, FN, TN) define precision = TP/(TP+FP) and recall = TP/(TP+FN), and sweeping the confidence threshold traces the PR curve. Section 7.2.",
+    "section": "7",
+    "fragment": "F-M4-3-detection-metrics.svg"
+   },
+   {
+    "id": "F-M4-4",
+    "title": "PR curve and the mission-value operating point",
+    "desc": "Sweeping the confidence threshold tau traces the precision-recall curve (P=TP/(TP+FP), R=TP/(TP+FN), F1=2PR/(P+R); mAP is the area). Lowering tau raises recall and lowers precision. There is no best tau in the abstract, only a best tau for a stated objective; on this machine the objective is economic (a missed fruit is lost revenue, a bad pick wastes a cycle), so the operating point tau* sits at higher recall than the F1 optimum. Sections 7.2 and 7.3.",
+    "section": "7",
+    "fragment": "F-M4-4-pr-operating-point.svg"
+   }
+  ]
+ },
+ "05": {
+  "label": "SIM2FIELD, Autonomous Watermelon Harvesting Robotics",
+  "anchor7": {
+   "widget": null,
+   "figure": null
+  },
+  "media": [
+   {
+    "kind": "widget",
+    "id": "W-M5-1",
+    "title": "Error-Budget Assembler",
+    "status": "slot",
+    "desc": "Sliders for each $\\sigma$ term and the capture tolerance $c$; live $\\sigma_\\text{place}$, $3\\sigma$ vs. $c$ verdict, and a highlighted **dominant term** (EI-05); a \"stage closer\" control that shrinks $\\sigma_Z$. *Goal:* CEC-03 + EI-05 made tactile."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M5-2",
+    "title": "Frame-Chain Visualizer",
+    "status": "slot",
+    "desc": "A pixel back-projected and transformed through camera->robot->field frames, with a wrong/stale transform toggled to show the frame-chain failure. *Goal:* \u00a76.2 to 6.3."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M5-3",
+    "title": "Kalman Fusion Sandbox",
+    "status": "slot",
+    "desc": "Two noisy sensors fused; sliders on each noise; watch the gain and the covariance shrink. *Goal:* \u00a76.5."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M5-4",
+    "title": "Covariance-vs-Window Overlay",
+    "status": "slot",
+    "desc": "The pose covariance ellipse drawn over the Grip-Force Window's capture tolerance, showing grasp feasibility as uncertainty changes. *Goal:* CEC-02<->CEC-03 link."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M5-1",
+    "title": "",
+    "status": "slot",
+    "desc": "The machine's coordinate frames (camera, manipulator/base, rover, field) with transforms labeled."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M5-2",
+    "title": "",
+    "status": "slot",
+    "desc": "Pose covariance ellipsoid on a fruit at the pick station, overlaid with the capture tolerance."
+   },
+   {
+    "kind": "figure",
+    "id": "F-M5-1",
+    "title": "Back-projection (pixel + depth -> camera point)",
+    "status": "slot",
+    "anchor": "\u00a76.2"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M5-2",
+    "title": "Frame chain camera->robot->field with transforms",
+    "status": "slot",
+    "anchor": "\u00a76.3"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M5-3",
+    "title": "Covariance propagation through a transform",
+    "status": "slot",
+    "anchor": "\u00a76.4/\u00a77.2"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M5-4",
+    "title": "Kalman predict/update cycle with covariance",
+    "status": "slot",
+    "anchor": "\u00a76.5"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M5-5",
+    "title": "**Placement error budget (RSS) with dominant term highlighted**",
+    "status": "slot",
+    "anchor": "\u00a76.7/\u00a77.5 (central)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M5-6",
+    "title": "Covariance ellipse vs. capture tolerance (grasp feasibility)",
+    "status": "slot",
+    "anchor": "\u00a77.5 / CEC-02"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M5-7",
+    "title": "Occlusion/uncertainty gate decision",
+    "status": "slot",
+    "anchor": "\u00a76.6"
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M5-1",
+    "title": "",
+    "status": "slot",
+    "desc": "A pixel back-projecting and riding the frame chain to a robot-frame point, with a covariance ellipsoid attached."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M5-2",
+    "title": "",
+    "status": "slot",
+    "desc": "The Kalman covariance shrinking on updates and growing on prediction as sensors report."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M5-3",
+    "title": "",
+    "status": "slot",
+    "desc": "The error budget re-balancing as staging range changes, the dominant depth term collapsing (EI-05)."
+   }
+  ],
+  "inlineFigures": [
+   {
+    "id": "F-M5-2",
+    "title": "The frame-transform chain (camera to field)",
+    "desc": "A pixel plus depth is back-projected to the camera frame (P_c = Z K^-1 [u,v,1]), then moved by homogeneous SE(3) transforms through the robot frame (hand-eye calibration, M3) to the field frame (rover pose from GNSS/IMU/odometry). A single wrong or stale transform anywhere in the chain misplaces the fruit even if every measurement was correct. Sections 6.2 and 6.3.",
+    "section": "6",
+    "fragment": "F-M5-2-frame-chain.svg"
+   },
+   {
+    "id": "F-M5-4",
+    "title": "The Kalman predict/update cycle with covariance",
+    "desc": "Predict advances the state and inflates the covariance; update corrects with a measurement and shrinks it. The recursive loop keeps pose uncertainty small enough to clear the occlusion gate and land in the capture tolerance; the gain trusts each sensor inversely to its noise. Section 6.5.",
+    "section": "6",
+    "fragment": "F-M5-4-kalman-cycle.svg"
+   },
+   {
+    "id": "F-M5-7",
+    "title": "The occlusion gate",
+    "desc": "Each detection is localized to a pose with a covariance; if the estimated uncertainty exceeds a threshold (a heavily occluded fruit inflates covariance), the gate rejects it and defers or skips rather than handing the Act stage a target it cannot trust. Uncertainty-driven decision-making in miniature. Section 6.6.",
+    "section": "6",
+    "fragment": "F-M5-7-occlusion-gate.svg"
+   },
+   {
+    "id": "F-M5-1",
+    "title": "From pixel to 3-D: back-projection",
+    "desc": "With a calibrated camera (intrinsics K from M3) and a known depth Z, a pixel back-projects to a camera-frame point P_c = Z K^-1 [u,v,1]. The mask centroid (M4) plus stereo depth (M3) yields the fruit's camera-frame position; everything downstream moves this point into the frame where the robot acts. Section 6.2.",
+    "section": "6",
+    "fragment": "F-M5-1-back-projection.svg"
+   },
+   {
+    "id": "F-M5-6",
+    "title": "Covariance ellipse vs capture tolerance (grasp feasibility)",
+    "desc": "A grasp is feasible when the 3-sigma pose-error ellipse (the M5 covariance) fits inside the capture-tolerance circle (radius c, from CEC-02), and infeasible when it exceeds it. The test is 3 sigma_place <= c; the fix is to shrink the covariance (fuse more, stage closer) or widen the tolerance (more compliance). Section 7.5 / CEC-02.",
+    "section": "7",
+    "fragment": "F-M5-6-covariance-ellipse.svg"
+   },
+   {
+    "id": "F-M5-3",
+    "title": "Covariance propagation through the transform chain",
+    "desc": "At each stage the output covariance is Sigma_y = J Sigma_x J^T, so chaining stages composes the Jacobians and per-source noise (depth sigma_Z growing as Z^2, calibration/hand-eye residual, rover-pose uncertainty) accumulates into the fruit-pose covariance in the robot frame. The deliverable of localization is a pose WITH covariance; the occlusion gate and grasp module consume it. Sections 6.4 and 7.2.",
+    "section": "7",
+    "fragment": "F-M5-3-covariance-propagation.svg"
+   }
+  ]
+ },
+ "06": {
+  "label": "SIM2FIELD, Autonomous Watermelon Harvesting Robotics",
+  "anchor7": {
+   "widget": null,
+   "figure": null
+  },
+  "media": [
+   {
+    "kind": "widget",
+    "id": "W-M6-1",
+    "title": "Latency-Budget Builder",
+    "status": "slot",
+    "desc": "Inputs: per-stage latencies (with a \"measured vs. datasheet\" toggle), cycle-time share. Outputs: total vs. budget, highlighted dominant stage (EI-05), pass/fail, and an Amdahl payoff estimator for accelerating each stage. *Goal:* \u00a77.1/\u00a77.3."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M6-2",
+    "title": "Accuracy-Latency Frontier",
+    "status": "slot",
+    "desc": "Slider over optimization aggressiveness showing recall vs. latency vs. energy and the recall-threshold line (EI-04). *Goal:* \u00a76.5."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M6-3",
+    "title": "Roofline Explorer",
+    "status": "slot",
+    "desc": "Plot kernels by arithmetic intensity vs. performance; show compute- vs memory-bound regions and which optimization helps. *Goal:* \u00a76.4."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M6-4",
+    "title": "Thermal-Throttle Simulator",
+    "status": "slot",
+    "desc": "Load vs. temperature vs. delivered clock, showing the latency budget breaking as the device heats. *Goal:* \u00a76.6 (SR-C-06)."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M6-1",
+    "title": "",
+    "status": "slot",
+    "desc": "Compute topology: edge SoC + accelerators, sensor and actuator interfaces, power/thermal path (block diagram)."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M6-2",
+    "title": "",
+    "status": "slot",
+    "desc": "The no-cloud boundary: runtime (on-robot) vs. development (off-robot) partition with data paths (annotated; CEC-04)."
+   },
+   {
+    "kind": "figure",
+    "id": "F-M6-1",
+    "title": "No-cloud runtime/development partition",
+    "status": "slot",
+    "anchor": "\u00a76.2 (CEC-04)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M6-2",
+    "title": "End-to-end latency budget within the cycle time",
+    "status": "slot",
+    "anchor": "\u00a77.1"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M6-3",
+    "title": "Roofline (compute- vs memory-bound)",
+    "status": "slot",
+    "anchor": "\u00a76.4"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M6-4",
+    "title": "Amdahl's-law payoff vs. accelerated fraction",
+    "status": "slot",
+    "anchor": "\u00a76.4"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M6-5",
+    "title": "**Accuracy-latency-energy frontier with recall threshold**",
+    "status": "slot",
+    "anchor": "\u00a76.5 (central, EI-04)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M6-6",
+    "title": "Thermal throttling: delivered vs. datasheet performance",
+    "status": "slot",
+    "anchor": "\u00a76.6"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M6-7",
+    "title": "SIL->HIL rig (twin drives real edge device)",
+    "status": "slot",
+    "anchor": "\u00a76.8"
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M6-1",
+    "title": "",
+    "status": "slot",
+    "desc": "The latency budget filling stage by stage, the dominant stage shrinking under optimization, and the total crossing under the budget line."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M6-2",
+    "title": "",
+    "status": "slot",
+    "desc": "A device heating under load, clocks dropping, and the latency budget being breached, then margin/degradation saving it."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M6-3",
+    "title": "",
+    "status": "slot",
+    "desc": "The no-cloud audit: data paths lighting up, one attempting to cross the boundary and being blocked."
+   }
+  ],
+  "inlineFigures": [
+   {
+    "id": "F-M6-3",
+    "title": "The roofline model (compute- vs memory-bound)",
+    "desc": "Attainable performance is the lower of the memory-bandwidth slope and the peak-compute ceiling, meeting at the ridge point. Kernels left of the ridge are memory-bound (a faster core does nothing), right of it compute-bound; the two need different fixes. Section 6.4.",
+    "section": "6",
+    "fragment": "F-M6-3-roofline.svg"
+   },
+   {
+    "id": "F-M6-4",
+    "title": "Amdahl's law: speedup vs accelerated fraction",
+    "desc": "Overall speedup = 1/((1-p)+p/s) saturates at 1/(1-p): accelerating a small fraction p caps the gain, so a 20%-of-time stage yields at most 1.25x even at infinite speed. The bottleneck governs, EI-05 (attack the dominant term) in the time domain. Section 6.4.",
+    "section": "6",
+    "fragment": "F-M6-4-amdahl.svg"
+   },
+   {
+    "id": "F-M6-1",
+    "title": "The no-cloud boundary: runtime vs development",
+    "desc": "Every capability is partitioned into a runtime side that closes entirely on-robot with no network dependency (detection, localization, decision, grasp control, safety) and a development side done off-robot (training, synthetic data, calibration, analysis, compilation, OTA updates) delivered as artifacts. The rule: no runtime path may depend on an off-robot resource. A design tool (CEC-04). Section 6.2.",
+    "section": "6",
+    "fragment": "F-M6-1-no-cloud-partition.svg"
+   },
+   {
+    "id": "F-M6-5",
+    "title": "Accuracy-latency-energy frontier",
+    "desc": "Model-optimization techniques (quantization, pruning, distillation, fusion/compilation, accelerator mapping) trace a Pareto frontier trading accuracy for speed/energy. The feasible region is bounded by the latency budget (CEC-01) and the recall threshold that protects yield; the operating point is chosen from consequence (EI-04). Accuracy over latency is worthless, accuracy below the yield threshold is worthless, and the optimum lives between. Sections 6.5 and 7.4.",
+    "section": "6",
+    "fragment": "F-M6-5-accuracy-latency-frontier.svg"
+   },
+   {
+    "id": "F-M6-7",
+    "title": "Software- to hardware-in-the-loop (SIL -> HIL)",
+    "desc": "The digital twin generates sensor streams and scenes that drive the real edge device running the deployed stack, measuring true latency, power, and thermal behavior against the budgets. This is the last validation before field hardware and the honest test that catches worked-on-my-laptop; datasheet is not delivered performance (EI-06). Section 6.8.",
+    "section": "6",
+    "fragment": "F-M6-7-sil-hil-rig.svg"
+   },
+   {
+    "id": "F-M6-2",
+    "title": "Compute latency budget within the cycle time",
+    "desc": "T_compute = t_detect + t_localize + t_decide + t_control must fit within the cycle-time compute share (CEC-01), populated with measured per-stage latency (EI-06). The dominant stage (detection) is attacked first (EI-05); levers if it won't close are optimize the dominant stage, faster accelerator, reduce resolution/rate (EI-04), or grow the budget. On a moving rover the latency becomes the sync term in the placement budget. Sections 7.1 and 6.3.",
+    "section": "7",
+    "fragment": "F-M6-2-latency-budget.svg"
+   }
+  ]
+ },
+ "07": {
+  "label": "SIM2FIELD, Autonomous Watermelon Harvesting Robotics",
+  "anchor7": {
+   "widget": null,
+   "figure": null
+  },
+  "media": [
+   {
+    "kind": "widget",
+    "id": "W-M7-1",
+    "title": "Decision-Gate Explorer",
+    "status": "slot",
+    "desc": "Sliders for covariance and ripeness-confidence thresholds; a field of candidate fruit is admitted/deferred and sequenced by value (\u00a76.2/\u00a77.1); shows yield vs. risk as thresholds move. *Goal:* uncertainty-aware decisions (CEC-03/EI-04)."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M7-2",
+    "title": "Reward & Reward-Hacking Sandbox",
+    "status": "slot",
+    "desc": "Edit reward weights; watch a schematic policy either grasp safely or \"hack\" a proxy (grip too hard), illustrating \u00a76.3. *Goal:* reward-design judgment."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M7-3",
+    "title": "Domain-Randomization / Reality-Gap Visualizer",
+    "status": "slot",
+    "desc": "Widen/narrow $p(\\xi)$ and see sim vs. real performance and the gap (\u00a77.3, CEC-05). *Goal:* the robustness-optimality tradeoff."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M7-4",
+    "title": "Propose-then-Bound Demonstrator",
+    "status": "slot",
+    "desc": "A policy proposal shown being clipped to the safe set (window \u2229 reach) or replaced by fallback (\u00a77.4, EI-07). *Goal:* the bounding architecture made visible."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M7-1",
+    "title": "",
+    "status": "slot",
+    "desc": "Decide-stage architecture: behavior node -> grasp-policy node -> verified bounding layer -> actuators, with the safety monitor outside (annotated; shows the EI-07 trust boundary)."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M7-2",
+    "title": "",
+    "status": "slot",
+    "desc": "Grasp action parameters on a fruit: approach vector, contact placement, force/compliance targets, overlaid with the Grip-Force Window bound."
+   },
+   {
+    "kind": "figure",
+    "id": "F-M7-1",
+    "title": "Two decision layers (task FSM vs. grasp policy)",
+    "status": "slot",
+    "anchor": "\u00a76.1"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M7-2",
+    "title": "Mission FSM with uncertainty/ripeness gating",
+    "status": "slot",
+    "anchor": "\u00a76.2"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M7-3",
+    "title": "The grasp MDP (state/action/reward/policy)",
+    "status": "slot",
+    "anchor": "\u00a76.3"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M7-4",
+    "title": "Sim-to-real pipeline (train->randomize->transfer->validate)",
+    "status": "slot",
+    "anchor": "\u00a76.4 (CEC-05)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M7-5",
+    "title": "**Propose-then-bound: action projected onto the safe set / fallback**",
+    "status": "slot",
+    "anchor": "\u00a76.5/\u00a77.4 (central, EI-07)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M7-6",
+    "title": "Domain randomization & the reality gap",
+    "status": "slot",
+    "anchor": "\u00a77.3"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M7-7",
+    "title": "Value-based pick sequencing",
+    "status": "slot",
+    "anchor": "\u00a77.1"
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M7-1",
+    "title": "",
+    "status": "slot",
+    "desc": "A policy proposal being clipped to the Grip-Force Window / reach set, then a rejected proposal triggering the deterministic fallback, EI-07 in motion."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M7-2",
+    "title": "",
+    "status": "slot",
+    "desc": "Domain randomization: the same grasp across randomized physics, then transferring to a \"real\" scene; the reality gap shrinking as $p(\\xi)$ widens."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M7-3",
+    "title": "",
+    "status": "slot",
+    "desc": "The mission FSM gating an uncertain fruit and sequencing the rest by value."
+   }
+  ],
+  "inlineFigures": [
+   {
+    "id": "F-M7-2",
+    "title": "Mission FSM with uncertainty/ripeness gating",
+    "desc": "The mission FSM sequences DRIVE, STAGE, ALIGN, GRAB, LIFT, SWING, LOWER, RELEASE, and before grabbing a gate uses M4 ripeness confidence and M5 pose covariance to decide whether to attempt: low-confidence or high-covariance targets are deferred or skipped, safe ones proceed, release loops to the next candidate. The task layer is discrete, auditable logic kept separate from the learned grasp policy. Section 6.2.",
+    "section": "6",
+    "fragment": "F-M7-2-mission-fsm.svg"
+   },
+   {
+    "id": "F-M7-5",
+    "title": "Propose-then-bound: projection onto the safe set",
+    "desc": "The learned policy emits a proposal, projected onto the safe set (window, reach, keep-out, gates) or replaced by a deterministic fallback. The bounding layer is verifiable, so the system is verifiable though the policy is not; worst case is bounded by S. EI-07, Sections 6.5 and 7.4.",
+    "section": "6",
+    "fragment": "F-M7-5-propose-then-bound.svg"
+   },
+   {
+    "id": "F-M7-1",
+    "title": "Two decision layers",
+    "desc": "The Decide stage has a discrete, auditable task layer (the mission FSM: which fruit, what order, whether to attempt) above a continuous, possibly learned action layer (the grasp policy: how to grasp). They are separated by rate and verifiability so the sequencing logic can be verified independently of the opaque grasp policy. Section 6.1.",
+    "section": "6",
+    "fragment": "F-M7-1-two-decision-layers.svg"
+   },
+   {
+    "id": "F-M7-3",
+    "title": "The grasp as a Markov decision process",
+    "desc": "Grasping is an MDP: a state (fruit pose+covariance, mask, ripeness, gripper) feeds a policy pi that chooses an action (approach, contact, force/compliance); the environment returns a reward R that adds success inside the Grip-Force Window (CEC-02) and subtracts slip, bruise, and miss, and the policy maximizes the discounted return. The reward is tied to the physical window, not a proxy, so it cannot be reward-hacked. Sections 6.3 and 7.2.",
+    "section": "6",
+    "fragment": "F-M7-3-grasp-mdp.svg"
+   },
+   {
+    "id": "F-M7-4",
+    "title": "The sim-to-real pipeline",
+    "desc": "Train the grasp policy in the digital twin (imitation learning bootstraps, RL refines), randomize across a distribution p(xi) of contact, fruit, sensor, and lighting parameters so it is robust, transfer to the machine, and validate against real data. The objective maximizes expected return over p(xi). The reality gap is measured by validating real vs sim and closed by widening p(xi); never trust a policy that has only seen the simulator (CEC-05). Sections 6.4 and 7.3.",
+    "section": "6",
+    "fragment": "F-M7-4-sim-to-real-pipeline.svg"
+   },
+   {
+    "id": "F-M7-7",
+    "title": "Value-based pick sequencing",
+    "desc": "Each admitted fruit is assigned a value V_i = w_r r_i (1 - u_i) / c_i with ripeness r_i, normalized uncertainty u_i (from covariance, CEC-03), and cycle cost c_i, then sequenced by descending V_i subject to reachability and the cycle-time budget (CEC-01): riper, more certain, cheaper-to-reach fruit go first. Uncertainty- and value-aware ordering, bounded in decision time. Section 7.1.",
+    "section": "7",
+    "fragment": "F-M7-7-pick-sequencing.svg"
+   }
+  ]
+ },
+ "08": {
+  "label": "SIM2FIELD, Autonomous Watermelon Harvesting Robotics",
+  "anchor7": {
+   "widget": null,
+   "figure": null
+  },
+  "media": [
+   {
+    "kind": "widget",
+    "id": "W-M8-1",
+    "title": "Workspace / Track-Width Explorer",
+    "status": "slot",
+    "desc": "Sliders for track width and actuator stroke; live reachable-region overlay on the bed width, flagging coverage gaps (\u00a77.2, resolves TS-1). *Goal:* feel the reach/track coupling."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M8-2",
+    "title": "Singularity Map",
+    "status": "slot",
+    "desc": "\u03bc and \u03b3 shaded across the workspace with the keep-out band and the pick region overlaid; drag the target to see the transmission angle change. *Goal:* \u00a76.5/\u00a77.4."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M8-3",
+    "title": "IK Solver Visualizer",
+    "status": "slot",
+    "desc": "Click a target; show the two actuator lengths and the two-circle FK branches; flag out-of-reach. *Goal:* \u00a77.1."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M8-4",
+    "title": "\u03c3_mech Budget & Stiffness",
+    "status": "slot",
+    "desc": "Sliders for repeatability, backlash, and stiffness/payload; live \u03c3_mech vs. the M5 allocation with the dominant term highlighted (EI-05). *Goal:* CEC-03 applied."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M8-1",
+    "title": "",
+    "status": "slot",
+    "desc": "The rail-mounted parallel manipulator: rail, base anchors $B_1,B_2$, actuators $L_1,L_2$, gripper point G at the pick station (annotated)."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M8-2",
+    "title": "",
+    "status": "slot",
+    "desc": "Workspace envelope overlaid on the bed cross-section, showing the track-width coupling and coverage margin."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M8-3",
+    "title": "",
+    "status": "slot",
+    "desc": "Transmission angle \u03b3 and the singular configurations at the workspace edges."
+   },
+   {
+    "kind": "figure",
+    "id": "F-M8-1",
+    "title": "Parallel mechanism geometry ($B_i$, $L_i$, G)",
+    "status": "slot",
+    "anchor": "\u00a76.2"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M8-2",
+    "title": "FK as two-circle intersection (two branches)",
+    "status": "slot",
+    "anchor": "\u00a77.1"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M8-3",
+    "title": "**Workspace vs. track width (coverage of the bed)**",
+    "status": "slot",
+    "anchor": "\u00a77.2 (central, resolves TS-1)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M8-4",
+    "title": "Jacobian: velocity/force transmission",
+    "status": "slot",
+    "anchor": "\u00a76.4/\u00a77.3"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M8-5",
+    "title": "Singularity map (\u03bc, \u03b3) with keep-out and pick region",
+    "status": "slot",
+    "anchor": "\u00a76.5/\u00a77.4"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M8-6",
+    "title": "\u03c3_mech decomposition & stiffness-under-load",
+    "status": "slot",
+    "anchor": "\u00a77.5 (CEC-03)"
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M8-1",
+    "title": "",
+    "status": "slot",
+    "desc": "The gripper sweeping the workspace, the reachable region filling in, and track width widening/narrowing it, the TS-1 coupling in motion."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M8-2",
+    "title": "",
+    "status": "slot",
+    "desc": "The arm approaching a singularity: \u03b3 shrinking, joint speed spiking, and the keep-out halting it."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M8-3",
+    "title": "",
+    "status": "slot",
+    "desc": "The payload deflecting the structure, moving the true gripper pose off the commanded one, then stiffness restoring it."
+   }
+  ],
+  "inlineFigures": [
+   {
+    "id": "F-M8-1",
+    "title": "The rail-mounted parallel manipulator (geometry)",
+    "desc": "The gripper point G is positioned by two cylinders anchored at B1, B2 on the rail, each of length L_i = ||G - B_i||. Inverse kinematics is this direct distance computation; forward kinematics is the two-circle intersection (two solutions, branch fixed by assembly). The parallel arrangement is stiff and light (tension/compression, not bending). The base-anchor separation is bounded by the rover track width (TS-1). Section 6.2.",
+    "section": "6",
+    "fragment": "F-M8-1-parallel-geometry.svg"
+   },
+   {
+    "id": "F-M8-3",
+    "title": "Workspace extent vs track width",
+    "desc": "The reachable transverse span is the annular intersection of the two actuators' reach (inner/outer stroke circles about the anchors), which must cover W_bed + margin; reach sets a minimum track width while stability and maneuverability (M10) set a maximum, and the design point is the intersection. If the interval is empty the architecture must change (taller stroke, offset station, second actuator pair). Resolves the TS-1 coupling. Sections 6.3 and 7.2.",
+    "section": "6",
+    "fragment": "F-M8-3-workspace-track-width.svg"
+   },
+   {
+    "id": "F-M8-2",
+    "title": "Forward kinematics as a two-circle intersection",
+    "desc": "The rail-mounted parallel mechanism: given the two actuator lengths, the gripper point G is an intersection of two circles centred on the rail anchors. Two solutions exist (mirror across the rail); the assembly fixes the branch. IK is direct (L_i = ||G - B_i||). Sections 6.2 and 7.1.",
+    "section": "7",
+    "fragment": "F-M8-2-fk-two-circle.svg"
+   },
+   {
+    "id": "F-M8-4",
+    "title": "The Jacobian: velocity and force transmission",
+    "desc": "Velocity maps joint to task (x_dot = J q_dot) and force maps task to joint by the transpose (tau = J^T F). The manipulability ellipse (J mapping the unit joint-velocity circle) is round in a well-conditioned pose and flattens near a singularity, where velocity collapses along one axis (lost DOF) and force there blows up (det J -> 0). Sections 6.4 and 7.3.",
+    "section": "7",
+    "fragment": "F-M8-4-jacobian-transmission.svg"
+   },
+   {
+    "id": "F-M8-6",
+    "title": "sigma_mech decomposition and stiffness under load",
+    "desc": "The mechanism's placement error sigma_mech = sqrt(sigma_rep^2 + sigma_bl^2 + sigma_defl^2) (repeatability, backlash, deflection-under-load), combined in quadrature and tested against the M5 allocation (CEC-03); the dominant term is attacked (EI-05). Deflection sigma_defl = F_load/k_eff gives the required stiffness k_eff >= F_load/delta_allowed for the 5 to 10 kg payload plus swing. The Jacobian scales joint error into task error, worst near singularities (gamma keep-out). Sections 6.6 and 7.5.",
+    "section": "7",
+    "fragment": "F-M8-6-sigma-mech.svg"
+   },
+   {
+    "id": "F-M8-5",
+    "title": "Singularity keep-out: manipulability vs transmission angle",
+    "desc": "Singularity is det J = 0 (det J proportional to sin gamma), so manipulability mu = sqrt(det(JJ^T)) falls to zero as the transmission angle gamma approaches 0 or 180 degrees. The design keeps the operating region in a safe band where mu >= mu_min and gamma in [gamma_min, gamma_max]. Because the arm swings a heavy payload, this keep-out is a safety requirement, not only performance. Sections 6.5 and 7.4.",
+    "section": "7",
+    "fragment": "F-M8-5-singularity-keepout.svg"
+   }
+  ]
+ },
+ "09": {
+  "label": "SIM2FIELD, Autonomous Watermelon Harvesting Robotics",
+  "anchor7": {
+   "widget": null,
+   "figure": null
+  },
+  "media": [
+   {
+    "kind": "widget",
+    "id": "W-M9-1",
+    "title": "Pressure->Force->Window Explorer",
+    "status": "slot",
+    "desc": "Sliders for pressure and piston area; live grip force ($F=PA$) on the Grip-Force Window (CEC-02), with the relief bound shown clipping force at $F_\\text{bruise}$. *Goal:* \u00a76.2/\u00a76.6."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M9-2",
+    "title": "Tunable-Stiffness Demonstrator",
+    "status": "slot",
+    "desc": "Sliders for pressure/volume showing $k_\\text{fluid}\\propto P/V$ and the soft-at-contact / firm-at-placement lever, with the \u03c3_mech budget line (M8). *Goal:* \u00a76.6, resolves M2<->M8."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M9-3",
+    "title": "Force-Control-Under-Latency Sandbox",
+    "status": "slot",
+    "desc": "Sliders for compliance, gain, and edge latency; watch the force loop track or oscillate, illustrating the compliance-bandwidth-latency tradeoff (\u00a77.4). *Goal:* stability intuition (EI-06/EI-09)."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M9-4",
+    "title": "Compliance-Absorbs-Uncertainty Demo",
+    "status": "slot",
+    "desc": "Inject placement offset/latency; compare a rigid vs. compliant gripper outcome (bruise/slip vs. success). *Goal:* EI-09 made visible."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M9-1",
+    "title": "",
+    "status": "slot",
+    "desc": "The fluid grasp subsystem: gripper, fluid actuator(s), proportional valve, pressure sensor, relief valve, supply (annotated schematic)."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M9-2",
+    "title": "",
+    "status": "slot",
+    "desc": "Compliant pad conforming to the rind under regulated pressure (links to M2 contact patch)."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M9-3",
+    "title": "",
+    "status": "slot",
+    "desc": "The two-bound safety design: software clip + mechanical relief on the force path."
+   },
+   {
+    "kind": "figure",
+    "id": "F-M9-1",
+    "title": "Fluid-power grasp schematic (supply->valve->actuator->gripper, relief, sensor)",
+    "status": "slot",
+    "anchor": "\u00a76.1/\u00a76.6"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M9-2",
+    "title": "Pressure->force ($F=PA$) on the Grip-Force Window",
+    "status": "slot",
+    "anchor": "\u00a76.2 (CEC-02)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M9-3",
+    "title": "Tunable fluid stiffness ($k_\\text{fluid}\\propto P/V$): soft<->firm",
+    "status": "slot",
+    "anchor": "\u00a76.6"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M9-4",
+    "title": "Force-control loop (pressure feedback, impedance)",
+    "status": "slot",
+    "anchor": "\u00a76.4"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M9-5",
+    "title": "**Stability vs. compliance & latency (bandwidth limit)**",
+    "status": "slot",
+    "anchor": "\u00a77.4 (central)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M9-6",
+    "title": "Two independent bounds: software clip + mechanical relief",
+    "status": "slot",
+    "anchor": "\u00a76.6/\u00a77.5 (EI-07/EI-09)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M9-7",
+    "title": "Compliance absorbing placement error & latency",
+    "status": "slot",
+    "anchor": "\u00a76.8 (EI-09)"
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M9-1",
+    "title": "",
+    "status": "slot",
+    "desc": "Grip force rising with pressure to an in-window setpoint, then the relief valve clipping an over-command at $F_\\text{bruise}$, the hard bound in action."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M9-2",
+    "title": "",
+    "status": "slot",
+    "desc": "A rigid vs. a compliant gripper meeting an off-center, slightly-late grasp: the rigid one bruises/slips, the compliant one yields and succeeds (EI-09)."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M9-3",
+    "title": "",
+    "status": "slot",
+    "desc": "Stiffness tuning: the same gripper soft at contact, then firming for placement."
+   }
+  ],
+  "inlineFigures": [
+   {
+    "id": "F-M9-1",
+    "title": "Fluid-power grasp schematic",
+    "desc": "Supply feeds a proportional valve driving a cylinder that closes the gripper on the fruit; a pressure sensor feeds the force controller that commands the valve. A mechanical relief valve set at the bruise pressure caps force as a hard physical bound (EI-09): the worst case is bounded by a valve, not a proof about the policy. Sections 6.1 and 6.6.",
+    "section": "6",
+    "fragment": "F-M9-1-fluid-power-grasp-schematic.svg"
+   },
+   {
+    "id": "F-M9-3",
+    "title": "Tunable fluid stiffness (soft to firm)",
+    "desc": "Fluid stiffness k = A^2 beta / V, and for gas beta ~ nP so k is proportional to P/V: stiffness rises with pressure and falls with trapped volume. The grip can be soft (low P, large V) for gentle contact or firm (high P, small V) for placement. In series with the structure the fluid can only soften; the structure sets the floor, and more compliance lowers the force-control bandwidth. Sections 6.2, 6.3, 7.1.",
+    "section": "6",
+    "fragment": "F-M9-3-tunable-stiffness.svg"
+   },
+   {
+    "id": "F-M9-6",
+    "title": "Two independent bounds: software clip + mechanical relief",
+    "desc": "The AI target is clipped in software to the grip-force window (F_exec = clip(F_AI, F_slip, F_bruise), EI-07), and the mechanical relief caps physical force at F_bruise regardless of the command (force <= P_relief x A, EI-09). Two independent bounds, one computed and one physical: if the software clip fails the relief holds, if the relief drifts the clip holds, and only if both fail can force exceed the limit (residual risk -> M15). Sections 6.6 and 7.5.",
+    "section": "6",
+    "fragment": "F-M9-6-two-bounds.svg"
+   },
+   {
+    "id": "F-M9-4",
+    "title": "Closed-loop grasp-force control",
+    "desc": "Grasp force is regulated, not open-loop: a controller compares measured force (M3) to the target and drives a proportional valve. Direct control regulates F to a setpoint (stiff); impedance control renders a spring-damper F = K_d(x_d-x) + B_d(...) so the gripper controls how it interacts. Delay (edge latency, CEC-04) plus fluid compliance invites oscillation, so bandwidth is conservative; the same compliance makes imperfect control gentle (EI-09). Sections 6.4 and 7.3.",
+    "section": "6",
+    "fragment": "F-M9-4-force-control-loop.svg"
+   },
+   {
+    "id": "F-M9-5",
+    "title": "Stability under compliance + latency",
+    "desc": "Control latency erodes phase margin, so the compliant force loop is stable only for crossover bandwidth below a limit (omega_c ~ 1/(k tau_d)) that falls as latency rises: too aggressive oscillates through the fluid, too slow lags the motion. Bandwidth is chosen from the measured edge latency (EI-06). More compliance both lowers achievable bandwidth and raises tolerance to latency-induced force error (EI-09). Section 7.4.",
+    "section": "7",
+    "fragment": "F-M9-5-stability-compliance-latency.svg"
+   },
+   {
+    "id": "F-M9-7",
+    "title": "Compliance absorbs placement error and latency",
+    "desc": "A rigid gripper meeting a misaligned or late grasp spikes the contact force out of the window and bruises; a compliant gripper yields to the misalignment and to latency-induced force error, keeping the force inside [F_slip, F_bruise]. The same compliance that limits control bandwidth makes imperfect control gentle (EI-09). Sections 6.4 and 7.4.",
+    "section": "7",
+    "fragment": "F-M9-7-compliance-absorbs.svg"
+   },
+   {
+    "id": "F-M9-2",
+    "title": "Pressure to force (F = P A) on the window",
+    "desc": "Grip force is gauge pressure times piston area (F = P A), a line whose slope is the area; sizing the actuator area sets how the commandable pressure range maps onto the grip-force window [F_slip, F_bruise] (M2). Size A so the commandable pressure spans the window forces and no more. The fluid can only soften (springs in series); the structure carries the stiffness floor. Section 7.1.",
+    "section": "7",
+    "fragment": "F-M9-2-pressure-force-window.svg"
+   }
+  ]
+ },
+ "10": {
+  "label": "SIM2FIELD, Autonomous Watermelon Harvesting Robotics",
+  "anchor7": {
+   "widget": null,
+   "figure": null
+  },
+  "media": [
+   {
+    "kind": "widget",
+    "id": "W-M10-1",
+    "title": "Drive-Speed / Cycle-Time Coupler",
+    "status": "slot",
+    "desc": "Sliders for fruit spacing, cycle time, and motion strategy; shows max drive speed ($v\\le d/T_\\text{cycle}$), throughput, and whether continuous is feasible (CEC-01). *Goal:* \u00a76.2."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M10-2",
+    "title": "Tip-Over / Stability Explorer",
+    "status": "slot",
+    "desc": "Sliders for track width, CoG height, slope, and arm-swing payload shift; live stability margin and max safe slope (\u00a77.2 to 7.3). *Goal:* whole-machine stability."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M10-3",
+    "title": "Track-Width Interval Resolver",
+    "status": "slot",
+    "desc": "Overlays reach coverage (M8), maneuverability limit, and stability margin vs. track width; highlights the feasible interval and design point (\u00a77.4, SR-I-11). *Goal:* close the tradeoff visually."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M10-4",
+    "title": "Lateral-Nav Budget vs. Workspace",
+    "status": "slot",
+    "desc": "Slider for nav error showing fruit moving toward/past the workspace edge as $\\sigma_\\text{lat}$ grows (\u00a77.4, CEC-03). *Goal:* nav accuracy as a manipulation budget."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M10-1",
+    "title": "",
+    "status": "slot",
+    "desc": "Drive-over straddle geometry: track width, wheelbase, CoG, support polygon, bed underneath (annotated)."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M10-2",
+    "title": "",
+    "status": "slot",
+    "desc": "Tip-over on a side slope with the arm swinging the payload (CoG projection vs. support edge)."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M10-3",
+    "title": "",
+    "status": "slot",
+    "desc": "Row-following / bed-centering: the rover keeping the bed within the arm's workspace."
+   },
+   {
+    "kind": "figure",
+    "id": "F-M10-1",
+    "title": "Drive-over platform and staging to the pick station",
+    "status": "slot",
+    "anchor": "\u00a76.1/\u00a76.2"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M10-2",
+    "title": "Motion strategies (continuous / index / stop-and-pick) vs. cycle time",
+    "status": "slot",
+    "anchor": "\u00a76.2 (CEC-01)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M10-3",
+    "title": "Support polygon & CoG on a slope (tip-over)",
+    "status": "slot",
+    "anchor": "\u00a76.3/\u00a77.2"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M10-4",
+    "title": "Arm-swing CoG shift eroding the stability margin",
+    "status": "slot",
+    "anchor": "\u00a77.3"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M10-5",
+    "title": "**Track-width interval: reach \u2229 maneuverability \u2229 stability**",
+    "status": "slot",
+    "anchor": "\u00a77.4 (central, SR-I-11)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M10-6",
+    "title": "Lateral nav budget vs. workspace half-width",
+    "status": "slot",
+    "anchor": "\u00a77.4 (CEC-03)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M10-7",
+    "title": "Operating envelope (slope/terrain/light) with design-at-edges",
+    "status": "slot",
+    "anchor": "\u00a76.6 (EI-10)"
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M10-1",
+    "title": "",
+    "status": "slot",
+    "desc": "The rover driving and staging fruit to the station at a speed set by the cycle-time budget; speeding up until fruit are missed."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M10-2",
+    "title": "",
+    "status": "slot",
+    "desc": "The machine on an increasing side slope with the arm swinging the payload; the CoG projection creeping to the support edge and the guard limiting the slope/swing."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M10-3",
+    "title": "",
+    "status": "slot",
+    "desc": "Track width widening/narrowing: reach coverage improving, maneuverability worsening, stability changing, the feasible interval emerging."
+   }
+  ],
+  "inlineFigures": [
+   {
+    "id": "F-M10-2",
+    "title": "Motion strategies vs cycle time",
+    "desc": "Over the same duration, stop-and-pick completes the fewest fruit but is most stable, index is a middle ground, and continuous drive-over completes the most but demands the arm track the motion and stresses the cycle-time budget hardest. Continuous is feasible only if T_cycle <= d/v (CEC-01); the single-arm cycle makes this tight, so many designs index or stop-and-pick. Drive speed is set by the pick cycle, not the terrain. Section 6.2.",
+    "section": "6",
+    "fragment": "F-M10-2-motion-strategies.svg"
+   },
+   {
+    "id": "F-M10-3",
+    "title": "Support polygon and CoG on a side slope",
+    "desc": "The machine stays upright while the CoG projects inside the support polygon (wheel footprint); tip-over impends as the projection reaches the downhill edge. tan(theta_tip) = (w/2)/h; margin(theta) = (w/2)cos(theta) - h sin(theta). A laterally swung payload shifts the CoG by Delta, so the worst case is margin(theta) - Delta: stability is a whole-machine property. Sections 6.3, 7.2, 7.3.",
+    "section": "6",
+    "fragment": "F-M10-3-support-polygon-slope.svg"
+   },
+   {
+    "id": "F-M10-7",
+    "title": "The operating envelope: design at the edges",
+    "desc": "The operating envelope defines the ranges of slope, terrain roughness, crop density, light, and dust within which the machine must work; the discipline is to design and validate at the edges (steepest slope with payload, roughest terrain, tightest headland, worst light and dust). The envelope is the real specification; the average condition is not (EI-10). Section 6.6.",
+    "section": "6",
+    "fragment": "F-M10-7-operating-envelope.svg"
+   },
+   {
+    "id": "F-M10-5",
+    "title": "Track-width feasible interval (closes SR-I-11)",
+    "desc": "Track width must be at least the reach bound (M8, arm crosses the bed) and at most the maneuverability bound (fit rows, turn, transport); the feasible interval lies between, with stability favoring the wider end given a low CoG. An empty interval (reach > maneuver) forces an architecture change. Wide enough to reach, narrow enough to maneuver, low enough to stay upright. Sections 6.4 and 7.4.",
+    "section": "7",
+    "fragment": "F-M10-5-track-width-interval.svg"
+   },
+   {
+    "id": "F-M10-4",
+    "title": "Arm-swing CoG shift erodes stability margin",
+    "desc": "Swinging the payload shifts the CoG laterally by Delta = m_fruit r_swing / m_total; on a side slope the worst case is the swing toward the downhill edge, subtracting from the slope margin (w/2)cos(theta) - h sin(theta). Require margin(theta_max) - Delta_max >= safety margin. This couples arm motion (M8/M9) to base design and may constrain the swing trajectory or max working slope. Section 7.3.",
+    "section": "7",
+    "fragment": "F-M10-4-arm-swing-cog.svg"
+   }
+  ]
+ },
+ "11": {
+  "label": "SIM2FIELD, Autonomous Watermelon Harvesting Robotics",
+  "anchor7": {
+   "widget": null,
+   "figure": null
+  },
+  "media": [
+   {
+    "kind": "widget",
+    "id": "W-M11-1",
+    "title": "Node-Graph Explorer",
+    "status": "slot",
+    "desc": "Interactive graph of nodes/topics with message types and QoS; hover a link to see its timing contract; toggle control vs. perception plane coloring. *Goal:* \u00a76.1 to 6.3."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M11-2",
+    "title": "Plane-Separation / Load Simulator",
+    "status": "slot",
+    "desc": "Slider for perception load; watch the control-loop latency stay flat (separated) vs. spike (shared), the priority-inversion failure and its fix (\u00a76.3 to 6.4). *Goal:* isolation intuition."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M11-3",
+    "title": "Worst-Case Latency Budget",
+    "status": "slot",
+    "desc": "Stacked $C_i+S_i+D_i$ along a control loop vs. the deadline; adjust node times to see the worst case breach or meet (\u00a77.1). *Goal:* worst-case (not average) thinking."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M11-4",
+    "title": "Safety-Monitor Fault Injector",
+    "status": "slot",
+    "desc": "Buttons to kill a node / stall a loop / command out-of-bounds; watch the monitor drive the machine to a safe state within the reaction time, and show what fails if the monitor is *not* independent (\u00a76.6, EI-11). *Goal:* the independence principle made visible."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M11-1",
+    "title": "",
+    "status": "slot",
+    "desc": "System software architecture: node graph with control plane / perception plane separation and the independent safety monitor + hardware safety controller (annotated)."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M11-2",
+    "title": "",
+    "status": "slot",
+    "desc": "The guard-arbitration stack: mission -> motion -> safety precedence, with each module's guard feeding in."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M11-3",
+    "title": "",
+    "status": "slot",
+    "desc": "Timing diagram of a grasp cycle across nodes (worst-case latency along the loop)."
+   },
+   {
+    "kind": "figure",
+    "id": "F-M11-1",
+    "title": "The machine as a ROS 2 node/topic graph (fixed interfaces)",
+    "status": "slot",
+    "anchor": "\u00a76.1"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M11-2",
+    "title": "Control plane vs. perception plane separation",
+    "status": "slot",
+    "anchor": "\u00a76.3"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M11-3",
+    "title": "Worst-case latency along a control loop vs. deadline",
+    "status": "slot",
+    "anchor": "\u00a76.4/\u00a77.1"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M11-4",
+    "title": "Time synchronization and message age (\u03c3_sync)",
+    "status": "slot",
+    "anchor": "\u00a76.5 (CEC-03)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M11-5",
+    "title": "**Independent safety monitor + guard arbitration (defense in depth)**",
+    "status": "slot",
+    "anchor": "\u00a76.6/\u00a76.7 (central, EI-11)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M11-6",
+    "title": "Fail-safe/fail-operational state machine",
+    "status": "slot",
+    "anchor": "\u00a76.8"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M11-7",
+    "title": "Safety reaction time vs. time-to-harm",
+    "status": "slot",
+    "anchor": "\u00a77.4"
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M11-1",
+    "title": "",
+    "status": "slot",
+    "desc": "Perception load spiking while the control-plane loop stays flat (separated) then, in a \"shared\" counterfactual, the loop stalling and a fruit bruising, plane separation in action."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M11-2",
+    "title": "",
+    "status": "slot",
+    "desc": "A fault injected (node killed / out-of-bounds command) and the independent safety monitor driving the machine to a safe stop within the reaction time; then the same fault with a *non-independent* monitor failing to act (EI-11)."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M11-3",
+    "title": "",
+    "status": "slot",
+    "desc": "A grasp cycle traversing the node graph with the worst-case latency accumulating and staying under the deadline."
+   }
+  ],
+  "inlineFigures": [
+   {
+    "id": "F-M11-1",
+    "title": "The machine as a ROS 2 node and topic graph",
+    "desc": "A best-effort perception plane (M4/M5) feeds a real-time control plane (M7/M8/M9/M10) over the fixed message interfaces prior modules set (pose-with-covariance, bounded grasp proposal). An independent safety monitor subscribes across both planes and can override the actuators (EI-11, defense in depth). Plane separation (DD-33) keeps a slow network from delaying the force loop. Sections 6.1 and 6.3.",
+    "section": "6",
+    "fragment": "F-M11-1-ros2-node-graph.svg"
+   },
+   {
+    "id": "F-M11-3",
+    "title": "Worst-case loop latency vs deadline",
+    "desc": "Loop latency L_wc = sum over nodes of (execution C + scheduling S + comms D) must fit under the deadline; the worst case, not the average, is the guarantee, since the rare long cycle bruises or misses. Scheduling (priority, core pinning, no priority inversion) keeps the worst case bounded; the deadline derives from CEC-01 and M9 stability-under-latency. Sections 6.4 and 7.1.",
+    "section": "6",
+    "fragment": "F-M11-3-latency-deadline.svg"
+   },
+   {
+    "id": "F-M11-4",
+    "title": "Time synchronization and message age",
+    "desc": "On a moving rover a timing error is a position error (= v x message age), feeding the sync term of the placement budget (CEC-03). A shared clock makes a fused pose refer to one instant; a QoS deadline bounds message age so no stale message is used. Bound period jitter and end-to-end age so 3 sigma_sync stays within its placement allocation; jitter also threatens control stability (M9). Sections 6.5 and 7.2.",
+    "section": "6",
+    "fragment": "F-M11-4-time-sync.svg"
+   },
+   {
+    "id": "F-M11-5",
+    "title": "The independent safety monitor",
+    "desc": "An independent node watches the guards the prior modules produce (grip force vs window M9, manipulability/gamma M8, stability M10, heartbeats) and can command a safe stop, release, or bounded halt regardless of what any node commands, because it has its own inputs, its own simple verified logic, and its own execution context. Independence turns a pile of guards into a safety function (EI-11); physical bounds act even faster. Section 6.6.",
+    "section": "6",
+    "fragment": "F-M11-5-safety-monitor.svg"
+   },
+   {
+    "id": "F-M11-6",
+    "title": "Fail-safe / fail-operational state machine",
+    "desc": "From normal operation a recoverable fault degrades to reduced operation (fail-operational) while an unrecoverable fault or a safety-monitor command forces a safe stop (fail-safe). The safe state is reachable from every state, and the reaction must beat harm: L_detect + L_react <= T_harm; physical bounds buy margin. Sections 6.6 and 7.4.",
+    "section": "6",
+    "fragment": "F-M11-6-failsafe-fsm.svg"
+   },
+   {
+    "id": "F-M11-2",
+    "title": "Control plane vs perception plane",
+    "desc": "The architecture separates a real-time control plane (grasp-force loop M9, drive/stability M10, motion M8, safety monitor) with bounded worst-case latency from a best-effort perception plane (detection M4, localization M5) that tolerates jitter, isolated so a neural network occasionally taking longer cannot delay the force loop. Engineered via executor/thread assignment, priorities, affinity, RTOS. Section 6.3.",
+    "section": "6",
+    "fragment": "F-M11-2-plane-separation.svg"
+   }
+  ]
+ },
+ "12": {
+  "label": "SIM2FIELD, Autonomous Watermelon Harvesting Robotics",
+  "anchor7": {
+   "widget": null,
+   "figure": null
+  },
+  "media": [
+   {
+    "kind": "widget",
+    "id": "W-M12-1",
+    "title": "Power Budget Builder",
+    "status": "slot",
+    "desc": "Sliders for each subsystem's draw and duty cycle; live average and coincident-peak power, endurance, and the dominant-load bar (EI-05). *Goal:* \u00a76.2/\u00a76.4."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M12-2",
+    "title": "Battery Sizing & Derating",
+    "status": "slot",
+    "desc": "Sliders for capacity, DoD, temperature, and C-rate/sag; live usable energy, endurance, and coverage (\u00a76.3). *Goal:* realistic sizing."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M12-3",
+    "title": "Thermal Envelope Explorer",
+    "status": "slot",
+    "desc": "Sliders for ambient, solar load, dust (\u2191$R_\\text{thermal}$), and dissipation; live component temperature vs. limit and throttle point (\u00a76.5/\u00a77.4, EI-10). *Goal:* thermal-margin intuition."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M12-4",
+    "title": "Dominant-Load Sensitivity",
+    "status": "slot",
+    "desc": "Improve one load's efficiency and watch endurance move most for the dominant one (\u00a77.3, EI-05). *Goal:* direct effort where energy is."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M12-1",
+    "title": "",
+    "status": "slot",
+    "desc": "Power distribution architecture: battery -> main bus -> clean/noisy rails -> subsystems, with protection and sequencing (annotated)."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M12-2",
+    "title": "",
+    "status": "slot",
+    "desc": "Thermal path: heat sources (GPU, drives, pump), sealed enclosure + heat exchanger, solar load, dust on airflow."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M12-3",
+    "title": "",
+    "status": "slot",
+    "desc": "Power budget stacked bar (per-subsystem draw) with the dominant load highlighted."
+   },
+   {
+    "kind": "figure",
+    "id": "F-M12-1",
+    "title": "Machine power budget (per-subsystem, average & coincident peak)",
+    "status": "slot",
+    "anchor": "\u00a76.2"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M12-2",
+    "title": "Battery sizing with DoD/temp/sag derating",
+    "status": "slot",
+    "anchor": "\u00a76.3/\u00a77.2"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M12-3",
+    "title": "**Dominant-load analysis (where efficiency pays)**",
+    "status": "slot",
+    "anchor": "\u00a76.4/\u00a77.3 (EI-05)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M12-4",
+    "title": "Thermal balance vs. ambient + solar + dust (throttle point)",
+    "status": "slot",
+    "anchor": "\u00a76.5/\u00a77.4 (EI-10)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M12-5",
+    "title": "Power distribution: clean/noisy rails, protection, sequencing",
+    "status": "slot",
+    "anchor": "\u00a76.6"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M12-6",
+    "title": "Endurance/coverage vs. temperature",
+    "status": "slot",
+    "anchor": "\u00a77.2 (->M16)"
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M12-1",
+    "title": "",
+    "status": "slot",
+    "desc": "Subsystem draws stacking into the coincident peak as drive climbs a slope while the pump cycles and inference bursts, the brownout risk."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M12-2",
+    "title": "",
+    "status": "slot",
+    "desc": "Component temperature rising as ambient + solar climb and dust clogs airflow, reaching the throttle point and the cycle-time budget breaking (EI-10)."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M12-3",
+    "title": "",
+    "status": "slot",
+    "desc": "Improving the dominant load's efficiency vs. a minor one, and the endurance bar moving far more for the former (EI-05)."
+   }
+  ],
+  "inlineFigures": [
+   {
+    "id": "F-M12-1",
+    "title": "Machine power budget (average and coincident peak)",
+    "desc": "Per-subsystem average (draw x duty) and peak draw, plus the coincident peak formed when drive-on-slope, a pump cycle, and an inference burst spike together. Average sets battery energy and endurance; the coincident peak sets the bus and discharge rate; both must stay under the delivery capacity. The power analogue of the placement RSS. Values illustrative. Section 6.2.",
+    "section": "6",
+    "fragment": "F-M12-1-power-budget.svg"
+   },
+   {
+    "id": "F-M12-2",
+    "title": "Battery sizing with DoD/temp/sag derating",
+    "desc": "The usable energy the shift requires (E_req = P_bar x t_shift) is inflated to the installed capacity by dividing through the depth-of-discharge limit, the temperature derate, and voltage sag, plus a design margin: E_install = E_req/(DoD x f_temp x f_sag). Each factor < 1 grows what must be built; cold reduces capacity and heat reduces life. Endurance and coverage (M10/M16) follow; the Amiga platform battery bounds availability. Section 6.3.",
+    "section": "6",
+    "fragment": "F-M12-2-battery-sizing.svg"
+   },
+   {
+    "id": "F-M12-5",
+    "title": "Power distribution: clean/noisy rails, protection, sequencing",
+    "desc": "The battery feeds a protected main bus that splits into clean regulated rails (compute, sensors, logic, safety monitor) isolated from noisy high-current rails (actuation, drive). Protection guards the bus; sequencing brings the safety monitor up first and enables actuators last. The electrical realization of the M11 integration. Section 6.6.",
+    "section": "6",
+    "fragment": "F-M12-5-power-distribution.svg"
+   },
+   {
+    "id": "F-M12-4",
+    "title": "Thermal balance and the throttle point",
+    "desc": "T_comp = T_ambient + (Q_gen + Q_solar) R_thermal must stay <= T_limit at the worst-case ambient with degraded R_thermal (dust) and added Q_solar. A cooling design validated on a cool clean bench can exceed the limit at the field edge and be forced to throttle the compute (a CEC-01 risk). The thermal envelope is the real spec (EI-10); dust and solar are its harshest terms. Sections 6.5 and 7.4.",
+    "section": "6",
+    "fragment": "F-M12-4-thermal-balance.svg"
+   },
+   {
+    "id": "F-M12-3",
+    "title": "Dominant-load analysis",
+    "desc": "Endurance is moved by attacking whichever load dominates average energy (drive, fluid-power pump, or edge compute), which must be computed for the specific machine, not assumed. The ranking redirects effort to the matched lever: drive -> lighter/slower/regen; fluid -> reduce pressure-maintenance duty (accumulators, sealing, lower pressure, M9); compute -> edge efficiency (M6). EI-05 in the power domain. Section 6.4.",
+    "section": "6",
+    "fragment": "F-M12-3-dominant-load.svg"
+   }
+  ]
+ },
+ "13": {
+  "label": "SIM2FIELD, Autonomous Watermelon Harvesting Robotics",
+  "anchor7": {
+   "widget": null,
+   "figure": null
+  },
+  "media": [
+   {
+    "kind": "widget",
+    "id": "W-M13-1",
+    "title": "Integration Assembler",
+    "status": "slot",
+    "desc": "Add subsystems one at a time to a machine diagram; each addition runs an interface check and surfaces any emergent metric change, incremental integration made tangible (EI-13). *Goal:* \u00a76.1 to 6.2."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M13-2",
+    "title": "Fidelity-Ladder Explorer",
+    "status": "slot",
+    "desc": "Pick a decision (reach / stability / grasp-bruise); a slider climbs the fidelity rungs and shows where the decision stabilizes and where it flips, the fidelity-sensitivity idea (CEC-06). *Goal:* \u00a76.4/\u00a77.1."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M13-3",
+    "title": "Composed-Budget Dashboard",
+    "status": "slot",
+    "desc": "Toggle subsystems on/off and watch the composed placement 3\u03c3, end-to-end cycle time, and power/thermal move against their limits, budgets holding or emergently breaking (\u00a76.5). *Goal:* system-level budgeting."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M13-4",
+    "title": "Reality-Gap / Validation Gate",
+    "status": "slot",
+    "desc": "For each rung, compare twin prediction vs. (mock) real data against the acceptance tolerance; show CR-03's contact rung passing only after validation (CEC-06). *Goal:* earn the trust."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M13-1",
+    "title": "",
+    "status": "slot",
+    "desc": "The integrated machine: all subsystems on the platform with interfaces annotated (the assembled Signal-to-Action Spine)."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M13-2",
+    "title": "",
+    "status": "slot",
+    "desc": "The fidelity ladder as a diagram: rungs from kinematic to field, each with its decision class and validation gate."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M13-3",
+    "title": "",
+    "status": "slot",
+    "desc": "The digital-twin <-> real-machine correspondence with per-rung reality gaps."
+   },
+   {
+    "kind": "figure",
+    "id": "F-M13-1",
+    "title": "The integrated machine (all subsystems, interfaces)",
+    "status": "slot",
+    "anchor": "\u00a76.1"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M13-2",
+    "title": "Incremental vs. big-bang integration (surprise localization)",
+    "status": "slot",
+    "anchor": "\u00a76.1/\u00a77.3 (EI-13)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M13-3",
+    "title": "**The Simulation-First Fidelity Ladder (rungs, decisions, validation gates)**",
+    "status": "slot",
+    "anchor": "\u00a76.4 (central, CEC-06)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M13-4",
+    "title": "Fidelity-decision sensitivity (where a decision stabilizes)",
+    "status": "slot",
+    "anchor": "\u00a77.1"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M13-5",
+    "title": "Composed system budgets (placement, cycle-time, power) vs. limits",
+    "status": "slot",
+    "anchor": "\u00a76.5/\u00a77.2"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M13-6",
+    "title": "Twin<->real correspondence & per-rung reality gap (CR-03 closed)",
+    "status": "slot",
+    "anchor": "\u00a76.7"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M13-7",
+    "title": "Emergent coupling map (resource/timing/dynamic)",
+    "status": "slot",
+    "anchor": "\u00a76.6"
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M13-1",
+    "title": "",
+    "status": "slot",
+    "desc": "Subsystems added one at a time; on a certain addition an emergent overrun appears and is localized to that interface, incremental integration catching the surprise (EI-13)."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M13-2",
+    "title": "",
+    "status": "slot",
+    "desc": "Climbing the fidelity ladder for a grasp: at low fidelity it \"succeeds,\" at contact fidelity it bruises, the fidelity-sensitivity of the decision and why CR-03 matters (CEC-06)."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M13-3",
+    "title": "",
+    "status": "slot",
+    "desc": "The twin prediction and real data converging as a rung is validated, the acceptance gate turning green."
+   }
+  ],
+  "inlineFigures": [
+   {
+    "id": "F-M13-2",
+    "title": "Incremental vs big-bang integration",
+    "desc": "Connecting all subsystems at once (big bang) leaves a broken metric hidden among O(n^2) pairwise interactions; adding one interface at a time (incremental) localizes any break to the just-added subsystem, an O(n) debug path. Incremental integration localizes the interaction that breaks and is far easier to debug (EI-13); the twin is where this composition happens first. Sections 6.1 and 7.3.",
+    "section": "6",
+    "fragment": "F-M13-2-incremental-integration.svg"
+   },
+   {
+    "id": "F-M13-5",
+    "title": "Composed budgets, all at once, vs limits",
+    "desc": "The placement (RSS vs capture tolerance c), cycle-time (sum of stage times vs d/v), and power (coincident load vs capacity) budgets are assembled from all real contributors at once and each tested against its limit. Composition can reveal an emergent overrun no single allocation predicted (EI-13), shown as shared-resource effects pushing the cycle-time budget toward its limit. Fractions of limit; illustrative. Sections 6.5 and 7.2.",
+    "section": "6",
+    "fragment": "F-M13-5-composed-budgets.svg"
+   },
+   {
+    "id": "F-M13-7",
+    "title": "Emergent coupling map (resource / timing / dynamic)",
+    "desc": "Integration reveals cross-subsystem behavior no module owns: dynamic coupling (arm swing vs base stability on a slope; fluid compliance vs placement stiffness), resource contention (shared compute), shared power/thermal, and timing jitter, plus interface drift. This is why integration is a distinct activity and why to integrate early and continuously (EI-13), using the twin to make surprises cheap. Section 6.6.",
+    "section": "6",
+    "fragment": "F-M13-7-coupling-map.svg"
+   },
+   {
+    "id": "F-M13-3",
+    "title": "The simulation-first fidelity ladder",
+    "desc": "A twin exists at multiple fidelity rungs from cheap/approximate (kinematic) up through dynamic, contact/fluid (CR-03), sensor-in-the-loop, and hardware-in-the-loop to expensive/faithful prototype/field. The discipline: match fidelity to the decision, find where fidelity is binding (decisions whose outcome changes across levels), and validate each rung against reality before trusting it. Trustworthiness is earned per rung (CEC-06). Section 6.4.",
+    "section": "6",
+    "fragment": "F-M13-3-fidelity-ladder.svg"
+   },
+   {
+    "id": "F-M13-4",
+    "title": "Fidelity-decision sensitivity",
+    "desc": "Some decisions stabilize at a low fidelity rung (reach settles at kinematic) while others keep changing until a high rung (grasp-will-not-bruise settles only at contact/fluid, CR-03). The rung where a decision stabilizes is the binding rung, where fidelity investment and validation must go. Low fidelity for a sensitive decision is over-trust; high fidelity for an insensitive one wastes effort. Section 6.4.",
+    "section": "6",
+    "fragment": "F-M13-4-fidelity-sensitivity.svg"
+   }
+  ]
+ },
+ "14": {
+  "label": "SIM2FIELD, Autonomous Watermelon Harvesting Robotics",
+  "anchor7": {
+   "widget": null,
+   "figure": null
+  },
+  "media": [
+   {
+    "kind": "widget",
+    "id": "W-M14-1",
+    "title": "Evidence-Matrix Builder",
+    "status": "slot",
+    "desc": "A requirements list with a fidelity-rung selector per claim; flags inadmissible pairings (e.g., grasp-bruise verified in kinematic twin), CEC-06 as V&V backbone. *Goal:* \u00a76.2."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M14-2",
+    "title": "Sample-Size / Confidence Calculator",
+    "status": "slot",
+    "desc": "Sliders for target reliability, confidence, and observed failures; live required sample size and confidence interval (\u00a77.1). *Goal:* statistics-not-anecdotes."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M14-3",
+    "title": "FMEA / Dominant-Mode Explorer",
+    "status": "slot",
+    "desc": "Enter failure modes and rates; live system failure rate, MTBF, and the dominant mode highlighted; reduce one and watch MTBF move (\u00a77.3, EI-05). *Goal:* attack the dominant mode."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M14-4",
+    "title": "Adversarial-Envelope Tester",
+    "status": "slot",
+    "desc": "Slide through envelope edges (slope/light/occlusion/dust/wear) and watch the success rate fall where the machine is weak (\u00a76.5, EI-14/EI-10). *Goal:* validate by breaking."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M14-1",
+    "title": "",
+    "status": "slot",
+    "desc": "The V&V pyramid: sim -> twin (validated) -> HIL -> prototype -> field, with which claims each rung can prove (CEC-06)."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M14-2",
+    "title": "",
+    "status": "slot",
+    "desc": "FMEA / reliability block diagram with the dominant failure mode highlighted."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M14-3",
+    "title": "",
+    "status": "slot",
+    "desc": "Envelope-coverage map: test strata across slope \u00d7 light \u00d7 fruit \u00d7 dust, edges emphasized."
+   },
+   {
+    "kind": "figure",
+    "id": "F-M14-1",
+    "title": "Verification vs. validation (build-it-right vs. right-thing)",
+    "status": "slot",
+    "anchor": "\u00a76.1"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M14-2",
+    "title": "**Requirement-to-evidence matrix with fidelity rungs**",
+    "status": "slot",
+    "anchor": "\u00a76.2 (central, CEC-06)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M14-3",
+    "title": "Sample size vs. confidence/reliability",
+    "status": "slot",
+    "anchor": "\u00a77.1"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M14-4",
+    "title": "FMEA & dominant failure mode (MTBF)",
+    "status": "slot",
+    "anchor": "\u00a76.4/\u00a77.3 (EI-05)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M14-5",
+    "title": "Adversarial envelope coverage (edges emphasized)",
+    "status": "slot",
+    "anchor": "\u00a76.5 (EI-14/EI-10)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M14-6",
+    "title": "Reliability growth over iterations / a season",
+    "status": "slot",
+    "anchor": "\u00a76.6"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M14-7",
+    "title": "Composed-budget acceptance table with evidence fidelity",
+    "status": "slot",
+    "anchor": "\u00a76.7/\u00a77.4"
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M14-1",
+    "title": "",
+    "status": "slot",
+    "desc": "A claim being \"verified\" in a low-fidelity twin, then failing in the field, then correctly verified once the evidence is matched to the right rung (CEC-06)."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M14-2",
+    "title": "",
+    "status": "slot",
+    "desc": "A confidence interval narrowing as trials accumulate, the demo (n=1) vs. a sized campaign."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M14-3",
+    "title": "",
+    "status": "slot",
+    "desc": "Reducing the dominant failure mode moving MTBF far more than reducing a minor one (EI-05)."
+   }
+  ],
+  "inlineFigures": [
+   {
+    "id": "F-M14-1",
+    "title": "Verification vs validation (the V-model)",
+    "desc": "The left arm decomposes mission to implementation, the right arm integrates and tests back up. Horizontal links are verification (did we build it right, meets spec, via analysis/test/review/demonstration); the top link is validation (did we build the right thing, in the field). A machine can pass verification yet fail validation. Section 6.1.",
+    "section": "6",
+    "fragment": "F-M14-1-v-model.svg"
+   },
+   {
+    "id": "F-M14-4",
+    "title": "FMEA and the dominant failure mode (MTBF)",
+    "desc": "Failure modes ranked by their contribution to the system failure rate, with the largest highlighted as the dominant mode to attack first. lambda_sys = sum lambda_i (series); MTBF = 1/lambda_sys; R(t) = e^(-lambda_sys t). A fractional cut of the dominant mode moves lambda_sys most: EI-05 in the reliability domain. Illustrative modes/rates; the method is the ranking. Sections 6.4 and 7.3.",
+    "section": "6",
+    "fragment": "F-M14-4-fmea-pareto.svg"
+   },
+   {
+    "id": "F-M14-6",
+    "title": "Reliability growth over a season",
+    "desc": "Reliability is grown across iterations: each durability-test fix (calibration drift re-inflating placement CEC-03, filter clogging thermal M12, seal wear fluid M9, fastener loosening vibration) raises MTBF toward the acceptance target. Durability testing (accelerated life, sustained operation, environmental) reveals wear modes day-one testing cannot; acceptance is a reliability target over a representative season, not a single good day. Section 6.6.",
+    "section": "6",
+    "fragment": "F-M14-6-reliability-growth.svg"
+   },
+   {
+    "id": "F-M14-2",
+    "title": "Requirement-to-evidence matrix",
+    "desc": "For each requirement, the matrix names the evidence and its fidelity rung and flags where only hardware/field data is admissible: reach -> kinematic twin, stability -> dynamic twin, grasp-will-not-bruise -> validated contact rung + field (CR-03), timing -> HIL under load. A claim is only as strong as its rung; an unvalidated or under-fidelity twin result is not admissible evidence (CEC-06). Section 6.2.",
+    "section": "6",
+    "fragment": "F-M14-2-requirement-evidence-matrix.svg"
+   },
+   {
+    "id": "F-M14-3",
+    "title": "Sample size vs confidence",
+    "desc": "A success rate from n trials has a confidence interval that narrows as n grows, so a single demo is n=1 with no coverage and no evidence, while claiming high reliability requires many trials and rare failures need very large n or accelerated/edge-case testing. Coverage of the operating envelope must make the sample represent the field. Section 6.3.",
+    "section": "6",
+    "fragment": "F-M14-3-sample-size-confidence.svg"
+   },
+   {
+    "id": "F-M14-7",
+    "title": "Composed-budget acceptance table",
+    "desc": "Each verified budget (placement 3sigma, cycle time, power/thermal, grasp success, reliability) is reported with its evidence fidelity rung and a confidence or margin. A budget met only in an unvalidated twin (CEC-06) is reported as a projection, not as field-proven, so every claim carries the rung of evidence beneath it. An honest acceptance table. Section 7.4.",
+    "section": "7",
+    "fragment": "F-M14-7-acceptance-table.svg"
+   }
+  ]
+ },
+ "15": {
+  "label": "SIM2FIELD, Autonomous Watermelon Harvesting Robotics",
+  "anchor7": {
+   "widget": null,
+   "figure": null
+  },
+  "media": [
+   {
+    "kind": "widget",
+    "id": "W-M15-1",
+    "title": "Hazard & Risk Register",
+    "status": "slot",
+    "desc": "Enter hazards with severity/likelihood; live risk ranking and the dominant risk highlighted (\u00a77.1); combined stored-energy faults flagged. *Goal:* \u00a76.2 to 6.3."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M15-2",
+    "title": "Defense-in-Depth Explorer",
+    "status": "slot",
+    "desc": "Toggle safety layers (physical bound, monitor, bounded learner, envelope) on/off and watch residual risk change; show a common-cause fault defeating multiple layers at once (\u00a76.4 to 6.5, \u00a77.3). *Goal:* independence & composition."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M15-3",
+    "title": "Safety-Case Builder",
+    "status": "slot",
+    "desc": "Assemble claim->argument->evidence with fidelity tags; flags a claim whose evidence is inadmissible for its fidelity (CEC-06) or that asserts more than the evidence supports (EI-15). *Goal:* \u00a76.6."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M15-4",
+    "title": "Responsible-Deployment Dashboard",
+    "status": "slot",
+    "desc": "Sliders/toggles for labor, worker-proximity, data, and environment considerations; surfaces the tradeoffs and where-not-to-operate bounds (\u00a76.8). *Goal:* ethics made explicit."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M15-1",
+    "title": "",
+    "status": "slot",
+    "desc": "The defense-in-depth safety architecture: physical bounds, independent monitor + HW controller, bounded learner, envelope limits, layered, with the common-cause concern annotated."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M15-2",
+    "title": "",
+    "status": "slot",
+    "desc": "Hazard map of the machine: pinch/crush points, stored-energy domains (fluid + electrical), keep-clear zone."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M15-3",
+    "title": "",
+    "status": "slot",
+    "desc": "The safety case as a goal structure (claim -> sub-claims -> arguments -> evidence -> residual risk)."
+   },
+   {
+    "kind": "figure",
+    "id": "F-M15-1",
+    "title": "Risk-ranked hazard register (severity \u00d7 likelihood)",
+    "status": "slot",
+    "anchor": "\u00a76.2/\u00a77.1"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M15-2",
+    "title": "Two stored-energy domains (fluid + electrical) & combined fault",
+    "status": "slot",
+    "anchor": "\u00a76.3"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M15-3",
+    "title": "**Defense-in-depth layers & the common-cause concern**",
+    "status": "slot",
+    "anchor": "\u00a76.4/\u00a76.5 (central, EI-11)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M15-4",
+    "title": "Safety case: claim -> argument -> evidence -> residual risk",
+    "status": "slot",
+    "anchor": "\u00a76.6 (EI-15)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M15-5",
+    "title": "Reaction-time margin (physics-speed vs. software)",
+    "status": "slot",
+    "anchor": "\u00a77.2 (EI-09)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M15-6",
+    "title": "Responsible-deployment considerations map",
+    "status": "slot",
+    "anchor": "\u00a76.8"
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M15-1",
+    "title": "",
+    "status": "slot",
+    "desc": "A hazard progressing toward harm and being caught by successive defense-in-depth layers; then a common-cause fault defeating several layers at once, motivating independence (EI-11)."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M15-2",
+    "title": "",
+    "status": "slot",
+    "desc": "The mechanical relief (physics-speed) capping force before the software monitor could react, why physics provides the fastest guarantee (EI-09)."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M15-3",
+    "title": "",
+    "status": "slot",
+    "desc": "A safety-case claim being attacked by a reviewer and either holding (with evidence) or failing (over-claimed), safety as an argument (EI-15)."
+   }
+  ],
+  "inlineFigures": [
+   {
+    "id": "F-M15-1",
+    "title": "Risk-ranked hazard register (severity x likelihood)",
+    "desc": "Each hazard (to people: struck/crushed, stored-energy release, pinch, slope roll-over; to fruit: bruise/drop; to property: tip-over, collision, fire) is placed on a severity-by-likelihood matrix, cells shaded by risk R = S x L. Severity and likelihood come from the M14 FMEA/reliability data; mitigation is prioritized by R (the dominant risk, EI-05-style). Coverage must include combined faults (M9+M12 stored energy) and adversarial conditions. Sections 6.2 and 7.1.",
+    "section": "6",
+    "fragment": "F-M15-1-hazard-register.svg"
+   },
+   {
+    "id": "F-M15-3",
+    "title": "Defense-in-depth layers and the common-cause concern",
+    "desc": "Four independent safety layers (envelope limits EI-10/12, bounded learner EI-07, independent monitor EI-11, physical bounds EI-09) each block the hazard except through a residual gap; because the gaps are misaligned, no single failure reaches harm. A common-cause fault can open a gap in every layer at once, which is what the safety case must rule out. Independence is certified by tracing each layer's inputs, clock, power, compute, and assumptions. Sections 6.4 and 6.5.",
+    "section": "6",
+    "fragment": "F-M15-3-defense-in-depth.svg"
+   },
+   {
+    "id": "F-M15-4",
+    "title": "The safety case: claim, argument, evidence, residual risk",
+    "desc": "A goal-structured argument: a top claim (residual risk acceptable for the defined operation) decomposed per hazard into sub-claims, each supported by a mitigation strategy and by evidence with its fidelity stated (CEC-06/M14). The case states residual risk and assumptions honestly and must be falsifiable (EI-15). Section 6.6.",
+    "section": "6",
+    "fragment": "F-M15-4-safety-case.svg"
+   },
+   {
+    "id": "F-M15-2",
+    "title": "Two stored-energy domains",
+    "desc": "The machine stores energy in pressurized fluid (M9) and the battery (M12), each a hazard (burst/release; arc/fire) and capable of a combined fault (electrical energizing a valve, a collision breaching both). Mitigations: relief/bleed-down and burst-rated components (fluid); fusing, isolation, thermal management, safe-shutdown (electrical); guarding and lockout for both. The safety case treats them together, a common-cause concern. Section 6.3.",
+    "section": "6",
+    "fragment": "F-M15-2-stored-energy-domains.svg"
+   },
+   {
+    "id": "F-M15-5",
+    "title": "Reaction-time margin: physics vs software speed",
+    "desc": "After a hazard begins, the software path must detect and react before the time-to-harm deadline (L_detect + L_react <= T_harm), while the physical bounds (mechanical relief M9, passive compliance EI-09) act at physics speed, near-instantly, buying margin the software path cannot guarantee alone. M11 Section 7.4; M15 Section 6.4.",
+    "section": "7",
+    "fragment": "F-M15-5-reaction-time-margin.svg"
+   }
+  ]
+ },
+ "16": {
+  "label": "SIM2FIELD, Autonomous Watermelon Harvesting Robotics",
+  "anchor7": {
+   "widget": null,
+   "figure": null
+  },
+  "media": [
+   {
+    "kind": "widget",
+    "id": "W-M16-1",
+    "title": "Cost-per-Acre Calculator",
+    "status": "slot",
+    "desc": "Inputs for build cost, life, operating cost, throughput (CEC-01), uptime (M14), coverage (M10), and bruise rate (M9); live cost-per-acre vs. a manual-harvest line, with break-even (\u00a77.1 to 7.2/\u00a77.4). *Goal:* the deploy/no-deploy number."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M16-2",
+    "title": "Dominant Cost-Driver Explorer",
+    "status": "slot",
+    "desc": "BOM line items with a live ranking and the dominant driver highlighted; reduce one and watch build cost move most for the dominant (\u00a76.4/\u00a77.3, EI-05). *Goal:* attack the dominant driver."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M16-3",
+    "title": "Deployment-Envelope Map",
+    "status": "slot",
+    "desc": "Sliders for farm size, terrain/slope (M10), and labor cost; shades where the machine beats manual harvest, the deployment envelope (\u00a76.5, EI-10). *Goal:* who the machine is for."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M16-4",
+    "title": "Lifecycle-Footprint Dashboard",
+    "status": "slot",
+    "desc": "Energy source, materials, manufacturing, end-of-life toggles; live footprint reconciled against cost (\u00a76.7). *Goal:* sustainability + economics together."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M16-1",
+    "title": "",
+    "status": "slot",
+    "desc": "BOM cost breakdown (stacked bar) with the dominant cost driver highlighted."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M16-2",
+    "title": "",
+    "status": "slot",
+    "desc": "Cost-per-acre vs. coverage/uptime, with the manual-harvest break-even line."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M16-3",
+    "title": "",
+    "status": "slot",
+    "desc": "Lifecycle stages (materials -> manufacture -> operation -> end-of-life) with footprint per stage."
+   },
+   {
+    "kind": "figure",
+    "id": "F-M16-1",
+    "title": "Cost structure (build / operating / TCO)",
+    "status": "slot",
+    "anchor": "\u00a76.1"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M16-2",
+    "title": "**Cost-per-acre vs. manual harvest (break-even)**",
+    "status": "slot",
+    "anchor": "\u00a76.2 to 6.3/\u00a77.1 (central)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M16-3",
+    "title": "Dominant cost driver (BOM ranked)",
+    "status": "slot",
+    "anchor": "\u00a76.4/\u00a77.3 (EI-05)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M16-4",
+    "title": "Marketable yield: bruise/miss rate -> revenue",
+    "status": "slot",
+    "anchor": "\u00a77.2 (M9/CEC-02)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M16-5",
+    "title": "Deployment envelope (farm profile where it pays)",
+    "status": "slot",
+    "anchor": "\u00a76.5 (EI-10)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M16-6",
+    "title": "Lifecycle assessment (footprint by stage)",
+    "status": "slot",
+    "anchor": "\u00a76.7"
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M16-1",
+    "title": "",
+    "status": "slot",
+    "desc": "Cost-per-acre falling below the manual-harvest line as coverage/utilization rises (service model), the break-even reached."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M16-2",
+    "title": "",
+    "status": "slot",
+    "desc": "Reducing the dominant cost driver moving build cost far more than trimming a cheap part (EI-05)."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M16-3",
+    "title": "",
+    "status": "slot",
+    "desc": "The deployment envelope shading in as farm profile varies, where the machine pays and where it doesn't (EI-10)."
+   }
+  ],
+  "inlineFigures": [
+   {
+    "id": "F-M16-2",
+    "title": "Cost-per-acre vs manual harvest (break-even)",
+    "desc": "The machine cost per acre (TCO/acres = fixed/acres + operating) falls toward an operating-cost floor as acres rise, crossing the flat manual-harvest labor cost at a break-even acreage. Below break-even manual is cheaper (not-yet); above it the machine is cheaper (deploy). Uptime and bruise rate move the curves. Axes qualitative. Sections 6.2, 6.3, 7.1.",
+    "section": "6",
+    "fragment": "F-M16-2-break-even.svg"
+   },
+   {
+    "id": "F-M16-3",
+    "title": "Dominant cost driver (BOM ranked)",
+    "desc": "BOM line items ranked by cost with the largest highlighted as the dominant driver, and a cumulative Pareto line showing a few items account for most of the build cost. d(cost)/d(c_i) is largest at the dominant item, so volume sourcing, design simplification, and substitution move it most: attack the dominant driver, not the convenient cheap part (EI-05). Shares illustrative. Sections 6.4 and 7.3.",
+    "section": "6",
+    "fragment": "F-M16-3-dominant-cost.svg"
+   },
+   {
+    "id": "F-M16-1",
+    "title": "Cost structure: build, operate, own",
+    "desc": "Three cost views: build cost (BOM + assembly/test, the ~$50k prototype falling toward a producible unit price at volume), operating cost (energy M12, maintenance/parts M14, supervision labor, per season), and total cost of ownership, which amortizes build over life and adds operating cost to give the true per-season cost that unit economics divide by coverage to get cost-per-acre. Section 6.1.",
+    "section": "6",
+    "fragment": "F-M16-1-cost-structure.svg"
+   },
+   {
+    "id": "F-M16-5",
+    "title": "The deployment / market envelope",
+    "desc": "Economics are not uniform across farms (field size, terrain, crop uniformity, labor cost, harvest window all vary), so the disciplined move is to define the deployment envelope, the farm profile the machine is for, and design and price to ITS economics rather than to an average farm that exists nowhere. EI-10 applied to the market; break-even is evaluated against this envelope. Section 6.5.",
+    "section": "6",
+    "fragment": "F-M16-5-deployment-envelope.svg"
+   },
+   {
+    "id": "F-M16-4",
+    "title": "Marketable yield to revenue",
+    "desc": "Revenue/acre = yield x (1 - loss rate) x price, where loss rate combines the bruise/damage rate (M9/CEC-02) and the missed-fruit rate (recall, M4); net value/acre = revenue/acre - cost/acre. A bruised melon earns nothing, so a percentage point of bruise rate is a direct revenue loss: quality is economics. Section 7.2.",
+    "section": "7",
+    "fragment": "F-M16-4-marketable-yield.svg"
+   }
+  ]
+ },
+ "17": {
+  "label": "SIM2FIELD, Autonomous Watermelon Harvesting Robotics",
+  "anchor7": {
+   "widget": null,
+   "figure": null
+  },
+  "media": [
+   {
+    "kind": "widget",
+    "id": "W-M17-1",
+    "title": "The Whole-Machine Dashboard",
+    "status": "slot",
+    "desc": "All budgets at once (placement, cycle-time, grip-force, power/thermal, reliability, cost-per-acre) with the composed design's status against each; change a subsystem decision and watch every budget move, the negotiated whole made tangible (EI-17). *Goal:* \u00a77.1, \u00a711.1."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M17-2",
+    "title": "System-Tradeoff Navigator",
+    "status": "slot",
+    "desc": "The coupled tensions (\u00a711.1) as linked sliders; moving one (e.g., compliance) shifts the others (placement, bruise, stiffness), the negotiation visualized. *Goal:* EI-17."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M17-3",
+    "title": "Acceptance-Argument Builder",
+    "status": "slot",
+    "desc": "Assemble works/proven/safe/pays with each claim's evidence and fidelity; highlights the weakest load-bearing (field-mandatory) claim (\u00a76.4/\u00a77.3, CEC-06/EI-15). *Goal:* the honest case."
+   },
+   {
+    "kind": "widget",
+    "id": "W-M17-4",
+    "title": "Transfer Studio",
+    "status": "slot",
+    "desc": "Pick a variant (soft fruit, heavy crop, steep terrain, collaborative); the tool re-derives which bounds, dominant terms, and envelope change and which stay, transfer demonstrated (\u00a76.5). *Goal:* generality of the tools."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M17-1",
+    "title": "",
+    "status": "slot",
+    "desc": "The complete machine, all subsystems integrated, annotated with the six CECs where each lives."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M17-2",
+    "title": "",
+    "status": "slot",
+    "desc": "The system-tradeoff map (the coupled tensions and their resolutions)."
+   },
+   {
+    "kind": "cad",
+    "id": "CAD-M17-3",
+    "title": "",
+    "status": "slot",
+    "desc": "The acceptance argument as a structure (works/proven/safe/pays -> evidence -> residual)."
+   },
+   {
+    "kind": "figure",
+    "id": "F-M17-1",
+    "title": "The complete machine with the six CECs located",
+    "status": "slot",
+    "anchor": "\u00a76.1"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M17-2",
+    "title": "**The system as a negotiation (coupled tensions & resolutions)**",
+    "status": "slot",
+    "anchor": "\u00a76.3/\u00a711.1 (central, EI-17)"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M17-3",
+    "title": "The four-part acceptance argument (works/proven/safe/pays)",
+    "status": "slot",
+    "anchor": "\u00a76.4"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M17-4",
+    "title": "Composed budgets, all at once, vs. limits",
+    "status": "slot",
+    "anchor": "\u00a77.1"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M17-5",
+    "title": "Transfer to a variant (what changes / what stays)",
+    "status": "slot",
+    "anchor": "\u00a76.5"
+   },
+   {
+    "kind": "figure",
+    "id": "F-M17-6",
+    "title": "The course map: six CECs + thirteen EIs as one practice",
+    "status": "slot",
+    "anchor": "\u00a76.1 to 6.2 (closing synthesis)"
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M17-1",
+    "title": "",
+    "status": "slot",
+    "desc": "Changing one subsystem decision rippling through every budget, the negotiated whole responding (EI-17)."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M17-2",
+    "title": "",
+    "status": "slot",
+    "desc": "The acceptance argument assembling claim by claim, each with its evidence fidelity, the weakest link highlighted (EI-15/CEC-06)."
+   },
+   {
+    "kind": "animation",
+    "id": "AN-M17-3",
+    "title": "",
+    "status": "slot",
+    "desc": "The tools transferring to a variant: the framework staying fixed while the bounds and dominant terms re-derive (\u00a76.5)."
+   }
+  ],
+  "inlineFigures": [
+   {
+    "id": "F-M17-2",
+    "title": "The system as a negotiation (coupled tensions and resolutions)",
+    "desc": "Six coupled tensions, each a prior module's tradeoff, shown as a spectrum between two competing pulls with the negotiated resolution named (track width, grip compliance, perception model, autonomy, throughput, safety margin). No subsystem optimum is the system optimum; the deliverable is a defensible negotiated whole (EI-17). Sections 6.3 and 11.1.",
+    "section": "6",
+    "fragment": "F-M17-2-negotiation.svg"
+   },
+   {
+    "id": "F-M17-3",
+    "title": "The four-part acceptance argument (works/proven/safe/pays)",
+    "desc": "A finished design makes one four-part claim on admissible evidence: works (functional mission, CEC-01/02/03, M13), proven (V&V at stated fidelity, M14), safe (certified safety case, independence, residual acceptable, M15), and pays (deployment case beats the alternative in a defined envelope, M16). All four support the deploy decision, whose honest tri-state is deploy / deploy-with-limits / not-yet. It is a case made to be reviewed and attacked (EI-15), not an assertion. Section 6.4.",
+    "section": "6",
+    "fragment": "F-M17-3-acceptance-argument.svg"
+   },
+   {
+    "id": "F-M17-6",
+    "title": "The course map: six CECs and thirteen EIs as one practice",
+    "desc": "Six analytical tools (the Core Engineering Concepts, CEC-01 the organizing Signal-to-Action Spine through CEC-06 the Fidelity Ladder) and thirteen judgment insights grouped into seven families (mission-alignment, dominant-term discipline, measure-and-design-for-reality, simplicity-and-physics, bounded-autonomy-and-safety, integration, economics), unified by EI-17 the synthesizing meta-insight to own the whole. Tools plus judgment are one practice; the test is transfer to a new crop, platform, or constraint. Module 17 Section 6.",
+    "section": "6",
+    "fragment": "F-M17-6-course-map.svg"
+   },
+   {
+    "id": "F-M17-5",
+    "title": "Transfer: the tools are general",
+    "desc": "Transferring to a variant (a delicate berry, a heavy squash, a different platform, a new constraint) changes the parameters and values (fruit properties, geometry, budgets, envelope) but keeps the tools and method (the six CECs and the judgment insights). None is watermelon-specific; a student who can re-derive a new machine with them has learned the course, not the case study (EI-17). Section 6.5.",
+    "section": "6",
+    "fragment": "F-M17-5-transfer-variant.svg"
+   }
+  ]
+ }
+}

@@ -1,0 +1,24 @@
+<svg viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Impact energy rises linearly with placement height and with fruit mass; a horizontal bruise-energy threshold sets a maximum safe height, which is lower for heavier fruit, so the mission lowers fruit rather than dropping it." font-family="'IBM Plex Mono',monospace">
+<rect x="70" y="52" width="636" height="98" fill="var(--danger)" fill-opacity="0.08"/>
+<line x1="70" y1="48" x2="70" y2="322" stroke="var(--border-strong)" stroke-width="1.5"/>
+<line x1="70" y1="322" x2="706" y2="322" stroke="var(--border-strong)" stroke-width="1.5"/>
+<path d="M66,52 L70,45 L74,52 z" fill="var(--border-strong)"/>
+<path d="M706,318 L713,322 L706,326 z" fill="var(--border-strong)"/>
+<text x="62" y="187.0" text-anchor="middle" font-size="10" fill="var(--text-muted)" transform="rotate(-90 62 187.0)">impact energy  E</text>
+<text x="388.0" y="352" text-anchor="middle" font-size="10" fill="var(--text-muted)">placement / drop height  h</text>
+<line x1="70" y1="150" x2="706" y2="150" stroke="var(--danger)" stroke-width="1.6" stroke-dasharray="6 3"/>
+<text x="700" y="144" text-anchor="end" font-size="9.5" fill="var(--danger-text)" font-weight="700">E<tspan dy="3" font-size="70%">br</tspan> bruise threshold</text>
+<text x="388.0" y="74" text-anchor="middle" font-size="10" fill="var(--danger-text)" font-weight="700">BRUISE  (E &gt; E<tspan dy="3" font-size="70%">br</tspan>)</text>
+<line x1="70" y1="322" x2="430" y2="52.782608695652186" stroke="var(--warn)" stroke-width="2.2"/>
+<line x1="70" y1="322" x2="700" y2="61.519230769230774" stroke="var(--accent)" stroke-width="2.2"/>
+<text x="434" y="56.782608695652186" font-size="9" fill="var(--warn)" font-weight="700">heavy fruit  (E = m g h)</text>
+<text x="698" y="55.519230769230774" text-anchor="end" font-size="9" fill="var(--accent)" font-weight="700">light fruit</text>
+<line x1="300" y1="150" x2="300" y2="322" stroke="var(--warn)" stroke-width="1" stroke-dasharray="3 3"/>
+<circle cx="300" cy="150" r="3.2" fill="var(--warn)"/>
+<text x="300" y="337" text-anchor="middle" font-size="8.5" fill="var(--warn)">h_max (heavy)</text>
+<line x1="486" y1="150" x2="486" y2="322" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 3"/>
+<circle cx="486" cy="150" r="3.2" fill="var(--accent)"/>
+<text x="486" y="337" text-anchor="middle" font-size="8.5" fill="var(--accent)">h_max (light)</text>
+<text x="78" y="312" font-size="8.5" fill="var(--text-muted)">safe: E &#8804; E<tspan dy="2.5" font-size="70%">br</tspan>  ->  h &#8804; E<tspan dy="2.5" font-size="70%">br</tspan><tspan dy="-2.5">/(m g)</tspan></text>
+<text x="78" y="92" font-size="9" fill="var(--text-secondary)">heavier fruit -> steeper line -> lower safe height -> lower, do not drop (DD-8)</text>
+</svg>

@@ -1,0 +1,61 @@
+<svg viewBox="0 0 760 440" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The system as a negotiation: six coupled tensions, each a prior module tradeoff, shown as a spectrum between two competing pulls with the negotiated resolution named. No subsystem optimum is the system optimum; the deliverable is a defensible negotiated whole." font-family="'IBM Plex Mono',monospace">
+<text x="20" y="26" font-size="12" fill="var(--text-primary)" font-weight="700" font-family="'Space Grotesk',sans-serif">The system as a negotiation (EI-17)</text>
+<text x="20" y="44" font-size="8.6" fill="var(--text-muted)">No subsystem optimum is the system optimum. Each subsystem is deliberately compromised to serve the whole; designing the machine is managing these negotiations.</text>
+<text x="558" y="70" font-size="8" fill="var(--accent)" font-weight="700">resolved by</text>
+<text x="20" y="102" font-size="9.5" fill="var(--text-primary)" font-weight="700">Track width</text>
+<text x="182" y="92" font-size="7.4" fill="var(--accent-2)">reach + stability (M8)</text>
+<text x="520" y="92" text-anchor="end" font-size="7.4" fill="var(--info)">maneuverability (M10)</text>
+<line x1="182" y1="106" x2="520" y2="106" stroke="var(--border-strong)" stroke-width="2.4"/>
+<circle cx="182" cy="106" r="3.2" fill="var(--accent-2)"/>
+<circle cx="520" cy="106" r="3.2" fill="var(--info)"/>
+<path d="M351,99 L358,106 L351,113 L344,106 z" fill="var(--accent)" stroke="var(--bg)" stroke-width="0.8"/>
+<text x="351" y="124" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">negotiated</text>
+<text x="540" y="108" font-size="7.6" fill="var(--accent)">-&gt; feasible interval (SR-I-11)</text>
+<text x="20" y="158" font-size="9.5" fill="var(--text-primary)" font-weight="700">Grip compliance</text>
+<text x="182" y="148" font-size="7.4" fill="var(--accent-2)">bruise-avoidance (M2/M9)</text>
+<text x="520" y="148" text-anchor="end" font-size="7.4" fill="var(--info)">placement stiffness (M8)</text>
+<line x1="182" y1="162" x2="520" y2="162" stroke="var(--border-strong)" stroke-width="2.4"/>
+<circle cx="182" cy="162" r="3.2" fill="var(--accent-2)"/>
+<circle cx="520" cy="162" r="3.2" fill="var(--info)"/>
+<path d="M337,155 L344,162 L337,169 L330,162 z" fill="var(--accent)" stroke="var(--bg)" stroke-width="0.8"/>
+<text x="337" y="180" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">negotiated</text>
+<text x="540" y="164" font-size="7.6" fill="var(--accent)">-&gt; tunable fluid stiffness (M9)</text>
+<text x="20" y="214" font-size="9.5" fill="var(--text-primary)" font-weight="700">Perception model</text>
+<text x="182" y="204" font-size="7.4" fill="var(--accent-2)">recall / yield (M4)</text>
+<text x="520" y="204" text-anchor="end" font-size="7.4" fill="var(--info)">power, heat, cost (M12/M16)</text>
+<line x1="182" y1="218" x2="520" y2="218" stroke="var(--border-strong)" stroke-width="2.4"/>
+<circle cx="182" cy="218" r="3.2" fill="var(--accent-2)"/>
+<circle cx="520" cy="218" r="3.2" fill="var(--info)"/>
+<path d="M317,211 L324,218 L317,225 L310,218 z" fill="var(--accent)" stroke="var(--bg)" stroke-width="0.8"/>
+<text x="317" y="236" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">negotiated</text>
+<text x="540" y="220" font-size="7.6" fill="var(--accent)">-&gt; mission-cost point (EI-04/05)</text>
+<text x="20" y="270" font-size="9.5" fill="var(--text-primary)" font-weight="700">Autonomy</text>
+<text x="182" y="260" font-size="7.4" fill="var(--accent-2)">capability</text>
+<text x="520" y="260" text-anchor="end" font-size="7.4" fill="var(--info)">verifiability / safety (M7/M15)</text>
+<line x1="182" y1="274" x2="520" y2="274" stroke="var(--border-strong)" stroke-width="2.4"/>
+<circle cx="182" cy="274" r="3.2" fill="var(--accent-2)"/>
+<circle cx="520" cy="274" r="3.2" fill="var(--info)"/>
+<path d="M368,267 L375,274 L368,281 L361,274 z" fill="var(--accent)" stroke="var(--bg)" stroke-width="0.8"/>
+<text x="368" y="292" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">negotiated</text>
+<text x="540" y="276" font-size="7.6" fill="var(--accent)">-&gt; bounded learner + monitor (EI-07/11)</text>
+<text x="20" y="326" font-size="9.5" fill="var(--text-primary)" font-weight="700">Throughput</text>
+<text x="182" y="316" font-size="7.4" fill="var(--accent-2)">coverage / economics (M16)</text>
+<text x="520" y="316" text-anchor="end" font-size="7.4" fill="var(--info)">stability, placement (M10/M13)</text>
+<line x1="182" y1="330" x2="520" y2="330" stroke="var(--border-strong)" stroke-width="2.4"/>
+<circle cx="182" cy="330" r="3.2" fill="var(--accent-2)"/>
+<circle cx="520" cy="330" r="3.2" fill="var(--info)"/>
+<path d="M351,323 L358,330 L351,337 L344,330 z" fill="var(--accent)" stroke="var(--bg)" stroke-width="0.8"/>
+<text x="351" y="348" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">negotiated</text>
+<text x="540" y="332" font-size="7.6" fill="var(--accent)">-&gt; index + composed budgets</text>
+<text x="20" y="382" font-size="9.5" fill="var(--text-primary)" font-weight="700">Safety margin</text>
+<text x="182" y="372" font-size="7.4" fill="var(--accent-2)">risk reduction (M15)</text>
+<text x="520" y="372" text-anchor="end" font-size="7.4" fill="var(--info)">cost-per-acre (M16)</text>
+<line x1="182" y1="386" x2="520" y2="386" stroke="var(--border-strong)" stroke-width="2.4"/>
+<circle cx="182" cy="386" r="3.2" fill="var(--accent-2)"/>
+<circle cx="520" cy="386" r="3.2" fill="var(--info)"/>
+<path d="M351,379 L358,386 L351,393 L344,386 z" fill="var(--accent)" stroke="var(--bg)" stroke-width="0.8"/>
+<text x="351" y="404" text-anchor="middle" font-size="6.6" fill="var(--text-muted)">negotiated</text>
+<text x="540" y="388" font-size="7.6" fill="var(--accent)">-&gt; defense in depth + residual (EI-15)</text>
+<text x="20" y="434" font-size="8.6" fill="var(--text-secondary)">The capstone task: resolve these together into one coherent machine, defending why each subsystem is compromised for the system's sake.</text>
+<text x="20" y="447" font-size="8.6" fill="var(--text-muted)">There is no single right answer; the deliverable is a defensible negotiated whole.</text>
+</svg>

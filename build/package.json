@@ -1,0 +1,21 @@
+{
+  "name": "sim2field-build",
+  "version": "1.2.0",
+  "description": "SIM2FIELD curriculum build pipeline: KaTeX build-time pre-render + drift guard + authored-typography guard. The math source of truth is the TeX in each build/<asset>-src.html; the shipped <asset>.html is a generated, self-contained artifact that needs no runtime KaTeX.",
+  "private": true,
+  "scripts": {
+    "build": "for f in *-src.html; do node prerender.js \"$f\" \"${OUT_DIR:-..}/${f%-src.html}.html\"; done",
+    "verify": "node verify-build.js && node verify-typography.js",
+    "verify:drift": "node verify-build.js",
+    "verify:typography": "node verify-typography.js",
+    "test": "node verify-build.js && node verify-typography.js"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@fontsource/ibm-plex-mono": "5.0.13",
+    "@fontsource/inter": "5.0.17",
+    "@fontsource/space-grotesk": "5.0.18",
+    "katex": "0.16.9",
+    "markdown-it": "^14.1.0"
+  }
+}

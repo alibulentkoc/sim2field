@@ -1,0 +1,37 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="color-scheme" content="dark"><title>F-M9-6 preview - Two independent bounds</title><style>:root{--bg:#0e120d;--surface:#161c14;--surface-2:#0b0e0a;--surface-3:#12160f;--border:#2b3527;--border-strong:#3a4633;--text-primary:#eef2e6;--text-secondary:#c8cfbe;--text-muted:#adb4a2;--accent:#9bcf3b;--info:#6fb0d9;--danger:#f0556a;--danger-text:#f697a4}
+body{margin:0;background:var(--bg);color:var(--text-primary);font-family:'IBM Plex Mono',ui-monospace,monospace;padding:2rem}
+.figure{max-width:840px;margin:0 auto;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.figbody{padding:1rem 1.1rem;background:var(--surface-3);overflow-x:auto} .figbody svg{display:block;width:100%;height:auto;min-width:640px}
+figcaption{padding:.7rem 1rem;font-size:.82rem;color:var(--text-muted);border-top:1px solid var(--border)} .fid{font-size:.64rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-right:.5rem}</style></head>
+<body><figure class="figure"><div class="figbody"><svg viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two independent bounds on grip force: the AI target is clipped in software to the grip-force window, and the mechanical relief caps the physical force at the bruise limit regardless of the command; because the bounds are independent, a single failure cannot bruise past the limit." font-family="'IBM Plex Mono',monospace">
+<rect x="118" y="46" width="560" height="68" fill="var(--danger)" fill-opacity="0.07"/>
+<text x="672" y="76" text-anchor="end" font-size="7.4" fill="var(--danger-text)">bruise zone (force &gt; F_bruise)</text>
+<line x1="118" y1="68" x2="118" y2="286" stroke="var(--border-strong)" stroke-width="1.5"/>
+<line x1="118" y1="286" x2="690" y2="286" stroke="var(--border-strong)" stroke-width="1.5"/>
+<text x="110" y="179.0" text-anchor="middle" font-size="8.6" fill="var(--text-muted)" transform="rotate(-90 110 179.0)">grip force</text>
+<line x1="118" y1="213" x2="680" y2="213" stroke="var(--info)" stroke-width="1.1" stroke-dasharray="4 3"/>
+<text x="122" y="209" font-size="7.4" fill="var(--info)">F_slip</text>
+<line x1="118" y1="115" x2="680" y2="115" stroke="var(--danger)" stroke-width="1.1" stroke-dasharray="4 3"/>
+<text x="122" y="111" font-size="7.4" fill="var(--danger)">F_bruise</text>
+<text x="214" y="300" text-anchor="middle" font-size="7.6" fill="var(--text-muted)">AI target</text>
+<text x="428" y="300" text-anchor="middle" font-size="7.6" fill="var(--text-muted)">after software clip</text>
+<text x="618" y="300" text-anchor="middle" font-size="7.6" fill="var(--text-muted)">physical force</text>
+<circle cx="214" cy="66" r="5" fill="var(--danger)"/>
+<text x="214" y="58" text-anchor="middle" font-size="7.4" fill="var(--danger-text)">F_AI (may exceed)</text>
+<line x1="222" y1="66" x2="420" y2="115" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#d)"/>
+<defs><marker id="d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/></marker></defs>
+<circle cx="428" cy="115" r="5" fill="var(--accent)"/>
+<text x="428" y="107" text-anchor="middle" font-size="7.4" fill="var(--accent)">F_exec = F_bruise</text>
+<line x1="436" y1="115" x2="610" y2="115" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#d)"/>
+<circle cx="618" cy="115" r="5" fill="var(--accent)"/>
+<text x="618" y="107" text-anchor="middle" font-size="7.4" fill="var(--accent)">held at F_bruise</text>
+<rect x="236" y="221.24" width="150" height="34" rx="7" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="311" y="235.24" text-anchor="middle" font-size="8" fill="var(--accent)" font-weight="700">SOFTWARE CLIP (EI-07)</text>
+<text x="311" y="246.24" text-anchor="middle" font-size="6.4" fill="var(--text-muted)">clip(F_AI, F_slip, F_bruise)</text>
+<rect x="450" y="221.24" width="150" height="34" rx="7" fill="var(--surface)" stroke="var(--danger)" stroke-width="1.3"/>
+<text x="525" y="235.24" text-anchor="middle" font-size="8" fill="var(--danger-text)" font-weight="700">MECH. RELIEF (EI-09)</text>
+<text x="525" y="246.24" text-anchor="middle" font-size="6.4" fill="var(--text-muted)">force &lt;= P_relief x A = F_bruise</text>
+<text x="20" y="316" font-size="8.5" fill="var(--text-primary)" font-weight="700">Two independent bounds, one computed, one physical:</text>
+<text x="20" y="330" font-size="8.2" fill="var(--text-muted)">if the software clip fails, the relief still holds physical force at F_bruise;  if the relief drifts, the clip still limits the command.</text>
+<text x="20" y="344" font-size="8.2" fill="var(--danger-text)">Only if BOTH fail can force exceed the bruise limit, the residual risk analyzed in the M15 safety case.</text>
+</svg></div><figcaption><span class="fid">F-M9-6</span>Two independent bounds on grip force. The AI target is clipped in software to the window, and the mechanical relief caps the physical force at the bruise limit regardless of the command. Because the bounds are independent, a single failure cannot bruise past the limit; only if both fail is the limit exceeded. Module 9, Sections 6.6 and 7.5.</figcaption></figure></body></html>

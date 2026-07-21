@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glossary — SIM2FIELD</title>
+<meta name="description" content="A short university course on the engineering of an autonomous watermelon/pumpkin harvesting robot: perception, edge AI, manipulation, and field deployment.">
+<link rel="stylesheet" href="assets/style.css">
+
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a class="brand" href="index.html"><span class="dot"></span>SIM2FIELD</a>
+  <div class="nav-links"><a href="index.html">Home</a><a href="index.html#modules">Modules</a><a href="demo-page.html">Live Demo</a><a href="index.html#specs">Specs</a><a href="capstone.html">Capstone</a></div>
+</div></nav>
+<header class="article-head"><div class="inner"><p class="eyebrow">Resources</p><h1>Glossary</h1></div></header><main class="page prose">
+<p>Terms as used in this course, in the harvesting-robot context.</p>
+<p><strong>Bill of materials (BOM)</strong> — a subsystem-organized list of hardware with
+quantities and costs; read as a record of design decisions, not a shopping list.</p>
+<p><strong>CAN bus</strong> — a deterministic serial bus for real-time motor and safety traffic;
+the control plane's backbone.</p>
+<p><strong>Digital twin</strong> — a simulation of the robot detailed enough to co-design
+hardware, generate synthetic training data, and act as a regression test bed.</p>
+<p><strong>Domain randomization</strong> — training a model (often an RL policy) over randomized
+simulation parameters so it transfers robustly to the real world.</p>
+<p><strong>Drive-over architecture</strong> — a design in which the rover straddles the crop bed
+and the fruit passes beneath the frame to a fixed pick station, rather than the
+arm reaching sideways.</p>
+<p><strong>Edge computing</strong> — running inference on the robot itself rather than in the
+cloud; required here by the no-connectivity reality of fields.</p>
+<p><strong>FMEA</strong> — failure mode and effects analysis; a structured way to enumerate
+failures, their effects, and mitigations.</p>
+<p><strong>Grasp policy</strong> — the controller that decides grip force and lift motion; in this
+course a learned (RL) policy with a rule-based safety fallback.</p>
+<p><strong>Inverse kinematics (IK)</strong> — computing actuator commands from a desired end
+position. For the case-study parallel mechanism, IK is the Euclidean distance
+<code>Lᵢ = |G − Bᵢ|</code>.</p>
+<p><strong>Keep-out volume</strong> — a region the planned payload envelope must not enter (frame,
+wheels, bin wall) during motion.</p>
+<p><strong>Localization (3D)</strong> — converting a 2D detection plus depth into a 3D position in
+the robot's coordinate frame; the handoff from perception to manipulation.</p>
+<p><strong>Occlusion gate</strong> — a policy that declines to pick a fruit whose visible fraction
+is below a threshold, deferring or clearing canopy instead.</p>
+<p><strong>Parallel mechanism</strong> — a manipulator whose actuators are grounded to the frame
+and drive the end platform through struts; low moving mass, high stiffness.</p>
+<p><strong>Precision / recall</strong> — detection metrics: precision = fraction of detections
+that are real; recall = fraction of real fruit detected. Recall protects yield;
+precision protects cycles.</p>
+<p><strong>Quantization</strong> — representing a model's numbers in lower precision (INT8/FP16)
+to cut latency/memory, at a small, validated accuracy cost.</p>
+<p><strong>Real-time boundary</strong> — the line between nodes that must meet deadlines (drive,
+arm, safety) and best-effort nodes (detection, logging).</p>
+<p><strong>ROS 2</strong> — the robotics middleware providing the node/message architecture used
+in the software stack.</p>
+<p><strong>Safety monitor</strong> — an independent process that can halt all motion regardless of
+the mission state machine's state.</p>
+<p><strong>Singularity (parallel)</strong> — a configuration where struts become nearly collinear
+and the mechanism loses force authority; tracked by the transmission angle γ.</p>
+<p><strong>Sim-to-real</strong> — transferring a model or policy trained in simulation to physical
+hardware.</p>
+<p><strong>Stereo disparity</strong> — the pixel offset of the same point between two cameras;
+inversely related to depth via <code>Z = f·b/d</code>.</p>
+<p><strong>Supervisor / mission state machine</strong> — the single component that owns
+decisions and sequences the harvest cycle
+(<code>DRIVE → STAGE → ALIGN → GRAB → LIFT → SWING → LOWER → RELEASE</code>).</p>
+<p><strong>TensorRT</strong> — an inference compiler that optimizes a model for a specific edge
+device; often the largest practical speedup with no accuracy change.</p>
+<p><strong>Transmission angle (γ)</strong> — the angle between the two struts at the gripper node;
+a live manipulability/singularity metric kept bounded away from 0°/180°.</p></main>
+<footer class="foot"><div class="inner">
+  <div>SIM2FIELD · Robotic Harvesting Systems — course materials</div>
+  <div><a href="index.html">Home</a> · <a href="demo-page.html">Live Demo</a> · <a href="capstone.html">Capstone</a></div>
+</div></footer>
+
+</body>
+</html>

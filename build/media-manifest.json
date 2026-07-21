@@ -704,6 +704,15 @@
     "section": "7",
     "fragment": "F-M4-4-pr-operating-point.svg"
    }
+  ],
+  "inlineDemos": [
+   {
+    "id": "D-M4",
+    "title": "Interactive: detection operating point (PR curve and mission value)",
+    "section": "7",
+    "file": "M4-detection-operating-point-worked-example.html",
+    "height": 720
+   }
   ]
  },
  "05": {
@@ -875,6 +884,15 @@
     "desc": "The placement error budget assembled in full: six independent sources (depth, calibration, hand-eye, sync, estimation, mechanical) combine in quadrature into sigma_place, which must satisfy 3 sigma_place <= c. Because the total is set by the largest term, the depth error (growing as Z^2) is often dominant, so the mission stages the fruit close and attacks the dominant source first (EI-05). The machine's central accuracy contract, allocated to each subsystem. Sections 6.7 and 7.4.",
     "section": "7",
     "fragment": "F-M5-5-placement-budget-master.svg"
+   }
+  ],
+  "inlineDemos": [
+   {
+    "id": "D-M5",
+    "title": "Interactive: placement error-budget assembler",
+    "section": "7",
+    "file": "M5-placement-error-budget-worked-example.html",
+    "height": 720
    }
   ]
  },
@@ -1048,6 +1066,15 @@
     "section": "7",
     "fragment": "F-M6-2-latency-budget.svg"
    }
+  ],
+  "inlineDemos": [
+   {
+    "id": "D-M6",
+    "title": "Interactive: edge latency boundary",
+    "section": "7",
+    "file": "M6-edge-latency-boundary-worked-example.html",
+    "height": 720
+   }
   ]
  },
  "07": {
@@ -1220,6 +1247,15 @@
     "section": "7",
     "fragment": "F-M7-6-domain-randomization.svg"
    }
+  ],
+  "inlineDemos": [
+   {
+    "id": "D-M7",
+    "title": "Interactive: sim-to-real pipeline",
+    "section": "7",
+    "file": "CEC05-sim-to-real-pipeline-worked-example.html",
+    "height": 720
+   }
   ]
  },
  "08": {
@@ -1384,6 +1420,15 @@
     "desc": "Singularity is det J = 0 (det J proportional to sin gamma), so manipulability mu = sqrt(det(JJ^T)) falls to zero as the transmission angle gamma approaches 0 or 180 degrees. The design keeps the operating region in a safe band where mu >= mu_min and gamma in [gamma_min, gamma_max]. Because the arm swings a heavy payload, this keep-out is a safety requirement, not only performance. Sections 6.5 and 7.4.",
     "section": "7",
     "fragment": "F-M8-5-singularity-keepout.svg"
+   }
+  ],
+  "inlineDemos": [
+   {
+    "id": "D-M8",
+    "title": "Interactive: kinematics and singularity explorer",
+    "section": "7",
+    "file": "M8-kinematics-singularity-explorer.html",
+    "height": 720
    }
   ]
  },
@@ -1563,6 +1608,15 @@
     "desc": "Grip force is gauge pressure times piston area (F = P A), a line whose slope is the area; sizing the actuator area sets how the commandable pressure range maps onto the grip-force window [F_slip, F_bruise] (M2). Size A so the commandable pressure spans the window forces and no more. The fluid can only soften (springs in series); the structure carries the stiffness floor. Section 7.1.",
     "section": "7",
     "fragment": "F-M9-2-pressure-force-window.svg"
+   }
+  ],
+  "inlineDemos": [
+   {
+    "id": "D-M9",
+    "title": "Interactive: grip-force window",
+    "section": "7",
+    "file": "M9-grip-force-window-worked-example.html",
+    "height": 720
    }
   ]
  },
@@ -2244,6 +2298,15 @@
     "desc": "Some decisions stabilize at a low fidelity rung (reach settles at kinematic) while others keep changing until a high rung (grasp-will-not-bruise settles only at contact/fluid, CR-03). The rung where a decision stabilizes is the binding rung, where fidelity investment and validation must go. Low fidelity for a sensitive decision is over-trust; high fidelity for an insensitive one wastes effort. Section 6.4.",
     "section": "6",
     "fragment": "F-M13-4-fidelity-sensitivity.svg"
+   }
+  ],
+  "inlineDemos": [
+   {
+    "id": "D-M13",
+    "title": "Interactive: simulation-first fidelity ladder",
+    "section": "6",
+    "file": "CEC06-fidelity-ladder-worked-example.html",
+    "height": 720
    }
   ]
  },

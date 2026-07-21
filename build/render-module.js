@@ -105,6 +105,14 @@ function widgetEmbed(w,student){
   const inner = frag || `<div class="we-cap" style="padding:1.1rem"><a href="${w.file}" target="_blank" rel="noopener">Open the interactive worked example.</a></div>`;
   return `<div class="widget-embed">${head}${inner}${cap}</div>`;
 }
+// A demo with a `file` renders as a sandboxed, self-contained iframe (offline, no CDN).
+// Identical output in student and author editions (no mode branching).
+function demoEmbed(d){
+  const px = Math.max(320, parseInt(d.height,10) || 640);
+  const head = `<div class="we-head"><span class="wid live">interactive</span><b>${d.title}</b><a class="we-open" href="${d.file}" target="_blank" rel="noopener">open full page</a></div>`;
+  const frame = `<iframe class="demo-frame" src="${d.file}" title="${d.title}" loading="lazy" sandbox="allow-scripts" style="display:block;width:100%;height:${px}px;border:0;background:var(--surface-3)"></iframe>`;
+  return `<div class="widget-embed demo">${head}${frame}</div>`;
+}
 
 /* ---------- parse module ---------- */
 const raw = fs.readFileSync(SRC,"utf8").replace(/\r\n/g,"\n");
@@ -223,6 +231,10 @@ for(const s of secList){
     const secNum=(h.match(/^(\d+)\./)||[])[1];
     (CFG.inlineFigures||[]).forEach(fg=>{
       if(fg.fragment && fg.section===secNum) html+=figureEmbed(fg);
+    });
+    // inline demos: any manifest demo with a file, anchored to its top-level section (both editions)
+    (CFG.inlineDemos||[]).forEach(d=>{
+      if(d.file && d.section===secNum) html+=demoEmbed(d);
     });
   }
   if(!STUDENT && /^20\./.test(h) && A7.widget) html+=widgetEmbed(A7.widget,false);

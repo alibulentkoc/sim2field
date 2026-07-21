@@ -5,11 +5,12 @@
   "private": true,
   "scripts": {
     "build": "for f in *-src.html; do node prerender.js \"$f\" \"${OUT_DIR:-..}/${f%-src.html}.html\"; done",
-    "verify": "node verify-build.js && node verify-typography.js && node verify-figures.js",
+    "verify": "node verify-build.js && node verify-typography.js && node verify-figures.js && node verify-demos.js",
     "verify:drift": "node verify-build.js",
     "verify:typography": "node verify-typography.js",
     "verify:figures": "node verify-figures.js",
-    "test": "node verify-build.js && node verify-typography.js && node verify-figures.js"
+    "verify:demos": "node verify-demos.js",
+    "test": "node verify-build.js && node verify-typography.js && node verify-figures.js && node verify-demos.js"
   },
   "license": "UNLICENSED",
   "dependencies": {

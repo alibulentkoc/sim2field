@@ -2072,6 +2072,13 @@
     "desc": "Endurance is moved by attacking whichever load dominates average energy (drive, fluid-power pump, or edge compute), which must be computed for the specific machine, not assumed. The ranking redirects effort to the matched lever: drive -> lighter/slower/regen; fluid -> reduce pressure-maintenance duty (accumulators, sealing, lower pressure, M9); compute -> edge efficiency (M6). EI-05 in the power domain. Section 6.4.",
     "section": "6",
     "fragment": "F-M12-3-dominant-load.svg"
+   },
+   {
+    "id": "F-M12-6",
+    "title": "Endurance / coverage vs temperature",
+    "desc": "Endurance and coverage fall as temperature rises: usable battery energy derates with temperature (f_temp) while thermal throttling raises average power draw, so endurance (E_usable/Pbar) and the coverage it buys (t v_eff swath) both drop at the hot edge of the envelope. Size the battery to a real shift at the envelope temperature, not nominal (EI-12/EI-10); coverage feeds cost-per-acre (M16). Section 7.2.",
+    "section": "7",
+    "fragment": "F-M12-6-endurance-temperature.svg"
    }
   ]
  },

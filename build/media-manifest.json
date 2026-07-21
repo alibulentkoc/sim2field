@@ -687,7 +687,7 @@
     "id": "F-M4-7",
     "title": "Development vs runtime AI boundary",
     "desc": "The model is built off-robot at development time (capture, annotation, synthetic generation, training, evaluation, compilation) and delivered as a compiled artifact; at runtime the on-robot machine only loads it and runs inference, with no learning and no network. This is the AI-specific view of the no-cloud boundary (CEC-04); complements the runtime/development partition figure. Section 17.",
-    "section": "6",
+    "section": "17",
     "fragment": "F-M4-7-dev-runtime-ai.svg"
    },
    {

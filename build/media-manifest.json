@@ -1212,6 +1212,13 @@
     "desc": "Each admitted fruit is assigned a value V_i = w_r r_i (1 - u_i) / c_i with ripeness r_i, normalized uncertainty u_i (from covariance, CEC-03), and cycle cost c_i, then sequenced by descending V_i subject to reachability and the cycle-time budget (CEC-01): riper, more certain, cheaper-to-reach fruit go first. Uncertainty- and value-aware ordering, bounded in decision time. Section 7.1.",
     "section": "7",
     "fragment": "F-M7-7-pick-sequencing.svg"
+   },
+   {
+    "id": "F-M7-6",
+    "title": "Domain randomization and the reality gap",
+    "desc": "Training over a randomization distribution p(xi) of simulator parameters makes the policy robust to the real value it later meets, but a too-narrow distribution overfits the simulator and leaves a large reality gap while a too-wide distribution degrades peak performance (the robustness-optimality tradeoff). The gap is measured by validating real vs sim and closed by widening p(xi); complements the sim-to-real pipeline figure. Section 7.3.",
+    "section": "7",
+    "fragment": "F-M7-6-domain-randomization.svg"
    }
   ]
  },

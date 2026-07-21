@@ -684,6 +684,13 @@
     "fragment": "F-M4-5-data-strategy.svg"
    },
    {
+    "id": "F-M4-7",
+    "title": "Development vs runtime AI boundary",
+    "desc": "The model is built off-robot at development time (capture, annotation, synthetic generation, training, evaluation, compilation) and delivered as a compiled artifact; at runtime the on-robot machine only loads it and runs inference, with no learning and no network. This is the AI-specific view of the no-cloud boundary (CEC-04); complements the runtime/development partition figure. Section 17.",
+    "section": "6",
+    "fragment": "F-M4-7-dev-runtime-ai.svg"
+   },
+   {
     "id": "F-M4-3",
     "title": "Detection metrics: IoU match, and precision/recall",
     "desc": "A predicted box matches a ground-truth box when IoU exceeds a threshold; the four outcomes (TP, FP, FN, TN) define precision = TP/(TP+FP) and recall = TP/(TP+FN), and sweeping the confidence threshold traces the PR curve. Section 7.2.",

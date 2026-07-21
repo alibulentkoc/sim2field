@@ -1035,6 +1035,13 @@
     "fragment": "F-M6-7-sil-hil-rig.svg"
    },
    {
+    "id": "F-M6-6",
+    "title": "Thermal throttling: delivered vs datasheet",
+    "desc": "Under sustained load in a hot enclosure the SoC drops clocks to protect itself, so delivered performance falls below the datasheet and a pipeline validated cold can miss its latency budget once hot. These are physical constraints measured on the real device under real thermal conditions, never assumed (EI-06): validate hot and loaded, not cold and idle. Section 6.6.",
+    "section": "6",
+    "fragment": "F-M6-6-thermal-throttling.svg"
+   },
+   {
     "id": "F-M6-2",
     "title": "Compute latency budget within the cycle time",
     "desc": "T_compute = t_detect + t_localize + t_decide + t_control must fit within the cycle-time compute share (CEC-01), populated with measured per-stage latency (EI-06). The dominant stage (detection) is attacked first (EI-05); levers if it won't close are optimize the dominant stage, faster accelerator, reduce resolution/rate (EI-04), or grow the budget. On a moving rover the latency becomes the sync term in the placement budget. Sections 7.1 and 6.3.",

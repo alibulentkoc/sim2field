@@ -246,3 +246,32 @@ link to two root HTML pages, but touched no guard's counted set, drift assets (1
 typography scanned files (160, same set), figure bindings (216), demo bindings (20), or
 solution answers (169), so every count is unchanged and all five guards stayed green
 without a baseline edit.
+
+## Workstream 9: public student-site publishing
+
+`build/publish-student.js` builds the public student site into `dist-public/` (gitignored,
+its own `.git` -> the book repo) and force-pushes it to the student book repo
+`github.com/alibulentkoc/sim2field-book` main.
+
+- Emits the student site only: 17 student module editions, index.html, figure-index.html,
+  figure-inventory.html, the 8 worked-example demos + 2 offline 3D sims (+2 thumbnails) those
+  pages reference, and the vendor/ tree. Figures are inline SVG, so no F-*.svg are referenced
+  or copied.
+- Excluded absolutely: author editions, solutions, homework check scripts, module markdown,
+  SESSION-LOG, CAPTURE-LIST, guards/build scripts, the curriculum register, instruments.html.
+- Publish-time transforms (export copies only, never the private source): strip the landing
+  page's author-edition links, its instruments link, and its build/ footer note; unwrap each
+  module's curriculum-register link to text and drop the "source: MODULE-NN.md" provenance.
+- Leak + link check before any push: no author/solution content markers in any emitted file;
+  no href/src to an excluded/unpublished file (checked on link values, so module prose that
+  merely names a path like "build/deploy" or <code>curriculum/...md</code> is not a false
+  positive, honoring "no engineering content changes"); every local link resolves in the set.
+  A failure aborts with nothing published.
+
+End-to-end run: build + leak/link check PASS (68 files, 30 HTML, self-contained), and the
+public commit is prepared in dist-public/. The push to the book repo is pending: the remote
+`alibulentkoc/sim2field-book` does not exist yet (git: "Repository not found") and `gh` is
+not installed here to create it, so the repo must be created once (its visibility is an owner
+decision), after which `node build/publish-student.js` publishes. The private repo's five
+guards stay green; dist-public/ is a subdir and is not scanned by any guard, and publish-
+student.js is a build script outside every guard's counted set, so no baseline changed.

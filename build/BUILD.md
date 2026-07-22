@@ -92,3 +92,42 @@ shipped `sandbox="allow-scripts"`:
   `chrome --headless=new --screenshot=out.png --window-size=1240,2600 --virtual-time-budget=10000 http://127.0.0.1:8137/module-08.html`.
   Use `--headless=new` for correct out-of-process-iframe compositing; the old `--headless`
   clips tall iframes (a capture artifact, not a rendering failure).
+
+## Publishing the public student site (build/publish-student.js)
+
+`build/publish-student.js` builds the public student site into `dist-public/` and pushes it
+to the student book repo (`github.com/alibulentkoc/sim2field-book`, branch `main`).
+`dist-public/` is gitignored in this private repo and carries its own `.git` pointing at the
+book remote.
+
+What it emits (the student site only): the 17 student module editions, `index.html`,
+`figure-index.html`, `figure-inventory.html`, the 8 worked-example demos and 2 offline 3D
+sims those pages reference (plus the 2 sim thumbnails), and the `vendor/` tree (fonts,
+KaTeX, three.js). Figures are inline SVG in the pages, so no `F-*.svg` files are referenced
+or copied.
+
+Excluded absolutely: author editions, solutions, homework check scripts, module markdown,
+`SESSION-LOG.md`, `CAPTURE-LIST.md`, the guards and build scripts, the curriculum register,
+and `instruments.html`.
+
+Publish-time transforms (applied to the exported copies only, never to the private source):
+the landing page's author-edition links, its `instruments.html` link, and its `build/`
+footer note are removed; each module's curriculum-register link is unwrapped to plain text
+and the `source: MODULE-NN.md` provenance is dropped from the top bar and footer.
+
+Leak + link check (runs before any push; a failure aborts with nothing published):
+- no emitted file may contain an author/solution content marker (`<body class="ed-author"`,
+  `<details class="answers`, `Author / production edition`, `Homework solutions (instructor)`);
+- no emitted page's `href`/`src` may target an excluded/unpublished file (author edition,
+  `.md`, solutions, `SESSION-LOG`, `CAPTURE-LIST`, `instruments.html`, `build/`, `-src.html`,
+  `checks/`) - checked on link values, so module prose that merely mentions such a path is
+  not a false positive;
+- every remaining local link must resolve to an emitted file (self-contained; nav resolves).
+
+Run:
+
+    node publish-student.js            # build, leak-check, and push to the book repo main
+    node publish-student.js --no-push  # build and leak-check only (dry run, no publish)
+
+The book repo must already exist and be pushable with the ambient git credentials; the
+script force-pushes `dist-public/` to its `main`.

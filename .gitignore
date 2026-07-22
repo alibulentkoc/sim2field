@@ -1,6 +1,10 @@
 # Claude Code local session / settings
 .claude/
 
+# Public student-site build output (its own git repo -> sim2field-book); built by
+# build/publish-student.js, never tracked in this private repo.
+dist-public/
+
 # OS / editor junk
 .DS_Store
 Thumbs.db

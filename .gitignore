@@ -1,0 +1,12 @@
+# Claude Code local session / settings
+.claude/
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*~
+
+# Note: build/node_modules is intentionally vendored (exact-pinned KaTeX for the
+# drift guard; offline builds) and is committed on purpose - do not ignore it.

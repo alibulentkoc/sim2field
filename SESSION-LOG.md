@@ -2,7 +2,8 @@
 
 Session date: 2026-07-21. Baseline before this session: commit `b0a853c`
 ("SIM2FIELD working set recovered from chat sandbox"). All work below is pushed
-to `origin/main` (HEAD `42711cf`). 23 commits total.
+to `origin/main`. 24 commits through the creation of this log (`9b5e989`); later
+maintenance edits to this file are not counted.
 
 ## Overview
 
@@ -120,7 +121,7 @@ from `vendor/` (no CDN, no 404s), standalone and inside the sandboxed iframe.
 Four guards, all green (`npm run verify` chains them):
 
 - `verify-build.js` (drift): 13/13 KaTeX assets byte-match a fresh render.
-- `verify-typography.js`: 156 files scanned, no forbidden authored Unicode.
+- `verify-typography.js`: 157 files scanned, no forbidden authored Unicode.
 - `verify-figures.js`: 216 shipped real figures all resolve to a binding.
 - `verify-demos.js`: 20 embedded demos (10 modules x 2 editions) all resolve to a
   binding whose file exists.

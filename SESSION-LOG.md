@@ -217,3 +217,32 @@ Five guards, all green (`npm run verify` chains them):
 All 17 modules now have homework; every author edition carries its model solutions and
 rubrics behind the answer-key details block, invisible in the student edition and enforced
 executable by the fifth guard.
+
+## Workstream 8: site-wide navigation
+
+Completed the cross-page navigation so every page reaches Home, its neighbors, and the
+figure index through relative links only (no external dependencies).
+
+- `render-module.js` `modnav()`: emits a nav bar at the top and bottom of every module,
+  in both editions, with Home (index.html), Previous module, Next module (omitted at
+  module 01 and module 17 respectively), and Figures (figure-index.html). Reading order is
+  01 through 17. The Home link label was finalized from "Contents" to "Home"; the bar was
+  already top-and-bottom in both editions.
+- `generate-figure-index.js`: added the Home link (and its `.home` rule, Rev 1.2 tokens)
+  through the generator, not by hand.
+- `generate-figure-inventory.js`: new. `figure-inventory.html` had been hand-authored with
+  no generator, so, following the Session 1 figure-index precedent, this generator was
+  built to reproduce the committed inventory byte-for-byte (proven at build time: 108 built
+  + 8 capture-preferred = 116 total, data-driven with counts derived from the arrays), then
+  the Home link was added through it.
+- `generate-index.js` already produced the landing page (title, 17 modules in order, figure
+  index, inventory); it was re-run and is idempotent (no change).
+
+Re-rendered all 17 modules in both editions; the only diff is the Home-label change in the
+two nav bars. The two figure pages differ only by the added `.home` rule and Home link.
+
+Guard baselines: none changed. The nav edit altered module-HTML content and added a Home
+link to two root HTML pages, but touched no guard's counted set, drift assets (13),
+typography scanned files (160, same set), figure bindings (216), demo bindings (20), or
+solution answers (169), so every count is unchanged and all five guards stayed green
+without a baseline edit.

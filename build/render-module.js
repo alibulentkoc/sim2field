@@ -272,7 +272,7 @@ function modnav(pos){
   const n = parseInt(NN,10), p2 = x => String(x).padStart(2,"0");
   const prev = n>1  ? `<a href="module-${p2(n-1)}${suf}.html" rel="prev">Previous module</a>` : "";
   const next = n<17 ? `<a href="module-${p2(n+1)}${suf}.html" rel="next">Next module</a>` : "";
-  return `<nav class="modnav ${pos}" aria-label="Module navigation"><a href="index.html">Contents</a>${prev}${next}<a href="figure-index.html">Figures</a></nav>`;
+  return `<nav class="modnav ${pos}" aria-label="Module navigation"><a href="index.html">Home</a>${prev}${next}<a href="figure-index.html">Figures</a></nav>`;
 }
 const CSS = fs.readFileSync(__dirname + "/module.css","utf8");
 const editionTag = STUDENT ? "Student edition" : "Author / production edition";

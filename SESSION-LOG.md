@@ -121,7 +121,7 @@ from `vendor/` (no CDN, no 404s), standalone and inside the sandboxed iframe.
 Four guards, all green (`npm run verify` chains them):
 
 - `verify-build.js` (drift): 13/13 KaTeX assets byte-match a fresh render.
-- `verify-typography.js`: 157 files scanned, no forbidden authored Unicode.
+- `verify-typography.js`: 159 files scanned, no forbidden authored Unicode.
 - `verify-figures.js`: 216 shipped real figures all resolve to a binding.
 - `verify-demos.js`: 20 embedded demos (10 modules x 2 editions) all resolve to a
   binding whose file exists.

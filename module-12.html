@@ -157,6 +157,14 @@ footer{max-width:var(--measure);margin:0 auto;padding:2.5rem 2rem;border-top:1px
 @media(max-width:900px){:root{--rail:0px}.book{grid-template-columns:1fr}.rail{display:none}.inner{padding:1.6rem 1.2rem 5rem}}
 @media(max-width:720px){.movement{grid-template-columns:1fr;gap:.5rem}.movement .mv-label::before{margin-bottom:.4rem}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+/* in-module navigation bar (top and bottom of the content column) */
+.modnav{display:flex;flex-wrap:wrap;gap:.3rem 1.2rem;align-items:baseline;font-family:var(--font-mono);font-size:.7rem}
+.modnav a{color:var(--text-muted);text-decoration:none}
+.modnav a:hover{color:var(--accent);text-decoration:underline}
+.modnav.top{border-bottom:1px solid var(--border);padding-bottom:.7rem;margin-bottom:1.6rem}
+.modnav.bottom{border-top:1px solid var(--border);padding-top:.9rem;margin-top:2rem}
+body.ed-author .modnav a:hover{color:var(--accent-2)}
 </style></head>
 <body class="ed-student">
 <a class="skip" href="#main">Skip to chapter</a>
@@ -166,6 +174,7 @@ footer{max-width:var(--measure);margin:0 auto;padding:2.5rem 2rem;border-top:1px
 <div class="book">
   <nav class="rail" aria-label="Chapter contents"><h2>Chapter contents</h2><ul class="toc"><li><a href="#sec-2-learning-objectives"><span class="tn">2</span>Learning Objectives</a></li><li><a href="#sec-3-student-outcomes"><span class="tn">3</span>Student Outcomes</a></li><li><a href="#sec-4-engineering-motivation"><span class="tn">4</span>Engineering Motivation</a></li><li><a href="#sec-engineering-failure-cases-power-and-ther">Engineering Failure Cases (power-and-thermal-specific)</a></li><li><a href="#sec-5-background-knowledge"><span class="tn">5</span>Background Knowledge</a></li><li><a href="#sec-6-theory"><span class="tn">6</span>Theory</a></li><li><a href="#sec-7-mathematics"><span class="tn">7</span>Mathematics</a></li><li><a href="#sec-8-engineering-principles"><span class="tn">8</span>Engineering Principles</a></li><li><a href="#sec-9-system-requirements"><span class="tn">9</span>System Requirements</a></li><li><a href="#sec-10-design-decisions"><span class="tn">10</span>Design Decisions</a></li><li><a href="#sec-11-trade-studies"><span class="tn">11</span>Trade Studies</a></li><li><a href="#sec-12-simulation-activities"><span class="tn">12</span>Simulation Activities</a></li><li><a href="#sec-13-digital-twin-activities"><span class="tn">13</span>Digital Twin Activities</a></li><li><a href="#sec-14-hardware-activities"><span class="tn">14</span>Hardware Activities</a></li><li><a href="#sec-15-software-activities"><span class="tn">15</span>Software Activities</a></li><li><a href="#sec-16-ros-2-integration"><span class="tn">16</span>ROS 2 Integration</a></li><li><a href="#sec-17-ai-integration"><span class="tn">17</span>AI Integration</a></li><li><a href="#sec-18-edge-computing-integration"><span class="tn">18</span>Edge Computing Integration</a></li><li><a href="#sec-19-fluid-power-integration"><span class="tn">19</span>Fluid Power Integration</a></li><li><a href="#sec-24-laboratory"><span class="tn">24</span>Laboratory</a></li><li><a href="#sec-25-homework"><span class="tn">25</span>Homework</a></li><li><a href="#sec-26-quiz"><span class="tn">26</span>Quiz</a></li><li><a href="#sec-27-challenge-problems"><span class="tn">27</span>Challenge Problems</a></li><li><a href="#sec-engineering-design-review">Engineering Design Review</a></li><li><a href="#sec-29-research-frontiers"><span class="tn">29</span>Research Frontiers</a></li><li><a href="#sec-30-references"><span class="tn">30</span>References</a></li></ul></nav>
   <main class="main" id="main"><div class="inner">
+    <nav class="modnav top" aria-label="Module navigation"><a href="index.html">Contents</a><a href="module-11.html" rel="prev">Previous module</a><a href="module-13.html" rel="next">Next module</a><a href="figure-index.html">Figures</a></nav>
     <header class="mission">
     <div class="mission-hero">
       <div class="eyebrow">Module 12 / Mission briefing</div>
@@ -712,6 +721,7 @@ footer{max-width:var(--measure);margin:0 auto;padding:2.5rem 2rem;border-top:1px
     <footer>Rendered from <b>MODULE-12.md</b> by Module Rendering Pipeline v1.3. Student edition. The module is the single source of truth.<br>
     Finished media only; production specifications and author notes live in the author edition.<br>
     SIM2FIELD / Autonomous Watermelon Harvesting Robotics</footer>
+    <nav class="modnav bottom" aria-label="Module navigation"><a href="index.html">Contents</a><a href="module-11.html" rel="prev">Previous module</a><a href="module-13.html" rel="next">Next module</a><a href="figure-index.html">Figures</a></nav>
   </div></main>
 </div>
 <script>

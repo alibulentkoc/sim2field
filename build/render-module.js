@@ -262,6 +262,14 @@ const body = rendered.map(s=>{
   return `<section class="${cls}">${hd}${s.html}</section>`;
 }).join("\n");
 
+/* ---------- in-module navigation bar (top and bottom, both editions) ---------- */
+function modnav(pos){
+  const suf = STUDENT ? "" : ".author";
+  const n = parseInt(NN,10), p2 = x => String(x).padStart(2,"0");
+  const prev = n>1  ? `<a href="module-${p2(n-1)}${suf}.html" rel="prev">Previous module</a>` : "";
+  const next = n<17 ? `<a href="module-${p2(n+1)}${suf}.html" rel="next">Next module</a>` : "";
+  return `<nav class="modnav ${pos}" aria-label="Module navigation"><a href="index.html">Contents</a>${prev}${next}<a href="figure-index.html">Figures</a></nav>`;
+}
 const CSS = fs.readFileSync(__dirname + "/module.css","utf8");
 const editionTag = STUDENT ? "Student edition" : "Author / production edition";
 
@@ -281,11 +289,13 @@ let HTML = `<!DOCTYPE html>
 <div class="book">
   <nav class="rail" aria-label="Chapter contents"><h2>Chapter contents</h2><ul class="toc">${toc}</ul></nav>
   <main class="main" id="main"><div class="inner">
+    ${modnav("top")}
     ${buildOpening()}
     ${body}
     <footer>Rendered from <b>MODULE-${NN}.md</b> by Module Rendering Pipeline v1.3. ${editionTag}. The module is the single source of truth.<br>
     ${STUDENT?"Finished media only; production specifications and author notes live in the author edition.":"Includes production specifications, figure placeholders, governance and instructor notes, and the answer key."}<br>
     SIM2FIELD / Autonomous Watermelon Harvesting Robotics</footer>
+    ${modnav("bottom")}
   </div></main>
 </div>
 <script>

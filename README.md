@@ -31,6 +31,9 @@ Four guards must pass after every change (`npm run verify` from `build/` chains 
 - `figure-inventory.html` - all 116 figure slots classified (108 built, 8 capture-preferred).
 - `figure-index.html` - gallery of the 108 built figures plus the interactive 3D demos.
 - `build/BUILD.md` - build pipeline, the four guards, and the demo/iframe mechanism.
+- [sim2field-book](https://github.com/alibulentkoc/sim2field-book) - the public book repo,
+  the leak-checked student-only site published by `build/publish-student.js` and served at
+  https://alibulentkoc.github.io/sim2field-book/.
 - `SESSION-LOG.md` - log of the 2026-07-21 working session.
 - `CURRICULUM-INDEX.md`, `PRODUCTION-STANDARD.md`, `MODULE-RENDERING-DIRECTIVE.md` -
   curriculum and production references.

@@ -104,7 +104,8 @@ What it emits (the student site only): the 17 student module editions, `index.ht
 `figure-index.html`, `figure-inventory.html`, the 8 worked-example demos and 2 offline 3D
 sims those pages reference (plus the 2 sim thumbnails), and the `vendor/` tree (fonts,
 KaTeX, three.js). Figures are inline SVG in the pages, so no `F-*.svg` files are referenced
-or copied.
+or copied. It also emits a generated `README.md` for the book repo that links to the live
+site and back to the private source repository.
 
 Excluded absolutely: author editions, solutions, homework check scripts, module markdown,
 `SESSION-LOG.md`, `CAPTURE-LIST.md`, the guards and build scripts, the curriculum register,

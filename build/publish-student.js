@@ -25,6 +25,8 @@ const fs = require("fs"), path = require("path"), cp = require("child_process");
 const ROOT = path.dirname(__dirname);
 const DIST = path.join(ROOT, "dist-public");
 const BOOK_REMOTE = "https://github.com/alibulentkoc/sim2field-book.git";
+const PAGES_URL = "https://alibulentkoc.github.io/sim2field-book/";
+const PRIVATE_URL = "https://github.com/alibulentkoc/sim2field";
 const PUSH = !process.argv.includes("--no-push");   // --no-push: build + leak-check only
 
 // ---------- the export set ----------
@@ -70,6 +72,23 @@ for (const m of MODULES) {
   h = h.replace(/<a href="curriculum\/_core-concepts\.md">([^<]*)<\/a>/g, "$1");
   fs.writeFileSync(path.join(DIST, m), h);
 }
+
+// ---------- 4b. emit a book-repo README that links back to the private source ----------
+const README = `# SIM2FIELD - Student Edition
+
+The public, student-only build of **SIM2FIELD**, a 17-module digital textbook on a
+drive-over watermelon harvesting robot.
+
+- Live site: ${PAGES_URL}
+- Source repository (private): ${PRIVATE_URL}
+
+This repository is generated. It is published from the private source repository by
+\`build/publish-student.js\`, which exports only the student editions - author editions,
+solutions, homework check scripts, and internal materials are excluded and leak-checked -
+and force-pushes the result. Do not edit these files by hand; they are overwritten on the
+next publish.
+`;
+fs.writeFileSync(path.join(DIST, "README.md"), README);
 
 // ---------- 5. leak + link checks (fail before any push) ----------
 const emitted = [];

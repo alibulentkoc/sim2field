@@ -44,3 +44,45 @@ diacritics).
 
 Fix in the SOURCE, never the shipped file: arrows -> `->` `<-` `<->` `=>`, minus
 -> `-`, quotes -> ASCII, dashes -> context-appropriate ASCII, ellipsis -> `...`.
+
+## Figure- and demo-binding guards (manifest <-> shipped HTML)
+
+Two guards close the drift class where a figure or demo ships in a module edition but
+has no `media-manifest.json` binding, so a re-render would silently drop it (the drift
+guard above only covers the KaTeX assets, not the module HTML). Both run in
+`npm run verify` / `test` alongside the drift and typography guards.
+
+- `verify-figures.js` - every real figure (`<figure class="figure fig-real">`) in a
+  shipped module edition must have a resolving `inlineFigures` (or `anchor7`) binding
+  whose `F-*.svg` exists.
+- `verify-demos.js` - every embedded demo (`<div class="widget-embed demo"> ... <iframe>`)
+  must have a resolving `inlineDemos` binding whose file exists.
+
+### Interactive demos (`inlineDemos`)
+
+A demo is an existing self-contained worked-example HTML embedded by section through an
+`inlineDemos` binding, rendered as a sandboxed iframe by `render-module.js` (`demoEmbed`):
+
+    <iframe src="<file>" sandbox="allow-scripts" loading="lazy" ...>
+
+- Identical in the student and author editions (no mode branching); anchored by the
+  demo's top-level `section`, exactly like `inlineFigures`.
+- Offline: relative `src`, no CDN. Bound demos must be self-contained (the two THREE.js
+  sims, `harvesting-robot-sim.html` and `watermelon-harvester-amiga.html`, load three.js
+  from jsdelivr and are excluded until it is vendored under `vendor/`).
+
+### Browser verification (the sandbox flag is sufficient)
+
+Verified in a real browser that the demos render, including interactivity, under the
+shipped `sandbox="allow-scripts"`:
+
+- Served the repo over local http and drove headless Chrome. The sandboxed iframe renders
+  the full worked-example - derivation, pre-rendered KaTeX, and the JS-driven interactive
+  widget (SVG + live sliders).
+- A controlled comparison (no sandbox vs `allow-scripts` vs `allow-scripts allow-same-origin`)
+  produced byte-identical captures, so the sandbox flags do not block the demo JS;
+  `allow-scripts` alone is sufficient and no `allow-same-origin` is needed.
+- Reproduce: `python -m http.server 8137` from the repo root, then
+  `chrome --headless=new --screenshot=out.png --window-size=1240,2600 --virtual-time-budget=10000 http://127.0.0.1:8137/module-08.html`.
+  Use `--headless=new` for correct out-of-process-iframe compositing; the old `--headless`
+  clips tall iframes (a capture artifact, not a rendering failure).

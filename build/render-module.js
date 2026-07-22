@@ -109,8 +109,9 @@ function widgetEmbed(w,student){
 // Identical output in student and author editions (no mode branching).
 function demoEmbed(d){
   const px = Math.max(320, parseInt(d.height,10) || 640);
+  const sandbox = d.sandbox || "allow-scripts";   // sims that fetch module subresources need "allow-scripts allow-same-origin"
   const head = `<div class="we-head"><span class="wid live">interactive</span><b>${d.title}</b><a class="we-open" href="${d.file}" target="_blank" rel="noopener">open full page</a></div>`;
-  const frame = `<iframe class="demo-frame" src="${d.file}" title="${d.title}" loading="lazy" sandbox="allow-scripts" style="display:block;width:100%;height:${px}px;border:0;background:var(--surface-3)"></iframe>`;
+  const frame = `<iframe class="demo-frame" src="${d.file}" title="${d.title}" loading="lazy" sandbox="${sandbox}" style="display:block;width:100%;height:${px}px;border:0;background:var(--surface-3)"></iframe>`;
   return `<div class="widget-embed demo">${head}${frame}</div>`;
 }
 

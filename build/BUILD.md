@@ -67,9 +67,15 @@ A demo is an existing self-contained worked-example HTML embedded by section thr
 
 - Identical in the student and author editions (no mode branching); anchored by the
   demo's top-level `section`, exactly like `inlineFigures`.
-- Offline: relative `src`, no CDN. Bound demos must be self-contained (the two THREE.js
-  sims, `harvesting-robot-sim.html` and `watermelon-harvester-amiga.html`, load three.js
-  from jsdelivr and are excluded until it is vendored under `vendor/`).
+- Offline: relative `src`, no CDN. three.js is vendored under `vendor/three/0.160.0/`
+  (core + OrbitControls / RoomEnvironment / lil-gui addons); the two 3D sims
+  (`harvesting-robot-sim.html`, `watermelon-harvester-amiga.html`) import it through a
+  local importmap - importmap addresses must start with `./` (a bare `vendor/...` is
+  rejected as an invalid address).
+- Sandbox per binding: a demo that fetches module subresources (the 3D sims) needs
+  `"sandbox": "allow-scripts allow-same-origin"` in its `inlineDemos` entry, because
+  `allow-scripts` alone runs the iframe in an opaque origin that CORS-blocks same-server
+  module fetches. Inline-JS demos (the worked-examples) keep the default `allow-scripts`.
 
 ### Browser verification (the sandbox flag is sufficient)
 

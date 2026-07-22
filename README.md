@@ -2,6 +2,10 @@
 
 A private 17-module digital textbook on a drive-over watermelon harvesting robot.
 
+**Live student site:** https://alibulentkoc.github.io/sim2field-book/ - the public,
+student-only edition, published from this private repo by `build/publish-student.js`
+(leak-checked; author editions, solutions, check scripts, and internal docs excluded).
+
 ## Pipeline
 
 `build/render-module.js` builds student and author HTML editions from each

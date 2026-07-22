@@ -132,3 +132,88 @@ Reproducibility: all 17 modules x 2 editions render byte-identical from source, 
 Open items (flagged, not acted on): the 8 capture-preferred figure slots (F-M2-1,
 F-M2-7, F-M4-6, F-M10-1, F-M13-1, F-M13-6, F-M16-6, F-M17-1) remain spec placeholders
 by design (they need real photo, CAD, or measured data and are not fabricated).
+
+---
+
+# SIM2FIELD Session Log, Session 2
+
+Session date: 2026-07-22. Baseline before this session: commit `1b33273`-era state
+(end of Session 1's figure work). All work below is pushed to `origin/main`.
+
+## Overview
+
+Session 2 added the site's navigation surface, a capture shopping list, and, as its
+main body of work, authored the pending **homework sets** for the 15 modules that
+lacked them (M5 and M9 already shipped homework). The homework campaign introduced a
+fifth build guard and a new author-edition-only content plane, closing the last large
+gap between the shipped book and a reproducible, self-checking source tree.
+
+Standing rules honored throughout: one deliverable per turn; no engineering content
+changes to module text; ASCII-only authored punctuation (non-ASCII math only as HTML
+entities); every change verified byte-confined before commit; all guards green after
+each change; commit and push per deliverable.
+
+## Workstream 6: site navigation and capture list
+
+- Landing page: `generate-index.js` now owns the root `index.html`, generated
+  deterministically from `media-manifest.json`. The prior drift-guarded landing page was
+  preserved byte-identical at `instruments.html` (build-manifest re-pointed
+  `index-src.html` -> `instruments.html`) after an AskUserQuestion resolved the conflict.
+- In-module navigation: `render-module.js` gained a `modnav()` helper emitting a nav bar
+  at the top and bottom of every module (prev / index / next), with matching `.modnav`
+  CSS in `module.css`. Verified rendering in the browser.
+- `CAPTURE-LIST.md`: a printable ASCII shopping list for the 8 capture-preferred figure
+  slots (photo / CAD / measured-data needs), derived read-only from the figure inventory
+  and per-module figure tables; linked from the README.
+
+## Workstream 7: homework campaign (15 sets)
+
+Scope, as set by the user: homework only, one component per turn, problems derived only
+from module content, twin/browser-only (no hardware, so no `[VERIFY@PUB]`-hardware gate),
+solutions and rubrics author-edition only, every numeric answer backed by an executable
+check, and a new guard tying the two together.
+
+Mechanism:
+
+- New content plane: `render-module.js` injects, in the **author edition only**, a
+  `<details class="answers hw">` block after the Section 25 heading, reading the module's
+  `homeworkSolutions` markdown from `media-manifest.json` (mirrors the existing quiz
+  answer-key precedent). Student editions are byte-unchanged; each turn was verified to
+  add exactly one such block and leave the rest of the author HTML byte-identical.
+- New guard: `verify-solutions.js` (fifth guard, wired into `npm run verify`/`test`). It
+  runs every `build/checks/M<NN>-homework-check.js`, parses each `EXPECT <string>` line,
+  and asserts the string appears verbatim in `solutions/M<NN>-homework-solutions.md`. A
+  numeric answer that drifts from its check, in either direction, fails the build.
+- Each check recomputes its module's answers from that module's Section 7 formulas with
+  an illustrative parameter set, so the solutions are executable, not asserted.
+
+Deliverables (one commit each; M1/M2/M3 landed at the Session 1/2 boundary):
+
+- `dc58dc3` M4, detection metrics and the mission operating point
+- `fb0719c` M6, edge-deployment budgets (latency, Amdahl, roofline, quantization, energy)
+- `cd213dc` M7, decision and grasp policy (value sequencing, safe-set projection)
+- `eafbb3b` M8, manipulator kinematics (IK/FK, track width, manipulability, sigma_mech)
+- `a040230` M10, mobility and stability (drive speed, slope tip-over, arm-swing, budget)
+- `8fd9eba` M11, ROS2 real-time (worst-case latency, monitor reaction, schedulability)
+- `0ed0524` M12, power and thermal (budget, battery sizing, dominant load, thermal balance)
+- `3409b12` M13, integration and digital twin (composed budget, rung gap, interaction count)
+- `6b44d35` M14, V&V and reliability (sample size, series MTBF, dominant mode)
+- `1928182` M15, safety and ethics (risk = severity x likelihood, common-cause residual)
+- `081a549` M16, unit economics (TCO, cost/acre, break-even, learning curve, utilization)
+- `1b39136` M17, capstone, a composed system model that recomputes all six course budgets
+  from their originating modules' formulas and shows they close together (EI-17 tension)
+
+## Final state (Session 2)
+
+Five guards, all green (`npm run verify` chains them):
+
+- `verify-build.js` (drift): 13/13 KaTeX assets byte-match a fresh render.
+- `verify-typography.js`: no forbidden authored Unicode across the scanned files.
+- `verify-figures.js`: 216 shipped real figures all resolve to a binding.
+- `verify-demos.js`: 20 embedded demos all resolve to a binding whose file exists.
+- `verify-solutions.js`: 15 homework check scripts, 169 numeric answers, each verified
+  against its solutions file.
+
+All 17 modules now have homework; every author edition carries its model solutions and
+rubrics behind the answer-key details block, invisible in the student edition and enforced
+executable by the fifth guard.

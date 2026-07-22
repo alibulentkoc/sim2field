@@ -70,6 +70,25 @@ for (let i = 1; i <= 17; i++) {
         + `<span class="cnt">${figs.length} figures</span></h2><div class="grid">${cards}</div></section>`;
 }
 
+// Interactive 3D demos: any inlineDemos entry with a thumbnail, appended as a trailing
+// section of linked thumbnail cards (module order). Thumbnails are PNGs at repo root.
+const demoCards = [];
+for (let i = 1; i <= 17; i++) {
+  const c = mani[String(i).padStart(2, "0")]; if (!c) continue;
+  for (const d of (c.inlineDemos || [])) {
+    if (!d.thumb) continue;
+    demoCards.push(`<figure class="card"><figcaption><span class="fid">${d.id}</span>`
+      + `<span class="sec">Module ${String(i).padStart(2, "0")}</span>`
+      + `<span class="ttl">${esc(d.title)}</span></figcaption>`
+      + `<div class="body"><a href="${d.file}" target="_blank" rel="noopener">`
+      + `<img src="${d.thumb}" alt="${esc(d.title)}" loading="lazy" style="display:block;width:100%;height:auto"></a></div></figure>`);
+  }
+}
+if (demoCards.length) {
+  body += `<section><h2><span class="mnum">Interactive</span> 3D demos `
+        + `<span class="cnt">${demoCards.length} demos</span></h2><div class="grid">${demoCards.join("")}</div></section>`;
+}
+
 if (missing.length) { console.error("FAIL - figures with no manifest binding:", missing.join(", ")); process.exit(1); }
 fs.writeFileSync(path.join(ROOT, "figure-index.html"), HEAD + body + FOOTER);
 console.log(`wrote figure-index.html (${svgs.length} figure cards across 17 modules)`);

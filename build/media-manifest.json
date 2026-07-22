@@ -1798,6 +1798,7 @@
     "title": "Interactive 3D: parallel-linkage harvesting rover",
     "section": "6",
     "file": "harvesting-robot-sim.html",
+    "thumb": "harvesting-robot-sim.thumb.png",
     "height": 760,
     "sandbox": "allow-scripts allow-same-origin"
    }
@@ -2986,6 +2987,7 @@
     "title": "Interactive 3D: the Amiga watermelon harvester",
     "section": "6",
     "file": "watermelon-harvester-amiga.html",
+    "thumb": "watermelon-harvester-amiga.thumb.png",
     "height": 760,
     "sandbox": "allow-scripts allow-same-origin"
    }

@@ -239,6 +239,10 @@ for(const s of secList){
     });
   }
   if(!STUDENT && /^20\./.test(h) && A7.widget) html+=widgetEmbed(A7.widget,false);
+  if(!STUDENT && /^25\./.test(h) && CFG.homeworkSolutions){   // homework model solutions, author edition only
+    let sol=""; try{ sol=fs.readFileSync(path.join(path.dirname(OUT), CFG.homeworkSolutions),"utf8"); }catch(e){}
+    if(sol) html+=`<details class="answers hw"><summary>Homework solutions (instructor)</summary>${styleBlocks(R(sol))}</details>`;
+  }
   if(!STUDENT && quizKeys){
     html+=`<details class="answers"><summary>Answer key (instructor)</summary><ol class="keylist">${
       quizKeys.map((k,i)=>`<li><span class="qn">${i+1}.</span> ${Rin(k)}</li>`).join("")}</ol></details>`;
